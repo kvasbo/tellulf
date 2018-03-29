@@ -1,0 +1,173 @@
+body {
+  font-family: -apple-system, arial, sans-serif;
+  font-weight: 200;
+}
+
+#mainContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background-color: black;
+}
+
+#contentArea {
+  display: flex;
+    flex: 1;
+    flex-direction: row;
+    height: 95vh;
+}
+
+#bottomContainer {
+  display: flex;
+  height: 5vh;
+  overflow: hidden;
+}
+
+#leftContainer {
+  display: flex;
+  flex-direction: column;
+  width: 66vw;
+  height: 100%;
+  overflow: hidden;
+}
+
+#rightContainer {
+  display: flex;
+  width: 34vw;
+  height: 100%;
+  overflow: hidden;
+}
+
+#container_kalender {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#container_yr {
+    flex: 1;
+    padding-top: 2vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+#buttonsContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 1vw;
+  left: 0;
+  top: 0;
+}
+
+.button {
+  font-size: 4vw;
+  padding: 1vw;
+  opacity: 0.2;
+  cursor: pointer;
+}
+
+.modal {
+  position: absolute;
+  left: 0vw;
+  top: 0vh;
+  padding: 20vh 20vw 20vh 20vw;
+  width: 60vw;
+  height: 60vh;
+  background-color: rgba(0,0,0,0.93);
+}
+
+.listBlock {
+  background-color: black;
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  position: relative;
+  width: 66vw;
+  height: 10.8vh;
+  display: flex;
+}
+
+.listBlockMainArea {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  font-size: 9vh;
+  width: 40vw;
+  left: 0;
+  height: 100%;
+  padding-right: 2vw;
+}
+
+.listBlockSubArea {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  width: 22vw;
+  height: 100%;
+  color: rgb(175,175,175);
+}
+
+.listBlockText {
+  padding: 0.4vh;
+  font-size: 2.5vw;
+}
+
+.listBlockTextLarge {
+  padding: 0.4vh;
+  font-size: 4.5vw;
+}
+
+.block {
+    background-color: black;
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    position: relative;
+}
+
+.rightText {
+    text-align: right;
+}
+
+.centered {
+    text-align: center;
+}
+
+.huge {
+    font-size: 13vw;
+}
+
+.xlarge {
+    font-size: 7vw;
+}
+
+.large {
+    font-size: 4.5vw;
+}
+
+.medium {
+    font-size: 3.7vw;
+}
+
+.small {
+    font-size: 3vw;
+}
+
+.centered {
+    text-align: center;
+}
+
+.grey {
+  color: rgb(150,150,150);
+}
+
+.unit {
+  
+}

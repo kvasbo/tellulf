@@ -1,0 +1,34 @@
+#polar {
+
+}
+
+#clock {
+
+}
+
+#klokkeContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+#clockInnerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 2vw;
+}
+
+#tid {
+  font-size: 9vh;  
+}
+
+#dag {
+  font-size: 4vh;
+  display: flex;
+  justify-content: center;
+  margin-top: 1vh;
+}
+
+#dato {
+  font-size: 5vh;  
+}

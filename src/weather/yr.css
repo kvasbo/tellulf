@@ -1,0 +1,170 @@
+
+.yr-container {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.weatherMeta {
+  display: flex;
+  height: 2vh;
+  padding: 1vh 1vw 1vh 1vw;
+  align-content: center;
+  justify-content: center;
+}
+
+.graphDiv {
+	flex: 1;
+	overflow: hidden;
+	border: none;
+  display: flex;
+  flex-direction: row;
+}
+
+.fullGraph {
+  flex: 1;
+  flex-direction: column;
+}
+
+.hoursDiv {
+  height: 50px;
+  flex: 1;
+}
+
+.maxMin {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 5vw;
+  padding-right: 2vw;
+}
+
+.max {
+  padding-top: 1vw;
+}
+
+.min {
+  padding-bottom: 6vw;
+}
+
+.endofday {
+  border-right: 1.5px solid rgba(255,255,255, 0.5);
+}
+
+.yrChart {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	border: none;
+}
+
+.overview {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hoursContainer {
+  height: 88%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: center;
+  position: relative;
+}
+
+.hoursDiv {
+  height: 12%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: center;
+  position: relative;
+}
+
+.hour {
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  padding-top: 3;
+}
+
+.hourMarker {
+  height: 100%;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+
+.top {
+  height: 50%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.bottom {
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.even {
+  background-color: rgb(15,15,15);
+  position: relative;
+}
+
+.odd {
+ /* background-color: rgb(30,30,30); */
+  position: relative;
+}
+
+.now {
+  background-color: rgb(80,80,80);
+  position: relative;
+}
+
+.time {
+  width: 100%;
+  padding: 10px 0 0 0;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 1.5vh;
+  color: rgb(220,220,220);
+  margin: 0;
+  border: none;
+}
+
+.temperature {
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.weatherIcon {
+  width: 3.5vw;
+  height: 3.5vw;
+  margin-bottom: 0.4vh;
+}
+
+.night {
+  width: 3.5vw;
+  height: 3.5.0vw;
+  margin-bottom: 0.4vh;
+}
