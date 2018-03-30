@@ -54,7 +54,7 @@ export default class Solceller extends Component {
   }
 
   showProdToday() {
-    const str = (parseFloat(this.state.today) / 1000).toFixed(2);
+    const str = (parseFloat(this.state.today) / 1000).toFixed(1);
     return str;
   }
 
@@ -75,10 +75,10 @@ export default class Solceller extends Component {
 
   render() {
     const subs = [
-      `Dag: ${this.showProdToday()}`,
-      `${getMonth()}: ${this.showProdMonth()}`,
-      `${getYear()}: ${this.showProdYear()}`,
-      `Tot: ${this.showProdTotal()}`,
+      `D: ${this.showProdToday()}`,
+      `M: ${this.showProdMonth()}`,
+      `Å: ${this.showProdYear()}`,
+      `∞: ${this.showProdTotal()}`,
     ];
 
     return (
