@@ -31,7 +31,7 @@ export default class Hour extends Component {
   }
 
   getTempHeight() {
-    const fromBottom = 0;
+    const fromBottom = 10;
     const maxHeight = 100;
     const fromMin = this.props.hour.temperature - this.props.limits.lowerRange;
     const percentOfRange = fromMin / (this.props.limits.upperRange - this.props.limits.lowerRange);

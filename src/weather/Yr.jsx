@@ -134,22 +134,18 @@ function parseLimits(data) {
   // Get max rain
   const minTemp = _.minBy(temp, 'value');
 
-  const month = new Date().getMonth() + 1;
+  const quarter = Moment().quarter();
 
   let upperRange = 15;
   let lowerRange = -15;
 
-  if ((month > 4 || month < 10) && minTemp > 0) {
+  if ((quarter === 2 || quarter === 3) && minTemp.value > 0) {
     upperRange = 30;
     lowerRange = 0;
-  }
-
-  if (minTemp > 0 && maxTemp > 15) {
+  } else if (minTemp.value > 0 && maxTemp.value > 15) {
     upperRange = 30;
     lowerRange = 0;
-  }
-
-  if (maxTemp < 0 && minTemp < -15) {
+  } else if (maxTemp.value < 0 && minTemp.value < -15) {
     upperRange = 0;
     lowerRange = -30;
   }
