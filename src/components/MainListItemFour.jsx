@@ -12,7 +12,7 @@ export default class MainListItemFour extends Component {
             display: 'flex',
             fontSize: '15pt',
             overflow: 'hidden',
-            height: '30%',
+            height: '33%',
             alignItems: 'center',
           }}
         >{item}
