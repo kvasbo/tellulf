@@ -134,20 +134,23 @@ function parseLimits(data) {
   // Get max rain
   const minTemp = _.minBy(temp, 'value');
 
+  const roundedMin = Math.round(minTemp.value);
+  const roundedMax = Math.round(maxTemp.value);
+
   const quarter = Moment().quarter();
 
   let upperRange = 15;
   let lowerRange = -15;
 
-  if ((quarter === 2 || quarter === 3) && minTemp.value > 0) {
+  if ((quarter === 2 || quarter === 3) && roundedMin >= 0) {
+    upperRange = Math.max(30, roundedMax);
+    lowerRange = 0;
+  } else if (roundedMin >= 0 && roundedMax > 15) {
     upperRange = 30;
     lowerRange = 0;
-  } else if (minTemp.value > 0 && maxTemp.value > 15) {
-    upperRange = 30;
-    lowerRange = 0;
-  } else if (maxTemp.value < 0 && minTemp.value < -15) {
+  } else if (roundedMax < 0 && roundedMin < -15) {
     upperRange = 0;
-    lowerRange = -30;
+    lowerRange = Math.min(-30, roundedMin);
   }
 
   return {

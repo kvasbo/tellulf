@@ -27,7 +27,7 @@ export default class Preggo extends Component {
   update() {
     const data = this.preggo.getCalculations();
 
-    const percent = data.percent.toFixed(2);
+    const percent = data.percent.toFixed(1);
 
     this.setState({
       percent,

@@ -1,32 +1,27 @@
-#polar {
-
-}
-
-#clock {
-
-}
-
 #klokkeContainer {
   display: flex;
-  flex-direction: row;
-}
-
-#clockInnerContainer {
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-left: 2vw;
+  height: 25vh;
+  width: '100%';
+  justify-content: 'center';
+  align-items: 'center';
 }
 
 #tid {
-  font-size: 9vh;  
+  font-size: 13vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex: 2;
 }
 
 #dag {
-  font-size: 4vh;
+  font-size: 5vh;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   margin-top: 1vh;
+  flex: 1;
 }
 
 #dato {

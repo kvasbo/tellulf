@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import { meanBy } from 'lodash';
 import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
-// const maxEver = 4254;
-// const maxDayEver = 28900;
+const minutesToKeep = 5;
 
 export default class Solceller extends Component {
   constructor(props) {
     super(props);
-
+    this.samples = [];
     this.state = {
       now: null,
       today: null,
       month: null,
       year: null,
       total: null,
+      nowAveraged: null,
     };
   }
 
@@ -26,6 +27,7 @@ export default class Solceller extends Component {
       try {
         const val = snapshot.val();
         const now = (typeof val.effect.val !== 'undefined') ? val.effect.val : null;
+        if (now) this.addPowerSampleAndPrune(now);
         const today = (typeof val.today.val !== 'undefined') ? val.today.val : null;
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
@@ -39,10 +41,18 @@ export default class Solceller extends Component {
     });
   }
 
+  addPowerSampleAndPrune(value) {
+    this.samples.push({ value, time: Moment() });
+    const cutOff = Moment().subtract(minutesToKeep, 'minutes');
+    this.samples = this.samples.filter(s => s.time.isSameOrAfter(cutOff));
+    const nowAveraged = Math.round(meanBy(this.samples, 'value'));
+    this.setState({ nowAveraged });
+  }
+
   showCurrent() {
-    if (this.state.now === null) { return 0; }
-    const str = this.state.now;
-    return str;
+    if (this.state.nowAveraged === null) { return 0; }
+    const str = this.state.nowAveraged;
+    return Number(str);
   }
 
   showProdToday() {

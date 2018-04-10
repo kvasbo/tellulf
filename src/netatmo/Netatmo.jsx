@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import MainListItem from '../components/MainListItem';
 import MainListItemFour from '../components/MainListItemFour';
 
 export default class Netatmo extends Component {
@@ -47,7 +46,7 @@ export default class Netatmo extends Component {
 
     if (ageInMinutes > 60) {
       return (
-        <MainListItem mainItem="?" subItems={[]} />
+        <MainListItemFour mainItem="?" subItems={[]} />
       );
     }
 

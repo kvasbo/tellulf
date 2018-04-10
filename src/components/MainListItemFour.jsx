@@ -29,10 +29,14 @@ export default class MainListItemFour extends Component {
     );
   }
 
+  getMainItem() {
+    return this.props.mainItem;
+  }
+
   render() {
     return (
       <div className="listBlock">
-        <div className="listBlockMainArea">{this.props.mainItem}{this.getUnit()}</div>
+        <div className="listBlockMainArea">{this.getMainItem()}{this.getUnit()}</div>
         <div style={{
           display: 'flex',
           flex: 1,
