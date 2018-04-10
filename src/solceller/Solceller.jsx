@@ -20,24 +20,16 @@ export default class Solceller extends Component {
   }
 
   componentDidMount() {
-    //  this._barEffect = this.initBarEffect();
-    //  this._barProduction = this.initBarProduction();
-
     const dbRef = window.firebase.database().ref('steca/currentData');
 
     dbRef.on('value', (snapshot) => {
       try {
         const val = snapshot.val();
-
         const now = (typeof val.effect.val !== 'undefined') ? val.effect.val : null;
         const today = (typeof val.today.val !== 'undefined') ? val.today.val : null;
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
-
-        // const wattage = val.effect.val / maxEver;
-        // const percentOfMaxDay = val.today.val / maxDayEver;
-
         this.setState({
           now, today, month, year, total,
         });
@@ -54,23 +46,19 @@ export default class Solceller extends Component {
   }
 
   showProdToday() {
-    const str = (parseFloat(this.state.today) / 1000).toFixed(1);
-    return str;
+    return getRoundedNumber(Number(this.state.today) / 1000);
   }
 
   showProdMonth() {
-    const str = (parseFloat(this.state.month) / 1000).toFixed(0);
-    return str;
+    return getRoundedNumber(parseFloat(this.state.month) / 1000);
   }
 
   showProdYear() {
-    const str = (parseFloat(this.state.year) / 1000).toFixed(0);
-    return str;
+    return getRoundedNumber(parseFloat(this.state.year) / 1000);
   }
 
   showProdTotal() {
-    const str = (parseFloat(this.state.total) / 1000).toFixed(0);
-    return str;
+    return getRoundedNumber(parseFloat(this.state.total) / 1000);
   }
 
   render() {
@@ -87,12 +75,13 @@ export default class Solceller extends Component {
   }
 }
 
-function getMonth() {
-  const m = new Moment().format('MMM');
-  return m.charAt(0).toUpperCase() + m.slice(1);
-}
-
-function getYear() {
-  const m = new Moment().format('YYYY');
-  return m.charAt(0).toUpperCase() + m.slice(1);
+function getRoundedNumber(number) {
+  if (number < 10) {
+    return number.toFixed(3);
+  } else if (number < 100) {
+    return number.toFixed(2);
+  } else if (number < 1000) {
+    return number.toFixed(1);
+  }
+  return number.toFixed(0);
 }
