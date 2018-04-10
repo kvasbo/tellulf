@@ -9,6 +9,7 @@
     "moment": "^2.19.1",
     "prop-types": "^15.6.1",
     "react": "^16.0.0",
+    "react-animated-number": "^0.4.4",
     "react-dom": "^16.0.0",
     "react-icons": "^2.2.7",
     "react-polar-clock": "*",

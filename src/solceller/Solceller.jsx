@@ -80,7 +80,7 @@ export default class Solceller extends Component {
     ];
 
     return (
-      <MainListItem mainItem={this.showCurrent()} unit="W" subItems={subs} />
+      <MainListItem animated mainItem={this.showCurrent()} unit="W" subItems={subs} />
     );
   }
 }
