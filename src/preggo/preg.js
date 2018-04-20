@@ -74,24 +74,22 @@ export default class Preg {
     } else if (week >= 8 && week < 42) {
       // var base = this.fheight[week - 8];
       const next = (this.fheight[week - 7] - base) * (day / 7);
-
       r = (base + next);
-
-      return Number(r.toPrecision(2));
+      return Number(r.toPrecision(3));
     }
     return 0;
   }
 
   getWeight(week, day) {
     let r;
-
     if (week >= 8 && week < 42) {
       const base = this.fweight[week - 8];
       const next = (this.fweight[week - 7] - base) * (day / 7);
-
       r = (base + next);
-
-      return Number(r.toPrecision(2));
+      if (r < 10) {
+        Number(r.toPrecision(3));
+      }
+      return Math.round(r);
     }
     return 0;
   }
