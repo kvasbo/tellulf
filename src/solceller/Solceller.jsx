@@ -5,6 +5,7 @@ import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
 const minutesToKeep = 60;
+const minutesToUseForTendency = 15;
 
 export default class Solceller extends Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class Solceller extends Component {
       year: null,
       total: null,
       nowAveraged: null,
+      tendencyAveraged: null,
+      hasPruned: false,
     };
   }
 
@@ -44,16 +47,24 @@ export default class Solceller extends Component {
   addPowerSampleAndPrune(value) {
     this.samples.push({ value, time: Moment() });
     const cutOff = Moment().subtract(minutesToKeep, 'minutes');
-    this.samples = this.samples.filter(s => s.time.isSameOrAfter(cutOff));
+    const devCutOff = Moment().subtract(minutesToUseForTendency, 'minutes');
+    const tempSamples = this.samples.filter(s => s.time.isSameOrAfter(cutOff));
+    if (!this.hasPruned && tempSamples.length < this.samples.length) {
+      this.setState({ hasPruned: true });
+    }
+    this.samples = tempSamples;
+    const devSamples = this.samples.filter(s => s.time.isSameOrAfter(devCutOff));
     const nowAveraged = Math.round(meanBy(this.samples, 'value'));
-    this.setState({ nowAveraged });
+    const tendencyAveraged = Math.round(meanBy(devSamples, 'value'));
+    // console.log(nowAveraged, tendencyAveraged);
+    this.setState({ nowAveraged, tendencyAveraged });
   }
 
   showCurrent() {
-    if (this.state.nowAveraged === null) { return 0; }
+    if (this.state.nowAveraged === null) return { val: 0, unit: 'W' };
     const avg = Number(this.state.nowAveraged);
     if (avg < 1000) {
-      return { val: avg.toFixed(0), unit: '' };
+      return { val: avg.toFixed(0), unit: 'W' };
     }
     const rounded = (avg / 1000).toFixed(1);
     return { val: rounded, unit: 'K' };
@@ -88,8 +99,12 @@ export default class Solceller extends Component {
       `!: ${this.showInstant()}`,
     ];
 
+    const pruneIndicator = (this.state.hasPruned) ? '' : '*';
+    const mainItem = `${current.val}`;
+    const unit = `${pruneIndicator}${current.unit}`;
+
     return (
-      <MainListItem mainItem={current.val} unit={current.unit} subItems={subs} />
+      <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
     );
   }
 }
