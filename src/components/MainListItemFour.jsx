@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AnimatedNumber from 'react-animated-number';
 
 export default class MainListItemFour extends Component {
   getSubItems() {
@@ -31,11 +30,6 @@ export default class MainListItemFour extends Component {
   }
 
   getMainItem() {
-    if (this.props.animated) {
-      return (
-        <AnimatedNumber duration={1500} stepPrecision={0} value={this.props.mainItem} />
-      );
-    }
     return this.props.mainItem;
   }
 
