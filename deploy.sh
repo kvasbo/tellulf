@@ -1,3 +1,3 @@
-npm version patch
-npm run build
+yarn version --patch
+yarn run build
 firebase deploy
