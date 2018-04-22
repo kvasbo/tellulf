@@ -4,7 +4,7 @@ import { meanBy } from 'lodash';
 import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
-const minutesToKeep = 5;
+const minutesToKeep = 60;
 
 export default class Solceller extends Component {
   constructor(props) {
@@ -51,8 +51,16 @@ export default class Solceller extends Component {
 
   showCurrent() {
     if (this.state.nowAveraged === null) { return 0; }
-    const str = this.state.nowAveraged;
-    return Number(str);
+    const avg = Number(this.state.nowAveraged);
+    if (avg < 1000) {
+      return { val: avg.toFixed(0), unit: '' };
+    }
+    const rounded = (avg / 1000).toFixed(1);
+    return { val: rounded, unit: 'K' };
+  }
+
+  showInstant() {
+    return `${Number(this.state.now)}W`;
   }
 
   showProdToday() {
@@ -72,15 +80,16 @@ export default class Solceller extends Component {
   }
 
   render() {
+    const current = this.showCurrent();
     const subs = [
       `D: ${this.showProdToday()}`,
       `M: ${this.showProdMonth()}`,
       `Å: ${this.showProdYear()}`,
-      `∞: ${this.showProdTotal()}`,
+      `!: ${this.showInstant()}`,
     ];
 
     return (
-      <MainListItem animated mainItem={this.showCurrent()} unit="W" subItems={subs} />
+      <MainListItem animated mainItem={current.val} unit={current.unit} subItems={subs} />
     );
   }
 }
