@@ -64,13 +64,14 @@ export default class MainListItemFour extends Component {
 
 MainListItemFour.defaultProps = {
   subItems: [],
+  mainItem: '',
   unit: '',
   animated: false,
 };
 
 MainListItemFour.propTypes = {
-  mainItem: PropTypes.string.isRequired,
-  subItems: PropTypes.array,
+  mainItem: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  subItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   unit: PropTypes.string,
   animated: PropTypes.bool,
 };

@@ -76,7 +76,7 @@ class DayHeaderWeather extends React.Component {
   }
 
   getWeather() {
-    const wTimeTmp = Moment(this.props.dato);
+    const wTimeTmp = Moment(this.props.date);
     wTimeTmp.set({ hour: 14, minute: 0 });
   }
 
@@ -107,6 +107,5 @@ class DayHeaderWeather extends React.Component {
 }
 
 Dag.propTypes = {
-  date: PropTypes.object.isRequired,
-  dato: PropTypes.object.isRequired,
+  date: PropTypes.string.isRequired,
 };
