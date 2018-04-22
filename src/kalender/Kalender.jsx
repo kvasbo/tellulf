@@ -98,7 +98,18 @@ function parseEvent(data) {
 
   const today = Moment();
   const start = Moment(data.start);
-  const oneDay = Moment(data.start).isSame(Moment(data.end).subtract(1, 'seconds'), 'day');
+  const end = Moment(data.end);
+
+  let oneDay = true;
+
+  // Not full day, and it is not a full day event.
+  if (!data.fullDay) {
+    if (!start.isSameOrBefore(end.endOf('day'), 'day')) oneDay = false;
+  }
+
+  if (data.fullDay) {
+    if (end.subtract(1, 'day').startOf('day').isAfter(start.startOf('day'))) oneDay = false;
+  }
 
   const startsBeforeToday = start.isBefore(today, 'day');
 
@@ -112,7 +123,7 @@ function parseEvent(data) {
   event.name = data.name;
 
   event.groupString = groupString;
-  event.start = start;
+  event.start = Moment(data.start);
   event.fullday = data.fullDay;
   event.oneDay = oneDay;
   event.end = Moment(data.end);

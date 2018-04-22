@@ -36,8 +36,7 @@ export class HendelseFullDag extends Component {
 function getTimeString(event) {
   let timeString = '';
 
-  if (event.fullday) // Full day events
-  {
+  if (event.fullday){ // Full day events
     if (!event.oneDay) {
       timeString = Moment(event.start).calendar(null, fullDayFormats());
 
