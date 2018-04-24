@@ -1,6 +1,6 @@
 {
   "name": "tellulf",
-  "version": "1.0.48",
+  "version": "1.0.49",
   "private": true,
   "dependencies": {
     "@firebase/app-types": "0.2.0",

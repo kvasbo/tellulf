@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Moment from 'moment';
 import MainListItemFour from '../components/MainListItemFour';
 
 export default class Netatmo extends Component {
@@ -20,22 +21,28 @@ export default class Netatmo extends Component {
 
     dbRef.on('value', (snapshot) => {
       const data = snapshot.val();
-      // console.log("netatmo", data)
+      const updated = Moment(data.updated);
 
-      const updated = new Date(data.updated);
+      const diff = Moment().diff(updated, 'minutes');
 
-      try {
-        const temp = (typeof data.uteTemp !== 'undefined') ? data.uteTemp.toFixed(1) : null;
-        const inneTemp = (typeof data.inneTemp !== 'undefined') ? Math.round(data.inneTemp) : null;
-        const co2 = (typeof data.co2 !== 'undefined') ? Math.round(data.co2) : null;
-        const fukt = (typeof data.inneFukt !== 'undefined') ? Math.round(data.inneFukt) : null;
-        const trykk = (typeof data.inneTrykk !== 'undefined') ? Math.round(data.inneTrykk) : null;
-
+      if (diff < 60) {
+        try {
+          const temp = (typeof data.uteTemp !== 'undefined') ? data.uteTemp.toFixed(1) : null;
+          const inneTemp = (typeof data.inneTemp !== 'undefined') ? Math.round(data.inneTemp) : null;
+          const co2 = (typeof data.co2 !== 'undefined') ? Math.round(data.co2) : null;
+          const fukt = (typeof data.inneFukt !== 'undefined') ? Math.round(data.inneFukt) : null;
+          const trykk = (typeof data.inneTrykk !== 'undefined') ? Math.round(data.inneTrykk) : null;
+  
+          this.setState({
+            temp, inneTemp, co2, fukt, updated, trykk,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
         this.setState({
-          temp, inneTemp, co2, fukt, updated, trykk,
+          temp: null, inneTemp: null, co2: null, fukt: null, updated: null, trykk: null,
         });
-      } catch (err) {
-        console.log(err);
       }
     });
   }
