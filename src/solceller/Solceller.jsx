@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { meanBy } from 'lodash';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
@@ -19,6 +20,7 @@ export default class Solceller extends Component {
       total: null,
       nowAveraged: null,
       tendencyAveraged: null,
+      byHour: null,
       hasPruned: false,
     };
   }
@@ -35,8 +37,9 @@ export default class Solceller extends Component {
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
+        const byHour = (typeof val.todayByHour.val !== 'undefined') ? val.todayByHour.val : null;
         this.setState({
-          now, today, month, year, total,
+          now, today, month, year, total, byHour,
         });
       } catch (err) {
         console.log(err);
@@ -90,6 +93,11 @@ export default class Solceller extends Component {
     return getRoundedNumber(parseFloat(this.state.total) / 1000);
   }
 
+  formatTick(data) {
+    const time = Moment.utc(data);
+    return time.format("HH");
+  }
+
   render() {
     const current = this.showCurrent();
     const subs = [
@@ -104,7 +112,18 @@ export default class Solceller extends Component {
     const unit = `${pruneIndicator}${current.unit}`;
 
     return (
-      <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
+      <div>
+        <div>
+          <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
+        </div>
+        <div>
+          <LineChart margin={{ top: 10, right: 10, left: 30, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
+            <XAxis dataKey="time" interval={10} tickFormatter={this.formatTick} />
+            <YAxis type="number" domain={[0, 4000]} />
+            <Line dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
+          </LineChart>
+        </div>
+      </div>
     );
   }
 }
