@@ -56,9 +56,6 @@ class Tellulf extends Component {
             <div id="container_solceller" className="block">
               <Solceller />
             </div>
-            <div id="container_zipato" className="block">
-              <Preggo start={new Date(2017, 7, 15, 0, 0, 0)} />
-            </div>
             <div id="container_yr" className="block">
               <Yr />
             </div>
