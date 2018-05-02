@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import SunCalc from 'suncalc';
 import Moment from 'moment';
+import { ComposedChart, Line, XAxis, YAxis } from 'recharts';
 import Hour from './Hour';
 import HourMarker from './HourMarker';
 import firebase from '../firebase';
@@ -74,12 +75,29 @@ export default class Yr extends Component {
     return out;
   }
 
+  formatTick(data) {
+    const time = Moment(data);
+    return time.format("HH");
+  }
+
   // Stays on
   render() {
+    console.log(this.state.hours);
     return (
       <div className="yr-container">
         <div className="weatherMeta">
           {getSunMeta()}
+        </div>
+        <div>
+          <ComposedChart margin={{ top: 10, right: 10, left: 30, bottom: 10 }} width={500} height={150} data={this.state.hours}>
+            <XAxis dataKey="time" tickFormatter={this.formatTick} />
+            <YAxis yAxisId="temp" type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
+            <YAxis yAxisId="rain" type="number" orientation="right" />
+            <Line dot={false} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d8" />
+          </ComposedChart>
         </div>
         <div className="graphDiv">
           <div className="overview">
