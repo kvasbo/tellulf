@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { meanBy } from 'lodash';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis } from 'recharts';
 import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
