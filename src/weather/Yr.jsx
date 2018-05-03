@@ -91,28 +91,6 @@ export default class Yr extends Component {
   }
 }
 
-/*
-        
-        <div className="graphDiv">
-          <div className="overview">
-            <div className="maxMin max" style={{ color: getMinMaxColor(this.state.maxTemp) }}>{this.state.maxTemp}</div>
-            <div className="maxMin min" style={{ color: getMinMaxColor(this.state.minTemp) }}>{this.state.minTemp}</div>
-          </div>
-          <div className="fullGraph">
-            <div className="hoursContainer">
-              {this.getHours()}
-              <div style={{
- width: '3px', position: 'absolute', left: getCurrentPosition(), height: '100%', backgroundColor: 'rgba(255,255,255,0.5)',
-}}
-              />
-            </div>
-            <div className="hoursDiv">
-              {this.renderHourMarkers()}
-            </div>
-          </div>
-        </div>
-        */
-
 function parseHours(data) {
   const out = [];
 
@@ -172,21 +150,6 @@ function setNewTimes() {
   const queryEnd = Number(new Moment().startOf('day').add(2, 'days').format('x'));
 
   return { start: queryStart, end: queryEnd };
-}
-
-function getMinMaxColor(temp) {
-  return (temp > 0) ? 'rgb(255,255,255)' : 'rgb(100,100,255)';
-}
-
-function getCurrentPosition() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  // Shift by one hour because we actually show from 23:00 last night
-  let percentage = (((hours + 1) / 24) + (minutes / (60 * 24))) * 100;
-  // Because we show two days
-  percentage /= 2;
-  return `${percentage}%`;
 }
 
 function getSunMeta() {
