@@ -37,7 +37,7 @@ export default class Solceller extends Component {
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
-        const byHour = (typeof val.todayByHour.val !== 'undefined') ? val.todayByHour.val : null;
+        const byHour = (typeof val.todayByHour.val !== 'undefined') ? this.parseByHour(val.todayByHour.val) : null;
         this.setState({
           now, today, month, year, total, byHour,
         });
@@ -45,6 +45,20 @@ export default class Solceller extends Component {
         console.log(err);
       }
     });
+  }
+
+  parseByHour(data) {
+    const startOfDay = Moment().startOf('day');
+    // console.log('parseByHour', data, startOfDay);
+
+    const out = data.map((d) => {
+      const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
+      return { time: time.toDate(), production: d.production }
+    });
+
+    console.log('parsed', out);
+
+    return out;
   }
 
   addPowerSampleAndPrune(value) {
@@ -94,7 +108,8 @@ export default class Solceller extends Component {
   }
 
   formatTick(data) {
-    const time = Moment.utc(data);
+    console.log('ftick', data);
+    const time = Moment(data);
     return time.format("HH");
   }
 
@@ -118,7 +133,7 @@ export default class Solceller extends Component {
         </div>
         <div>
           <LineChart margin={{ top: 10, right: 10, left: 30, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
-            <XAxis dataKey="time" interval={10} tickFormatter={this.formatTick} />
+            <XAxis dataKey="time" />
             <YAxis type="number" domain={[0, 4000]} />
             <Line dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
           </LineChart>
