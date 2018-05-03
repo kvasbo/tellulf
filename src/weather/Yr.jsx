@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import SunCalc from 'suncalc';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
 import firebase from '../firebase';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
@@ -17,9 +17,6 @@ export default class Yr extends Component {
       queryStart: times.start,
       queryEnd: times.end,
       hours: [],
-      haveUpdated: false,
-      maxTemp: null,
-      minTemp: null,
     };
 
     this.theChart = null;
@@ -77,10 +74,12 @@ export default class Yr extends Component {
         </div>
         <div>
           <ComposedChart margin={{ top: 10, right: 0, left: 0, bottom: 10 }} width={500} height={250} data={this.state.hours}>
-            <XAxis dataKey="time" tickFormatter={this.formatTick} />
+            <XAxis dataKey="time" tickFormatter={this.formatTick} interval={0} />
             <YAxis yAxisId="temp" type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
             <YAxis yAxisId="rain" type="number" orientation="right" />
-            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8"  strokeWidth={0} />
+            <CartesianGrid strokeDasharray="2 5" stroke="#FFFFFF55" />
+            <Label value="Pages of my website" offset={0} position="insideTopLeft" />
+            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={0} />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d888" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d888" />
@@ -93,7 +92,6 @@ export default class Yr extends Component {
 
 function parseHours(data) {
   const out = [];
-
   for (let i = 1; i < data.length - 1; i += 3) {
     const tmp = {};
     tmp.from = data[i - 1].from;
@@ -141,7 +139,7 @@ function parseLimits(data) {
   }
 
   return {
-    maxRain, minTemp, maxTemp, lowerRange, upperRange,
+    maxRain, lowerRange, upperRange,
   };
 }
 

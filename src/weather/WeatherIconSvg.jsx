@@ -43,24 +43,9 @@ class WeatherIcon extends Component {
     );
   }
 }
-/*
-<div className="weatherIcon" style={{ position: 'absolute', height: 5, width: 5, backgroundColor: '#ffffff', top: this.props.cy, left: this.props.cx }} >
-        Hei!
-      </div>*/
-// <img src={this.getIcon()} alt="weatherIcon" className={this.getClassForIcon()} />
-
-/*
-<svg width="5cm" height="4cm" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image xlink:href={this.getIcon()} x="0" y="0" height="50px" width="50px"/>
-      </svg>
-*/
-/*
-
-      */
 
 WeatherIcon.propTypes = {
-  hour: PropTypes.object.isRequired,
+
 };
 
 export default WeatherIcon;

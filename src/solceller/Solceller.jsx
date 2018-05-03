@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { meanBy } from 'lodash';
-import { LineChart, Line, XAxis, YAxis } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ReferenceLine, ReferenceDot } from 'recharts';
 import MainListItem from '../components/MainListItemFour';
 import './style.css';
 
@@ -20,6 +20,7 @@ export default class Solceller extends Component {
       total: null,
       nowAveraged: null,
       tendencyAveraged: null,
+      currentTime: Moment().valueOf(),
       byHour: null,
       hasPruned: false,
     };
@@ -38,8 +39,9 @@ export default class Solceller extends Component {
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
         const byHour = (typeof val.todayByHour.val !== 'undefined') ? this.parseByHour(val.todayByHour.val) : null;
+        const currentTime = Moment().valueOf();
         this.setState({
-          now, today, month, year, total, byHour,
+          now, today, month, year, total, byHour, currentTime
         });
       } catch (err) {
         console.log(err);
@@ -53,10 +55,10 @@ export default class Solceller extends Component {
 
     const out = data.map((d) => {
       const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
-      return { time: time.toDate(), production: d.production }
+      return { time: time.valueOf(), production: d.production }
     });
 
-    console.log('parsed', out);
+    // console.log('parsed', out)
 
     return out;
   }
@@ -73,7 +75,6 @@ export default class Solceller extends Component {
     const devSamples = this.samples.filter(s => s.time.isSameOrAfter(devCutOff));
     const nowAveraged = Math.round(meanBy(this.samples, 'value'));
     const tendencyAveraged = Math.round(meanBy(devSamples, 'value'));
-    // console.log(nowAveraged, tendencyAveraged);
     this.setState({ nowAveraged, tendencyAveraged });
   }
 
@@ -108,7 +109,6 @@ export default class Solceller extends Component {
   }
 
   formatTick(data) {
-    console.log('ftick', data);
     const time = Moment(data);
     return time.format("HH");
   }
@@ -132,9 +132,11 @@ export default class Solceller extends Component {
           <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
         </div>
         <div>
-          <LineChart margin={{ top: 10, right: 10, left: 30, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
-            <XAxis dataKey="time" />
+          <LineChart margin={{ top: 20, right: 40, left: 30, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
+            <XAxis dataKey="time" type="number" tickFormatter={this.formatTick} interval={0} domain={['dataMin', 'dataMax']} />
             <YAxis type="number" domain={[0, 4000]} />
+            <ReferenceLine y={this.state.nowAveraged} label={{ value: `hour: ${this.state.nowAveraged}`, stroke: "yellow", position: 'insideRight' }} stroke="#FFFF0099" strokeDasharray="1 1" />
+            <ReferenceDot label={{ value: `${this.state.now}`, stroke: "red", position: 'top' }} y={this.state.now} x={this.state.currentTime} r={5} fill="red" stroke="none" />
             <Line dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
           </LineChart>
         </div>
