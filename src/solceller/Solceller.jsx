@@ -113,6 +113,10 @@ export default class Solceller extends Component {
     return time.format("HH");
   }
 
+  formatYTick(data) {
+    return `${Math.round(data / 1000)}KW`;
+  }
+
   render() {
     const current = this.showCurrent();
     const subs = [
@@ -132,11 +136,11 @@ export default class Solceller extends Component {
           <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
         </div>
         <div>
-          <LineChart margin={{ top: 20, right: 40, left: 30, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
-            <XAxis dataKey="time" type="number" tickFormatter={this.formatTick} interval={0} domain={['dataMin', 'dataMax']} />
-            <YAxis type="number" domain={[0, 4000]} />
+          <LineChart margin={{ top: 20, right: 0, left: 0, bottom: 10 }} width={500} height={150} data={this.state.byHour}>
+            <XAxis dataKey="time" type="number" tickFormatter={this.formatTick} tickCount={24} domain={['dataMin', 'dataMax']} />
+            <YAxis type="number" tickFormatter={this.formatYTick} domain={[0, 4000]} />
             <ReferenceLine y={this.state.nowAveraged} label={{ value: `hour: ${this.state.nowAveraged}`, stroke: "yellow", position: 'insideRight' }} stroke="#FFFF0099" strokeDasharray="1 1" />
-            <ReferenceDot label={{ value: `${this.state.now}`, stroke: "red", position: 'top' }} y={this.state.now} x={this.state.currentTime} r={5} fill="red" stroke="none" />
+            <ReferenceDot label={{ value: `${this.state.now}`, stroke: "red", position: 'top' }} y={this.state.now} x={this.state.currentTime} r={6} fill="red" stroke="none" />
             <Line dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
           </LineChart>
         </div>
