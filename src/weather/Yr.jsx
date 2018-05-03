@@ -3,9 +3,8 @@ import _ from 'lodash';
 import SunCalc from 'suncalc';
 import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis } from 'recharts';
-import Hour from './Hour';
-import HourMarker from './HourMarker';
 import firebase from '../firebase';
+import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
 export default class Yr extends Component {
@@ -59,20 +58,8 @@ export default class Yr extends Component {
     });
   }
 
-  getHours() {
-    if (!this.state.haveUpdated) return (<div>Laster</div>);
-
-    const out = this.state.hours.map(hour => (
-      <Hour key={hour.from} limits={this.state.limits} hour={hour} />
-    ));
-    return out;
-  }
-
-  renderHourMarkers() {
-    const out = this.state.hours.map(hour => (
-      <HourMarker key={hour.from} limits={this.state.limits} hour={hour} />
-    ));
-    return out;
+  renderDots(data) {
+    return <WeatherIcon hour={data.payload} />
   }
 
   formatTick(data) {
@@ -82,23 +69,30 @@ export default class Yr extends Component {
 
   // Stays on
   render() {
-    console.log(this.state.hours);
+    // console.log(this.state.hours);
     return (
       <div className="yr-container">
         <div className="weatherMeta">
           {getSunMeta()}
         </div>
         <div>
-          <ComposedChart margin={{ top: 10, right: 10, left: 30, bottom: 10 }} width={500} height={150} data={this.state.hours}>
+          <ComposedChart margin={{ top: 10, right: 0, left: 0, bottom: 10 }} width={500} height={250} data={this.state.hours}>
             <XAxis dataKey="time" tickFormatter={this.formatTick} />
             <YAxis yAxisId="temp" type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
             <YAxis yAxisId="rain" type="number" orientation="right" />
-            <Line dot={false} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" />
+            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8"  strokeWidth={0} />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d888" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d888" />
           </ComposedChart>
         </div>
+      </div>
+    );
+  }
+}
+
+/*
+        
         <div className="graphDiv">
           <div className="overview">
             <div className="maxMin max" style={{ color: getMinMaxColor(this.state.maxTemp) }}>{this.state.maxTemp}</div>
@@ -117,10 +111,7 @@ export default class Yr extends Component {
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
-}
+        */
 
 function parseHours(data) {
   const out = [];
