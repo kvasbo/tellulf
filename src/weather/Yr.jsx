@@ -50,9 +50,13 @@ export default class Yr extends Component {
       const limits = parseLimits(out);
       const hours = parseHours(out);
       this.setState({
-        hours, limits, haveUpdated: true, maxTemp: limits.upperRange, minTemp: limits.lowerRange,
+        hours, limits,
       });
     });
+  }
+
+  getTemperatureTicks() {
+    return this.state.limits.ticks;
   }
 
   renderDots(data) {
@@ -69,26 +73,25 @@ export default class Yr extends Component {
     // console.log(this.state.hours);
     return (
       <div className="yr-container">
-        <div className="weatherMeta">
-          {getSunMeta()}
-        </div>
-        <div>
-          <ComposedChart margin={{ top: 10, right: 0, left: 0, bottom: 10 }} width={500} height={250} data={this.state.hours}>
-            <XAxis dataKey="time" tickFormatter={this.formatTick} interval={0} />
-            <YAxis yAxisId="temp" type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
-            <YAxis yAxisId="rain" type="number" orientation="right" />
-            <CartesianGrid strokeDasharray="2 5" stroke="#FFFFFF55" />
-            <Label value="Pages of my website" offset={0} position="insideTopLeft" />
-            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={0} />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d888" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d888" />
-          </ComposedChart>
-        </div>
+        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={500} height={250} data={this.state.hours}>
+          <XAxis dataKey="time" tickFormatter={this.formatTick} interval={0} />
+          <YAxis yAxisId="temp" ticks={this.getTemperatureTicks()} mirror type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
+          <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
+          
+          <Label value="Pages of my website" offset={0} position="insideTopLeft" />
+          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={0} />
+          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
+          <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d888" />
+          <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d888" />
+        </ComposedChart>
       </div>
     );
   }
 }
+
+// div className="weatherMeta">
+// {getSunMeta()}
+// </div>
 
 function parseHours(data) {
   const out = [];
@@ -126,20 +129,24 @@ function parseLimits(data) {
 
   let upperRange = 15;
   let lowerRange = -15;
+  let ticks = [-15, -10, -5, 5, 10, 15];
 
   if ((quarter === 2 || quarter === 3) && roundedMin >= 0) {
     upperRange = Math.max(30, roundedMax);
     lowerRange = 0;
+    ticks = [10, 20, 30];
   } else if (roundedMin >= 0 && roundedMax > 15) {
-    upperRange = 30;
+    upperRange = Math.max(30, roundedMax);
     lowerRange = 0;
+    ticks = [10, 20, 30];
   } else if (roundedMax < 0 && roundedMin < -15) {
     upperRange = 0;
     lowerRange = Math.min(-30, roundedMin);
+    ticks = [-10, -20, -30];
   }
 
   return {
-    maxRain, lowerRange, upperRange,
+    maxRain, lowerRange, upperRange, ticks,
   };
 }
 

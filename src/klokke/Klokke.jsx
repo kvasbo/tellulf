@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Polar from 'react-polar-clock';
 import Moment from 'moment';
 import './klokke.css';
 
@@ -26,7 +25,6 @@ export default class Klokke extends Component {
   }
 
   render() {
-    // const subs = [this.state.dag, this.state.dato];
     return (
       <div id="klokkeContainer" >
         <div id="tid">{this.state.time}</div>
