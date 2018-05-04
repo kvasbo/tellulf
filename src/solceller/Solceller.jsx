@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { meanBy } from 'lodash';
-import { LineChart, Line, XAxis, YAxis, Label, Area, AreaChart, ReferenceLine, ReferenceDot } from 'recharts';
-import MainListItem from '../components/MainListItemFour';
+import { XAxis, YAxis, Area, AreaChart, ReferenceLine, ReferenceDot } from 'recharts';
 import './style.css';
 
 const minutesToKeep = 60;
@@ -117,32 +116,32 @@ export default class Solceller extends Component {
     return `${Math.round(data / 1000)}KW`;
   }
 
+  getCurrentLabelPosition() {
+
+    const side = (Moment().hour() < 18) ? 'right' : 'left';
+
+    if (this.state.now > 3300) {
+      return side;
+    }
+    return 'top';
+  }
+
   render() {
-    const current = this.showCurrent();
-    const subs = [
-      `D: ${this.showProdToday()}`,
-      `M: ${this.showProdMonth()}`,
-      `Å: ${this.showProdYear()}`,
-      `!: ${this.showInstant()}`,
-    ];
-
-    const pruneIndicator = (this.state.hasPruned) ? '' : '*';
-    const mainItem = `${current.val}`;
-    const unit = `${pruneIndicator}${current.unit}`;
-
     return (
       <div>
         <div>
-          <MainListItem mainItem={mainItem} unit={unit} subItems={subs} />
-        </div>
-        <div>
-          <AreaChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={500} height={230} data={this.state.byHour}>
+          <AreaChart margin={{ top: 30, right: 20, left: 30, bottom: 10 }} width={540} height={280} data={this.state.byHour}>
             <XAxis dataKey="time" type="number" tickFormatter={this.formatTick} tickCount={25} interval={1} domain={['dataMin', 'dataMax']} />
             <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={this.formatYTick} domain={[0, 4000]} />
-            <ReferenceLine y={this.state.nowAveraged} stroke="#FFFF0099" strokeDasharray="1 1" />
-            <ReferenceDot label={{ value: `${this.state.now}`, stroke: 'red', position: 'top' }} y={this.state.now} x={this.state.currentTime} r={6} fill="red" stroke="none" />
             <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
+            <ReferenceLine y={this.state.nowAveraged} stroke="#FFFF00" strokeDasharray="3 3" />
+            <ReferenceDot label={{ value: `${this.state.now}W`, stroke: 'white', fill: 'white', fontSize: 55, position: this.getCurrentLabelPosition() }} y={this.state.now} x={this.state.currentTime} r={6} fill="red" stroke="none" />
           </AreaChart>
+        </div>
+        <div style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+          <div>Dag: {this.showProdToday()}</div>
+          <div>Måned: {this.showProdMonth()}</div>
+          <div>År: {this.showProdYear()}</div>
         </div>
       </div>
     );

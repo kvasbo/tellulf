@@ -32,6 +32,7 @@ export default class Yr extends Component {
         queryStart: times.start,
         queryEnd: times.end,
       });
+      this.setListeners();
     }, 1000 * this.oppdateringsFrekvens);
   }
 
@@ -46,7 +47,6 @@ export default class Yr extends Component {
       querySnapshot.forEach((doc) => {
         out.push(doc.data());
       });
-
       const limits = parseLimits(out);
       const hours = parseHours(out);
       this.setState({
@@ -73,11 +73,10 @@ export default class Yr extends Component {
     // console.log(this.state.hours);
     return (
       <div className="yr-container">
-        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={500} height={250} data={this.state.hours}>
+        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.state.hours}>
           <XAxis dataKey="time" tickFormatter={this.formatTick} interval={0} />
           <YAxis yAxisId="temp" ticks={this.getTemperatureTicks()} mirror type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
-          
           <Label value="Pages of my website" offset={0} position="insideTopLeft" />
           <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={0} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
@@ -153,7 +152,6 @@ function parseLimits(data) {
 function setNewTimes() {
   const queryStart = Number(new Moment().startOf('day').format('x'));
   const queryEnd = Number(new Moment().startOf('day').add(2, 'days').format('x'));
-
   return { start: queryStart, end: queryEnd };
 }
 

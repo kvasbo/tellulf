@@ -26,14 +26,14 @@ body {
 #leftContainer {
   display: flex;
   flex-direction: column;
-  width: 66vw;
+  width: 72vw;
   height: 100%;
   overflow: hidden;
 }
 
 #rightContainer {
   display: flex;
-  width: 34vw;
+  width: 28vw;
   height: 100%;
   overflow: hidden;
 }
