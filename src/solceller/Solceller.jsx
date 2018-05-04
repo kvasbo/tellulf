@@ -133,7 +133,7 @@ export default class Solceller extends Component {
           <AreaChart margin={{ top: 30, right: 20, left: 30, bottom: 10 }} width={540} height={280} data={this.state.byHour}>
             <XAxis dataKey="time" type="number" tickFormatter={this.formatTick} tickCount={25} interval={1} domain={['dataMin', 'dataMax']} />
             <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={this.formatYTick} domain={[0, 4000]} />
-            <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8" />
+            <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8aa" fill="#8884d866" />
             <ReferenceLine y={this.state.nowAveraged} stroke="#FFFF00" strokeDasharray="3 3" />
             <ReferenceDot label={{ value: `${this.state.now}W`, stroke: 'white', fill: 'white', fontSize: 55, position: this.getCurrentLabelPosition() }} y={this.state.now} x={this.state.currentTime} r={6} fill="red" stroke="none" />
           </AreaChart>
