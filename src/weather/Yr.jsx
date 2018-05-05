@@ -11,6 +11,7 @@ export default class Yr extends Component {
   constructor(props) {
     super(props);
     const times = setNewTimes();
+    this.firestore = firebase.firestore().collection('weatherHourly');
 
     this.state = {
       limits: {},
@@ -21,6 +22,7 @@ export default class Yr extends Component {
 
     this.theChart = null;
     this.oppdateringsFrekvens = 3600;
+    // this.oppdateringsFrekvens = 10;
   }
 
   componentDidMount() {
@@ -32,14 +34,14 @@ export default class Yr extends Component {
         queryStart: times.start,
         queryEnd: times.end,
       });
+      console.log('done interval', this.state);
       this.setListeners();
     }, 1000 * this.oppdateringsFrekvens);
   }
 
   setListeners() {
-    const firestore = firebase.firestore().collection('weatherHourly');
-
-    firestore.where(
+    this.firestore = firebase.firestore().collection('weatherHourly');
+    this.firestore.where(
       'fromStamp',
       '>=', Number(this.state.queryStart),
     ).where('fromStamp', '<=', Number(this.state.queryEnd)).onSnapshot((querySnapshot) => {
@@ -116,7 +118,7 @@ function parseLimits(data) {
   const maxRainArr = data.map(hour => ({ time: new Moment(hour.fromStamp).toISOString(), value: Number(hour.rainDetails.maxRain) }));
   // Get max rain
   const maxRain = _.maxBy(maxRainArr, 'value');
-  // Get max rain
+  // Get max temp
   const maxTemp = _.maxBy(temp, 'value');
   // Get max rain
   const minTemp = _.minBy(temp, 'value');
@@ -145,7 +147,7 @@ function parseLimits(data) {
   }
 
   return {
-    maxRain, lowerRange, upperRange, ticks,
+    lowerRange, upperRange, ticks,
   };
 }
 
