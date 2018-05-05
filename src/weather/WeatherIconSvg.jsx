@@ -31,15 +31,17 @@ class WeatherIcon extends Component {
 
   getTemp() {
     const temp = Math.round(this.props.payload.temp);
-    console.log(temp);
     return temp;
   }
 
   render() {
-    // if (this.props.index % 5 !== 0) return null;
-    console.log('custom', this.props);
+    if (!this.props.cy) return null;
+    if (this.props.index % 3 !== 0) return null;
     return (
-      <svg><text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text></svg>
+      <svg>
+        <text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text>
+        <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px" />
+      </svg>
     );
   }
 }
