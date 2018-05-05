@@ -1,30 +1,54 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import SunCalc from 'suncalc';
+import axios from 'axios';
 import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
 import firebase from '../firebase';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
+const store = require('store');
+const XML = require('pixl-xml');
+
+const lat = '59.9409';
+const long = '10.6991';
+
 export default class Yr extends Component {
   constructor(props) {
     super(props);
     const times = setNewTimes();
+    this.reloadTimer = null;
 
     this.state = {
       limits: {},
       queryStart: times.start,
       queryEnd: times.end,
       hours: [],
+      weather: undefined,
     };
 
     this.theChart = null;
     this.oppdateringsFrekvens = 3600;
   }
 
+  componentWillMount() {
+    this.updateWeather();
+  }
+
+  setNextReload() {
+    // Start of next hour
+    clearTimeout(this.reloadTimer);
+    const nextReload = Moment().add(1, 'hours').startOf('hour');
+    const nextReloadDiff = nextReload.diff(Moment());
+    this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
+    console.log('Weather: Next reload: ', nextReload.toLocaleString());
+  }
+
   componentDidMount() {
     this.setListeners();
+
+    this.setNextReload();
 
     setInterval(() => {
       const times = setNewTimes();
@@ -34,6 +58,75 @@ export default class Yr extends Component {
       });
       this.setListeners();
     }, 1000 * this.oppdateringsFrekvens);
+  }
+
+  initWeather() {
+    const out = {};
+    const now = new Moment().startOf('day');
+    for (let i = 0; i < 48; i++) {
+      const key = now.toISOString();
+      out[key] = { temp: 0, rain: 0, rainMin: 0, rainMax: 0, symbol: 'Sun', symbolNumber: 1, time: now.toISOString() };
+      now.add(1, 'hours');
+    }
+    return out;
+  }
+
+  loadWeatherFromLocalStorage() {
+    const loaded = store.get('weather');
+    if (!loaded) {
+      store.set('weather', this.initWeather);
+      return this.initWeather();
+    }
+    return this.initWeather();
+    return loaded;
+  }
+
+  async updateWeather() {
+    const weatherOut = this.loadWeatherFromLocalStorage();
+    const start = new Moment().startOf('day');
+    const end = new Moment().add(1, 'day').endOf('day');
+  
+    // const weatherOut = this.initWeather();
+    const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
+    const parsed = XML.parse(data.data);
+    const singlePoints = parsed.product.time.filter((d) => {
+      if (d.from !== d.to) return false;
+      const from = Moment(d.from);
+      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+      return false;
+    });
+    const hours = parsed.product.time.filter((d) => {
+      const from = Moment(d.from);
+      const to = Moment(d.to);
+      if (!(to.diff(from, 'hours') === 1)) return false;
+      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+      return false;
+    });
+    singlePoints.forEach((p) => {
+      const time = Moment(p.from);
+      const key = time.toISOString();
+      if (key in weatherOut) {
+        weatherOut[key].temp = Number(p.location.temperature.value);
+        weatherOut[key].time = time.toISOString();
+      }
+    });
+    hours.forEach((p) => {
+      const time = Moment(p.from);
+      const key = time.toISOString();
+      if (key in weatherOut) {
+        weatherOut[key].rain = Number(p.location.precipitation.value);
+        weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
+        weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
+        weatherOut[key].symbol = p.location.symbol.id;
+        weatherOut[key].symbolNumber = p.location.symbol.number;
+        weatherOut[key].time = time.toISOString();
+      }
+    });
+
+    console.log('single', singlePoints, hours);
+    console.log('weatherOut', weatherOut);
+
+    this.setState({ weather: weatherOut });
   }
 
   setListeners() {
@@ -59,29 +152,38 @@ export default class Yr extends Component {
     return this.state.limits.ticks;
   }
 
-  renderDots(data) {
-    return <WeatherIcon hour={data.payload} />
-  }
-
   formatTick(data) {
     const time = Moment(data);
     return time.format("HH");
   }
 
+  getData() {
+    const all = Object.values(this.state.weather);
+    // console.log('all', all);
+    const filtered = all.filter((h) => {
+      const time = new Moment(h.time);
+      return (time.hour() % 3 === 0);
+    });
+    return filtered;
+  }
+
   // Stays on
   render() {
-    // console.log(this.state.hours);
+    if (!this.state.weather) {
+      return null;
+    }
+    // console.log('weather', this.state.weather);
+    // console.log('hours', this.state.hours);
     return (
       <div className="yr-container">
-        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.state.hours}>
-          <XAxis dataKey="time" tickFormatter={this.formatTick} interval={0} />
-          <YAxis yAxisId="temp" ticks={this.getTemperatureTicks()} mirror type="number" tickCount={4} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
+        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
+          <XAxis dataKey="time" tickFormatter={this.formatTick} interval={3} />
+          <YAxis yAxisId="temp" ticks={this.getTemperatureTicks()} mirror type="number" tickCount={4} domain={[0, 30]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
-          <Label value="Pages of my website" offset={0} position="insideTopLeft" />
-          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={0} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-          <Line dot={false} yAxisId="rain" type="monotone" dataKey="minRain" stroke="#8884d888" />
-          <Line dot={false} yAxisId="rain" type="monotone" dataKey="maxRain" stroke="#8884d888" />
+          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
+          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
+          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={1} />
         </ComposedChart>
       </div>
     );

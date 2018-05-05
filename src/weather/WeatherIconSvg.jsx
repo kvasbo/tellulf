@@ -20,30 +20,32 @@ class WeatherIcon extends Component {
   }
 
   getIcon() {
-    let icon = 'blank.png';
+    let icon = 'blank.svg';
     const nattdag = (this.getDayTime()) ? 'dag' : 'natt';
-    if (this.props.payload.icon in symbols) {
-      icon = `${symbols[this.props.payload.icon]}.svg`;
+    if (this.props.payload.symbol in symbols) {
+      icon = `${symbols[this.props.payload.symbol]}.svg`;
     }
     const returnStr = `icons/${nattdag}/${icon}`;
     return returnStr;
   }
 
   getTemp() {
-    return Math.round(this.props.payload.temperature);
+    const temp = Math.round(this.props.payload.temp);
+    console.log(temp);
+    return temp;
   }
 
   render() {
-    // console.log('custom', this.props);
+    // if (this.props.index % 5 !== 0) return null;
+    console.log('custom', this.props);
     return (
-      <svg>
-        <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px"/>
-        <text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text>
-      </svg>
+      <svg><text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text></svg>
     );
   }
 }
-
+// <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px" />
+// {this.getTemp()}
+// <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px"/>
 WeatherIcon.propTypes = {
 
 };
