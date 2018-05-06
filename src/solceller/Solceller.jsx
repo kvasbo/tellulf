@@ -68,6 +68,7 @@ export default class Solceller extends Component {
   }
 
   render() {
+    if (!this.state.byHour) return null;
     return (
       <div>
         <div>
