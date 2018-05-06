@@ -19,6 +19,7 @@ export default class Yr extends Component {
     this.reloadTimer = null;
     this.state = {
       weather: undefined,
+      limits: undefined,
     };
   }
 
@@ -87,8 +88,9 @@ export default class Yr extends Component {
         weatherOut[key].time = time.toISOString();
       }
     });
+    const limits = parseLimits(weatherOut);
     store.set('weather', weatherOut);
-    this.setState({ weather: weatherOut });
+    this.setState({ weather: weatherOut, limits });
   }
 
   formatTick(data) {
@@ -103,14 +105,14 @@ export default class Yr extends Component {
 
   // Stays on
   render() {
-    if (!this.state.weather) {
+    if (!this.state.weather || !this.state.limits) {
       return null;
     }
     return (
       <div className="yr-container">
         <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
           <XAxis dataKey="time" tickFormatter={this.formatTick} interval={3} />
-          <YAxis yAxisId="temp" mirror type="number" tickCount={4} domain={[0, 30]} />
+          <YAxis yAxisId="temp" mirror type="number" ticks={this.state.limits.ticks} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
@@ -163,24 +165,23 @@ function loadWeatherFromLocalStorage() {
 }
 
 function parseLimits(data) {
-  const temp = data.map(hour => ({ time: new Moment(hour.fromStamp).toISOString(), value: Number(hour.temperature.value) }));
-  const maxRainArr = data.map(hour => ({ time: new Moment(hour.fromStamp).toISOString(), value: Number(hour.rainDetails.maxRain) }));
-  // Get max rain
-  const maxRain = maxBy(maxRainArr, 'value');
-  // Get max temp
-  const maxTemp = maxBy(temp, 'value');
-  // Get max rain
-  const minTemp = minBy(temp, 'value');
-
-  const roundedMin = Math.round(minTemp.value);
-  const roundedMax = Math.round(maxTemp.value);
-
-  const quarter = Moment().quarter();
-
+  const now = new Moment();
+  const quarter = now.quarter();
+  const dataArray = Object.values(data);
+  const maxRainPoint = maxBy(dataArray, 'rainMax');
+  const maxRain = maxRainPoint.rainMax;
+  const maxRainTime = maxRainPoint.time;
+  const maxTempPoint = maxBy(dataArray, 'temp');
+  const maxTemp = maxTempPoint.temp;
+  const maxTempTime = maxTempPoint.time;
+  const minTempPoint = minBy(dataArray, 'temp');
+  const minTemp = minTempPoint.temp;
+  const minTempTime = minTempPoint.time;
+  const roundedMin = Math.floor(minTemp);
+  const roundedMax = Math.ceil(maxTemp);
   let upperRange = 15;
   let lowerRange = -15;
   let ticks = [-15, -10, -5, 5, 10, 15];
-
   if ((quarter === 2 || quarter === 3) && roundedMin >= 0) {
     upperRange = Math.max(30, roundedMax);
     lowerRange = 0;
@@ -194,10 +195,11 @@ function parseLimits(data) {
     lowerRange = Math.min(-30, roundedMin);
     ticks = [-10, -20, -30];
   }
-
-  return {
-    lowerRange, upperRange, ticks,
+  const sunData = getSunMeta();
+  const out = {
+    lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData,
   };
+  return out;
 }
 
 function getSunMeta() {
@@ -205,11 +207,15 @@ function getSunMeta() {
   const yesterday = new Moment(now).subtract(1, 'days');
   const sunTimes = SunCalc.getTimes(new Date(), 59.9409, 10.6991);
   const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), 59.9409, 10.6991);
-  const sunrise = new Moment(sunTimes.sunrise);
-  const sunset = new Moment(sunTimes.sunset);
+  const sunriseM = new Moment(sunTimes.sunrise);
+  const sunsetM = new Moment(sunTimes.sunset);
   const sunriseYesterday = new Moment(sunTimesYesterday.sunrise);
   const sunsetYesterday = new Moment(sunTimesYesterday.sunset);
-  const diffRise = sunrise.diff(sunriseYesterday, 'minutes') - 1440;
-  const diffSet = sunset.diff(sunsetYesterday, 'minutes') - 1440;
-  return `Soloppgang: ${sunrise.format('LT')} (${diffRise}) - Solnedgang: ${sunset.format('LT')} (${diffSet})`;
+  const diffRise = sunriseM.diff(sunriseYesterday, 'minutes') - 1440;
+  const diffSet = sunsetM.diff(sunsetYesterday, 'minutes') - 1440;
+  const sunrise = sunriseM.toISOString();
+  const sunset = sunsetM.toISOString();
+  return {
+    sunrise, sunset, diffRise, diffSet,
+  };
 }
