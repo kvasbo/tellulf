@@ -39,28 +39,17 @@ export default class Yr extends Component {
   loadWeatherFromLocalStorage() {
     let loaded = store.get('weather');
     if (!loaded) {
-      loaded = initWeather();
-      store.set('weather', loaded);
+      loaded = {};
     }
-    return loaded;
+    loaded = pruneWeatherData(loaded);
+    const todayAndTomorrow = initWeather();
+    return { ...todayAndTomorrow, ...loaded };
   }
 
-  // Remove anything but today and tomorrow.
-  pruneWeatherData(data) {
-    const { start, end } = getTimeLimits();
-    const newData = filter(data, (val, key) => {
-      return Moment(key).isBetween(start, end, null, '[]');
-    });
-    const outObject = {};
-    newData.forEach((d) => {
-      outObject[d.time] = d;
-    });
-    return outObject;
-  }
+  
 
   async updateWeather() {
-    const loaded = this.loadWeatherFromLocalStorage();
-    const weatherOut = this.pruneWeatherData(loaded);
+    const weatherOut = this.loadWeatherFromLocalStorage();
     const { start, end } = getTimeLimits();
     const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
     const parsed = XML.parse(data.data);
@@ -147,6 +136,19 @@ function initWeather() {
     now.add(1, 'hours');
   }
   return out;
+}
+
+// Remove anything but today and tomorrow.
+function pruneWeatherData(data) {
+  const { start, end } = getTimeLimits();
+  const newData = filter(data, (val, key) => {
+    return Moment(key).isBetween(start, end, null, '[]');
+  });
+  const outObject = {};
+  newData.forEach((d) => {
+    outObject[d.time] = d;
+  });
+  return outObject;
 }
 
 function parseLimits(data) {
