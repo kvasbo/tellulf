@@ -5,9 +5,6 @@ import Moment from 'moment';
 import './yr.css';
 import symbols from './symbols';
 
-const iconSize = 25;
-const iconDisplacement = iconSize / 2;
-
 class WeatherIcon extends Component {
   componentDidMount() {
     // console.log(this.props.hour, this.props.limits);
@@ -45,11 +42,19 @@ class WeatherIcon extends Component {
     );
   }
 }
-// <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px" />
-// {this.getTemp()}
-// <image xlinkHref={this.getIcon()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px"/>
-WeatherIcon.propTypes = {
 
+WeatherIcon.defaultProps = {
+  cx: undefined,
+  cy: undefined,
+  index: undefined,
+  payload: undefined,
+};
+
+WeatherIcon.propTypes = {
+  payload: PropTypes.object,
+  cx: PropTypes.number,
+  cy: PropTypes.number,
+  index: PropTypes.number,
 };
 
 export default WeatherIcon;

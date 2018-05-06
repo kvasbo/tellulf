@@ -7,50 +7,40 @@ import './flat.css';
 export default class Ruter extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       tog: [],
     };
-
     this.oppdateringsFrekvens = 10;
   }
 
   componentDidMount() {
     console.log('Ruter mounted');
-
     setInterval(() => {
       this.getRuterData();
     }, 1000 * this.oppdateringsFrekvens);
-
     this.getRuterData();
   }
 
   getTrains(data) {
     const tog = [];
-
     // Loop backwards
     for (let i = data.length - 1; i > -1; i -= 1) {
       const t = getTrain(data[i]);
-
       tog.push(t);
     }
-
     this.setState({ tog });
   }
 
   getTrainObjects() {
     const out = [];
-
     for (let i = 0; i < this.state.tog.length; i += 1) {
       out.push(<Tog key={this.state.tog[i].id} info={this.state.tog[i]} />);
     }
-
     return out;
   }
 
   async getRuterData() {
     const url = `https://reisapi.ruter.no/StopVisit/GetDepartures/${this.props.stasjon}?json=true`;
-    const now = new Date();
 
     const data = await fetch(url);
     const jsonData = await data.json();

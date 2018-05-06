@@ -15,8 +15,11 @@ export default class Kalender extends Component {
   }
 
   componentDidMount() {
-    const firestore = firebase.firestore().collection('kalender');
-    firestore.onSnapshot((querySnapshot) => {
+    const firestore = firebase.firestore();
+    const settings = { timestampsInSnapshots: true };
+    firestore.settings(settings);
+    const fireRef = firestore.collection('kalender')
+    fireRef.onSnapshot((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         if (doc.id === 'felles') {
           this.parseCalendar(doc.data().data);
@@ -95,13 +98,10 @@ export default class Kalender extends Component {
 
 function parseEvent(data) {
   const event = {};
-
   const today = Moment();
   const start = Moment(data.start);
   const end = Moment(data.end);
-
   let oneDay = true;
-
   // Not full day, and it is not a full day event.
   if (!data.fullDay) {
     if (!start.isSameOrBefore(end.endOf('day'), 'day')) oneDay = false;
@@ -110,18 +110,14 @@ function parseEvent(data) {
   if (data.fullDay) {
     if (end.subtract(1, 'day').startOf('day').isAfter(start.startOf('day'))) oneDay = false;
   }
-
   const startsBeforeToday = start.isBefore(today, 'day');
-
   let groupString = start.format('YYYY-MM-DD');
-
   // If it starts before today, include in today group
   if (startsBeforeToday) {
     groupString = today.format('YYYY-MM-DD');
   }
 
   event.name = data.name;
-
   event.groupString = groupString;
   event.start = Moment(data.start);
   event.fullday = data.fullDay;
