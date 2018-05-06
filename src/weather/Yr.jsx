@@ -49,7 +49,10 @@ export default class Yr extends Component {
   
 
   async updateWeather() {
-    const weatherOut = this.loadWeatherFromLocalStorage();
+    let weatherOut = this.loadWeatherFromLocalStorage();
+    if (typeof weatherOut !== 'object' || weatherOut === null) {
+      weatherOut = initWeather();
+    }
     const { start, end } = getTimeLimits();
     const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
     const parsed = XML.parse(data.data);

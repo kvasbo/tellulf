@@ -51,20 +51,6 @@ export default class Solceller extends Component {
     return 'top';
   }
 
-  showCurrent() {
-    if (this.state.nowAveraged === null) return { val: 0, unit: 'W' };
-    const avg = Number(this.state.nowAveraged);
-    if (avg < 1000) {
-      return { val: avg.toFixed(0), unit: 'W' };
-    }
-    const rounded = (avg / 1000).toFixed(1);
-    return { val: rounded, unit: 'K' };
-  }
-
-  showInstant() {
-    return `${Number(this.state.now)}W`;
-  }
-
   showProdToday() {
     return getRoundedNumber(Number(this.state.today) / 1000);
   }
@@ -98,7 +84,7 @@ export default class Solceller extends Component {
           >
             <XAxis dataKey="time" type="number" tickFormatter={formatTick} tickCount={25} interval={1} domain={['dataMin', 'dataMax']} />
             <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
-            <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8aa" fill="#8884d866" />
+            <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8cc" fill="#8884d888" />
             <ReferenceLine y={this.state.averageFull} stroke="#FFFF00" strokeDasharray="3 3" />
             <ReferenceDot
               label={{
@@ -126,6 +112,7 @@ export default class Solceller extends Component {
           <div>Dag: {this.showProdToday()}</div>
           <div>Måned: {this.showProdMonth()}</div>
           <div>År: {this.showProdYear()}</div>
+          <div>Total: {this.showProdTotal()}</div>
         </div>
       </div>
     );

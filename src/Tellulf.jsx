@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import ErrorBoundary from './ErrorBoundary';
 import Klokke from './klokke/Klokke';
 import Netatmo from './netatmo/Netatmo';
 import Kalender from './kalender/Kalender';
@@ -48,27 +49,27 @@ class Tellulf extends Component {
         <div id="contentArea">
           <div id="leftContainer">
             <div id="container_klokke" className="block">
-              <Klokke />
+              <ErrorBoundary><Klokke /></ErrorBoundary>
             </div>
             <div id="container_netatmo" className="block">
-              <Netatmo />
+              <ErrorBoundary><Netatmo /></ErrorBoundary>
             </div>
             <div id="container_solceller" className="block">
-              <Solceller />
+              <ErrorBoundary><Solceller /></ErrorBoundary>
             </div>
             <div id="container_yr" className="block">
-              <Yr />
+              <ErrorBoundary><Yr /></ErrorBoundary>
             </div>
           </div>
           <div id="rightContainer">
             <div id="container_kalender" className="block">
-              <Kalender />
+              <ErrorBoundary><Kalender /></ErrorBoundary>
             </div>
           </div>
         </div>
         <div id="bottomContainer">
           <div id="container_flatBane" className="block">
-            <Ruter stasjon="3012315" retning="1 (Retning sentrum)" />
+            <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
           </div>
         </div>
       </div>
