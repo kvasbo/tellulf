@@ -36,26 +36,24 @@ export default class Yr extends Component {
     console.log('Weather: Next reload: ', nextReload.toLocaleString());
   }
 
-  loadWeatherFromLocalStorage() {
-    let loaded = store.get('weather');
-    if (!loaded) {
-      loaded = {};
-    }
-    loaded = pruneWeatherData(loaded);
-    const todayAndTomorrow = initWeather();
-    return { ...todayAndTomorrow, ...loaded };
-  }
-
-  
-
   async updateWeather() {
-    let weatherOut = this.loadWeatherFromLocalStorage();
+    let weatherOut = loadWeatherFromLocalStorage();
     if (typeof weatherOut !== 'object' || weatherOut === null) {
       weatherOut = initWeather();
     }
     const { start, end } = getTimeLimits();
     const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
     const parsed = XML.parse(data.data);
+   
+    try {
+      // console.log(parsed);
+      const nextRun = Moment(parsed.meta.model[0].nextrun);
+      const dataFrom = Moment(parsed.meta.model[0].runended);
+      console.log('Data from', dataFrom.toLocaleString())
+      console.log('Next run', nextRun.toLocaleString())
+    } catch (err) {
+      console.log('Could not get next run');
+    }
     const singlePoints = parsed.product.time.filter((d) => {
       if (d.from !== d.to) return false;
       const from = Moment(d.from);
@@ -145,13 +143,23 @@ function initWeather() {
 function pruneWeatherData(data) {
   const { start, end } = getTimeLimits();
   const newData = filter(data, (val, key) => {
-    return Moment(key).isBetween(start, end, null, '[]');
+    return Moment(key).isBetween(start, end, null, '(]');
   });
   const outObject = {};
   newData.forEach((d) => {
     outObject[d.time] = d;
   });
   return outObject;
+}
+
+function loadWeatherFromLocalStorage() {
+  let loaded = store.get('weather');
+  if (!loaded) {
+    loaded = {};
+  }
+  loaded = pruneWeatherData(loaded);
+  const todayAndTomorrow = initWeather();
+  return { ...todayAndTomorrow, ...loaded };
 }
 
 function parseLimits(data) {
