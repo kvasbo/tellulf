@@ -33,7 +33,8 @@ class WeatherIcon extends Component {
 
   render() {
     if (!this.props.cy) return null;
-    if (this.props.index % 3 !== 0) return null;
+    const time = Moment(this.props.payload.time);
+    if (time.hours() % 3 !== 0) return null;
     return (
       <svg>
         <text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text>

@@ -35,24 +35,19 @@ export class HendelseFullDag extends Component {
 
 function getTimeString(event) {
   let timeString = '';
-
   if (event.fullday){ // Full day events
     if (!event.oneDay) {
       timeString = Moment(event.start).calendar(null, fullDayFormats());
-
       // subtract one, as we only want the last included day
       const newEnd = Moment(event.end);
       newEnd.subtract(1, 'day');
-
       timeString += ` - ${Moment(newEnd).calendar(null, fullDayFormats())}`;
     }
   } else {
-    var toFormats = normalDayToFormats();
-
+    let toFormats = normalDayToFormats();
     if (!event.oneDay) {
-      var toFormats = normalFormats();
+      toFormats = normalFormats();
     }
-
     timeString = `${Moment(event.start).calendar(null, normalDayToFormats())}→${Moment(event.end).calendar(null, toFormats)}`;
   }
   return timeString;

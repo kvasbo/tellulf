@@ -3,7 +3,7 @@ import { maxBy, minBy, filter } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Label } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
@@ -20,12 +20,14 @@ export default class Yr extends Component {
     this.state = {
       weather: undefined,
       limits: undefined,
+      currentTime: Moment().valueOf(),
     };
   }
 
   componentDidMount() {
     this.updateWeather();
     this.setNextReload();
+    setInterval(() => { this.reloadTime(); }, 60000);
   }
 
   setNextReload() {
@@ -35,6 +37,11 @@ export default class Yr extends Component {
     const nextReloadDiff = nextReload.diff(Moment());
     this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
     console.log('Weather: Next reload: ', nextReload.toLocaleString());
+  }
+
+  reloadTime() {
+    console.log("setting time");
+    this.setState({ currentTime: Moment().valueOf() })
   }
 
   async updateWeather() {
@@ -47,11 +54,10 @@ export default class Yr extends Component {
     const parsed = XML.parse(data.data);
    
     try {
-      // console.log(parsed);
       const nextRun = Moment(parsed.meta.model[0].nextrun);
       const dataFrom = Moment(parsed.meta.model[0].runended);
-      console.log('Data from', dataFrom.toLocaleString())
-      console.log('Next run', nextRun.toLocaleString())
+      console.log('Data from', dataFrom.toLocaleString());
+      console.log('Next run', nextRun.toLocaleString());
     } catch (err) {
       console.log('Could not get next run');
     }
@@ -73,7 +79,7 @@ export default class Yr extends Component {
       const key = time.toISOString();
       if (key in weatherOut) {
         weatherOut[key].temp = Number(p.location.temperature.value);
-        weatherOut[key].time = time.toISOString();
+        weatherOut[key].time = time.valueOf();
       }
     });
     hours.forEach((p) => {
@@ -85,7 +91,7 @@ export default class Yr extends Component {
         weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
         weatherOut[key].symbol = p.location.symbol.id;
         weatherOut[key].symbolNumber = p.location.symbol.number;
-        weatherOut[key].time = time.toISOString();
+        weatherOut[key].time = time.valueOf();
       }
     });
     const limits = parseLimits(weatherOut);
@@ -94,8 +100,8 @@ export default class Yr extends Component {
   }
 
   formatTick(data) {
-    const time = Moment(data);
-    return time.format("HH");
+    const time = Moment(data, 'x');
+    return time.format('HH');
   }
 
   getData() {
@@ -111,17 +117,29 @@ export default class Yr extends Component {
     return (
       <div className="yr-container">
         <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
-          <XAxis dataKey="time" tickFormatter={this.formatTick} interval={3} />
+          <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={4} type="number" domain={['dataMin', 'dataMax']} />
           <YAxis yAxisId="temp" mirror type="number" ticks={this.state.limits.ticks} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
-          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={1} />
+          <ReferenceLine x={this.state.currentTime} stroke="#FFFFFF88" strokeWidth={2} />
+          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
         </ComposedChart>
       </div>
     );
   }
+}
+
+function getTicks() {
+  const limits = getTimeLimits();
+  const time = limits.start;
+  const out = [];
+  for (let i = 0; i < 49; i += 1) {
+    out.push(time.valueOf());
+    time.add(1, 'hours');
+  }
+  return out;
 }
 
 function getTimeLimits() {
@@ -135,7 +153,7 @@ function initWeather() {
   const now = new Moment().startOf('day');
   for (let i = 0; i < 48; i++) {
     const key = now.toISOString();
-    out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: now.toISOString() };
+    out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: now.valueOf() };
     now.add(1, 'hours');
   }
   return out;
@@ -155,6 +173,7 @@ function pruneWeatherData(data) {
 }
 
 function loadWeatherFromLocalStorage() {
+  // store.remove('weather');
   let loaded = store.get('weather');
   if (!loaded) {
     loaded = {};

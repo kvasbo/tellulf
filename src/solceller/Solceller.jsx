@@ -25,7 +25,6 @@ export default class Solceller extends Component {
       try {
         const val = snapshot.val();
         const now = (typeof val.effect.val !== 'undefined') ? val.effect.val : null;
-        // if (now) this.addPowerSampleAndPrune(now);
         const today = (typeof val.today.val !== 'undefined') ? val.today.val : null;
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
@@ -83,10 +82,16 @@ export default class Solceller extends Component {
             height={280}
             data={this.state.byHour}
           >
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="10%" stopColor="#bf2a2a" stopOpacity={1} />
+                <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
+              </linearGradient>
+            </defs>
             <XAxis dataKey="time" type="number" tickFormatter={formatTick} tickCount={25} interval={1} domain={['dataMin', 'dataMax']} />
             <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
-            <Area dot={false} type="monotone" dataKey="production" stroke="#8884d8cc" fill="#8884d888" />
-            <ReferenceLine y={this.state.averageFull} stroke="#FFFF00" strokeDasharray="3 3" />
+            <Area dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
+            <ReferenceLine y={this.state.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
             <ReferenceDot
               label={{
                 value: `${this.state.now}W`,
@@ -98,7 +103,7 @@ export default class Solceller extends Component {
               y={this.state.now}
               x={this.state.currentTime}
               r={6}
-              fill="red"
+              fill="#bf2a2a"
               stroke="none"
             />
           </AreaChart>
