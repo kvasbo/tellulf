@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import { createStore } from 'redux';
+import storage from 'redux-persist/lib/storage';
+import { Provider } from 'react-redux';
 import 'moment/locale/nb';
+import tellulfReducer from './redux/reducers';
 import Tellulf from './Tellulf';
 import Login from './Login';
 import firebase from './firebase';
+
+const store = createStore(
+  tellulfReducer, /* preloadedState, */
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+ );
 
 Moment.locale('nb');
 
@@ -27,7 +36,11 @@ class App extends Component {
 
   getApp() {
     if (this.state.loggedIn) {
-      return <Tellulf />;
+      return (
+        <Provider store={store}>
+          <Tellulf />
+        </Provider>
+      );
     }
     return <Login />;
   }

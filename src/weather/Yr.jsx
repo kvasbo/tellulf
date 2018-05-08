@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { maxBy, minBy, filter } from 'lodash';
+import { connect } from 'react-redux';
+import { maxBy, minBy, filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
+import { updateWeather, updateWeatherLimits, pruneWeather } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
@@ -13,20 +15,17 @@ const XML = require('pixl-xml');
 const lat = '59.9409';
 const long = '10.6991';
 
-export default class Yr extends Component {
+class Yr extends Component {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
     this.state = {
-      weather: undefined,
-      limits: undefined,
       currentTime: Moment().valueOf(),
     };
   }
 
   componentDidMount() {
     this.updateWeather();
-    this.setNextReload();
     setInterval(() => { this.reloadTime(); }, 60000);
   }
 
@@ -34,17 +33,19 @@ export default class Yr extends Component {
     // Start of next hour
     clearTimeout(this.reloadTimer);
     const nextReload = Moment().add(1, 'hours').startOf('hour');
+    // const nextReload = Moment().add(1, 'minutes').startOf('minute');
     const nextReloadDiff = nextReload.diff(Moment());
     this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
     console.log('Weather: Next reload: ', nextReload.toLocaleString());
   }
 
   reloadTime() {
-    console.log("setting time");
     this.setState({ currentTime: Moment().valueOf() })
   }
 
   async updateWeather() {
+    console.log('Updating weather');
+    this.setNextReload();
     let weatherOut = loadWeatherFromLocalStorage();
     if (typeof weatherOut !== 'object' || weatherOut === null) {
       weatherOut = initWeather();
@@ -76,7 +77,7 @@ export default class Yr extends Component {
     });
     singlePoints.forEach((p) => {
       const time = Moment(p.from);
-      const key = time.toISOString();
+      const key = time.valueOf();
       if (key in weatherOut) {
         weatherOut[key].temp = Number(p.location.temperature.value);
         weatherOut[key].time = time.valueOf();
@@ -84,7 +85,7 @@ export default class Yr extends Component {
     });
     hours.forEach((p) => {
       const time = Moment(p.from);
-      const key = time.toISOString();
+      const key = time.valueOf();
       if (key in weatherOut) {
         weatherOut[key].rain = Number(p.location.precipitation.value);
         weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
@@ -96,7 +97,13 @@ export default class Yr extends Component {
     });
     const limits = parseLimits(weatherOut);
     store.set('weather', weatherOut);
-    this.setState({ weather: weatherOut, limits });
+    this.setState({ limits });
+    try {
+      this.props.dispatch(updateWeather(weatherOut));
+      this.props.dispatch(updateWeatherLimits(limits));
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   formatTick(data) {
@@ -105,20 +112,23 @@ export default class Yr extends Component {
   }
 
   getData() {
-    const all = Object.values(this.state.weather);
-    return all;
+    const rawData = Object.values(this.props.weather);
+    const uniqueData = uniqBy(rawData, 'time');
+    const sortedData = sortBy(uniqueData, 'time');
+    return sortedData;
   }
 
   // Stays on
   render() {
-    if (!this.state.weather || !this.state.limits) {
+    // console.log(this.props);
+    if (!this.props.weather || !this.props.limits) {
       return null;
     }
     return (
       <div className="yr-container">
         <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
           <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={4} type="number" domain={['dataMin', 'dataMax']} />
-          <YAxis yAxisId="temp" mirror type="number" ticks={this.state.limits.ticks} domain={[this.state.limits.lowerRange, this.state.limits.upperRange]} />
+          <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
@@ -152,7 +162,7 @@ function initWeather() {
   const out = {};
   const now = new Moment().startOf('day');
   for (let i = 0; i < 48; i++) {
-    const key = now.toISOString();
+    const key = now.valueOf();
     out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: now.valueOf() };
     now.add(1, 'hours');
   }
@@ -173,7 +183,7 @@ function pruneWeatherData(data) {
 }
 
 function loadWeatherFromLocalStorage() {
-  // store.remove('weather');
+  store.remove('weather');
   let loaded = store.get('weather');
   if (!loaded) {
     loaded = {};
@@ -232,9 +242,18 @@ function getSunMeta() {
   const sunsetYesterday = new Moment(sunTimesYesterday.sunset);
   const diffRise = sunriseM.diff(sunriseYesterday, 'minutes') - 1440;
   const diffSet = sunsetM.diff(sunsetYesterday, 'minutes') - 1440;
-  const sunrise = sunriseM.toISOString();
-  const sunset = sunsetM.toISOString();
+  const sunrise = sunriseM.valueOf();
+  const sunset = sunsetM.valueOf();
   return {
     sunrise, sunset, diffRise, diffSet,
   };
 }
+
+const mapStateToProps = state => {
+  return {
+    weather: state.Weather.weather,
+    limits: state.Weather.limits,
+  };
+}
+
+export default connect(mapStateToProps)(Yr);
