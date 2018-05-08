@@ -88,7 +88,8 @@ export default class Solceller extends Component {
                 <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="time" type="number" tickFormatter={formatTick} tickCount={25} interval={1} domain={['dataMin', 'dataMax']} />
+            <XAxis dataKey="time" type="number" tickFormatter={formatTick} 
+            ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
             <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
             <Area dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
             <ReferenceLine y={this.state.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
@@ -143,6 +144,16 @@ function parseByHour(data) {
     const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
     return { time: time.valueOf(), production: d.production };
   });
+  return out;
+}
+
+function getXTicks() {
+  const time = Moment().startOf('day');
+  const out = [];
+  for (let i = 0; i < 24; i += 2) {
+    const t = Moment(time).add(i, 'hours');
+    out.push(t.valueOf());
+  }
   return out;
 }
 

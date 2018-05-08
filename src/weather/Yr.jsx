@@ -127,7 +127,7 @@ class Yr extends Component {
     return (
       <div className="yr-container">
         <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
-          <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={4} type="number" domain={['dataMin', 'dataMax']} />
+          <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
           <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
           <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
           <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
@@ -183,7 +183,6 @@ function pruneWeatherData(data) {
 }
 
 function loadWeatherFromLocalStorage() {
-  store.remove('weather');
   let loaded = store.get('weather');
   if (!loaded) {
     loaded = {};
