@@ -15,7 +15,7 @@ import './tellulf.css';
 
 function startReloadLoop() {
   const now = new Moment();
-  const reload = Moment(now).startOf('day').add(1, 'day').add(1, 'second');
+  const reload = Moment(now).startOf('hour').add(1, 'hour');
   const diff = reload.diff(now, 'milliseconds');
   console.log('Reload at', reload.toLocaleString());
   window.reloadTimer = setTimeout(() => {
