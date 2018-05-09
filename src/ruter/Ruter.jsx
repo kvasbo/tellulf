@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
+import axios from 'axios';
 import Tog from './Tog';
 import './flat.css';
 
@@ -40,30 +41,35 @@ export default class Ruter extends Component {
   }
 
   async getRuterData() {
-    const url = `https://reisapi.ruter.no/StopVisit/GetDepartures/${this.props.stasjon}?json=true`;
+    try {
+      const url = `https://reisapi.ruter.no/StopVisit/GetDepartures/${this.props.stasjon}?json=true`;
+      const result = await axios.get(url);
+      const jsonData = result.data;
 
-    const data = await fetch(url);
-    const jsonData = await data.json();
+      if (result.status !== 200) throw Error('Couldnt fetch ruter data');
 
-    const trainData = [];
+      const trainData = [];
 
-    jsonData.forEach((t) => {
-      if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === this.props.retning) {
-        const d = t.MonitoredVehicleJourney.MonitoredCall;
-        const out = {};
-        out.ruteTid = new Date(d.AimedArrivalTime);
-        out.faktiskTid = new Date(d.ExpectedArrivalTime);
-        // out.diffRute = Math.floor((out.faktiskTid - out.ruteTid) / 1000);
-        // out.diffNow = Math.floor((out.faktiskTid - now) / 1000);
-        // eslint-disable-next-line max-len
-        out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
-        out.linje = t.MonitoredVehicleJourney.PublishedLineName;
-        out.Endestasjon = t.MonitoredVehicleJourney.DestinationName;
-        trainData.push(out);
-      }
-    });
+      jsonData.forEach((t) => {
+        if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === this.props.retning) {
+          const d = t.MonitoredVehicleJourney.MonitoredCall;
+          const out = {};
+          out.ruteTid = new Date(d.AimedArrivalTime);
+          out.faktiskTid = new Date(d.ExpectedArrivalTime);
+          // out.diffRute = Math.floor((out.faktiskTid - out.ruteTid) / 1000);
+          // out.diffNow = Math.floor((out.faktiskTid - now) / 1000);
+          // eslint-disable-next-line max-len
+          out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
+          out.linje = t.MonitoredVehicleJourney.PublishedLineName;
+          out.Endestasjon = t.MonitoredVehicleJourney.DestinationName;
+          trainData.push(out);
+        }
+      });
 
-    this.getTrains(trainData);
+      this.getTrains(trainData);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
 
