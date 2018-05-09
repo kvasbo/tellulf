@@ -44,63 +44,67 @@ class Yr extends Component {
   }
 
   async updateWeather() {
-    console.log('Updating weather');
-    this.setNextReload();
-    let weatherOut = loadWeatherFromLocalStorage();
-    if (typeof weatherOut !== 'object' || weatherOut === null) {
-      weatherOut = initWeather();
-    }
-    const { start, end } = getTimeLimits();
-    const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
-    const parsed = XML.parse(data.data);
-   
     try {
-      const nextRun = Moment(parsed.meta.model[0].nextrun);
-      const dataFrom = Moment(parsed.meta.model[0].runended);
-      console.log('Data from', dataFrom.toLocaleString());
-      console.log('Next run', nextRun.toLocaleString());
-    } catch (err) {
-      console.log('Could not get next run');
-    }
-    const singlePoints = parsed.product.time.filter((d) => {
-      if (d.from !== d.to) return false;
-      const from = Moment(d.from);
-      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-      return false;
-    });
-    const hours = parsed.product.time.filter((d) => {
-      const from = Moment(d.from);
-      const to = Moment(d.to);
-      if (!(to.diff(from, 'hours') === 1)) return false;
-      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-      return false;
-    });
-    singlePoints.forEach((p) => {
-      const time = Moment(p.from);
-      const key = time.valueOf();
-      if (key in weatherOut) {
-        weatherOut[key].temp = Number(p.location.temperature.value);
-        weatherOut[key].time = time.valueOf();
+      console.log('Updating weather');
+      this.setNextReload();
+      let weatherOut = loadWeatherFromLocalStorage();
+      if (typeof weatherOut !== 'object' || weatherOut === null) {
+        weatherOut = initWeather();
       }
-    });
-    hours.forEach((p) => {
-      const time = Moment(p.from);
-      const key = time.valueOf();
-      if (key in weatherOut) {
-        weatherOut[key].rain = Number(p.location.precipitation.value);
-        weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
-        weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
-        weatherOut[key].symbol = p.location.symbol.id;
-        weatherOut[key].symbolNumber = p.location.symbol.number;
-        weatherOut[key].time = time.valueOf();
+      const { start, end } = getTimeLimits();
+      const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
+      const parsed = XML.parse(data.data);
+    
+      try {
+        const nextRun = Moment(parsed.meta.model[0].nextrun);
+        const dataFrom = Moment(parsed.meta.model[0].runended);
+        console.log('Data from', dataFrom.toLocaleString());
+        console.log('Next run', nextRun.toLocaleString());
+      } catch (err) {
+        console.log('Could not get next run');
       }
-    });
-    const limits = parseLimits(weatherOut);
-    store.set('weather', weatherOut);
-    this.setState({ limits });
-    try {
-      this.props.dispatch(updateWeather(weatherOut));
-      this.props.dispatch(updateWeatherLimits(limits));
+      const singlePoints = parsed.product.time.filter((d) => {
+        if (d.from !== d.to) return false;
+        const from = Moment(d.from);
+        if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+        return false;
+      });
+      const hours = parsed.product.time.filter((d) => {
+        const from = Moment(d.from);
+        const to = Moment(d.to);
+        if (!(to.diff(from, 'hours') === 1)) return false;
+        if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+        return false;
+      });
+      singlePoints.forEach((p) => {
+        const time = Moment(p.from);
+        const key = time.valueOf();
+        if (key in weatherOut) {
+          weatherOut[key].temp = Number(p.location.temperature.value);
+          weatherOut[key].time = time.valueOf();
+        }
+      });
+      hours.forEach((p) => {
+        const time = Moment(p.from);
+        const key = time.valueOf();
+        if (key in weatherOut) {
+          weatherOut[key].rain = Number(p.location.precipitation.value);
+          weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
+          weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
+          weatherOut[key].symbol = p.location.symbol.id;
+          weatherOut[key].symbolNumber = p.location.symbol.number;
+          weatherOut[key].time = time.valueOf();
+        }
+      });
+      const limits = parseLimits(weatherOut);
+      store.set('weather', weatherOut);
+      this.setState({ limits });
+      try {
+        this.props.dispatch(updateWeather(weatherOut));
+        this.props.dispatch(updateWeatherLimits(limits));
+      } catch (err) {
+        console.log(err);
+      }
     } catch (err) {
       console.log(err);
     }
