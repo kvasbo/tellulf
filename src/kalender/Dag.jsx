@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 import { HendelseMedTid, HendelseFullDag } from './Hendelse';
+import symbols from '../weather/symbols';
+import DayHeaderWeather from './DagHeaderWeather';
 
 import './style.css';
 
@@ -28,7 +30,6 @@ export default class Dag extends Component {
 
   getDinner() {
     if (typeof this.props.dinner === 'undefined') return null;
-
     return (
       <span className="dinner">{this.props.dinner.events[0].name}</span>
     );
@@ -41,9 +42,7 @@ export default class Dag extends Component {
       nextWeek: 'dddd',
       sameElse: 'dddd DD.',
     };
-
     const dateStr = Moment(date).calendar(null, dateHeaderFormats);
-
     return dateStr;
   }
 
@@ -53,59 +52,13 @@ export default class Dag extends Component {
         <span className="calendarDayHeader">
           <span>{this.getDayHeader(this.props.date)}</span>
         </span>
+        <DayHeaderWeather weather={this.props.weather} date={this.props.date} />
         {this.getDinner()}
         <span className="events">{this.getEvents(this.props.events)}</span>
-
       </div>
     );
   }
 }
-
-class DayHeaderWeather extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      symbol: null,
-      temperature: null,
-    };
-  }
-
-  componentDidMount() {
-    this.getWeather();
-  }
-
-  getWeather() {
-    const wTimeTmp = Moment(this.props.date);
-    wTimeTmp.set({ hour: 14, minute: 0 });
-  }
-
-  getWeatherSymbol(symbolId) {
-    if (symbolId === null) return 'blank.png';
-
-    if (parseInt(symbolId) < 10) {
-      return `0${symbolId}.svg`;
-    }
-
-    return `${symbolId}.svg`;
-  }
-
-  getTemperature(temp) {
-    if (temp === null) return '';
-
-    return `${temp}°`;
-  }
-
-  render() {
-    return (
-      <span className="headerWeather">
-        <span className="headerWeatherTemp">{this.getTemperature(this.state.temperature)}</span>
-        <img src={`/yr/symboler/${this.getWeatherSymbol(this.state.symbol)}`} className="weatherImage" />
-      </span>
-    );
-  }
-}
-
 Dag.propTypes = {
   date: PropTypes.string.isRequired,
 };
