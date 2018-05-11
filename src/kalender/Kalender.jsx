@@ -37,7 +37,7 @@ class Kalender extends Component {
     const out = [];
     for (const day in this.state.kalenderData) {
       const weather = this.getWeather(day);
-      out.push(<Dag key={day} date={day} weather={weather} events={this.state.kalenderData[day]} dinner={this.state.dinners[day]} weather={this.state.kalenderData[day].weather} />);
+      out.push(<Dag key={day} date={day} weather={weather} events={this.state.kalenderData[day]} dinner={this.state.dinners[day]} />);
     }
     return out;
   }
