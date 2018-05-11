@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import Dag from './Dag';
 import firebase from '../firebase';
 import './style.css';
 
-export default class Kalender extends Component {
+class Kalender extends Component {
   constructor(props) {
     super(props);
 
@@ -35,9 +36,19 @@ export default class Kalender extends Component {
   getDays() {
     const out = [];
     for (const day in this.state.kalenderData) {
-      out.push(<Dag key={day} date={day} events={this.state.kalenderData[day]} dinner={this.state.dinners[day]} weather={this.state.kalenderData[day].weather} />);
+      const weather = this.getWeather(day);
+      out.push(<Dag key={day} date={day} weather={weather} events={this.state.kalenderData[day]} dinner={this.state.dinners[day]} weather={this.state.kalenderData[day].weather} />);
     }
     return out;
+  }
+
+  getWeather(day) {
+    if (!this.props.weather) return [];
+    const from = Moment(day).startOf('day').valueOf();
+    const to = Moment(day).endOf('day').valueOf();
+    return Object.values(this.props.weather).filter((w) => {
+      return (w.time >= from && w.time <= to);
+    });
   }
 
   parseDinners(data) {
@@ -126,3 +137,11 @@ function parseEvent(data) {
 
   return event;
 }
+
+const mapStateToProps = state => {
+  return {
+    weather: state.Weather.long,
+  };
+}
+
+export default connect(mapStateToProps)(Kalender);
