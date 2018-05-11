@@ -1,10 +1,18 @@
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
+export const UPDATE_WEATHER_LONG = 'UPDATE_WEATHER_LONG';
 export const UPDATE_WEATHER_LIMITS = 'UPDATE_WEATHER_LIMITS';
 export const PRUNE_WEATHER = 'PRUNE_WEATHER';
 
 export function updateWeather(data) {
   return {
     type: UPDATE_WEATHER,
+    data,
+  };
+}
+
+export function updateWeatherLong(data) {
+  return {
+    type: UPDATE_WEATHER_LONG,
     data,
   };
 }

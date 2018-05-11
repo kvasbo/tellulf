@@ -5,7 +5,7 @@ import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
-import { updateWeather, updateWeatherLimits, pruneWeather } from '../redux/actions';
+import { updateWeather, updateWeatherLimits, pruneWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
@@ -76,6 +76,14 @@ class Yr extends Component {
         if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
         return false;
       });
+      const sixes = parsed.product.time.filter((d) => {
+        const fromUtc = Moment(d.from).utc().hours();
+        if (fromUtc % 6 !== 0) return false;
+        const from = Moment(d.from);
+        const to = Moment(d.to);
+        if ((to.diff(from, 'hours') === 6)) return true;
+        return false;
+      });
       singlePoints.forEach((p) => {
         const time = Moment(p.from);
         const key = time.valueOf();
@@ -83,6 +91,19 @@ class Yr extends Component {
           weatherOut[key].temp = Number(p.location.temperature.value);
           weatherOut[key].time = time.valueOf();
         }
+      });
+      const sixesOut = {};
+      sixes.forEach((s) => {
+        const from = Moment(s.from);
+        const key = from.valueOf();
+        const to = Moment(s.to);
+        const time = Moment(from).add(3, 'hours');
+        const rain = Number(s.location.precipitation.value, 10);
+        const symbol = s.location.symbol.id;
+        const minTemp = Number(s.location.minTemperature.value, 10);
+        const maxTemp = Number(s.location.maxTemperature.value, 10);
+        const temp = (minTemp + maxTemp) / 2;
+        sixesOut[key] = { from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol };
       });
       hours.forEach((p) => {
         const time = Moment(p.from);
@@ -97,10 +118,9 @@ class Yr extends Component {
         }
       });
       const limits = parseLimits(weatherOut);
-      store.set('weather', weatherOut);
-      this.setState({ limits });
       try {
         this.props.dispatch(updateWeather(weatherOut));
+        this.props.dispatch(updateWeatherLong(sixesOut));
         this.props.dispatch(updateWeatherLimits(limits));
       } catch (err) {
         console.log(err);
@@ -187,7 +207,7 @@ function pruneWeatherData(data) {
 }
 
 function loadWeatherFromLocalStorage() {
-  let loaded = store.get('weather');
+  let loaded = null; //store.get('weather');
   if (!loaded) {
     loaded = {};
   }

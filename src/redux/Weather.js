@@ -1,8 +1,9 @@
 import { cloneDeep } from 'lodash';
-import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LIMITS  } from './actions';
+import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LIMITS, UPDATE_WEATHER_LONG } from './actions';
 
 const initialState = {
   weather: {},
+  long: {},
   limits: undefined,
 };
 
@@ -11,6 +12,11 @@ export function Weather(state = initialState, action) {
     case UPDATE_WEATHER: {
       const newWeather = cloneDeep(state);
       newWeather.weather = { ...newWeather.weather, ...action.data }
+      return newWeather
+    }
+    case UPDATE_WEATHER_LONG: {
+      const newWeather = cloneDeep(state);
+      newWeather.long = { ...newWeather.long, ...action.data }
       return newWeather
     }
     case UPDATE_WEATHER_LIMITS: {

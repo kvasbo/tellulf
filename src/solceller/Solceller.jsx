@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-import { XAxis, YAxis, Area, AreaChart, ReferenceLine, ReferenceDot } from 'recharts';
+import axios from 'axios';
+import { XAxis, YAxis, Area, Line, AreaChart, ReferenceLine, ReferenceDot, ComposedChart } from 'recharts';
 import './style.css';
 
 export default class Solceller extends Component {
@@ -15,12 +16,14 @@ export default class Solceller extends Component {
       currentTime: Moment().valueOf(),
       byHour: null,
       averageFull: 0,
+      powerPrices: [],
     };
   }
 
   componentDidMount() {
+    setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
+    this.getPowerPrice();
     const dbRef = window.firebase.database().ref('steca/currentData');
-
     dbRef.on('value', (snapshot) => {
       try {
         const val = snapshot.val();
@@ -40,6 +43,31 @@ export default class Solceller extends Component {
         console.log(err);
       }
     });
+  }
+
+  async getPowerPrice() {
+    try {
+      const data = await axios({
+        url: 'https://api.tibber.com/v1-beta/gql',
+        method: 'post',
+        headers: {'Authorization': "bearer" + '1a3772d944bcf972f1ee84cf45d769de1c80e4f0173d665328287d1e2a746004'},
+        data: {
+          query: `
+            {viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt }}}}}}
+            `,
+        },
+      });
+      if (data.status === 200) {
+        // console.log(data.data.data.viewer.homes[0].currentSubscription.priceInfo.today);
+        const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
+        const powerPrices = prices.map((p) => {
+          return { price: p.total, time: Moment(p.startsAt).valueOf() };
+        });
+        this.setState({ powerPrices });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   getCurrentLabelPosition() {
@@ -66,12 +94,29 @@ export default class Solceller extends Component {
     return getRoundedNumber(parseFloat(this.state.total) / 1000);
   }
 
-  render() {
+  getData() {
     if (!this.state.byHour) return null;
+    const dataSet = getDataPointObject();
+    // Map production data
+    this.state.byHour.forEach((h) => {
+      if (h.time in dataSet) {
+        dataSet[h.time].production = h.production;
+      }
+    });
+    this.state.powerPrices.forEach((h) => {
+      if (h.time in dataSet) {
+        dataSet[h.time].price = h.price;
+      }
+    });
+    return Object.values(dataSet);
+  }
+
+  render() {
+    if (!this.getData()) return null;
     return (
       <div>
         <div>
-          <AreaChart
+          <ComposedChart
             margin={{
               top: 30,
               right: 20,
@@ -80,7 +125,7 @@ export default class Solceller extends Component {
             }}
             width={540}
             height={280}
-            data={this.state.byHour}
+            data={this.getData()}
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -88,12 +133,14 @@ export default class Solceller extends Component {
                 <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="time" type="number" tickFormatter={formatTick} 
-            ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-            <YAxis mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
-            <Area dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
-            <ReferenceLine y={this.state.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
+            <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
+            <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1]} orientation="right" type="number" domain={[0, 1]} />
+            <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
+            <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
+            <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
+            <ReferenceLine yAxisId="kwh" y={this.state.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
             <ReferenceDot
+              yAxisId="kwh"
               label={{
                 value: `${this.state.now}W`,
                 stroke: 'white',
@@ -107,7 +154,7 @@ export default class Solceller extends Component {
               fill="#bf2a2a"
               stroke="none"
             />
-          </AreaChart>
+          </ComposedChart>
         </div>
         <div style={{
           display: 'flex',
@@ -124,6 +171,17 @@ export default class Solceller extends Component {
       </div>
     );
   }
+}
+
+function getDataPointObject() {
+  const out = {};
+  const time = Moment().startOf('day');
+  for (let i = 0; i < 144; i += 1) {
+    const key = time.valueOf();
+    out[key] = { time: key, production: null, price: null };
+    time.add(10, 'minutes');
+  }
+  return out;
 }
 
 function getRoundedNumber(number) {
