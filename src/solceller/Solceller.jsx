@@ -4,6 +4,8 @@ import axios from 'axios';
 import { XAxis, YAxis, Area, Line, AreaChart, ReferenceLine, ReferenceDot, ComposedChart } from 'recharts';
 import './style.css';
 
+const nettleie = 0.477;
+
 export default class Solceller extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +63,7 @@ export default class Solceller extends Component {
         // console.log(data.data.data.viewer.homes[0].currentSubscription.priceInfo.today);
         const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
         const powerPrices = prices.map((p) => {
-          return { price: p.total, time: Moment(p.startsAt).valueOf() };
+          return { price: p.total + nettleie, time: Moment(p.startsAt).valueOf() };
         });
         this.setState({ powerPrices });
       }
@@ -134,7 +136,7 @@ export default class Solceller extends Component {
               </linearGradient>
             </defs>
             <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-            <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1]} orientation="right" type="number" domain={[0, 1]} />
+            <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1.0, 1.25, 1.5]} orientation="right" type="number" domain={[0, 1.5]} />
             <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
             <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
             <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
