@@ -9,7 +9,6 @@ import { updateWeather, updateWeatherLimits, pruneWeather, updateWeatherLong } f
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
-const store = require('store');
 const XML = require('pixl-xml');
 
 const lat = '59.9409';

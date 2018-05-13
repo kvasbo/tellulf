@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import { connect } from 'react-redux';
 import MainListItemFour from '../components/MainListItemFour';
+import { updateNetatmo } from '../redux/actions';
 
-export default class Netatmo extends Component {
+class Netatmo extends Component {
   constructor(props) {
     super(props);
 
@@ -22,8 +24,11 @@ export default class Netatmo extends Component {
     dbRef.on('value', (snapshot) => {
       const data = snapshot.val();
       const updated = Moment(data.updated);
-
       const diff = Moment().diff(updated, 'minutes');
+
+      console.log('netatmo', data);
+    
+      this.props.dispatch(updateNetatmo(data));
 
       if (diff < 60) {
         try {
@@ -69,3 +74,11 @@ export default class Netatmo extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    netatmo: state.Netatmo,
+  };
+}
+
+export default connect(mapStateToProps)(Netatmo);

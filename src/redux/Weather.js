@@ -25,7 +25,7 @@ export function Weather(state = initialState, action) {
       return newLimits;
     }
     case PRUNE_WEATHER: {
-      
+      break;
     }
     default:
       return state
