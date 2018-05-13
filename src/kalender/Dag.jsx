@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 import { HendelseMedTid, HendelseFullDag } from './Hendelse';
-import symbols from '../weather/symbols';
 import DayHeaderWeather from './DagHeaderWeather';
 
 import './style.css';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SunCalc from 'suncalc';
 import Moment from 'moment';
 import './yr.css';
-import symbols from './symbols';
+import symboler from './symboler';
 
 class WeatherIcon extends Component {
   componentDidMount() {
@@ -17,13 +17,12 @@ class WeatherIcon extends Component {
   }
 
   getIcon() {
-    let icon = 'blank.svg';
-    const nattdag = (this.getDayTime()) ? 'dag' : 'natt';
-    if (this.props.payload.symbol in symbols) {
-      icon = `${symbols[this.props.payload.symbol]}.svg`;
+    let icon = symboler.blank;
+    const nattdag = (this.getDayTime()) ? 'day' : 'night';
+    if (this.props.payload.symbol in symboler[nattdag]) {
+      icon = symboler[nattdag][this.props.payload.symbol];
     }
-    const returnStr = `icons/${nattdag}/${icon}`;
-    return returnStr;
+    return icon;
   }
 
   getTemp() {

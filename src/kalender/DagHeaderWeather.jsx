@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 import SunCalc from 'suncalc';
-import symbols from '../weather/symbols';
+import symboler from '../weather/symboler';
 
 export default class DayHeaderWeather extends Component {
 
@@ -13,15 +13,13 @@ export default class DayHeaderWeather extends Component {
   }
 
   getIcon(data) {
-    let icon = 'blank.svg';
-    const nattdag = (this.getDayTime(data)) ? 'dag' : 'natt';
-    if (data.symbol in symbols) {
-      icon = `${symbols[data.symbol]}.svg`;
+    let icon = symboler.blank;
+    const nattdag = (this.getDayTime(data)) ? 'day' : 'night';
+    if (data.symbol in symboler[nattdag]) {
+      icon = symboler[nattdag][data.symbol];
     }
-    const returnStr = `icons/${nattdag}/${icon}`;
-    return returnStr;
+    return icon;
   }
-
 
   getWeatherData() {
     const first = this.props.weather.filter((w) => {
