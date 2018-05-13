@@ -66,7 +66,6 @@ export default class DayHeaderWeather extends Component {
   render() {
     if (this.props.weather.length === 0) return null;
     const weather = this.getWeatherData();
-    console.log(weather);
     return (
       <div style={{ flexDirection: 'row', display: 'flex', flex: 1, padding: 3 }}>
         { this.renderWeatherCell(weather.first) }

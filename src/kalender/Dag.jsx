@@ -31,7 +31,7 @@ export default class Dag extends Component {
   getDinner() {
     if (typeof this.props.dinner === 'undefined') return null;
     return (
-      <span className="dinner">{this.props.dinner.events[0].name}</span>
+      <span className="hendelse">🍴 {this.props.dinner.events[0].name}</span>
     );
   }
 
@@ -39,8 +39,8 @@ export default class Dag extends Component {
     const dateHeaderFormats = {
       sameDay: '[I dag]',
       nextDay: '[I morgen]',
-      nextWeek: 'dddd',
-      sameElse: 'dddd DD.',
+      nextWeek: 'dddd DD.',
+      sameElse: 'dddd DD. MMM',
     };
     const dateStr = Moment(date).calendar(null, dateHeaderFormats);
     return dateStr;
@@ -49,12 +49,12 @@ export default class Dag extends Component {
   render() {
     return (
       <div className="calendarDay">
-        <span className="calendarDayHeader">
-          <span>{this.getDayHeader(this.props.date)}</span>
-        </span>
+        <div className="calendarDayHeader">
+          {this.getDayHeader(this.props.date)}
+        </div>
         <DayHeaderWeather weather={this.props.weather} date={this.props.date} />
         {this.getDinner()}
-        <span className="events">{this.getEvents(this.props.events)}</span>
+        <div className="events">{this.getEvents(this.props.events)}</div>
       </div>
     );
   }

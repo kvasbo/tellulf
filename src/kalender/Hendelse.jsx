@@ -41,14 +41,14 @@ function getTimeString(event) {
       // subtract one, as we only want the last included day
       const newEnd = Moment(event.end);
       newEnd.subtract(1, 'day');
-      timeString += ` - ${Moment(newEnd).calendar(null, fullDayFormats())}`;
+      timeString += ` → ${Moment(newEnd).calendar(null, fullDayFormats())}`;
     }
   } else {
     let toFormats = normalDayToFormats();
     if (!event.oneDay) {
       toFormats = normalFormats();
     }
-    timeString = `${Moment(event.start).calendar(null, normalDayToFormats())}→${Moment(event.end).calendar(null, toFormats)}`;
+    timeString = `${Moment(event.start).calendar(null, normalDayToFormats())} → ${Moment(event.end).calendar(null, toFormats)}`;
   }
   return timeString;
 }
@@ -59,7 +59,7 @@ function fullDayFormats() {
     nextWeek: 'dddd',
     sameDay: '[I dag]',
     nextDay: '[I morgen]',
-    sameElse: 'DD.MM',
+    sameElse: 'DD. MMM',
   };
 }
 
