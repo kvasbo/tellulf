@@ -189,9 +189,9 @@ export default class Solceller extends Component {
               }}
               y={this.state.now}
               x={this.state.currentTime}
-              r={6}
-              fill="#bf2a2a"
-              stroke="none"
+              r={3}
+              fill="#ffffff44"
+              stroke="#ffffff"
             />
           </ComposedChart>
         </div>

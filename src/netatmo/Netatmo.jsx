@@ -26,7 +26,7 @@ class Netatmo extends Component {
       const updated = Moment(data.updated);
       const diff = Moment().diff(updated, 'minutes');
 
-      console.log('netatmo', data);
+      // console.log('netatmo', data);
     
       this.props.dispatch(updateNetatmo(data));
 
