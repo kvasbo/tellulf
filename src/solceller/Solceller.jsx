@@ -3,7 +3,7 @@ import Moment from 'moment';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { XAxis, YAxis, Area, Line, AreaChart, ReferenceLine, ReferenceDot, ComposedChart } from 'recharts';
-import { updateSolarMax, updateSolarCurrent } from '../redux/actions';
+import { updateSolarMax, updateSolarCurrent, updatePowerPrices } from '../redux/actions';
 import './style.css';
 
 const nettleie = 0.477;
@@ -11,10 +11,6 @@ const nettleie = 0.477;
 class Solceller extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentTime: Moment().valueOf(),
-      powerPrices: [],
-    };
   }
 
   componentDidMount() {
@@ -110,9 +106,9 @@ class Solceller extends Component {
         // console.log(data.data.data.viewer.homes[0].currentSubscription.priceInfo.today);
         const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
         const powerPrices = prices.map((p) => {
-          return { price: p.total + nettleie, time: Moment(p.startsAt).valueOf() };
+          return { total: p.total + nettleie, nettleie, power: p.total, time: Moment(p.startsAt).valueOf() };
         });
-        this.setState({ powerPrices });
+        this.props.dispatch(updatePowerPrices(powerPrices));
       }
     } catch (err) {
       console.log(err);
@@ -152,9 +148,9 @@ class Solceller extends Component {
         dataSet[h.time].production = h.production;
       }
     });
-    this.state.powerPrices.forEach((h) => {
+    this.props.powerPrices.forEach((h) => {
       if (h.time in dataSet) {
-        dataSet[h.time].price = h.price;
+        dataSet[h.time].price = h.total;
       }
     });
     return Object.values(dataSet);
@@ -238,6 +234,7 @@ const mapStateToProps = state => {
   return {
     current: state.Solar.current,
     max: state.Solar.max,
+    powerPrices: state.PowerPrices,
   };
 }
 
