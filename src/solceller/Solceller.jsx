@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import { XAxis, YAxis, Area, Line, AreaChart, ReferenceLine, ReferenceDot, ComposedChart } from 'recharts';
+import { updateSolarMax, updateSolarCurrent } from '../redux/actions';
 import './style.css';
 
 const nettleie = 0.477;
 
-export default class Solceller extends Component {
+class Solceller extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      now: null,
-      today: null,
-      month: null,
-      year: null,
-      total: null,
-      maxDay: null,
       currentTime: Moment().valueOf(),
-      byHour: null,
-      averageFull: 0,
       powerPrices: [],
     };
   }
@@ -40,9 +34,10 @@ export default class Solceller extends Component {
         // const averageShort = (typeof val.averages.short !== 'undefined') ? val.averages.short : null;
         const byHour = (typeof val.todayByHour.val !== 'undefined') ? parseByHour(val.todayByHour.val) : null;
         const currentTime = Moment().valueOf();
-        this.setState({
+        const state = {
           now, today, month, year, total, byHour, currentTime, averageFull,
-        });
+        };
+        this.props.dispatch(updateSolarCurrent(state));
       } catch (err) {
         console.log(err);
       }
@@ -65,9 +60,36 @@ export default class Solceller extends Component {
     dbRefDayMax.on('value', (snapshot) => {
         const val = snapshot.val();
         if (val && val.value) {
-          this.setState({ maxDay: val.value });
+          const state = { maxDay: val.value }
+          this.props.dispatch(updateSolarMax(state));
         }
-        
+    });
+
+    const dbRefMonthMax = window.firebase.database().ref(refMonth);
+    dbRefMonthMax.on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxMonth: val.value }
+          this.props.dispatch(updateSolarMax(state));
+        }
+    });
+
+    const dbRefYearMax = window.firebase.database().ref(refYear);
+    dbRefYearMax.on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxYear: val.value }
+          this.props.dispatch(updateSolarMax(state));
+        }
+    });
+
+    const dbRefEverMax = window.firebase.database().ref(refEver);
+    dbRefEverMax.on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxEver: val.value }
+          this.props.dispatch(updateSolarMax(state));
+        }
     });
 
   }
@@ -99,33 +121,33 @@ export default class Solceller extends Component {
 
   getCurrentLabelPosition() {
     const side = (Moment().hour() < 18) ? 'right' : 'left';
-    if (this.state.now > 3300) {
+    if (this.props.current.now > 3300) {
       return side;
     }
     return 'top';
   }
 
   showProdToday() {
-    return getRoundedNumber(Number(this.state.today) / 1000);
+    return getRoundedNumber(Number(this.props.current.today) / 1000);
   }
 
   showProdMonth() {
-    return getRoundedNumber(parseFloat(this.state.month) / 1000);
+    return getRoundedNumber(parseFloat(this.props.current.month) / 1000);
   }
 
   showProdYear() {
-    return getRoundedNumber(parseFloat(this.state.year) / 1000);
+    return getRoundedNumber(parseFloat(this.props.current.year) / 1000);
   }
 
   showProdTotal() {
-    return getRoundedNumber(parseFloat(this.state.total) / 1000);
+    return getRoundedNumber(parseFloat(this.props.current.total) / 1000);
   }
 
   getData() {
-    if (!this.state.byHour) return null;
+    if (!this.props.current.byHour) return null;
     const dataSet = getDataPointObject();
     // Map production data
-    this.state.byHour.forEach((h) => {
+    this.props.current.byHour.forEach((h) => {
       if (h.time in dataSet) {
         dataSet[h.time].production = h.production;
       }
@@ -165,13 +187,13 @@ export default class Solceller extends Component {
             <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
             <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
             <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
-            <ReferenceLine yAxisId="kwh" y={this.state.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
+            <ReferenceLine yAxisId="kwh" y={this.props.current.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
             <ReferenceLine
               yAxisId="kwh"
-              y={this.state.maxDay}
+              y={this.props.max.maxDay}
               stroke="#FFFF0088"
               label={{
-                value: `${this.state.maxDay}W`,
+                value: `${this.props.max.maxDay}W`,
                 stroke: '#ffffff77',
                 fill: '#ffffff77',
                 fontSize: 12,
@@ -181,14 +203,14 @@ export default class Solceller extends Component {
             <ReferenceDot
               yAxisId="kwh"
               label={{
-                value: `${this.state.now}W`,
+                value: `${this.props.current.now}W`,
                 stroke: 'white',
                 fill: 'white',
                 fontSize: 55,
                 position: this.getCurrentLabelPosition(),
               }}
-              y={this.state.now}
-              x={this.state.currentTime}
+              y={this.props.current.now}
+              x={this.props.current.currentTime}
               r={3}
               fill="#ffffff44"
               stroke="#ffffff"
@@ -211,6 +233,15 @@ export default class Solceller extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    current: state.Solar.current,
+    max: state.Solar.max,
+  };
+}
+
+export default connect(mapStateToProps)(Solceller);
 
 function getDataPointObject() {
   const out = {};

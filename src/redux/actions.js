@@ -3,10 +3,26 @@ export const UPDATE_WEATHER_LONG = 'UPDATE_WEATHER_LONG';
 export const UPDATE_WEATHER_LIMITS = 'UPDATE_WEATHER_LIMITS';
 export const PRUNE_WEATHER = 'PRUNE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
+export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
+export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 
 export function updateWeather(data) {
   return {
     type: UPDATE_WEATHER,
+    data,
+  };
+}
+
+export function updateSolarMax(data) {
+  return {
+    type: UPDATE_SOLAR_MAX,
+    data,
+  };
+}
+
+export function updateSolarCurrent(data) {
+  return {
+    type: UPDATE_SOLAR_CURRENT,
     data,
   };
 }
