@@ -1,4 +1,4 @@
-import { cloneDeep, omit } from 'lodash';
+import { cloneDeep } from 'lodash';
 import Moment from 'moment';
 import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LIMITS, UPDATE_WEATHER_LONG } from './actions';
 
