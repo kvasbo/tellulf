@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { createStore } from 'redux';
 import storage from 'redux-persist/lib/storage';
+import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux';
 import 'moment/locale/nb';
 import tellulfReducer from './redux/reducers';
 import Tellulf from './Tellulf';
 import Login from './Login';
 import firebase from './firebase';
+import { store, persistor } from './redux/store';
 
-const store = createStore(
-  tellulfReducer, /* preloadedState, */
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
- );
+global.persistor = persistor;
 
 Moment.locale('nb');
 
@@ -38,7 +37,9 @@ class App extends Component {
     if (this.state.loggedIn) {
       return (
         <Provider store={store}>
-          <Tellulf />
+          <PersistGate loading={null} persistor={persistor}>
+            <Tellulf />
+          </PersistGate>
         </Provider>
       );
     }

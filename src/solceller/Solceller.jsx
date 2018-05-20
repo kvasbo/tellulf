@@ -116,9 +116,8 @@ class Solceller extends Component {
   }
 
   getCurrentLabelPosition() {
-    const side = (Moment().hour() < 18) ? 'right' : 'left';
-    if (this.props.current.now > 3300) {
-      return side;
+    if (this.props.current.averagefull > 3300) {
+      return 'bottom';
     }
     return 'top';
   }
@@ -183,28 +182,26 @@ class Solceller extends Component {
             <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
             <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
             <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
-            <ReferenceLine yAxisId="kwh" y={this.props.current.averageFull} stroke="#FFFFFF" strokeDasharray="3 3" />
             <ReferenceLine
               yAxisId="kwh"
-              y={this.props.max.maxDay}
-              stroke="#FFFF0088"
+              y={this.props.current.averageFull}
+              stroke="#FFFFFF"
+              strokeDasharray="3 3"
               label={{
-                value: `${this.props.max.maxDay}W`,
-                stroke: '#ffffff77',
-                fill: '#ffffff77',
-                fontSize: 12,
-                position: "top",
-              }}
-              strokeDasharray="3 3" />
-            <ReferenceDot
-              yAxisId="kwh"
-              label={{
-                value: `${this.props.current.now}W`,
+                value: `${this.props.current.averageFull}W`,
                 stroke: 'white',
                 fill: 'white',
                 fontSize: 55,
                 position: this.getCurrentLabelPosition(),
               }}
+            />
+            <ReferenceLine
+              yAxisId="kwh"
+              y={this.props.max.maxDay}
+              stroke="#FFFF0088"
+              strokeDasharray="3 3" />
+            <ReferenceDot
+              yAxisId="kwh"
               y={this.props.current.now}
               x={this.props.current.currentTime}
               r={3}

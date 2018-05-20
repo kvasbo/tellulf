@@ -4,7 +4,6 @@ import ErrorBoundary from './ErrorBoundary';
 import Klokke from './klokke/Klokke';
 import Netatmo from './netatmo/Netatmo';
 import Kalender from './kalender/Kalender';
-import Preggo from './preggo/Preggo';
 import Ruter from './ruter/Ruter';
 import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
