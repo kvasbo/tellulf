@@ -4,8 +4,8 @@ import { maxBy, minBy, filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
-import { updateWeather, updateWeatherLimits, pruneWeather, updateWeatherLong } from '../redux/actions';
+import { ComposedChart, Line, XAxis, YAxis, ReferenceLine, ResponsiveContainer } from 'recharts';
+import { updateWeather, updateWeatherLimits, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
 
@@ -149,16 +149,18 @@ class Yr extends Component {
     }
     return (
       <div className="yr-container">
-        <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} width={540} height={290} data={this.getData()}>
-          <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
-          <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
-          <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
-          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
-          <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
-          <ReferenceLine x={this.state.currentTime} stroke="#FFFFFF88" strokeWidth={2} />
-          <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
-        </ComposedChart>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} data={this.getData()}>
+            <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
+            <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
+            <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
+            <ReferenceLine x={this.state.currentTime} stroke="#FFFFFF88" strokeWidth={2} />
+            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     );
   }

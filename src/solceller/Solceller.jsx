@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Moment from 'moment';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { XAxis, YAxis, Area, Line, AreaChart, ReferenceLine, ReferenceDot, ComposedChart } from 'recharts';
+import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer } from 'recharts';
 import { updateSolarMax, updateSolarCurrent, updatePowerPrices } from '../redux/actions';
 import './style.css';
 
@@ -158,61 +158,60 @@ class Solceller extends Component {
   render() {
     if (!this.getData()) return null;
     return (
-      <div>
-        <div>
-          <ComposedChart
-            margin={{
-              top: 30,
-              right: 20,
-              left: 30,
-              bottom: 10,
-            }}
-            width={540}
-            height={260}
-            data={this.getData()}
-          >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="10%" stopColor="#bf2a2a" stopOpacity={1} />
-                <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-            <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1.0, 1.25, 1.5]} orientation="right" type="number" domain={[0, 1.5]} />
-            <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
-            <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
-            <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
-            <ReferenceLine
-              yAxisId="kwh"
-              y={this.props.current.averageFull}
-              stroke="#FFFFFF"
-              strokeDasharray="3 3"
-              label={{
-                value: `${this.props.current.averageFull}W`,
-                stroke: 'white',
-                fill: 'white',
-                fontSize: 55,
-                position: this.getCurrentLabelPosition(),
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%' }}>
+        <div style={{ display: 'flex', flex: 1 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart
+              margin={{
+                top: 30,
+                right: 20,
+                left: 30,
+                bottom: 10,
               }}
-            />
-            <ReferenceLine
-              yAxisId="kwh"
-              y={this.props.max.maxDay}
-              stroke="#FFFF0088"
-              strokeDasharray="3 3" />
-            <ReferenceDot
-              yAxisId="kwh"
-              y={this.props.current.now}
-              x={this.props.current.currentTime}
-              r={3}
-              fill="#ffffff44"
-              stroke="#ffffff"
-            />
-          </ComposedChart>
+              data={this.getData()}
+            >
+              <defs>
+                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="10%" stopColor="#bf2a2a" stopOpacity={1} />
+                  <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
+              <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1.0, 1.25, 1.5]} orientation="right" type="number" domain={[0, 1.5]} />
+              <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
+              <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
+              <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={this.props.current.averageFull}
+                stroke="#FFFFFF"
+                strokeDasharray="3 3"
+                label={{
+                  value: `${this.props.current.averageFull}W`,
+                  stroke: 'white',
+                  fill: 'white',
+                  fontSize: 55,
+                  position: this.getCurrentLabelPosition(),
+                }}
+              />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={this.props.max.maxDay}
+                stroke="#FFFF0088"
+                strokeDasharray="3 3" />
+              <ReferenceDot
+                yAxisId="kwh"
+                y={this.props.current.now}
+                x={this.props.current.currentTime}
+                r={3}
+                fill="#ffffff44"
+                stroke="#ffffff"
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
         </div>
         <div style={{
           display: 'flex',
-          flex: 1,
           flexDirection: 'row',
           justifyContent: 'space-evenly',
           }}

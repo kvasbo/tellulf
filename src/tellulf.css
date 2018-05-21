@@ -18,48 +18,6 @@ body {
 }
 
 .block {
-  padding: 0;
-  border: none;
   position: relative;
   overflow: auto;
-}
-
-.rightText {
-    text-align: right;
-}
-
-.centered {
-    text-align: center;
-}
-
-.huge {
-    font-size: 13vw;
-}
-
-.xlarge {
-    font-size: 7vw;
-}
-
-.large {
-    font-size: 4.5vw;
-}
-
-.medium {
-    font-size: 3.7vw;
-}
-
-.small {
-    font-size: 3vw;
-}
-
-.centered {
-    text-align: center;
-}
-
-.grey {
-  color: rgb(150,150,150);
-}
-
-.unit {
-  color: rgb(75,75,75);
 }
