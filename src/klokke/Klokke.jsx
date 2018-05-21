@@ -26,7 +26,7 @@ export default class Klokke extends Component {
 
   render() {
     return (
-      <div id="klokkeContainer" >
+      <div style={{ display: 'flex', flex: 1, height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} >
         <div id="tid">{this.state.time}</div>
         <div id="dag">{this.state.dato}</div>
       </div>

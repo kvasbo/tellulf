@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
 import { connect } from 'react-redux';
-import MainListItemFour from '../components/MainListItemFour';
 import { updateNetatmo } from '../redux/actions';
 
 class Netatmo extends Component {
@@ -56,21 +55,30 @@ class Netatmo extends Component {
     const now = new Date();
     const ageInMinutes = (now - this.state.updated) / 60 / 1000;
 
+    let nowTemp = this.state.temp;
+
     if (ageInMinutes > 60) {
-      return (
-        <MainListItemFour mainItem="?" subItems={[]} />
-      );
+      nowTemp = '?';
     }
 
-    const subs = [
-      `${this.state.inneTemp}°`,
-      `${this.state.co2} ppm`,
-      `${this.state.fukt}%`,
-      `${this.state.trykk} mb`,
-    ];
-
     return (
-      <MainListItemFour mainItem={this.state.temp} unit="°" subItems={subs} />
+      <div style={{ display: 'grid', gridTemplateColumns: '45% 14% 25% auto', gridColumnGap: 30, gridTemplateRows: '10% 40% 40% 10%', height: '100%', width: '100%' }} >
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 2, gridRowStart: 2, gridRowEnd: 4, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '9vh' }} >
+          {nowTemp}
+        </div>
+        <div style={{ gridColumnStart: 2, gridColumnEnd: 3, gridRowStart: 2, gridRowEnd: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: '15pt' }} >
+          {this.state.inneTemp}°
+        </div>
+        <div style={{ gridColumnStart: 2, gridColumnEnd: 3, gridRowStart: 3, gridRowEnd: 4, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: '15pt', }} >
+          {this.state.co2} ppm
+        </div>
+        <div style={{ gridColumnStart: 3, gridColumnEnd: 4, gridRowStart: 2, gridRowEnd: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: '15pt' }} >
+          {this.state.fukt}%
+        </div>
+        <div style={{ gridColumnStart: 3, gridColumnEnd: 4, gridRowStart: 3, gridRowEnd: 4, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: '15pt' }} >
+          {this.state.trykk} mb
+        </div>
+      </div>
     );
   }
 }

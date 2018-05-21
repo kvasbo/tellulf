@@ -168,7 +168,7 @@ class Solceller extends Component {
               bottom: 10,
             }}
             width={540}
-            height={280}
+            height={260}
             data={this.getData()}
           >
             <defs>

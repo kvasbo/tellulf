@@ -1,11 +1,3 @@
-#klokkeContainer {
-  display: flex;
-  flex-direction: column;
-  height: 25vh;
-  width: '100%';
-  justify-content: 'center';
-  align-items: 'center';
-}
 
 #tid {
   font-size: 13vh;

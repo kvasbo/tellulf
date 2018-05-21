@@ -47,14 +47,14 @@ export default class DayHeaderWeather extends Component {
   }
 
   renderWeatherCell(data) {
-    if (!data) return (<div style={{ flex: 1 }}/>)
+    if (!data) return (<div style={{ display: 'flex', flex: 1 }} />)
     const icon = this.getIcon(data);
     return (
-      <div style={{ fontSize: 14, color: '#ffffff88', flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
-        <div style={{flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flex: 1, overFlow: 'hidden', fontSize: 14, color: '#ffffff88', justifyContent: 'center', flexDirection: 'row', marginTop: '0.4vh' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <img src={icon} width={20} height={20} />
         </div>
-        <div style={{flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{display: 'flex', marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
           {Math.round(data.temp)}
         </div>
       </div>
@@ -65,7 +65,7 @@ export default class DayHeaderWeather extends Component {
     if (this.props.weather.length === 0) return null;
     const weather = this.getWeatherData();
     return (
-      <div style={{ flexDirection: 'row', display: 'flex', flex: 1, padding: 3 }}>
+      <div style={{ flexDirection: 'row', display: 'flex', flex: 1 }}>
         { this.renderWeatherCell(weather.first) }
         { this.renderWeatherCell(weather.second) }
         { this.renderWeatherCell(weather.third) }

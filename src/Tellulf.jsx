@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
+import Modal from 'react-responsive-modal';
 import ErrorBoundary from './ErrorBoundary';
 import Klokke from './klokke/Klokke';
 import Netatmo from './netatmo/Netatmo';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
+import Smarthus from './smarthus/Smarthus';
 import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
-import ZipatoPanel from './lys/Zipato';
-import Modal from './components/Modal';
 import './cssReset.css';
 import './tellulf.css';
 
@@ -25,62 +25,45 @@ function startReloadLoop() {
 class Tellulf extends Component {
   constructor(props) {
     super(props);
-    this.state = { modal: 'none' };
-    this.killModal = this.killModal.bind(this);
+    this.state = { modalBlinds: false };
   }
 
   componentDidMount() {
     startReloadLoop();
   }
 
-  getModal() {
-    if (this.state.modal === 'zipato') return (<Modal close={this.killModal}><ZipatoPanel /></Modal>);
-    return null;
-  }
-
-  killModal() {
-    this.setState({ modal: 'none' });
-  }
-
   render() {
     return (
-      <div className="App" id="mainContainer">
-        <div id="contentArea">
-          <div id="leftContainer">
-            <div id="container_klokke" className="block">
-              <ErrorBoundary><Klokke /></ErrorBoundary>
-            </div>
-            <div id="container_netatmo" className="block">
-              <ErrorBoundary><Netatmo /></ErrorBoundary>
-            </div>
-            <div id="container_solceller" className="block">
-              <ErrorBoundary><Solceller /></ErrorBoundary>
-            </div>
-            <div id="container_yr" className="block">
-              <ErrorBoundary><Yr /></ErrorBoundary>
-            </div>
-          </div>
-          <div id="rightContainer">
-            <div id="container_kalender" className="block">
-              <ErrorBoundary><Kalender /></ErrorBoundary>
-            </div>
-          </div>
+      <div className="gridContainer">
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 4, gridRowStart: 1, gridRowEnd: 2 }}>
+          <ErrorBoundary><Klokke /></ErrorBoundary>
         </div>
-        <div id="bottomContainer">
-          <div id="container_flatBane" className="block">
-            <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
-          </div>
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 4, gridRowStart: 2, gridRowEnd: 3 }} className="block">
+          <ErrorBoundary><Netatmo /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 4, gridRowStart: 3, gridRowEnd: 4 }} className="block">
+          <ErrorBoundary><Solceller /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 4, gridRowStart: 4, gridRowEnd: 5 }} className="block">
+          <ErrorBoundary><Yr /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumnStart: 4, gridColumnEnd: 5, gridRowStart: 1, gridRowEnd: 5 }} className="block">
+          <ErrorBoundary><Kalender /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 5, gridRowStart: 5, gridRowEnd: 6 }} className="block">
+          <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
         </div>
       </div>
     );
   }
 }
 
-/**
-       <div id="buttonsContainer">
-          <i className="material-icons button" onClick={() => { this.setState({ modal: 'zipato' }); }}>lightbulb_outline</i>
+/*
+
+<div style={{ gridColumnStart: 3, gridColumnEnd: 4, gridRowStart: 5, gridRowEnd: 6 }} className="block">
+          <ErrorBoundary><Smarthus /></ErrorBoundary>
         </div>
-        {this.getModal()}
- */
+
+        */
 
 export default Tellulf;
