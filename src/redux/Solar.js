@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { UPDATE_SOLAR_CURRENT, UPDATE_SOLAR_MAX } from './actions';
 
 const initialState = {

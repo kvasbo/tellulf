@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { UPDATE_POWER_PRICES } from './actions';
 
 export function PowerPrices(state = [], action) {

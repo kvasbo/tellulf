@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { NETATMO_UPDATE } from './actions';
 
 const initialState = {
