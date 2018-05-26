@@ -50,8 +50,11 @@ class Tellulf extends Component {
         <div style={{ gridColumnStart: 4, gridColumnEnd: 5, gridRowStart: 1, gridRowEnd: 5 }} className="block">
           <ErrorBoundary><Kalender /></ErrorBoundary>
         </div>
-        <div style={{ gridColumnStart: 1, gridColumnEnd: 5, gridRowStart: 5, gridRowEnd: 6 }} className="block">
+        <div style={{ gridColumnStart: 1, gridColumnEnd: 4, gridRowStart: 5, gridRowEnd: 6 }} className="block">
           <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumnStart: 4, gridColumnEnd: 5, gridRowStart: 5, gridRowEnd: 6 }} className="block">
+          <ErrorBoundary><Smarthus /></ErrorBoundary>
         </div>
       </div>
     );
