@@ -25,9 +25,10 @@ export default class Ruter extends Component {
 
   render() {
     return (
-      <div>
-        <div onClick={() => this.performAction('openDoor')}>Åpne dør</div>
-        <div onClick={() => this.performAction('closeDoor')}>Lukk dør</div>
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'row', height: '100%', justifyContent: 'space-evenly', alignItems: 'center' }} >
+        Dør: 
+        <div style={{ padding: 4 }} onClick={() => this.performAction('openDoor')}>▲</div>
+        <div style={{ padding: 4 }}  onClick={() => this.performAction('closeDoor')}>▼</div>
       </div>
     );
   }
