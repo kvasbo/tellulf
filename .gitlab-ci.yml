@@ -10,8 +10,9 @@ deploy_production:
   only:
     - master
   script:
-    - npm install -g firebase-tools
-    - cd /builds/tellulf-client
+    # - npm install -g firebase-tools
+    - cd /builds/
+    - ls
     - yarn
     - yarn run build
     # - firebase use --token $FIREBASE_DEPLOY_KEY production
