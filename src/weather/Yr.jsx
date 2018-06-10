@@ -4,7 +4,7 @@ import { maxBy, minBy, filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ReferenceLine, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceDot } from 'recharts';
 import { updateWeather, updateWeatherLimits, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';

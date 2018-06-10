@@ -5,22 +5,6 @@ import SunCalc from 'suncalc';
 import symboler from '../weather/symboler';
 
 export default class DayHeaderWeather extends Component {
-
-  getDayTime(data) {
-    const time = new Moment(data.time);
-    const sunTimes = SunCalc.getTimes(time.toDate(), 59.9409, 10.6991);
-    return time.isBetween(sunTimes.dawn, sunTimes.dusk);
-  }
-
-  getIcon(data) {
-    let icon = symboler.blank;
-    const nattdag = (this.getDayTime(data)) ? 'day' : 'night';
-    if (data.symbol in symboler[nattdag]) {
-      icon = symboler[nattdag][data.symbol];
-    }
-    return icon;
-  }
-
   getWeatherData() {
     const first = this.props.weather.filter((w) => {
       const t = Moment(w.time);
@@ -46,31 +30,50 @@ export default class DayHeaderWeather extends Component {
     return out;
   }
 
-  renderWeatherCell(data) {
-    if (!data) return (<div style={{ display: 'flex', flex: 1 }} />)
-    const icon = this.getIcon(data);
-    return (
-      <div style={{ display: 'flex', flex: 1, overFlow: 'hidden', fontSize: 14, color: '#ffffff88', justifyContent: 'center', flexDirection: 'row', marginTop: '0.4vh' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img src={icon} width={20} height={20} />
-        </div>
-        <div style={{display: 'flex', marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
-          {Math.round(data.temp)}
-        </div>
-      </div>
-    )
-  }
-
   render() {
     if (this.props.weather.length === 0) return null;
     const weather = this.getWeatherData();
     return (
       <div style={{ flexDirection: 'row', display: 'flex', flex: 1 }}>
-        { this.renderWeatherCell(weather.first) }
-        { this.renderWeatherCell(weather.second) }
-        { this.renderWeatherCell(weather.third) }
-        { this.renderWeatherCell(weather.fourth) }
+        { renderWeatherCell(weather.first) }
+        { renderWeatherCell(weather.second) }
+        { renderWeatherCell(weather.third) }
+        { renderWeatherCell(weather.fourth) }
       </div>
     );
   }
 }
+
+function renderWeatherCell(data) {
+  if (!data) return (<div style={{ display: 'flex', flex: 1 }} />);
+  const icon = getIcon(data);
+  return (
+    <div style={{ display: 'flex', flex: 1, overFlow: 'hidden', fontSize: 14, color: '#ffffff88', justifyContent: 'center', flexDirection: 'row', marginTop: '0.4vh' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <img src={icon} width={20} height={20} alt="" />
+      </div>
+      <div style={{ display: 'flex', marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
+        {Math.round(data.temp)}
+      </div>
+    </div>
+  )
+}
+
+function getIcon(data) {
+  let icon = symboler.blank;
+  const nattdag = (getDayTime(data)) ? 'day' : 'night';
+  if (data.symbol in symboler[nattdag]) {
+    icon = symboler[nattdag][data.symbol];
+  }
+  return icon;
+}
+
+function getDayTime(data) {
+  const time = new Moment(data.time);
+  const sunTimes = SunCalc.getTimes(time.toDate(), 59.9409, 10.6991);
+  return time.isBetween(sunTimes.dawn, sunTimes.dusk);
+}
+
+DayHeaderWeather.propTypes = {
+  weather: PropTypes.array.isRequired,
+};

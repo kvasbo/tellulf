@@ -41,8 +41,8 @@ class Solceller extends Component {
     const y = now.format("YYYY");
     const m = now.format("MM");
     const d = now.format("DD");
-    const h = now.format("HH");
-    const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
+    // const h = now.format("HH");
+    // const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
     const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
     const refMonth = `steca/maxValues/monthly/${y}/${m}`;
     const refYear = `steca/maxValues/yearly/${y}`;
@@ -91,7 +91,7 @@ class Solceller extends Component {
       const data = await axios({
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
-        headers: {'Authorization': "bearer" + '1a3772d944bcf972f1ee84cf45d769de1c80e4f0173d665328287d1e2a746004'},
+        headers: { Authorization: 'bearer 1a3772d944bcf972f1ee84cf45d769de1c80e4f0173d665328287d1e2a746004' },
         data: {
           query: `
             {viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt }}}}}}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Moment from 'moment';
-import Modal from 'react-responsive-modal';
 import ErrorBoundary from './ErrorBoundary';
 import Klokke from './klokke/Klokke';
 import Netatmo from './netatmo/Netatmo';

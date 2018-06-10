@@ -30,6 +30,7 @@ export default class Dag extends Component {
   getDinner() {
     if (typeof this.props.dinner === 'undefined') return null;
     return (
+      // eslint-disable-next-line
       <span className="hendelse">🍴 {this.props.dinner.events[0].name}</span>
     );
   }

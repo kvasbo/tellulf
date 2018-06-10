@@ -22,6 +22,7 @@ module.exports = {
     "react/forbid-prop-types": 0,
     "no-use-before-define": 0,
     "no-console": 0,
-    "react/prefer-stateless-function": 0
+    "react/prefer-stateless-function": 0,
+    "jsx-a11y/accessible-emoji": 0
   }
 };
