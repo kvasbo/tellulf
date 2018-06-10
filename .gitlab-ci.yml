@@ -10,8 +10,8 @@ deploy_production:
   only:
     - master
   script:
-    # - npm install -g firebase-tools
-    - cd /builds/
+    - yarn add --global firebase-tools
+    - cd /builds/tellulf
     - ls
     - yarn
     - yarn run build
