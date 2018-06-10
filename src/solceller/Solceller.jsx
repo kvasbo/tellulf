@@ -9,10 +9,6 @@ import './style.css';
 const nettleie = 0.477;
 
 class Solceller extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
     this.getPowerPrice();
