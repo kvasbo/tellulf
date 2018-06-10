@@ -155,15 +155,22 @@ class Yr extends Component {
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} data={this.getData()}>
+            <defs>
+              <radialGradient id="sunGradient">
+                <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
+                <stop offset="14%" stopColor={getColorForSun()} stopOpacity="0.25" />
+                <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
+              </radialGradient>
+            </defs>
             <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
             <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
+            <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFFFF88" />
+            <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
-            <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFF00AA" />
-            <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="#FFFF00FF" stroke="none" r={8} />
             <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
           </ComposedChart>
         </ResponsiveContainer>
@@ -176,6 +183,17 @@ function getSunForTime(time) {
   const t = Moment(time).toDate();
   const s = SunCalc.getPosition(t, lat * 1, long * 1);
   return s.altitude;
+}
+
+function getColorForSun() {
+  const cutoff = 0.35;
+  const base = 120;
+  const altitude = getSunForTime(new Date());
+  if (altitude > cutoff) return '#FFD700';
+  const percent = altitude / cutoff;
+  const percentRed = Math.min(215, base + (215 * percent));
+  const redString = Math.round(percentRed).toString(16);
+  return `#FF${redString}00`;
 }
 
 function getTicks() {
