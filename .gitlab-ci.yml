@@ -11,7 +11,7 @@ deploy_production:
     - master
   script:
     - yarn add firebase-tools --global 
-    - cd /builds/tellulf
+    - cd /builds/tellulf/tellulf-client
     - ls
     - yarn
     - CI=false yarn run build
