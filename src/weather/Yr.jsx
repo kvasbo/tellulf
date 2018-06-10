@@ -4,7 +4,7 @@ import { maxBy, minBy, filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ReferenceLine, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ReferenceLine, ResponsiveContainer, ReferenceDot } from 'recharts';
 import { updateWeather, updateWeatherLimits, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
@@ -104,6 +104,12 @@ class Yr extends Component {
         const temp = (minTemp + maxTemp) / 2;
         sixesOut[key] = { from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol };
       });
+      // Sun height
+      Object.values(weatherOut).forEach((w) => {
+        const tObject = Moment(w.time).toDate();
+        const sun = SunCalc.getPosition(tObject, lat * 1, long * 1);
+        weatherOut[w.time].sunHeight = sun.altitude;
+      });
       hours.forEach((p) => {
         const time = Moment(p.from);
         const key = time.valueOf();
@@ -113,7 +119,6 @@ class Yr extends Component {
           weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
           weatherOut[key].symbol = p.location.symbol.id;
           weatherOut[key].symbolNumber = p.location.symbol.number;
-          weatherOut[key].time = time.valueOf();
         }
       });
       const limits = parseLimits(weatherOut);
@@ -143,7 +148,6 @@ class Yr extends Component {
 
   // Stays on
   render() {
-    // console.log(this.props);
     if (!this.props.weather || !this.props.limits) {
       return null;
     }
@@ -154,16 +158,24 @@ class Yr extends Component {
             <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
+            <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
-            <ReferenceLine x={this.state.currentTime} stroke="#FFFFFF88" strokeWidth={2} />
+            <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFF00AA" />
+            <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="#FFFF00FF" stroke="none" r={8} />
             <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
     );
   }
+}
+
+function getSunForTime(time) {
+  const t = Moment(time).toDate();
+  const s = SunCalc.getPosition(t, lat * 1, long * 1);
+  return s.altitude;
 }
 
 function getTicks() {
@@ -188,7 +200,7 @@ function initWeather() {
   const now = new Moment().startOf('day');
   for (let i = 0; i < 48; i++) {
     const key = now.valueOf();
-    out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: now.valueOf() };
+    out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf() };
     now.add(1, 'hours');
   }
   return out;
