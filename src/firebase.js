@@ -1,5 +1,7 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/database';
 
 const config = {
   apiKey: 'AIzaSyBIJfOzVFrazxX9FkLEOHcf2dKeewXBCpI',
@@ -9,5 +11,6 @@ const config = {
   storageBucket: 'tellulf-151318.appspot.com',
   messagingSenderId: '159155087298',
 };
+
 const fire = firebase.initializeApp(config);
 export default fire;

@@ -159,7 +159,6 @@ class Yr extends Component {
     }
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
-    console.log(sunPercent);
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
