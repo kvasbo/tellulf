@@ -177,8 +177,8 @@ class Yr extends Component {
             <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFFFF88" />
             <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8AA" strokeDasharray="2 2" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
             <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
           </ComposedChart>
         </ResponsiveContainer>

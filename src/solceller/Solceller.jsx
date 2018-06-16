@@ -193,7 +193,7 @@ class Solceller extends Component {
               <ReferenceLine
                 yAxisId="kwh"
                 y={this.props.max.maxDay}
-                stroke="#FFFF0088"
+                stroke="#FFFF0055"
                 strokeDasharray="3 3" />
               <ReferenceDot
                 yAxisId="kwh"
