@@ -179,7 +179,7 @@ class Yr extends Component {
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d888" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d888" />
-            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#8884d8" strokeWidth={2} />
+            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
