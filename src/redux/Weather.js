@@ -1,5 +1,5 @@
 import Moment from 'moment';
-import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LIMITS, UPDATE_WEATHER_LONG } from './actions';
+import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LONG } from './actions';
 
 const initialState = {
   weather: undefined,
@@ -20,13 +20,10 @@ export function Weather(state = initialState, action) {
       filtered.forEach((w) => {
         newWeather[w.time] = w;
       });
-      return { ...state, weather: newWeather }
+      return { ...state, weather: newWeather, limits: action.limits }
     }
     case UPDATE_WEATHER_LONG: {
       return { ...state, long: { ...state.long, ...action.data } }
-    }
-    case UPDATE_WEATHER_LIMITS: {
-      return { ...state, limits: { ...state.limits, ...action.limits } }
     }
     case PRUNE_WEATHER: {
       break;

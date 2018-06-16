@@ -129,8 +129,7 @@ class Yr extends Component {
       });
       const limits = parseLimits(weatherOut);
       try {
-        this.props.dispatch(updateWeatherLimits(limits));
-        this.props.dispatch(updateWeather(weatherOut));
+        this.props.dispatch(updateWeather(weatherOut, limits));
         this.props.dispatch(updateWeatherLong(sixesOut));
       } catch (err) {
         console.log(err);
