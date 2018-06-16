@@ -30,6 +30,10 @@ class Yr extends Component {
     setInterval(() => { this.reloadTime(); }, 60000);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return true;
+  }
+
   setNextReload() {
     // Start of next hour
     clearTimeout(this.reloadTimer);
@@ -125,9 +129,9 @@ class Yr extends Component {
       });
       const limits = parseLimits(weatherOut);
       try {
+        this.props.dispatch(updateWeatherLimits(limits));
         this.props.dispatch(updateWeather(weatherOut));
         this.props.dispatch(updateWeatherLong(sixesOut));
-        this.props.dispatch(updateWeatherLimits(limits));
       } catch (err) {
         console.log(err);
       }
@@ -153,8 +157,9 @@ class Yr extends Component {
     if (!this.props.weather || !this.props.limits) {
       return null;
     }
-    // const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar.now);
-    // const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+    const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
+    const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+    console.log(sunPercent);
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
@@ -162,7 +167,7 @@ class Yr extends Component {
             <defs>
               <radialGradient id="sunGradient">
                 <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
-                <stop offset="14%" stopColor={getColorForSun()} stopOpacity="0.2" />
+                <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
                 <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
               </radialGradient>
             </defs>
@@ -309,9 +314,9 @@ function getSunMeta() {
 
 const mapStateToProps = state => {
   return {
+    currentSolar: Math.round(state.Solar.current.now / 100) * 100,
     weather: state.Weather.weather,
     limits: state.Weather.limits,
-    // currentSolar: state.Solar.current,
   };
 }
 

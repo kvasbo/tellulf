@@ -2,7 +2,7 @@ import Moment from 'moment';
 import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LIMITS, UPDATE_WEATHER_LONG } from './actions';
 
 const initialState = {
-  weather: {},
+  weather: undefined,
   long: {},
   limits: undefined,
 };
