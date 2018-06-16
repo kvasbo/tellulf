@@ -153,8 +153,8 @@ class Yr extends Component {
     if (!this.props.weather || !this.props.limits) {
       return null;
     }
-    const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar.now);
-    const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+    // const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar.now);
+    // const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
@@ -162,7 +162,7 @@ class Yr extends Component {
             <defs>
               <radialGradient id="sunGradient">
                 <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
-                <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
+                <stop offset="14%" stopColor={getColorForSun()} stopOpacity="0.2" />
                 <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
               </radialGradient>
             </defs>
@@ -311,7 +311,7 @@ const mapStateToProps = state => {
   return {
     weather: state.Weather.weather,
     limits: state.Weather.limits,
-    currentSolar: state.Solar.current,
+    // currentSolar: state.Solar.current,
   };
 }
 
