@@ -6,11 +6,10 @@ export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
 export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
 
-export function updateWeather(data, limits) {
+export function updateWeather(data) {
   return {
     type: UPDATE_WEATHER,
     data,
-    limits,
   };
 }
 
