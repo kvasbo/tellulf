@@ -4,7 +4,7 @@ import { filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceDot, Area } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIconSvg';
 import './yr.css';
@@ -174,8 +174,8 @@ class Yr extends Component {
             <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
             <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFFFF88" />
             <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8AA" strokeDasharray="2 2" />
+            <Area dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
             <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
           </ComposedChart>
