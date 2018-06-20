@@ -244,7 +244,7 @@ function pruneWeatherData(data) {
 }
 
 function loadWeatherFromLocalStorage() {
-  let loaded = null; //store.get('weather');
+  let loaded = null;
   if (!loaded) {
     loaded = {};
   }
