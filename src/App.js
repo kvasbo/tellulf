@@ -29,16 +29,13 @@ class App extends Component {
   }
 
   getApp() {
-    if (this.state.loggedIn) {
-      return (
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <Tellulf />
-          </PersistGate>
-        </Provider>
-      );
-    }
-    return <Login />;
+    return (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Tellulf />
+        </PersistGate>
+      </Provider>
+    );
   }
 
   render() {
