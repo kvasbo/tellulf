@@ -24,7 +24,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "run": "react-native run-ios --simulator='iPad (5th generation)'",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
