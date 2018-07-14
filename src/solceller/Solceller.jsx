@@ -23,11 +23,12 @@ class Solceller extends Component {
         const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
         const averageFull = (typeof val.averages.full !== 'undefined') ? val.averages.full : null;
+        const averageMinute = (typeof val.averages['1'] !== 'undefined') ? val.averages['1'] : null;
         // const averageShort = (typeof val.averages.short !== 'undefined') ? val.averages.short : null;
         const byHour = (typeof val.todayByHour.val !== 'undefined') ? parseByHour(val.todayByHour.val) : null;
         const currentTime = Moment().valueOf();
         const state = {
-          now, today, month, year, total, byHour, currentTime, averageFull,
+          now, today, month, year, total, byHour, currentTime, averageFull, averageMinute,
         };
         this.props.dispatch(updateSolarCurrent(state));
       } catch (err) {
@@ -182,13 +183,6 @@ class Solceller extends Component {
                 y={this.props.current.averageFull}
                 stroke="#FFFFFF"
                 strokeDasharray="3 3"
-                label={{
-                  value: `${this.props.current.averageFull}W`,
-                  stroke: 'white',
-                  fill: 'white',
-                  fontSize: 55,
-                  position: this.getCurrentLabelPosition(),
-                }}
               />
               <ReferenceLine
                 yAxisId="kwh"
@@ -202,6 +196,13 @@ class Solceller extends Component {
                 r={3}
                 fill="#ffffff44"
                 stroke="#ffffff"
+                label={{
+                  value: `${this.props.current.averageMinute}W`,
+                  stroke: 'white',
+                  fill: 'white',
+                  fontSize: 50,
+                  position: this.getCurrentLabelPosition(),
+                }}
               />
             </ComposedChart>
           </ResponsiveContainer>

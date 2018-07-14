@@ -22,6 +22,14 @@ export default class Ruter extends Component {
     this.getRuterData();
   }
 
+  getTrainObjects() {
+    const out = [];
+    for (let i = 0; i < this.state.tog.length; i += 1) {
+      out.push(<Tog key={this.state.tog[i].id} info={this.state.tog[i]} />);
+    }
+    return out;
+  }
+  
   getTrains(data) {
     const tog = [];
     // Loop backwards
@@ -32,13 +40,7 @@ export default class Ruter extends Component {
     this.setState({ tog });
   }
 
-  getTrainObjects() {
-    const out = [];
-    for (let i = 0; i < this.state.tog.length; i += 1) {
-      out.push(<Tog key={this.state.tog[i].id} info={this.state.tog[i]} />);
-    }
-    return out;
-  }
+ 
 
   async getRuterData() {
     try {
@@ -56,8 +58,6 @@ export default class Ruter extends Component {
           const out = {};
           out.ruteTid = new Date(d.AimedArrivalTime);
           out.faktiskTid = new Date(d.ExpectedArrivalTime);
-          // out.diffRute = Math.floor((out.faktiskTid - out.ruteTid) / 1000);
-          // out.diffNow = Math.floor((out.faktiskTid - now) / 1000);
           // eslint-disable-next-line max-len
           out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
           out.linje = t.MonitoredVehicleJourney.PublishedLineName;

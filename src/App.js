@@ -4,7 +4,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux';
 import 'moment/locale/nb';
 import Tellulf from './Tellulf';
-import Login from './Login';
 import firebase from './firebase';
 import { store, persistor } from './redux/store';
 
