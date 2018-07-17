@@ -6,7 +6,7 @@ import axios from 'axios';
 import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceDot, Area } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
-import WeatherIcon from './WeatherIconSvg';
+import WeatherIcon from './WeatherIcon';
 import './yr.css';
 
 const XML = require('pixl-xml');
