@@ -152,6 +152,39 @@ class Solceller extends Component {
     return Object.values(dataSet);
   }
 
+  getProductionForHour(hour) {
+    const start = Moment().hour(hour).startOf('hour');
+    const end = Moment().hour(hour).endOf('hour');
+
+    const samplesForHour = this.props.current.byHour.filter((h) => {
+      return Moment(h.time).isBetween(start, end);
+    });
+
+    let sum = 0;
+    samplesForHour.forEach((h) => {
+      sum += h.production;
+    });
+
+    return sum / samplesForHour.length;
+  }
+
+  getMoneySavedToday() {
+    try {
+      let sum = 0;
+      for (let i = 0; i < 24; i += 1) {
+        const production = this.getProductionForHour(i);
+        const price = this.props.powerPrices[i];
+        const savedThisHour = (production * price.total) / 1000;
+        sum += savedThisHour;
+        // console.log(i, production, price.total, savedThisHour);
+      }
+      return Math.round(sum, 2);
+    } catch (err) {
+      console.log(err);
+      return '?';
+    }
+  }
+
   render() {
     if (!this.getData()) return null;
     return (
@@ -216,7 +249,7 @@ class Solceller extends Component {
           height: 50,
           }}
         >
-          <div>Dag: {this.showProdToday()}</div>
+          <div>Dag: {this.showProdToday()} kWh / {this.getMoneySavedToday()} kr</div>
           <div>Måned: {this.showProdMonth()}</div>
           <div>År: {this.showProdYear()}</div>
           <div>Total: {this.showProdTotal()}</div>
@@ -226,7 +259,7 @@ class Solceller extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     current: state.Solar.current,
     max: state.Solar.max,
