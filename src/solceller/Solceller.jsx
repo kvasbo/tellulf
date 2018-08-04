@@ -211,6 +211,9 @@ class Solceller extends Component {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-evenly',
+          color: 'white',
+          padding: 0,
+          height: 50,
           }}
         >
           <div>Dag: {this.showProdToday()}</div>

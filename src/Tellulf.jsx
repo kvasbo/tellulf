@@ -24,7 +24,7 @@ class Tellulf extends Component {
   render() {
     return (
       <div className="gridContainer" style={{ flexDirection: 'column' }}>
-        <div style={{ flex: 1 }} className="block">
+        <div style={{ flex: 1.3 }} className="block">
           <ErrorBoundary><Solceller /></ErrorBoundary>
         </div>
         <div style={{ flex: 1 }} className="block">
