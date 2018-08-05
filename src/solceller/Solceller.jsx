@@ -153,19 +153,22 @@ class Solceller extends Component {
   }
 
   getProductionForHour(hour) {
-    const start = Moment().hour(hour).startOf('hour');
-    const end = Moment().hour(hour).endOf('hour');
+    try {
+      const start = Moment().hour(hour).startOf('hour');
+      const end = Moment().hour(hour).endOf('hour');
 
-    const samplesForHour = this.props.current.byHour.filter((h) => {
-      return Moment(h.time).isBetween(start, end);
-    });
+      const samplesForHour = this.props.current.byHour.filter((h) => {
+        return Moment(h.time).isBetween(start, end);
+      });
 
-    let sum = 0;
-    samplesForHour.forEach((h) => {
-      sum += h.production;
-    });
-
-    return sum / samplesForHour.length;
+      let sum = 0;
+      samplesForHour.forEach((h) => {
+        sum += h.production;
+      });
+      return sum / samplesForHour.length;
+    } catch (err) {
+      return 0;
+    }
   }
 
   getMoneySavedToday() {
@@ -178,7 +181,7 @@ class Solceller extends Component {
         sum += savedThisHour;
         // console.log(i, production, price.total, savedThisHour);
       }
-      return Math.round(sum, 2);
+      return Math.round(sum * 100) / 100;
     } catch (err) {
       console.log(err);
       return '?';
@@ -207,7 +210,7 @@ class Solceller extends Component {
                 </linearGradient>
               </defs>
               <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-              <YAxis yAxisId="price" mirror ticks={[0.25, 0.5, 0.75, 1.0, 1.25, 1.5]} orientation="right" type="number" domain={[0, 1.5]} />
+              <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2.25]} />
               <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
               <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
               <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
@@ -217,6 +220,26 @@ class Solceller extends Component {
                 stroke="#FFFFFF"
                 strokeDasharray="3 3"
               />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={1000}
+                stroke="#FFFFFF55"
+                strokeDasharray="1 2" />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={2000}
+                stroke="#FFFFFF55"
+                strokeDasharray="1 2" />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={3000}
+                stroke="#FFFFFF55"
+                strokeDasharray="1 2" />
+              <ReferenceLine
+                yAxisId="kwh"
+                y={4000}
+                stroke="#FFFFFF55"
+                strokeDasharray="1 2" />
               <ReferenceLine
                 yAxisId="kwh"
                 y={this.props.max.maxDay}
@@ -265,7 +288,7 @@ const mapStateToProps = (state) => {
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
   };
-}
+};
 
 export default connect(mapStateToProps)(Solceller);
 
@@ -317,5 +340,5 @@ function formatTick(data) {
 }
 
 function formatYTick(data) {
-  return `${Math.round(data / 1000)}KW`;
+  return `${data / 1000} kW`;
 }
