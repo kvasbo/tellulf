@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { filter, sortBy, uniqBy } from 'lodash';
 import SunCalc from 'suncalc';
@@ -16,7 +16,7 @@ const long = '10.6991';
 const sunMax = 0.75;
 const sunMaxThreshold = 3000;
 
-class Yr extends Component {
+class Yr extends React.PureComponent {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
@@ -28,10 +28,6 @@ class Yr extends Component {
   componentDidMount() {
     this.updateWeather();
     setInterval(() => { this.reloadTime(); }, 60000);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
   }
 
   setNextReload() {

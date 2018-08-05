@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Moment from 'moment';
 import ErrorBoundary from './ErrorBoundary';
 import Solceller from './solceller/Solceller';
@@ -16,7 +16,7 @@ function startReloadLoop() {
   }, diff);
 }
 
-class Tellulf extends Component {
+class Tellulf extends React.PureComponent {
   componentDidMount() {
     startReloadLoop();
   }
