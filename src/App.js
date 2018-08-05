@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Moment from 'moment';
 import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux';
@@ -11,20 +11,9 @@ Moment.locale('nb');
 
 window.firebase = firebase;
 
-class App extends Component {
+class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { loggedIn: false };
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in.
-        this.setState({ loggedIn: true });
-        // ...
-      } else {
-        this.setState({ loggedIn: false });
-      }
-    });
   }
 
   getApp() {
