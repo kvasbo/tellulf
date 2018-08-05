@@ -1,5 +1,6 @@
 import Moment from 'moment';
-import { maxBy, minBy } from 'lodash';
+import maxBy from 'lodash/maxBy';
+import minBy from 'lodash/minBy';
 import SunCalc from 'suncalc';
 import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LONG } from './actions';
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { filter, sortBy, uniqBy } from 'lodash';
+import filter from 'lodash/filter';
+import sortBy from 'lodash/sortBy';
+import uniqBy from 'lodash/uniqBy';
 import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';

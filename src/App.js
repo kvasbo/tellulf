@@ -12,10 +12,6 @@ Moment.locale('nb');
 window.firebase = firebase;
 
 class App extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   getApp() {
     return (
       <Provider store={store}>
