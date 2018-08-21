@@ -3,13 +3,28 @@ import Moment from 'moment';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer } from 'recharts';
+import SunCalc from 'suncalc';
 import { updateSolarMax, updateSolarCurrent, updatePowerPrices } from '../redux/actions';
+
 import './style.css';
 
 const nettleie = 0.477;
+const lat = '59.9409';
+const long = '10.6991';
+const sunMax = 0.75;
+const sunMaxThreshold = 3000;
 
 class Solceller extends Component {
+  constructor(props) {
+    super(props);
+    this.reloadTimer = null;
+    this.state = {
+      currentTime: Moment().valueOf(),
+    };
+  }
+
   componentDidMount() {
+    setInterval(() => { this.reloadTime(); }, 60000);
     setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
     this.getPowerPrice();
     this.attachMaxListeners();
@@ -35,6 +50,10 @@ class Solceller extends Component {
         console.log(err);
       }
     });
+  }
+
+  reloadTime() {
+    this.setState({ currentTime: Moment().valueOf() })
   }
 
   async attachMaxListeners() {
@@ -142,6 +161,8 @@ class Solceller extends Component {
     this.props.current.byHour.forEach((h) => {
       if (h.time in dataSet) {
         dataSet[h.time].production = h.production;
+        const hour = new Moment(h.time);
+        dataSet[h.time].sun = getSunForTime(hour);
       }
     });
     this.props.powerPrices.forEach((h) => {
@@ -190,6 +211,8 @@ class Solceller extends Component {
 
   render() {
     if (!this.getData()) return null;
+    const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
+    const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     return (
       <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%' }}>
         <div style={{ display: 'flex', flex: 1 }}>
@@ -204,6 +227,11 @@ class Solceller extends Component {
               data={this.getData()}
             >
               <defs>
+                <radialGradient id="sunGradient">
+                  <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
+                  <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
+                  <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
+                </radialGradient>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="10%" stopColor="#bf2a2a" stopOpacity={1} />
                   <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
@@ -212,7 +240,9 @@ class Solceller extends Component {
               <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
               <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2.25]} />
               <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
+              <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
               <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
+              <Line dot={false} yAxisId="sun" type="monotone" dataKey="sun" stroke="#FFFFFF88" />
               <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
               <ReferenceLine
                 yAxisId="kwh"
@@ -245,6 +275,7 @@ class Solceller extends Component {
                 y={this.props.max.maxDay}
                 stroke="#FFFF0055"
                 strokeDasharray="3 3" />
+              <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.current.now}
@@ -287,10 +318,28 @@ const mapStateToProps = (state) => {
     current: state.Solar.current,
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
+    currentSolar: Math.round(state.Solar.current.now / 100) * 100,
   };
 };
 
 export default connect(mapStateToProps)(Solceller);
+
+function getSunForTime(time) {
+  const t = Moment(time).toDate();
+  const s = SunCalc.getPosition(t, lat * 1, long * 1);
+  return s.altitude;
+}
+
+function getColorForSun() {
+  const cutoff = 0.35;
+  const base = 120;
+  const altitude = getSunForTime(new Date());
+  if (altitude > cutoff) return '#FFD700';
+  const percent = altitude / cutoff;
+  const percentRed = Math.min(215, base + (215 * percent));
+  const redString = Math.round(percentRed).toString(16);
+  return `#FF${redString}00`;
+}
 
 function getDataPointObject() {
   const out = {};

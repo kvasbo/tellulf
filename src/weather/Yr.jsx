@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
-import SunCalc from 'suncalc';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceDot, Area } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIcon';
 import './yr.css';
@@ -15,21 +14,15 @@ const XML = require('pixl-xml');
 
 const lat = '59.9409';
 const long = '10.6991';
-const sunMax = 0.75;
-const sunMaxThreshold = 3000;
 
 class Yr extends React.PureComponent {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
-    this.state = {
-      currentTime: Moment().valueOf(),
-    };
   }
 
   componentDidMount() {
     this.updateWeather();
-    setInterval(() => { this.reloadTime(); }, 60000);
   }
 
   setNextReload() {
@@ -40,10 +33,6 @@ class Yr extends React.PureComponent {
     const nextReloadDiff = nextReload.diff(Moment());
     this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
     console.log('Weather: Next reload: ', nextReload.toLocaleString());
-  }
-
-  reloadTime() {
-    this.setState({ currentTime: Moment().valueOf() })
   }
 
   async updateWeather() {
@@ -108,12 +97,6 @@ class Yr extends React.PureComponent {
         const temp = (minTemp + maxTemp) / 2;
         sixesOut[key] = { from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol };
       });
-      // Sun height
-      Object.values(weatherOut).forEach((w) => {
-        const tObject = Moment(w.time).toDate();
-        const sun = SunCalc.getPosition(tObject, lat * 1, long * 1);
-        weatherOut[w.time].sunHeight = sun.altitude;
-      });
       hours.forEach((p) => {
         const time = Moment(p.from);
         const key = time.valueOf();
@@ -153,25 +136,14 @@ class Yr extends React.PureComponent {
     if (!this.props.weather || !this.props.limits) {
       return null;
     }
-    const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
-    const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} data={this.getData()}>
-            <defs>
-              <radialGradient id="sunGradient">
-                <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
-                <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
-                <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
-              </radialGradient>
-            </defs>
             <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror ticks={[4, 8, 12]} type="number" orientation="right" domain={[0, 12]} />
             <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
-            <Line dot={false} yAxisId="sun" type="monotone" dataKey="sunHeight" stroke="#FFFFFF88" />
-            <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
             <Area dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
@@ -181,23 +153,6 @@ class Yr extends React.PureComponent {
       </div>
     );
   }
-}
-
-function getSunForTime(time) {
-  const t = Moment(time).toDate();
-  const s = SunCalc.getPosition(t, lat * 1, long * 1);
-  return s.altitude;
-}
-
-function getColorForSun() {
-  const cutoff = 0.35;
-  const base = 120;
-  const altitude = getSunForTime(new Date());
-  if (altitude > cutoff) return '#FFD700';
-  const percent = altitude / cutoff;
-  const percentRed = Math.min(215, base + (215 * percent));
-  const redString = Math.round(percentRed).toString(16);
-  return `#FF${redString}00`;
 }
 
 function getTicks() {
@@ -253,7 +208,6 @@ function loadWeatherFromLocalStorage() {
 
 const mapStateToProps = state => {
   return {
-    currentSolar: Math.round(state.Solar.current.now / 100) * 100,
     weather: state.Weather.weather,
     limits: state.Weather.limits,
   };
