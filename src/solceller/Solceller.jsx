@@ -161,7 +161,7 @@ class Solceller extends Component {
     this.props.current.byHour.forEach((h) => {
       if (h.time in dataSet) {
         dataSet[h.time].production = h.production;
-        const hour = new Moment(h.time);
+        const hour = new Date(h.time);
         dataSet[h.time].sun = getSunForTime(hour);
       }
     });
