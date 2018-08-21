@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer } from 'recharts';
 import SunCalc from 'suncalc';
-import { updateSolarMax, updateSolarCurrent, updatePowerPrices } from '../redux/actions';
+import { updateSolarMax, updateSolarCurrent, updatePowerPrices, updateInitStatus } from '../redux/actions';
 
 import './style.css';
 
@@ -46,6 +46,7 @@ class Solceller extends Component {
           now, today, month, year, total, byHour, currentTime, averageFull, averageMinute,
         };
         this.props.dispatch(updateSolarCurrent(state));
+        this.props.dispatch(updateInitStatus('solar'));
       } catch (err) {
         console.log(err);
       }
@@ -125,6 +126,7 @@ class Solceller extends Component {
           return { total: p.total + nettleie, nettleie, power: p.total, time: Moment(p.startsAt).valueOf() };
         });
         this.props.dispatch(updatePowerPrices(powerPrices));
+        this.props.dispatch(updateInitStatus('powerPrices'));
       }
     } catch (err) {
       console.log(err);
@@ -155,7 +157,6 @@ class Solceller extends Component {
   }
 
   getData() {
-    if (!this.props.current.byHour) return null;
     const dataSet = getDataPointObject();
     // Map production data
     this.props.current.byHour.forEach((h) => {
@@ -210,7 +211,7 @@ class Solceller extends Component {
   }
 
   render() {
-    if (!this.getData()) return null;
+    if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     return (
@@ -319,6 +320,7 @@ const mapStateToProps = (state) => {
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
     currentSolar: Math.round(state.Solar.current.now / 100) * 100,
+    initState: state.Init,
   };
 };
 

@@ -5,6 +5,15 @@ export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
 export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
+export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
+
+export function updateInitStatus(key, value = true) {
+  return {
+    type: UPDATE_INIT_STATUS,
+    key,
+    value,
+  };
+}
 
 export function updateWeather(data) {
   return {
