@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 const baseUrl = './WeatherIcons/';
 
 class WeatherIcon extends React.PureComponent {
-  getIconLocation(isDay) {
+  getIconLocation() {
     let icon = this.props.symbolMap.blank;
-    const nattdag = (isDay) ? 'day' : 'night';
+    const nattdag = (this.props.payload.time >= this.props.sunrise && this.props.payload.time <= this.props.sunset) ? 'day' : 'night';
     if (this.props.payload.symbol in this.props.symbolMap[nattdag]) {
       icon = this.props.symbolMap[nattdag][this.props.payload.symbol];
     }
@@ -19,14 +19,13 @@ class WeatherIcon extends React.PureComponent {
   }
 
   render() {
-    const isDay = (this.props.payload.time >= this.props.sunrise && this.props.payload.time <= this.props.sunset);
     if (!this.props.cy) return null;
     const t = new Date(this.props.payload.time).getHours();
     if (t % 3 !== 0) return null;
     return (
       <svg>
         <text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text>
-        <image xlinkHref={this.getIconLocation(isDay)} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px" />
+        <image xlinkHref={this.getIconLocation()} x={this.props.cx - 13} y={this.props.cy - 15} height="26px" width="26px" />
       </svg>
     );
   }
