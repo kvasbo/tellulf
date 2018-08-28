@@ -8,6 +8,7 @@ import Moment from 'moment';
 import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIcon';
+import symbolMap from './symbolMap';
 import './yr.css';
 
 const XML = require('pixl-xml');
@@ -148,7 +149,7 @@ class Yr extends React.PureComponent {
             <Area dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
-            <Line dot={<WeatherIcon />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
+            <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
