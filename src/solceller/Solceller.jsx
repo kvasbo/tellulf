@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Moment from 'moment';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer } from 'recharts';
+import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer, CartesianGrid } from 'recharts';
 import SunCalc from 'suncalc';
 import { updateSolarMax, updateSolarCurrent, updatePowerPrices, updateInitStatus } from '../redux/actions';
 
@@ -14,7 +14,7 @@ const long = '10.6991';
 const sunMax = 0.75;
 const sunMaxThreshold = 3000;
 
-class Solceller extends Component {
+class Solceller extends React.PureComponent {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
@@ -59,50 +59,50 @@ class Solceller extends Component {
 
   async attachMaxListeners() {
     const now = Moment();
-    const y = now.format("YYYY");
-    const m = now.format("MM");
-    const d = now.format("DD");
+    const y = now.format('YYYY');
+    const m = now.format('MM');
+    const d = now.format('DD');
     // const h = now.format("HH");
     // const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
     const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
     const refMonth = `steca/maxValues/monthly/${y}/${m}`;
     const refYear = `steca/maxValues/yearly/${y}`;
-    const refEver = `steca/maxValues/ever/`;
+    const refEver = 'steca/maxValues/ever/';
 
     const dbRefDayMax = window.firebase.database().ref(refDay);
     dbRefDayMax.on('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val && val.value) {
-          const state = { maxDay: val.value }
-          this.props.dispatch(updateSolarMax(state));
-        }
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxDay: val.value }
+        this.props.dispatch(updateSolarMax(state));
+      }
     });
 
     const dbRefMonthMax = window.firebase.database().ref(refMonth);
     dbRefMonthMax.on('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val && val.value) {
-          const state = { maxMonth: val.value }
-          this.props.dispatch(updateSolarMax(state));
-        }
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxMonth: val.value }
+        this.props.dispatch(updateSolarMax(state));
+      }
     });
 
     const dbRefYearMax = window.firebase.database().ref(refYear);
     dbRefYearMax.on('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val && val.value) {
-          const state = { maxYear: val.value }
-          this.props.dispatch(updateSolarMax(state));
-        }
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxYear: val.value }
+        this.props.dispatch(updateSolarMax(state));
+      }
     });
 
     const dbRefEverMax = window.firebase.database().ref(refEver);
     dbRefEverMax.on('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val && val.value) {
-          const state = { maxEver: val.value }
-          this.props.dispatch(updateSolarMax(state));
-        }
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxEver: val.value }
+        this.props.dispatch(updateSolarMax(state));
+      }
     });
 
   }
@@ -239,9 +239,9 @@ class Solceller extends Component {
                 </linearGradient>
               </defs>
               <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-              <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2.25]} />
-              <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4500]} />
-              <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.54]} />
+              <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2]} />
+              <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
+              <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.24]} />
               <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="monotone" dataKey="sun" stroke="#FFFFFF88" />
               <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
@@ -251,26 +251,7 @@ class Solceller extends Component {
                 stroke="#FFFFFF"
                 strokeDasharray="3 3"
               />
-              <ReferenceLine
-                yAxisId="kwh"
-                y={1000}
-                stroke="#FFFFFF55"
-                strokeDasharray="1 2" />
-              <ReferenceLine
-                yAxisId="kwh"
-                y={2000}
-                stroke="#FFFFFF55"
-                strokeDasharray="1 2" />
-              <ReferenceLine
-                yAxisId="kwh"
-                y={3000}
-                stroke="#FFFFFF55"
-                strokeDasharray="1 2" />
-              <ReferenceLine
-                yAxisId="kwh"
-                y={4000}
-                stroke="#FFFFFF55"
-                strokeDasharray="1 2" />
+              <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
               <ReferenceLine
                 yAxisId="kwh"
                 y={this.props.max.maxDay}
