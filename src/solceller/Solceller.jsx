@@ -1,18 +1,36 @@
 import React from 'react';
 import Moment from 'moment';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { XAxis, YAxis, Area, Line, ReferenceLine, ReferenceDot, ComposedChart, ResponsiveContainer, CartesianGrid } from 'recharts';
+import {
+  XAxis,
+  YAxis,
+  Area,
+  Line,
+  ReferenceLine,
+  ReferenceDot,
+  ComposedChart,
+  ResponsiveContainer,
+  CartesianGrid,
+} from 'recharts';
 import SunCalc from 'suncalc';
-import { updateSolarMax, updateSolarCurrent, updatePowerPrices, updateInitStatus } from '../redux/actions';
+import {
+  updateSolarMax,
+  updateSolarCurrent,
+  updatePowerPrices,
+  updateInitStatus,
+} from '../redux/actions';
 
 import './style.css';
 
 const nettleie = 0.477;
-const lat = '59.9409';
-const long = '10.6991';
+const lat = 59.9409;
+const long = 10.6991;
 const sunMax = 0.75;
 const sunMaxThreshold = 3000;
+
+const maxSunHeight = getMaxSunHeight();
 
 class Solceller extends React.PureComponent {
   constructor(props) {
@@ -53,60 +71,6 @@ class Solceller extends React.PureComponent {
     });
   }
 
-  reloadTime() {
-    this.setState({ currentTime: Moment().valueOf() })
-  }
-
-  async attachMaxListeners() {
-    const now = Moment();
-    const y = now.format('YYYY');
-    const m = now.format('MM');
-    const d = now.format('DD');
-    // const h = now.format("HH");
-    // const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
-    const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
-    const refMonth = `steca/maxValues/monthly/${y}/${m}`;
-    const refYear = `steca/maxValues/yearly/${y}`;
-    const refEver = 'steca/maxValues/ever/';
-
-    const dbRefDayMax = window.firebase.database().ref(refDay);
-    dbRefDayMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxDay: val.value }
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefMonthMax = window.firebase.database().ref(refMonth);
-    dbRefMonthMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxMonth: val.value }
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefYearMax = window.firebase.database().ref(refYear);
-    dbRefYearMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxYear: val.value }
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefEverMax = window.firebase.database().ref(refEver);
-    dbRefEverMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxEver: val.value }
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-  }
-
   async getPowerPrice() {
     try {
       const data = await axios({
@@ -123,7 +87,9 @@ class Solceller extends React.PureComponent {
         // console.log(data.data.data.viewer.homes[0].currentSubscription.priceInfo.today);
         const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
         const powerPrices = prices.map((p) => {
-          return { total: p.total + nettleie, nettleie, power: p.total, time: Moment(p.startsAt).valueOf() };
+          return {
+            total: p.total + nettleie, nettleie, power: p.total, time: Moment(p.startsAt).valueOf(),
+          };
         });
         this.props.dispatch(updatePowerPrices(powerPrices));
         this.props.dispatch(updateInitStatus('powerPrices'));
@@ -138,22 +104,6 @@ class Solceller extends React.PureComponent {
       return 'bottom';
     }
     return 'top';
-  }
-
-  showProdToday() {
-    return getRoundedNumber(Number(this.props.current.today) / 1000);
-  }
-
-  showProdMonth() {
-    return getRoundedNumber(parseFloat(this.props.current.month) / 1000);
-  }
-
-  showProdYear() {
-    return getRoundedNumber(parseFloat(this.props.current.year) / 1000);
-  }
-
-  showProdTotal() {
-    return getRoundedNumber(parseFloat(this.props.current.total) / 1000);
   }
 
   getData() {
@@ -174,7 +124,7 @@ class Solceller extends React.PureComponent {
     return Object.values(dataSet);
   }
 
-  getProductionForHour(hour) {
+  getProductionForHour(hour) {
     try {
       const start = Moment().hour(hour).startOf('hour');
       const end = Moment().hour(hour).endOf('hour');
@@ -210,12 +160,68 @@ class Solceller extends React.PureComponent {
     }
   }
 
+  async attachMaxListeners() {
+    const now = Moment();
+    const y = now.format('YYYY');
+    const m = now.format('MM');
+    const d = now.format('DD');
+    // const h = now.format("HH");
+    // const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
+    const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
+    const refMonth = `steca/maxValues/monthly/${y}/${m}`;
+    const refYear = `steca/maxValues/yearly/${y}`;
+    const refEver = 'steca/maxValues/ever/';
+
+    const dbRefDayMax = window.firebase.database().ref(refDay);
+    dbRefDayMax.on('value', (snapshot) => {
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxDay: val.value };
+        this.props.dispatch(updateSolarMax(state));
+      }
+    });
+
+    const dbRefMonthMax = window.firebase.database().ref(refMonth);
+    dbRefMonthMax.on('value', (snapshot) => {
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxMonth: val.value };
+        this.props.dispatch(updateSolarMax(state));
+      }
+    });
+
+    const dbRefYearMax = window.firebase.database().ref(refYear);
+    dbRefYearMax.on('value', (snapshot) => {
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxYear: val.value };
+        this.props.dispatch(updateSolarMax(state));
+      }
+    });
+
+    const dbRefEverMax = window.firebase.database().ref(refEver);
+    dbRefEverMax.on('value', (snapshot) => {
+      const val = snapshot.val();
+      if (val && val.value) {
+        const state = { maxEver: val.value };
+        this.props.dispatch(updateSolarMax(state));
+      }
+    });
+  }
+
+  reloadTime() {
+    this.setState({ currentTime: Moment().valueOf() });
+  }
+
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     return (
-      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%' }}>
+      <div style={{
+        display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
+      }}
+      >
         <div style={{ display: 'flex', flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
@@ -241,7 +247,7 @@ class Solceller extends React.PureComponent {
               <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
               <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2]} />
               <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
-              <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, 1.24]} />
+              <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, maxSunHeight]} />
               <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="monotone" dataKey="sun" stroke="#FFFFFF88" />
               <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
@@ -256,8 +262,16 @@ class Solceller extends React.PureComponent {
                 yAxisId="kwh"
                 y={this.props.max.maxDay}
                 stroke="#FFFF0055"
-                strokeDasharray="3 3" />
-              <ReferenceDot x={this.state.currentTime} y={getSunForTime(this.state.currentTime)} yAxisId="sun" fill="url(#sunGradient)" stroke="none" r={90} />
+                strokeDasharray="3 3"
+              />
+              <ReferenceDot
+                x={this.state.currentTime}
+                y={getSunForTime(this.state.currentTime)}
+                yAxisId="sun"
+                fill="url(#sunGradient)"
+                stroke="none"
+                r={90}
+              />
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.current.now}
@@ -283,17 +297,26 @@ class Solceller extends React.PureComponent {
           color: 'white',
           padding: 0,
           height: 50,
-          }}
+        }}
         >
-          <div>Dag: {this.showProdToday()} kWh / {this.getMoneySavedToday()} kr</div>
-          <div>Måned: {this.showProdMonth()}</div>
-          <div>År: {this.showProdYear()}</div>
-          <div>Total: {this.showProdTotal()}</div>
+          <div>Dag: {getRoundedNumber(Number(this.props.current.today) / 1000)} kWh / {this.getMoneySavedToday()} kr</div>
+          <div>Måned: {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}</div>
+          <div>År: {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}</div>
+          <div>Total: {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}</div>
         </div>
       </div>
     );
   }
 }
+
+Solceller.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  current: PropTypes.object.isRequired,
+  currentSolar: PropTypes.number.isRequired,
+  max: PropTypes.object.isRequired,
+  initState: PropTypes.object.isRequired,
+  powerPrices: PropTypes.array.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -308,9 +331,20 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps)(Solceller);
 
 function getSunForTime(time) {
-  const t = Moment(time).toDate();
-  const s = SunCalc.getPosition(t, lat * 1, long * 1);
-  return s.altitude;
+  const s = SunCalc.getPosition(Moment(time).toDate(), lat, long);
+  return Math.max(0, s.altitude);
+}
+
+function getMaxSunHeight() {
+  try {
+    // Get max height of sun in position
+    const solstice = Moment('2018-06-21').toDate();
+    const sunTimes = SunCalc.getTimes(solstice, lat, long);
+    const data = SunCalc.getPosition(sunTimes.solarNoon, lat, long);
+    return data.altitude;
+  } catch (err) {
+    return 1;
+  }
 }
 
 function getColorForSun() {
