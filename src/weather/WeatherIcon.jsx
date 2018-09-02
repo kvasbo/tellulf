@@ -6,7 +6,7 @@ const baseUrl = './WeatherIcons/';
 class WeatherIcon extends React.PureComponent {
   getIconLocation() {
     let icon = this.props.symbolMap.blank;
-    const nattdag = (this.props.payload.time >= this.props.sunrise && this.props.payload.time <= this.props.sunset) ? 'day' : 'night';
+    const nattdag = (this.props.payload.time % 86400000 >= this.props.sunrise % 86400000 && this.props.payload.time % 86400000 <= this.props.sunset % 86400000) ? 'day' : 'night';
     if (this.props.payload.symbol in this.props.symbolMap[nattdag]) {
       icon = this.props.symbolMap[nattdag][this.props.payload.symbol];
     }
