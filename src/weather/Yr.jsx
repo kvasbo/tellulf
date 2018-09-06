@@ -161,7 +161,7 @@ function getTicks() {
   const limits = getTimeLimits();
   const time = limits.start;
   const out = [];
-  for (let i = 0; i < 49; i += 1) {
+  for (let i = 0; i < 73; i += 1) {
     out.push(time.valueOf());
     time.add(1, 'hours');
   }
@@ -170,14 +170,14 @@ function getTicks() {
 
 function getTimeLimits() {
   const start = new Moment().startOf('day');
-  const end = new Moment().add(1, 'day').endOf('day');
+  const end = new Moment().add(2, 'day').endOf('day');
   return { start, end };
 }
 
 function initWeather() {
   const out = {};
   const now = new Moment().startOf('day');
-  for (let i = 0; i < 48; i++) {
+  for (let i = 0; i < 72; i++) {
     const key = now.valueOf();
     out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf() };
     now.add(1, 'hours');

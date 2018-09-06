@@ -14,7 +14,7 @@ export function Weather(state = initialState, action) {
   switch (action.type) {
     case UPDATE_WEATHER: {
       const from = Moment().startOf('day');
-      const to = Moment().add(2, 'day').startOf('day');
+      const to = Moment().add(3, 'day').startOf('day');
       const toFilter = Object.values({ ...state.weather, ...action.data });
       const filtered = toFilter.filter((w) => {
         return Moment(w.time).isBetween(from, to, null, "[]");
