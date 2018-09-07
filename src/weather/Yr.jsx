@@ -5,7 +5,7 @@ import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
@@ -15,6 +15,7 @@ const XML = require('pixl-xml');
 
 const lat = '59.9409';
 const long = '10.6991';
+const gridColor = '#FFFFFF88';
 
 class Yr extends React.PureComponent {
   constructor(props) {
@@ -138,18 +139,37 @@ class Yr extends React.PureComponent {
       return null;
     }
     const data = this.getData();
+    const divider1m = new Moment().startOf('day').add(1, 'day');
+    const divider2m = new Moment().startOf('day').add(2, 'day');
+    const divider1 = divider1m.valueOf();
+    const divider2 = divider2m.valueOf();
+
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} data={data}>
-            <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} />
+            <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
-            <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
+            <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
             <Area dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
             <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
+            <ReferenceLine
+              yAxisId="temp"
+              x={divider1}
+              stroke={gridColor}
+              strokeDasharray="5 0"
+              label={{ value: divider1m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+            />
+            <ReferenceLine
+              yAxisId="temp"
+              x={divider2}
+              stroke={gridColor}
+              strokeDasharray="5 0"
+              label={{ value: divider2m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+            />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -177,9 +197,11 @@ function getTimeLimits() {
 function initWeather() {
   const out = {};
   const now = new Moment().startOf('day');
-  for (let i = 0; i < 72; i++) {
+  for (let i = 0; i < 72; i += 1) {
     const key = now.valueOf();
-    out[key] = { temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf() };
+    out[key] = {
+      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf()
+    };
     now.add(1, 'hours');
   }
   return out;
