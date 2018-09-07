@@ -139,8 +139,10 @@ class Yr extends React.PureComponent {
       return null;
     }
     const data = this.getData();
+    const divider0m = new Moment().startOf('day');
     const divider1m = new Moment().startOf('day').add(1, 'day');
     const divider2m = new Moment().startOf('day').add(2, 'day');
+    const divider0 = divider0m.valueOf();
     const divider1 = divider1m.valueOf();
     const divider2 = divider2m.valueOf();
 
@@ -156,6 +158,13 @@ class Yr extends React.PureComponent {
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
             <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} />
+            <ReferenceLine
+              yAxisId="temp"
+              x={divider0}
+              stroke={gridColor}
+              strokeDasharray="0 0"
+              label={{ value: divider0m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+            />
             <ReferenceLine
               yAxisId="temp"
               x={divider1}
