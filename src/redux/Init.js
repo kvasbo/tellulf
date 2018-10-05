@@ -8,6 +8,6 @@ export function Init(state = {}, action) {
       return newState;
     }
     default:
-      return state
-    }
+      return state;
+  }
 }

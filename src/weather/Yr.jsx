@@ -5,7 +5,9 @@ import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import axios from 'axios';
 import Moment from 'moment';
-import { ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine } from 'recharts';
+import {
+  ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine,
+} from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
@@ -48,7 +50,7 @@ class Yr extends React.PureComponent {
       const { start, end } = getTimeLimits();
       const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
       const parsed = XML.parse(data.data);
-    
+
       try {
         const nextRun = Moment(parsed.meta.model[0].nextrun);
         const dataFrom = Moment(parsed.meta.model[0].runended);
@@ -97,7 +99,9 @@ class Yr extends React.PureComponent {
         const minTemp = Number(s.location.minTemperature.value, 10);
         const maxTemp = Number(s.location.maxTemperature.value, 10);
         const temp = (minTemp + maxTemp) / 2;
-        sixesOut[key] = { from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol };
+        sixesOut[key] = {
+          from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol,
+        };
       });
       hours.forEach((p) => {
         const time = Moment(p.from);
@@ -149,7 +153,12 @@ class Yr extends React.PureComponent {
     return (
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart margin={{ top: 10, right: 20, left: 30, bottom: 10 }} data={data}>
+          <ComposedChart
+            margin={{
+              top: 10, right: 20, left: 30, bottom: 10,
+            }}
+            data={data}
+          >
             <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
@@ -209,7 +218,7 @@ function initWeather() {
   for (let i = 0; i < 72; i += 1) {
     const key = now.valueOf();
     out[key] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf()
+      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf(),
     };
     now.add(1, 'hours');
   }
@@ -239,11 +248,11 @@ function loadWeatherFromLocalStorage() {
   return { ...todayAndTomorrow, ...loaded };
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     weather: state.Weather.weather,
     limits: state.Weather.limits,
   };
-}
+};
 
 export default connect(mapStateToProps)(Yr);

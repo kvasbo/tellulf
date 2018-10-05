@@ -17,22 +17,22 @@ export function Weather(state = initialState, action) {
       const to = Moment().add(3, 'day').startOf('day');
       const toFilter = Object.values({ ...state.weather, ...action.data });
       const filtered = toFilter.filter((w) => {
-        return Moment(w.time).isBetween(from, to, null, "[]");
+        return Moment(w.time).isBetween(from, to, null, '[]');
       });
       const newWeather = {};
       filtered.forEach((w) => {
         newWeather[w.time] = w;
       });
-      return { ...state, weather: newWeather, limits: parseLimits(action.data) }
+      return { ...state, weather: newWeather, limits: parseLimits(action.data) };
     }
     case UPDATE_WEATHER_LONG: {
-      return { ...state, long: { ...state.long, ...action.data } }
+      return { ...state, long: { ...state.long, ...action.data } };
     }
     case PRUNE_WEATHER: {
       break;
     }
     default:
-      return state
+      return state;
   }
 }
 

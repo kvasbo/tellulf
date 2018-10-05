@@ -8,12 +8,12 @@ const initialState = {
 export function Solar(state = initialState, action) {
   switch (action.type) {
     case UPDATE_SOLAR_MAX: {
-      return { ...state, max: { ...state.max, ...action.data } }
+      return { ...state, max: { ...state.max, ...action.data } };
     }
     case UPDATE_SOLAR_CURRENT: {
-      return { ...state, current: { ...state.current, ...action.data } }
+      return { ...state, current: { ...state.current, ...action.data } };
     }
     default:
-      return state
-    }
+      return state;
+  }
 }

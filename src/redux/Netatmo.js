@@ -6,9 +6,9 @@ const initialState = {
 export function Netatmo(state = initialState, action) {
   switch (action.type) {
     case NETATMO_UPDATE: {
-      return { ...state, ...action.data }
+      return { ...state, ...action.data };
     }
     default:
-      return state
+      return state;
   }
 }
