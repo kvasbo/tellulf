@@ -155,7 +155,15 @@ class Yr extends React.PureComponent {
             <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
-            <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="natural" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} isAnimationActive={false} />
+            <Line
+              dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />}
+              yAxisId="temp"
+              type="natural"
+              dataKey="temp"
+              stroke="#ffffffaa"
+              strokeWidth={0.5}
+              isAnimationActive={false}
+            />
             <ReferenceLine
               yAxisId="temp"
               x={divider0}

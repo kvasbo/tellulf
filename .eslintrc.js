@@ -18,10 +18,10 @@ module.exports = {
         "sourceType": "module"
     },
   "rules": {
-    "max-len": ["error", { "code": 150 }],
+    "max-len": ["error", { "code": 200 }],
     "react/forbid-prop-types": 0,
     "no-use-before-define": 0,
-    "no-console": 1,
+    "no-console": 0,
     "no-else-return": 1,
     "arrow-body-style": 0,
     "react/prefer-stateless-function": 0,
