@@ -152,10 +152,10 @@ class Yr extends React.PureComponent {
             <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
             { this.props.limits.lowerRange < 0 && <ReferenceArea y1={0} y2={this.props.limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.2" /> }
-            <Area dot={false} yAxisId="rain" connectNulls={false} type="monotone" isAnimationActive={false} dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" connectNulls={false} type="monotone" isAnimationActive={false} dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
-            <Line dot={false} yAxisId="rain" connectNulls={false} type="monotone" isAnimationActive={false} dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
-            <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="monotone" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} isAnimationActive={false} />
+            <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rain" stroke="#8884d8" />
+            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
+            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" isAnimationActive={false} dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
+            <Line dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />} yAxisId="temp" type="natural" dataKey="temp" stroke="#ffffffaa" strokeWidth={0.5} isAnimationActive={false} />
             <ReferenceLine
               yAxisId="temp"
               x={divider0}
