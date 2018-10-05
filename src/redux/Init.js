@@ -1,6 +1,6 @@
 import { UPDATE_INIT_STATUS } from './actions';
 
-export function Init(state = {}, action) {
+export default function Init(state = {}, action) {
   switch (action.type) {
     case UPDATE_INIT_STATUS: {
       const newState = { ...state };

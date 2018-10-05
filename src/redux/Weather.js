@@ -10,7 +10,7 @@ const initialState = {
   limits: undefined,
 };
 
-export function Weather(state = initialState, action) {
+export default function Weather(state = initialState, action) {
   switch (action.type) {
     case UPDATE_WEATHER: {
       const from = Moment().startOf('day');

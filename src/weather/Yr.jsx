@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
@@ -36,12 +37,17 @@ class Yr extends React.PureComponent {
     // const nextReload = Moment().add(1, 'minutes').startOf('minute');
     const nextReloadDiff = nextReload.diff(Moment());
     this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
-    console.log('Weather: Next reload: ', nextReload.toLocaleString());
+  }
+
+  getData() {
+    const rawData = Object.values(this.props.weather);
+    const uniqueData = uniqBy(rawData, 'time');
+    const sortedData = sortBy(uniqueData, 'time');
+    return sortedData;
   }
 
   async updateWeather() {
     try {
-      console.log('Updating weather');
       this.setNextReload();
       let weatherOut = loadWeatherFromLocalStorage();
       if (typeof weatherOut !== 'object' || weatherOut === null) {
@@ -51,14 +57,15 @@ class Yr extends React.PureComponent {
       const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
       const parsed = XML.parse(data.data);
 
+      /*
       try {
-        const nextRun = Moment(parsed.meta.model[0].nextrun);
-        const dataFrom = Moment(parsed.meta.model[0].runended);
-        console.log('Data from', dataFrom.toLocaleString());
-        console.log('Next run', nextRun.toLocaleString());
+        const nextRun = Moment(parsed.meta.model[0].nextrun).valueOf();
+        const dataFrom = Moment(parsed.meta.model[0].runended).vauleOf();
       } catch (err) {
         console.log('Could not get next run');
       }
+      */
+
       const singlePoints = parsed.product.time.filter((d) => {
         if (d.from !== d.to) return false;
         const from = Moment(d.from);
@@ -114,27 +121,11 @@ class Yr extends React.PureComponent {
           weatherOut[key].symbolNumber = p.location.symbol.number;
         }
       });
-      try {
-        this.props.dispatch(updateWeather(weatherOut));
-        this.props.dispatch(updateWeatherLong(sixesOut));
-      } catch (err) {
-        console.log(err);
-      }
+      this.props.dispatch(updateWeather(weatherOut));
+      this.props.dispatch(updateWeatherLong(sixesOut));
     } catch (err) {
       console.log(err);
     }
-  }
-
-  formatTick(data) {
-    const time = Moment(data, 'x');
-    return time.format('HH');
-  }
-
-  getData() {
-    const rawData = Object.values(this.props.weather);
-    const uniqueData = uniqBy(rawData, 'time');
-    const sortedData = sortBy(uniqueData, 'time');
-    return sortedData;
   }
 
   // Stays on
@@ -159,7 +150,7 @@ class Yr extends React.PureComponent {
             }}
             data={data}
           >
-            <XAxis dataKey="time" tickFormatter={this.formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
+            <XAxis dataKey="time" tickFormatter={formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
@@ -247,6 +238,22 @@ function loadWeatherFromLocalStorage() {
   const todayAndTomorrow = initWeather();
   return { ...todayAndTomorrow, ...loaded };
 }
+
+function formatTick(data) {
+  const time = Moment(data, 'x');
+  return time.format('HH');
+}
+
+Yr.defaultProps = {
+  weather: undefined,
+  limits: undefined,
+};
+
+Yr.propTypes = {
+  weather: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
+  limits: PropTypes.object,
+};
 
 const mapStateToProps = (state) => {
   return {
