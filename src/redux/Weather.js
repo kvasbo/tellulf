@@ -37,8 +37,6 @@ export function Weather(state = initialState, action) {
 }
 
 function parseLimits(data) {
-  const now = new Moment();
-  const quarter = now.quarter();
   const dataArray = Object.values(data);
   const maxRainPoint = maxBy(dataArray, 'rainMax');
   const maxRain = maxRainPoint.rainMax;
@@ -49,23 +47,23 @@ function parseLimits(data) {
   const minTempPoint = minBy(dataArray, 'temp');
   const minTemp = minTempPoint.temp;
   const minTempTime = minTempPoint.time;
-  const roundedMin = Math.floor(minTemp);
-  const roundedMax = Math.ceil(maxTemp);
-  let upperRange = 15;
-  let lowerRange = -15;
-  let ticks = [-15, -10, -5, 5, 10, 15];
-  if ((quarter === 2 || quarter === 3) && roundedMin >= 0) {
+  const roundedMin = Math.floor(minTemp / 10) * 10;
+  const roundedMax = Math.ceil(maxTemp / 10) * 10;
+  let upperRange = 20;
+  let lowerRange = -20;
+  let ticks = [-10, 0, 10];
+  if (roundedMin >= 0) {
     upperRange = Math.max(30, roundedMax);
     lowerRange = 0;
     ticks = [10, 20, 30];
-  } else if (roundedMin >= 0 && roundedMax > 15) {
-    upperRange = Math.max(30, roundedMax);
-    lowerRange = 0;
-    ticks = [10, 20, 30];
-  } else if (roundedMax < 0 && roundedMin < -15) {
+  } else if (roundedMax < 0) {
     upperRange = 0;
     lowerRange = Math.min(-30, roundedMin);
     ticks = [-10, -20, -30];
+  } else {
+    upperRange = roundedMax;
+    lowerRange = roundedMin;
+    // ticks = [-10, -20, -30, 0, 10, 20];
   }
   const sunData = getSunMeta();
   const out = {
