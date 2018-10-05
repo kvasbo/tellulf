@@ -7,7 +7,7 @@ import uniqBy from 'lodash/uniqBy';
 import axios from 'axios';
 import Moment from 'moment';
 import {
-  ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine,
+  ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea,
 } from 'recharts';
 import { updateWeather, updateWeatherLong } from '../redux/actions';
 import WeatherIcon from './WeatherIcon';
@@ -47,85 +47,81 @@ class Yr extends React.PureComponent {
   }
 
   async updateWeather() {
-    try {
-      this.setNextReload();
-      let weatherOut = loadWeatherFromLocalStorage();
-      if (typeof weatherOut !== 'object' || weatherOut === null) {
-        weatherOut = initWeather();
-      }
-      const { start, end } = getTimeLimits();
-      const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
-      const parsed = XML.parse(data.data);
-
-      /*
-      try {
-        const nextRun = Moment(parsed.meta.model[0].nextrun).valueOf();
-        const dataFrom = Moment(parsed.meta.model[0].runended).vauleOf();
-      } catch (err) {
-        console.log('Could not get next run');
-      }
-      */
-
-      const singlePoints = parsed.product.time.filter((d) => {
-        if (d.from !== d.to) return false;
-        const from = Moment(d.from);
-        if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-        return false;
-      });
-      const hours = parsed.product.time.filter((d) => {
-        const from = Moment(d.from);
-        const to = Moment(d.to);
-        if (!(to.diff(from, 'hours') === 1)) return false;
-        if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-        return false;
-      });
-      const sixes = parsed.product.time.filter((d) => {
-        const fromUtc = Moment(d.from).utc().hours();
-        if (fromUtc % 6 !== 0) return false;
-        const from = Moment(d.from);
-        const to = Moment(d.to);
-        if ((to.diff(from, 'hours') === 6)) return true;
-        return false;
-      });
-      singlePoints.forEach((p) => {
-        const time = Moment(p.from);
-        const key = time.valueOf();
-        if (key in weatherOut) {
-          weatherOut[key].temp = Number(p.location.temperature.value);
-          weatherOut[key].time = time.valueOf();
-        }
-      });
-      const sixesOut = {};
-      sixes.forEach((s) => {
-        const from = Moment(s.from);
-        const key = from.valueOf();
-        const to = Moment(s.to);
-        const time = Moment(from).add(3, 'hours');
-        const rain = Number(s.location.precipitation.value, 10);
-        const symbol = s.location.symbol.id;
-        const minTemp = Number(s.location.minTemperature.value, 10);
-        const maxTemp = Number(s.location.maxTemperature.value, 10);
-        const temp = (minTemp + maxTemp) / 2;
-        sixesOut[key] = {
-          from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol,
-        };
-      });
-      hours.forEach((p) => {
-        const time = Moment(p.from);
-        const key = time.valueOf();
-        if (key in weatherOut) {
-          weatherOut[key].rain = Number(p.location.precipitation.value);
-          weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
-          weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
-          weatherOut[key].symbol = p.location.symbol.id;
-          weatherOut[key].symbolNumber = p.location.symbol.number;
-        }
-      });
-      this.props.dispatch(updateWeather(weatherOut));
-      this.props.dispatch(updateWeatherLong(sixesOut));
-    } catch (err) {
-      console.log(err);
+    this.setNextReload();
+    let weatherOut = loadWeatherFromLocalStorage();
+    if (typeof weatherOut !== 'object' || weatherOut === null) {
+      weatherOut = initWeather();
     }
+    const { start, end } = getTimeLimits();
+    const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
+    const parsed = XML.parse(data.data);
+
+    /*
+    try {
+      const nextRun = Moment(parsed.meta.model[0].nextrun).valueOf();
+      const dataFrom = Moment(parsed.meta.model[0].runended).vauleOf();
+    } catch (err) {
+      console.log('Could not get next run');
+    }
+    */
+
+    const singlePoints = parsed.product.time.filter((d) => {
+      if (d.from !== d.to) return false;
+      const from = Moment(d.from);
+      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+      return false;
+    });
+    const hours = parsed.product.time.filter((d) => {
+      const from = Moment(d.from);
+      const to = Moment(d.to);
+      if (!(to.diff(from, 'hours') === 1)) return false;
+      if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+      return false;
+    });
+    const sixes = parsed.product.time.filter((d) => {
+      const fromUtc = Moment(d.from).utc().hours();
+      if (fromUtc % 6 !== 0) return false;
+      const from = Moment(d.from);
+      const to = Moment(d.to);
+      if ((to.diff(from, 'hours') === 6)) return true;
+      return false;
+    });
+    singlePoints.forEach((p) => {
+      const time = Moment(p.from);
+      const key = time.valueOf();
+      if (key in weatherOut) {
+        weatherOut[key].temp = Number(p.location.temperature.value);
+        weatherOut[key].time = time.valueOf();
+      }
+    });
+    const sixesOut = {};
+    sixes.forEach((s) => {
+      const from = Moment(s.from);
+      const key = from.valueOf();
+      const to = Moment(s.to);
+      const time = Moment(from).add(3, 'hours');
+      const rain = Number(s.location.precipitation.value, 10);
+      const symbol = s.location.symbol.id;
+      const minTemp = Number(s.location.minTemperature.value, 10);
+      const maxTemp = Number(s.location.maxTemperature.value, 10);
+      const temp = (minTemp + maxTemp) / 2;
+      sixesOut[key] = {
+        from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol,
+      };
+    });
+    hours.forEach((p) => {
+      const time = Moment(p.from);
+      const key = time.valueOf();
+      if (key in weatherOut) {
+        weatherOut[key].rain = Number(p.location.precipitation.value);
+        weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
+        weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
+        weatherOut[key].symbol = p.location.symbol.id;
+        weatherOut[key].symbolNumber = p.location.symbol.number;
+      }
+    });
+    this.props.dispatch(updateWeather(weatherOut));
+    this.props.dispatch(updateWeatherLong(sixesOut));
   }
 
   // Stays on
@@ -154,6 +150,7 @@ class Yr extends React.PureComponent {
             <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
             <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
+            { this.props.limits.lowerRange < 0 && <ReferenceArea y1={0} y2={this.props.limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.2" /> }
             <Area dot={false} yAxisId="rain" type="monotone" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" type="monotone" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
