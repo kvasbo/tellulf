@@ -40,9 +40,8 @@
     "webpack-bundle-analyzer": "^2.13.1"
   },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
+    "last 2 iOS major versions",
+    "last 2 chrome major versions",
+    "last 2 safari major versions"
   ]
 }
