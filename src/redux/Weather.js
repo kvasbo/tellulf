@@ -2,12 +2,14 @@ import Moment from 'moment';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import SunCalc from 'suncalc';
-import { UPDATE_WEATHER, PRUNE_WEATHER, UPDATE_WEATHER_LONG } from './actions';
+import { UPDATE_WEATHER, UPDATE_WEATHER_LONG } from './actions';
 
 const initialState = {
   weather: undefined,
   long: {},
   limits: undefined,
+  lat: undefined,
+  lon: undefined,
 };
 
 export default function Weather(state = initialState, action) {
@@ -23,20 +25,17 @@ export default function Weather(state = initialState, action) {
       filtered.forEach((w) => {
         newWeather[w.time] = w;
       });
-      return { ...state, weather: newWeather, limits: parseLimits(action.data) };
+      return { ...state, lat: action.lat, long: action.long, weather: newWeather, limits: parseLimits(action.data, action.lat, action.long) };
     }
     case UPDATE_WEATHER_LONG: {
       return { ...state, long: { ...state.long, ...action.data } };
-    }
-    case PRUNE_WEATHER: {
-      break;
     }
     default:
       return state;
   }
 }
 
-function parseLimits(data) {
+function parseLimits(data, lat, long) {
   const dataArray = Object.values(data);
   const maxRainPoint = maxBy(dataArray, 'rainMax');
   const maxRain = maxRainPoint.rainMax;
@@ -65,18 +64,18 @@ function parseLimits(data) {
     lowerRange = roundedMin;
     // ticks = [-10, -20, -30, 0, 10, 20];
   }
-  const sunData = getSunMeta();
+  const sunData = getSunMeta(lat, long);
   const out = {
     lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData,
   };
   return out;
 }
 
-function getSunMeta() {
+function getSunMeta(lat, long) {
   const now = new Moment();
   const yesterday = new Moment(now).subtract(1, 'days');
-  const sunTimes = SunCalc.getTimes(new Date(), 59.9409, 10.6991);
-  const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), 59.9409, 10.6991);
+  const sunTimes = SunCalc.getTimes(new Date(), lat, long);
+  const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
   const sunriseM = new Moment(sunTimes.sunrise);
   const sunsetM = new Moment(sunTimes.sunset);
   const sunriseYesterday = new Moment(sunTimesYesterday.sunrise);

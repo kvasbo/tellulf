@@ -14,7 +14,6 @@ function startReloadLoop() {
     window.location.reload();
   }, diff);
 }
-
 class Tellulf extends React.PureComponent {
   componentDidMount() {
     startReloadLoop();
@@ -23,7 +22,7 @@ class Tellulf extends React.PureComponent {
   render() {
     return (
       <div className="gridContainer" style={{ flexDirection: 'column' }}>
-        <div style={{ flex: 1.3 }} className="block">
+        <div style={{ flex: 1.15 }} className="block">
           <ErrorBoundary><Solceller /></ErrorBoundary>
         </div>
         <div style={{ flex: 1 }} className="block">

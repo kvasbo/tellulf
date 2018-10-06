@@ -1,6 +1,7 @@
+import getWeatherFromYr from '../weather/updateWeather';
+
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const UPDATE_WEATHER_LONG = 'UPDATE_WEATHER_LONG';
-export const PRUNE_WEATHER = 'PRUNE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
 export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
@@ -15,10 +16,12 @@ export function updateInitStatus(key, value = true) {
   };
 }
 
-export function updateWeather(data) {
+export function updateWeather(data, lat, long) {
   return {
     type: UPDATE_WEATHER,
     data,
+    lat,
+    long,
   };
 }
 
@@ -43,18 +46,12 @@ export function updateSolarCurrent(data) {
   };
 }
 
-export function updateWeatherLong(data) {
+export function updateWeatherLong(data, lat, long) {
   return {
     type: UPDATE_WEATHER_LONG,
     data,
-  };
-}
-
-export function pruneWeather(from, to) {
-  return {
-    type: PRUNE_WEATHER,
-    from,
-    to,
+    lat,
+    long,
   };
 }
 
@@ -62,5 +59,14 @@ export function updateNetatmo(data) {
   return {
     type: NETATMO_UPDATE,
     data,
+  };
+}
+
+export function fetchWeather(lat, long) {
+  return (dispatch) => {
+    return getWeatherFromYr(lat, long).then(
+      weather => dispatch(updateWeather(weather, lat, long)),
+      weather => dispatch(updateWeatherLong(weather, lat, long)),
+    );
   };
 }
