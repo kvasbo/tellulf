@@ -125,22 +125,30 @@ class Yr extends React.PureComponent {
           display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10, margin: 0, paddingTop: 0, color: 'white',
         }}
         >
-          <input
-            style={{ margin: 10 }}
-            type="radio"
-            name="sted"
-            value="oslo"
-            checked={this.state.sted === 'oslo'}
-            onChange={val => this.stedEndra(val)}
-          /> Hjemme
-          <input
-            style={{ margin: 10 }}
-            type="radio"
-            name="sted"
-            value="sandefjord"
-            checked={this.state.sted === 'sandefjord'}
-            onChange={val => this.stedEndra(val)}
-          /> Hytta
+          <label htmlFor="oslo">
+            <input
+              style={{ margin: 10 }}
+              type="radio"
+              id="oslo"
+              name="sted"
+              value="oslo"
+              checked={this.state.sted === 'oslo'}
+              onChange={val => this.stedEndra(val)}
+            />
+            Hjemme
+          </label>
+          <label htmlFor="sandefjord">
+            <input
+              style={{ margin: 10 }}
+              type="radio"
+              id="sandefjord"
+              name="sted"
+              value="sandefjord"
+              checked={this.state.sted === 'sandefjord'}
+              onChange={val => this.stedEndra(val)}
+            />
+            Hytta
+          </label>
         </div>
       </div>
     );
