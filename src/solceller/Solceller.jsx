@@ -272,6 +272,7 @@ class Solceller extends React.PureComponent {
                 stroke="none"
                 r={90}
               />
+              {(this.props.current.now > 0) && (
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.current.now}
@@ -286,7 +287,7 @@ class Solceller extends React.PureComponent {
                   fontSize: 50,
                   position: this.getCurrentLabelPosition(),
                 }}
-              />
+              />)}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
