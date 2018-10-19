@@ -11,3 +11,7 @@ deploy_production:
     - yarn install --non-interactive --pure-lockfile
     - CI=false yarn run build
     - firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY
+  artifacts:
+    name: "$CI_JOB_NAME"
+    paths:
+      - /builds/tellulf/tellulf-client/build/
