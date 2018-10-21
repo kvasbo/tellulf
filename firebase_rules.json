@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "netatmo" : {
+      ".read": "auth != null"
+    },
+   	"steca" : {
+      ".read": "auth != null"
+    }
+  }
+}
