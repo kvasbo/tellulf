@@ -239,10 +239,6 @@ class Solceller extends React.PureComponent {
                   <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
                   <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
                 </radialGradient>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="10%" stopColor="#bf2a2a" stopOpacity={1} />
-                  <stop offset="80%" stopColor="#bf2a2a" stopOpacity={0.3} />
-                </linearGradient>
               </defs>
               <XAxis dataKey="time" type="number" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
               <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2]} />
@@ -250,7 +246,7 @@ class Solceller extends React.PureComponent {
               <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, maxSunHeight]} />
               <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="monotone" dataKey="sun" stroke="#FFFFFF88" />
-              <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#bf2a2a" fillOpacity={1} fill="url(#colorUv)" />
+              <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#ffffff55" fillOpacity={1} fill="#ffffff55" />
               <ReferenceLine
                 yAxisId="kwh"
                 y={this.props.current.averageFull}
