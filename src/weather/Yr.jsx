@@ -92,6 +92,14 @@ class Yr extends React.PureComponent {
             />
             <YAxis
               width={25}
+              label={{
+                angle: 90,
+                value: 'mm',
+                stroke: '#ffffff55',
+                fill: '#ffffff55',
+                fontSize: 15,
+                position: 'right',
+              }}
               yAxisId="rain"
               allowDataOverflow
               ticks={[3, 6, 9]}

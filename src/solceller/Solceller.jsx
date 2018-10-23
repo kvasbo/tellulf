@@ -235,7 +235,22 @@ class Solceller extends React.PureComponent {
                 </radialGradient>
               </defs>
               <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-              <YAxis width={25} yAxisId="price" ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2]} />
+              <YAxis
+                width={25}
+                yAxisId="price"
+                ticks={[0.5, 1.0, 1.5, 2]}
+                orientation="right"
+                type="number"
+                domain={[0, 2]}
+                label={{
+                  angle: 90,
+                  value: 'kr',
+                  stroke: '#ffffff55',
+                  fill: '#ffffff55',
+                  fontSize: 15,
+                  position: 'right',
+                }}
+              />
               <YAxis
                 width={25}
                 label={{
@@ -245,11 +260,34 @@ class Solceller extends React.PureComponent {
                   fill: '#ffffff55',
                   fontSize: 15,
                   position: 'left',
-                }} yAxisId="kwh" ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
-              <YAxis width={25} yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, maxSunHeight]} />
+                }}
+                yAxisId="kwh"
+                ticks={[1000, 2000, 3000, 4000]}
+                type="number"
+                tickFormatter={formatYTick}
+                domain={[0, 4000]}
+              />
+              <YAxis
+                width={25}
+                yAxisId="sun"
+                hide
+                allowDataOverflow
+                ticks={[]}
+                type="number"
+                orientation="right"
+                domain={[0, maxSunHeight]}
+              />
               <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
-              <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#ffffff55" fillOpacity={1} fill="#ffffff55" />
+              <Area
+                yAxisId="kwh"
+                dot={false}
+                type="monotone"
+                dataKey="production"
+                stroke="#ffffcc66"
+                fillOpacity={1}
+                fill="#ffffcc66"
+              />
               <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
               <ReferenceLine
                 yAxisId="kwh"
