@@ -84,12 +84,11 @@ class Solceller extends React.PureComponent {
         },
       });
       if (data.status === 200) {
-        // console.log(data.data.data.viewer.homes[0].currentSubscription.priceInfo.today);
         const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
-        const powerPrices = prices.map((p) => {
-          return {
-            total: p.total + nettleie, nettleie, power: p.total, time: Moment(p.startsAt).valueOf(),
-          };
+        const powerPrices = {};
+        prices.forEach((p) => {
+          const h = Moment(p.startsAt).hours();
+          powerPrices[h] = { total: p.total + nettleie };
         });
         this.props.dispatch(updatePowerPrices(powerPrices));
         this.props.dispatch(updateInitStatus('powerPrices'));
@@ -113,12 +112,10 @@ class Solceller extends React.PureComponent {
       if (h.time in dataSet) {
         dataSet[h.time].production = h.production;
         const hour = new Date(h.time);
+        const hr = hour.getHours();
+        const price = this.props.powerPrices[hr];
         dataSet[h.time].sun = getSunForTime(hour);
-      }
-    });
-    this.props.powerPrices.forEach((h) => {
-      if (h.time in dataSet) {
-        dataSet[h.time].price = h.total;
+        dataSet[h.time].price = price.total;
       }
     });
     return Object.values(dataSet);
@@ -151,7 +148,6 @@ class Solceller extends React.PureComponent {
         const price = this.props.powerPrices[i];
         const savedThisHour = (production * price.total) / 1000;
         sum += savedThisHour;
-        // console.log(i, production, price.total, savedThisHour);
       }
       return Math.round(sum * 100) / 100;
     } catch (err) {
@@ -165,8 +161,6 @@ class Solceller extends React.PureComponent {
     const y = now.format('YYYY');
     const m = now.format('MM');
     const d = now.format('DD');
-    // const h = now.format("HH");
-    // const refHour = `steca/maxValues/hourly/${y}/${m}/${d}/${h}`;
     const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
     const refMonth = `steca/maxValues/monthly/${y}/${m}`;
     const refYear = `steca/maxValues/yearly/${y}`;
@@ -244,7 +238,7 @@ class Solceller extends React.PureComponent {
               <YAxis yAxisId="price" mirror ticks={[0.5, 1.0, 1.5, 2]} orientation="right" type="number" domain={[0, 2]} />
               <YAxis yAxisId="kwh" mirror ticks={[1000, 2000, 3000, 4000]} type="number" tickFormatter={formatYTick} domain={[0, 4000]} />
               <YAxis yAxisId="sun" hide allowDataOverflow ticks={[]} type="number" orientation="right" domain={[0, maxSunHeight]} />
-              <Line yAxisId="price" dot={false} type="monotone" connectNulls dataKey="price" stroke="#8884d8" />
+              <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="monotone" dataKey="sun" stroke="#FFFFFF88" />
               <Area yAxisId="kwh" dot={false} type="monotone" dataKey="production" stroke="#ffffff55" fillOpacity={1} fill="#ffffff55" />
               <ReferenceLine
@@ -312,7 +306,7 @@ Solceller.propTypes = {
   currentSolar: PropTypes.number.isRequired,
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
-  powerPrices: PropTypes.array.isRequired,
+  powerPrices: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
