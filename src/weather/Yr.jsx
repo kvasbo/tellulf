@@ -82,9 +82,23 @@ class Yr extends React.PureComponent {
             }}
             data={data}
           >
-            <XAxis dataKey="time" tickFormatter={formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
-            <YAxis yAxisId="temp" mirror type="number" ticks={this.props.limits.ticks} domain={[this.props.limits.lowerRange, this.props.limits.upperRange]} />
-            <YAxis yAxisId="rain" mirror allowDataOverflow ticks={[3, 6, 9]} type="number" orientation="right" domain={[0, 9]} />
+            <XAxis scale="time" dataKey="time" tickFormatter={formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
+            <YAxis
+              width={25}
+              yAxisId="temp"
+              type="number"
+              ticks={this.props.limits.ticks}
+              domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
+            />
+            <YAxis
+              width={25}
+              yAxisId="rain"
+              allowDataOverflow
+              ticks={[3, 6, 9]}
+              type="number"
+              orientation="right"
+              domain={[0, 9]}
+            />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
             { this.props.limits.lowerRange < 0 && <ReferenceArea y1={0} y2={this.props.limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.2" /> }
             <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" />
