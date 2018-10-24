@@ -48,21 +48,12 @@ function parseLimits(data, lat, long) {
   const minTempTime = minTempPoint.time;
   const roundedMin = Math.floor(minTemp / 10) * 10;
   const roundedMax = Math.ceil(maxTemp / 10) * 10;
-  let upperRange = 20;
-  let lowerRange = -20;
-  let ticks = [-10, 0, 10];
-  if (roundedMin >= 0) {
-    upperRange = Math.max(30, roundedMax);
-    lowerRange = 0;
-    ticks = [10, 20, 30];
-  } else if (roundedMax < 0) {
-    upperRange = 0;
-    lowerRange = Math.min(-30, roundedMin);
-    ticks = [-10, -20, -30];
-  } else {
-    lowerRange = roundedMin;
-    upperRange = Math.max(roundedMin + 30, roundedMax);
-  }
+
+  const ticks = [-10, 0, 10];
+
+  const lowerRange = Math.min(0, roundedMin);
+  const upperRange = Math.max(roundedMin + 30, roundedMax);
+
   const sunData = getSunMeta(lat, long);
   const out = {
     lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData,
