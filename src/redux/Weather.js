@@ -46,8 +46,8 @@ function parseLimits(data, lat, long) {
   const minTempPoint = minBy(dataArray, 'temp');
   const minTemp = minTempPoint.temp;
   const minTempTime = minTempPoint.time;
-  const roundedMin = Math.floor(minTemp / 10) * 10;
-  const roundedMax = Math.ceil(maxTemp / 10) * 10;
+  const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
+  const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
 
   const lowerRange = Math.min(0, roundedMin);
   const upperRange = Math.max(roundedMin + 30, roundedMax);
