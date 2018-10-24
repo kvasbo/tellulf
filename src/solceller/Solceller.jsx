@@ -284,9 +284,10 @@ class Solceller extends React.PureComponent {
                 dot={false}
                 type="monotone"
                 dataKey="production"
-                stroke="#ffffcc66"
-                fillOpacity={1}
-                fill="#ffffcc66"
+                fill="#00FF00"
+                stroke="#00FF00"
+                fillOpacity="0.2"
+                strokeOpacity="0.2"
               />
               <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
               <ReferenceLine
