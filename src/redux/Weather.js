@@ -49,10 +49,13 @@ function parseLimits(data, lat, long) {
   const roundedMin = Math.floor(minTemp / 10) * 10;
   const roundedMax = Math.ceil(maxTemp / 10) * 10;
 
-  const ticks = [-10, 0, 10];
-
   const lowerRange = Math.min(0, roundedMin);
   const upperRange = Math.max(roundedMin + 30, roundedMax);
+
+  const ticks = [];
+  for (let i = lowerRange; i <= upperRange; i += 10) {
+    ticks.push(i);
+  }
 
   const sunData = getSunMeta(lat, long);
   const out = {
