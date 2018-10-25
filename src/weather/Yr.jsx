@@ -13,7 +13,7 @@ import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import './yr.css';
 
-const gridColor = '#FFFFFF88';
+const gridColor = '#FFFFFF55';
 
 const steder = {
   oslo: { lat: 59.9409, long: 10.6991 },
@@ -24,11 +24,12 @@ class Yr extends React.PureComponent {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
-    this.state = { sted: 'oslo' };
+    this.state = { sted: 'oslo', currentTime: Moment().valueOf() };
   }
 
   componentDidMount() {
     this.updateWeather();
+    setInterval(() => { this.reloadTime(); }, 60000);
   }
 
   setNextReload() {
@@ -45,6 +46,10 @@ class Yr extends React.PureComponent {
     const uniqueData = uniqBy(rawData, 'time');
     const sortedData = sortBy(uniqueData, 'time');
     return sortedData;
+  }
+
+  reloadTime() {
+    this.setState({ currentTime: Moment().valueOf() });
   }
 
   updateWeather() {
@@ -122,23 +127,31 @@ class Yr extends React.PureComponent {
             />
             <ReferenceLine
               yAxisId="temp"
+              x={this.state.currentTime}
+              stroke="#FF000088"
+              strokeWidth={3}
+              strokeDasharray="3 3"
+              label={null}
+            />
+            <ReferenceLine
+              yAxisId="temp"
               x={divider0}
-              stroke={gridColor}
-              strokeDasharray="0 0"
+              stroke={null}
+              strokeDasharray="1 0"
               label={{ value: divider0m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider1}
               stroke={gridColor}
-              strokeDasharray="5 0"
+              strokeDasharray="2 2"
               label={{ value: divider1m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider2}
               stroke={gridColor}
-              strokeDasharray="5 0"
+              strokeDasharray="2 2"
               label={{ value: divider2m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
             />
           </ComposedChart>

@@ -211,6 +211,7 @@ class Solceller extends React.PureComponent {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+    const data = this.getData();
     return (
       <div style={{
         display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
@@ -225,7 +226,7 @@ class Solceller extends React.PureComponent {
                 left: 30,
                 bottom: 10,
               }}
-              data={this.getData()}
+              data={data}
             >
               <defs>
                 <radialGradient id="sunGradient">
