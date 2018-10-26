@@ -26,12 +26,10 @@ class App extends React.PureComponent {
     });
   }
 
-  
-
   getApp() {
     return (
       <Provider store={store}>
-        <Tellulf />
+        <Tellulf loggedIn={this.state.loggedIn} />
       </Provider>
     );
   }
@@ -43,7 +41,7 @@ class App extends React.PureComponent {
   }
 
   render() {
-    if (!this.state.loggedIn) return this.getLoggingIn();
+    // if (!this.state.loggedIn) return this.getLoggingIn();
     return this.getApp();
   }
 }

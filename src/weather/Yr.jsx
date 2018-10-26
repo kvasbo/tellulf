@@ -96,6 +96,20 @@ class Yr extends React.PureComponent {
               domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
             />
             <YAxis
+              yAxisId="wind"
+              type="number"
+              ticks={null}
+              domain={[0, 50]}
+              hide
+            />
+            <YAxis
+              yAxisId="clouds"
+              type="number"
+              ticks={null}
+              domain={[0, 1]}
+              hide
+            />
+            <YAxis
               width={25}
               label={{
                 angle: 90,
@@ -117,6 +131,7 @@ class Yr extends React.PureComponent {
             <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
+            <Line dot={false} yAxisId="wind" connectNulls={false} type="natural" dataKey="wind" stroke="#ffffff77" strokeDasharray="3 5" />
             <Line
               dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />}
               yAxisId="temp"

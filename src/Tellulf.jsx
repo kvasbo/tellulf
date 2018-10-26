@@ -23,7 +23,7 @@ class Tellulf extends React.PureComponent {
     return (
       <div className="gridContainer" style={{ flexDirection: 'column' }}>
         <div style={{ flex: 1.15 }} className="block">
-          <ErrorBoundary><Solceller /></ErrorBoundary>
+          {this.props.loggedIn && <ErrorBoundary><Solceller /></ErrorBoundary>}
         </div>
         <div style={{ flex: 1 }} className="block">
           <ErrorBoundary><Yr /></ErrorBoundary>

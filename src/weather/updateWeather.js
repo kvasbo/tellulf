@@ -38,6 +38,10 @@ export default async function getWeatherFromYr(lat, long) {
     const key = time.valueOf();
     if (key in weatherOut) {
       weatherOut[key].temp = Number(p.location.temperature.value);
+      const clouds = Number(p.location.cloudiness.percent) / 100;
+      weatherOut[key].clouds = clouds;
+      weatherOut[key].cloudsNeg = 1 - clouds;
+      weatherOut[key].wind = Number(p.location.windSpeed.mps);
       weatherOut[key].time = time.valueOf();
     }
   });
@@ -80,7 +84,7 @@ function initWeather() {
   for (let i = 0; i < 72; i += 1) {
     const key = now.valueOf();
     out[key] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf(),
+      temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf(),
     };
     now.add(1, 'hours');
   }
