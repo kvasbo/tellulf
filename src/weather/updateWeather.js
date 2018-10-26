@@ -1,7 +1,9 @@
 import axios from 'axios';
 import Moment from 'moment';
+import store from 'store';
+import XML from 'pixl-xml';
 
-const XML = require('pixl-xml');
+const localStorageKey = '1';
 
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
@@ -66,6 +68,9 @@ export default async function getWeatherFromYr(lat, long) {
     }
   });
 
+  // Overwrite cache
+  store.set(`weather_${localStorageKey}`, weatherOut);
+
   return weatherOut;
 }
 
@@ -79,6 +84,17 @@ function initWeather() {
     };
     now.add(1, 'hours');
   }
+
+  // Load localstore if applicable, and write to output item if applicable
+  const fromStore = store.get(`weather_${localStorageKey}`);
+  if (fromStore) {
+    Object.keys(fromStore).forEach((k) => {
+      if (out[k]) {
+        out[k] = { ...out[k], ...fromStore[k] };
+      }
+    });
+  }
+
   return out;
 }
 

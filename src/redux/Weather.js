@@ -25,7 +25,9 @@ export default function Weather(state = initialState, action) {
       filtered.forEach((w) => {
         newWeather[w.time] = w;
       });
-      return { ...state, lat: action.lat, long: action.long, weather: newWeather, limits: parseLimits(action.data, action.lat, action.long) };
+      return {
+        ...state, lat: action.lat, long: action.long, weather: newWeather, limits: parseLimits(action.data, action.lat, action.long),
+      };
     }
     case UPDATE_WEATHER_LONG: {
       return { ...state, long: { ...state.long, ...action.data } };
