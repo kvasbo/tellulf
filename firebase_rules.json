@@ -1,10 +1,12 @@
 {
   "rules": {
     "netatmo" : {
-      ".read": "auth != null"
+      ".read": "auth != null",
+      ".write": "auth.provider === 'password'"
     },
    	"steca" : {
-      ".read": "auth != null"
+      ".read": "auth != null",
+      ".write": "auth.provider === 'password'"
     }
   }
 }
