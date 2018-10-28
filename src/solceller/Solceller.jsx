@@ -426,8 +426,7 @@ function parseByHour(data) {
 }
 
 function getXTicks() {
-  const start = Moment().startOf('day');
-  const end = Moment().startOf('day').add(1, 'days');
+  const { start, end } = getTimeLimits();
   const out = [];
   while (start.isSameOrBefore(end)) {
     if (start.hours() % 2 === 0) {
@@ -445,4 +444,10 @@ function formatTick(data) {
 
 function formatYTick(data) {
   return `${data / 1000}`;
+}
+
+export function getTimeLimits() {
+  const start = new Moment().startOf('day');
+  const end = new Moment().add(1, 'day').startOf('day');
+  return { start, end };
 }
