@@ -18,6 +18,7 @@ export default async function getWeatherFromYr(lat, long) {
     if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
     return false;
   });
+
   const hours = parsed.product.time.filter((d) => {
     const from = Moment(d.from);
     const to = Moment(d.to);
@@ -25,6 +26,7 @@ export default async function getWeatherFromYr(lat, long) {
     if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
     return false;
   });
+
   const sixes = parsed.product.time.filter((d) => {
     const fromUtc = Moment(d.from).utc().hours();
     if (fromUtc % 6 !== 0) return false;
@@ -80,13 +82,14 @@ export default async function getWeatherFromYr(lat, long) {
 
 function initWeather() {
   const out = {};
+  const { start, end } = getTimeLimits();
   const now = new Moment().startOf('day');
-  for (let i = 0; i < 72; i += 1) {
-    const key = now.valueOf();
+  while (start.isSameOrBefore(end)) {
+    const key = start.valueOf();
     out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf(),
     };
-    now.add(1, 'hours');
+    start.add(1, 'hours');
   }
 
   // Load localstore if applicable, and write to output item if applicable
@@ -104,6 +107,6 @@ function initWeather() {
 
 export function getTimeLimits() {
   const start = new Moment().startOf('day');
-  const end = new Moment().add(2, 'day').endOf('day');
+  const end = new Moment().add(3, 'day').startOf('day');
   return { start, end };
 }
