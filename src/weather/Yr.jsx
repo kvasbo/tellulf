@@ -209,7 +209,7 @@ function getTicks() {
   const { start, end } = getTimeLimits();
   const out = [];
   while (start.isSameOrBefore(end)) {
-    if (start.hours() % 4 === 0) {
+    if (start.hours() % 6 === 0) {
       out.push(start.valueOf());
     }
     start.add(1, 'hours');
