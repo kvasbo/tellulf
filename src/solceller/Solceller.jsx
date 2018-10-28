@@ -425,11 +425,14 @@ function parseByHour(data) {
 }
 
 function getXTicks() {
-  const time = Moment().startOf('day');
+  const start = Moment().startOf('day');
+  const end = Moment().startOf('day').add(1, 'days');
   const out = [];
-  for (let i = 0; i < 24; i += 2) {
-    const t = Moment(time).add(i, 'hours');
-    out.push(t.valueOf());
+  while (start.isSameOrBefore(end)) {
+    if (start.hours() % 2 === 0) {
+      out.push(start.valueOf());
+    }
+    start.add(1, 'hours');
   }
   return out;
 }

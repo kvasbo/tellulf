@@ -214,7 +214,6 @@ function getTicks() {
     }
     start.add(1, 'hours');
   }
-  console.log(out);
   return out;
 }
 
