@@ -87,7 +87,7 @@ class Yr extends React.PureComponent {
             }}
             data={data}
           >
-            <XAxis scale="time" dataKey="time" tickFormatter={formatTick} ticks={getTicks()} interval={3} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
+            <XAxis scale="time" dataKey="time" tickFormatter={formatTick} ticks={getTicks()} type="number" domain={['dataMin', 'dataMax']} allowDataOverflow />
             <YAxis
               width={25}
               yAxisId="temp"
@@ -206,13 +206,15 @@ class Yr extends React.PureComponent {
 }
 
 function getTicks() {
-  const limits = getTimeLimits();
-  const time = limits.start;
+  const { start, end } = getTimeLimits();
   const out = [];
-  for (let i = 0; i < 73; i += 1) {
-    out.push(time.valueOf());
-    time.add(1, 'hours');
+  while (start.isSameOrBefore(end)) {
+    if (start.hours() % 4 === 0) {
+      out.push(start.valueOf());
+    }
+    start.add(1, 'hours');
   }
+  console.log(out);
   return out;
 }
 

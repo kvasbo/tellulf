@@ -83,11 +83,10 @@ export default async function getWeatherFromYr(lat, long) {
 function initWeather() {
   const out = {};
   const { start, end } = getTimeLimits();
-  const now = new Moment().startOf('day');
   while (start.isSameOrBefore(end)) {
     const key = start.valueOf();
     out[key] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time: now.valueOf(),
+      temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time: start.valueOf(),
     };
     start.add(1, 'hours');
   }
