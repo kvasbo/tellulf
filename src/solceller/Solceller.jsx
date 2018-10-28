@@ -134,6 +134,7 @@ class Solceller extends React.PureComponent {
       samplesForHour.forEach((h) => {
         sum += h.production;
       });
+      if (!samplesForHour || samplesForHour.length === 0) return 0;
       return sum / samplesForHour.length;
     } catch (err) {
       return 0;
