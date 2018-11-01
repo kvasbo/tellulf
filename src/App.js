@@ -22,6 +22,8 @@ class App extends React.PureComponent {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true });
+      } else {
+        console.log('Not logged in!');
       }
     });
   }
