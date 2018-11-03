@@ -5,7 +5,7 @@ class HendelseMedTid extends React.PureComponent {
 
   render() {
     return (
-      <div style={{ backgroundColor: '#222222', margin: 5, padding: 3, paddingLeft: 15, borderRadius: 5 }}>
+      <div style={{ backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 15, borderRadius: 5 }}>
         <div style={{ color: '#FFFFFF' }} >{this.props.data.name}</div>
         <div style={{ color: '#FFFFFF' }} >{getTimeString(this.props.data)}</div>
       </div>
@@ -35,7 +35,7 @@ export function getTimeString(event) {
 
 function fullDayFormats() {
   return {
-    lastWeek: '[forrige] dddd',
+    lastWeek: 'dddd DD.',
     nextWeek: 'dddd',
     sameDay: '[I dag]',
     nextDay: '[I morgen]',

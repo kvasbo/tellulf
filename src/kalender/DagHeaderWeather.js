@@ -47,7 +47,7 @@ function renderWeatherCell(data) {
   if (!data) return <div style={{ flex: 1 }} />;
   const icon = getIcon(data);
   return (
-    <div style={{ display: 'flex', flex: 1, justifyContent: 'center', flexDirection: 'column', margin: 5, padding: 0 }}>
+    <div style={{ display: 'flex', flex: 1, justifyContent: 'center', flexDirection: 'row', margin: 5, padding: 0, alignItems: 'center' }}>
       <div style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
         <img src={`./WeatherIcons/${icon}`} alt={icon} height={20} />
       </div>

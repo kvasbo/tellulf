@@ -5,11 +5,10 @@ import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 
 class Dag extends React.PureComponent {
-
   getDinner() {
     if (!this.props.dinner) return null;
     return (
-      <div><div style={{ color: '#FFFFFF'}} >🍴 {this.props.dinner.events[0].name}</div></div>
+      <div>🍴 {this.props.dinner.events[0].name}</div>
     );
   }
 
