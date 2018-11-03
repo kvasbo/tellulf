@@ -6,13 +6,18 @@ import Dag from './Dag';
 
 const IcalExpander = require('ical-expander');
 
-const cal = encodeURIComponent('https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvpgc50mqms5tu0kk%40group.calendar.google.com/private-7020f002efde8095cc911279983fb92a/basic.ics');
-const dinner = encodeURIComponent('https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics');
+const calUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvpgc50mqms5tu0kk%40group.calendar.google.com/private-7020f002efde8095cc911279983fb92a/basic.ics'
 
-const proxy = 'http://192.168.1.5:3333';
+const dinnerUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics';
 
-const calP = `${proxy}/${cal}`;
-const dinP = `${proxy}/${dinner}`;
+// const cal = encodeURIComponent(calUrl);
+// const dinner = encodeURIComponent(dinnerUrl);
+
+// const proxy = 'http://192.168.1.5:3333';
+const proxy2 = 'https://cors-anywhere.herokuapp.com';
+
+const calP = `${proxy2}/${calUrl}`;
+const dinP = `${proxy2}/${dinnerUrl}`;
 
 class Kalender extends React.PureComponent {
   constructor(props) {
