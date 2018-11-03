@@ -19,7 +19,8 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "store": "^2.0.12",
-    "suncalc": "^1.8.0"
+    "suncalc": "^1.8.0",
+    "ical-expander": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

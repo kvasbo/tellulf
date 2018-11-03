@@ -4619,6 +4619,18 @@ https-browserify@^1.0.0:
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
+ical-expander@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ical-expander/-/ical-expander-2.0.0.tgz#8d30b6081752ac0b825a7a099bba92e86c2f6a9c"
+  integrity sha512-DABFhfEl0c58MeiTbG8hO5VEWQfKlFA7jSqdoIbS2caxS4nGyA73nVBGsFtIbmTrDO7Osgw9/up2ZCnvuxGcKA==
+  dependencies:
+    ical.js "^1.2.2"
+
+ical.js@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/ical.js/-/ical.js-1.2.2.tgz#59b517362a8f61dce0342fe67deb7c20dd119f6e"
+  integrity sha1-WbUXNiqPYdzgNC/mfet8IN0Rn24=
+
 iconv-lite@0.4.23:
   version "0.4.23"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
