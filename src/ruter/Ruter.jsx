@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Moment from 'moment';
 import axios from 'axios';
 import Tog from './Tog';
-import './flat.css';
+import './ruter.css';
 
 export default class Ruter extends Component {
   constructor(props) {
@@ -15,7 +15,6 @@ export default class Ruter extends Component {
   }
 
   componentDidMount() {
-    console.log('Ruter mounted');
     setInterval(() => {
       this.getRuterData();
     }, 1000 * this.oppdateringsFrekvens);
@@ -56,9 +55,6 @@ export default class Ruter extends Component {
           const out = {};
           out.ruteTid = new Date(d.AimedArrivalTime);
           out.faktiskTid = new Date(d.ExpectedArrivalTime);
-          // out.diffRute = Math.floor((out.faktiskTid - out.ruteTid) / 1000);
-          // out.diffNow = Math.floor((out.faktiskTid - now) / 1000);
-          // eslint-disable-next-line max-len
           out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
           out.linje = t.MonitoredVehicleJourney.PublishedLineName;
           out.Endestasjon = t.MonitoredVehicleJourney.DestinationName;
@@ -75,7 +71,7 @@ export default class Ruter extends Component {
 
   render() {
     return (
-      <div style={{ display: 'relative' }} id="RuterFlat">{this.getTrainObjects()}</div>
+      <div style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainObjects()}</div>
     );
   }
 }
@@ -83,7 +79,6 @@ export default class Ruter extends Component {
 function getTrain(data) {
   const train = {};
   const now = new Moment();
-
   train.id = data.id;
   train.faktiskTid = new Moment(data.faktiskTid);
   train.ruteTid = new Moment(data.ruteTid);
@@ -92,7 +87,6 @@ function getTrain(data) {
   train.fromNow = train.faktiskTid.diff(now, 's');
   train.fromNowM = train.faktiskTid.diff(now, 'm');
   train.ruteDiff = train.faktiskTid.diff(train.ruteTid, 'm');
-
   return train;
 }
 

@@ -14,7 +14,7 @@ body {
   display: grid;
   grid-column-gap: 0px;
   grid-template-columns: auto 30vw;
-  grid-template-rows: 20vh 14vh 30vh 30vh 6vh;
+  grid-template-rows: auto 14vh 30vh 30vh 5vh;
 }
 
 .block {
