@@ -32,21 +32,6 @@ class Netatmo extends React.PureComponent {
           <div>{Math.round(this.props.netatmo.inneTrykk)} mb</div>
         </div>
       </div>
-      /*<View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' , backgroundColor: '#000000'}} >
-        <View style={{ flex: 0.5, padding: 10, alignItems: 'flex-end', backgroundColor: '#000000', justifyContent: 'center' }} >
-          <Text style={{ color: '#FFFFFF', fontSize: 75, fontWeight: '200' }}>{this.props.averages.temperature}°</Text>
-        </View>
-        <View style={{ flex: 0.7, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
-          <View style={{ paddingLeft: 10, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }} >
-            <Text style={{ color: '#FFFFFF', padding: 3, fontSize: 20, fontWeight: '200' }}>{this.props.netatmo.inneTemp}°</Text>
-            <Text style={{ color: '#FFFFFF', padding: 3, fontSize: 20, fontWeight: '200' }}>{this.props.netatmo.co2} ppm</Text>
-          </View>
-          <View style={{ paddingLeft: 10, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }} >
-            <Text style={{ color: '#FFFFFF', padding: 3, fontSize: 20, fontWeight: '200' }}>{Math.round(this.props.netatmo.inneFukt)}%</Text>
-            <Text style={{ color: '#FFFFFF', padding: 3, fontSize: 20, fontWeight: '200' }}>{Math.round(this.props.netatmo.inneTrykk)} mb</Text>
-          </View>
-        </View>
-      </View>*/
     );
   }
 }
