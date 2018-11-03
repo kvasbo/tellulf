@@ -20,12 +20,17 @@ class Netatmo extends React.PureComponent {
   render() {
     if (!this.props.netatmo || !this.props.averages) return null;
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gridTemplateRows: 'auto auto auto' }}>
-        <div>{this.props.averages.temperature}°</div>
-        <div>{this.props.netatmo.inneTemp}°</div>
-        <div>{this.props.netatmo.co2} ppm</div>
-        <div>{Math.round(this.props.netatmo.inneFukt)}%</div>
-        <div>{Math.round(this.props.netatmo.inneTrykk)} mb</div>
+      <div style={{ display: 'flex', height: '100%', flexDirection: 'row' }}>
+        <div style={{ display: 'flex', flex: 1, padding: 20, justifyContent: 'flex-end', alignItems: 'center', fontSize: 75 }}>
+          {this.props.averages.temperature}°
+        </div>
+        <div style={{ flex: 1, paddingLeft: 20, display: 'grid', gridTemplateColumns: 'auto auto', gridTemplateRows: 'auto auto', justifyItems: 'start', alignItems: 'center' }}>
+          
+          <div>{this.props.netatmo.inneTemp}°</div>
+          <div>{this.props.netatmo.co2} ppm</div>
+          <div>{Math.round(this.props.netatmo.inneFukt)}%</div>
+          <div>{Math.round(this.props.netatmo.inneTrykk)} mb</div>
+        </div>
       </div>
       /*<View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' , backgroundColor: '#000000'}} >
         <View style={{ flex: 0.5, padding: 10, alignItems: 'flex-end', backgroundColor: '#000000', justifyContent: 'center' }} >
