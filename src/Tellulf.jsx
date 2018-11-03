@@ -4,6 +4,7 @@ import ErrorBoundary from './ErrorBoundary';
 import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
 import Ruter from './ruter/Ruter';
+import Netatmo from './Netatmo';
 import './cssReset.css';
 import './tellulf.css';
 
@@ -31,6 +32,9 @@ class Tellulf extends React.PureComponent {
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '5 / 5' }} className="block">
           <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
+        </div>
+        <div style={{ gridColumn: '1 / 1', gridRow: '2 / 3' }} className="block">
+          <ErrorBoundary><Netatmo /></ErrorBoundary>
         </div>
       </div>
     );
