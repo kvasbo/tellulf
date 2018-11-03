@@ -16,11 +16,11 @@ class Clock extends React.PureComponent {
   render() {
     return (
       <div style={{
-        display: 'flex', flexDirection: 'column', paddingBottom: 20, paddingTop: 20, backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center',
+        display: 'flex', flex: 1, height: '100%', flexDirection: 'column', backgroundColor: '#000000', justifyContent: 'space-evenly', alignItems: 'center',
       }}
       >
-        <div style={{ color: '#ffffff', fontSize: 100, fontWeight: '200' }}>{this.state.time.format('HH:mm')}</div>
-        <div style={{ color: '#ffffff', fontSize: 40, fontWeight: '200' }}>{this.state.time.format('dddd Do MMMM')}</div>
+        <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', display: 'flex', color: '#ffffff', fontSize: 100, paddingTop: 30, fontWeight: '200' }}>{this.state.time.format('HH:mm')}</div>
+        <div style={{ flex: 0.7, color: '#ffffff', fontSize: 35, fontWeight: '100' }}>{this.state.time.format('dddd Do MMMM')}</div>
       </div>
     );
   }

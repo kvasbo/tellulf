@@ -24,7 +24,7 @@ class Netatmo extends React.PureComponent {
         <div style={{ display: 'flex', flex: 1, padding: 20, justifyContent: 'flex-end', alignItems: 'center', fontSize: 75 }}>
           {this.props.averages.temperature}°
         </div>
-        <div style={{ flex: 1, padding: 40, paddingRight: 80, paddingLeft: 20, display: 'grid', gridTemplateColumns: 'auto auto', gridTemplateRows: 'auto auto', justifyItems: 'start', alignItems: 'center' }}>
+        <div style={{ flex: 1, padding: 35, display: 'grid', gridTemplateColumns: 'auto auto', gridTemplateRows: 'auto auto', justifyItems: 'start', alignItems: 'center' }}>
           
           <div>{this.props.netatmo.inneTemp}°</div>
           <div>{this.props.netatmo.co2} ppm</div>
