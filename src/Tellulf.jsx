@@ -5,6 +5,7 @@ import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
 import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo';
+import Klokke from './Klokke';
 import './cssReset.css';
 import './tellulf.css';
 
@@ -24,6 +25,9 @@ class Tellulf extends React.PureComponent {
   render() {
     return (
       <div className="grid">
+        <div style={{ gridColumn: '1 / 1', gridRow: '1 / 2' }} className="block">
+          <ErrorBoundary><Klokke /></ErrorBoundary>
+        </div>
         <div style={{ gridColumn: '1 / 1', gridRow: '3 / 4' }} className="block">
           {this.props.loggedIn && <ErrorBoundary><Solceller /></ErrorBoundary>}
         </div>
