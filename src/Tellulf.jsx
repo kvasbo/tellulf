@@ -21,11 +21,11 @@ class Tellulf extends React.PureComponent {
 
   render() {
     return (
-      <div className="gridContainer" style={{ flexDirection: 'column' }}>
-        <div style={{ flex: 1.15 }} className="block">
+      <div className="grid">
+        <div style={{ gridColumn: '1 / 1', gridRow: '3 / 3' }} className="block">
           {this.props.loggedIn && <ErrorBoundary><Solceller /></ErrorBoundary>}
         </div>
-        <div style={{ flex: 1 }} className="block">
+        <div style={{ gridColumn: '1 / 1', gridRow: '4 / 4' }} className="block">
           <ErrorBoundary><Yr /></ErrorBoundary>
         </div>
       </div>
