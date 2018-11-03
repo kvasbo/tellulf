@@ -1,7 +1,6 @@
 import getWeatherFromYr from '../weather/updateWeather';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
-export const UPDATE_WEATHER_LONG = 'UPDATE_WEATHER_LONG';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const NETATMO_UPDATE_AVERAGES = 'NETATMO_UPDATE_AVERAGES';
 export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
@@ -17,12 +16,12 @@ export function updateInitStatus(key, value = true) {
   };
 }
 
-export function updateWeather(data, lat, long) {
+export function updateWeather(data, lat, lon) {
   return {
     type: UPDATE_WEATHER,
     data,
     lat,
-    long,
+    lon,
   };
 }
 
@@ -47,15 +46,6 @@ export function updateSolarCurrent(data) {
   };
 }
 
-export function updateWeatherLong(data, lat, long) {
-  return {
-    type: UPDATE_WEATHER_LONG,
-    data,
-    lat,
-    long,
-  };
-}
-
 export function updateNetatmo(data) {
   return {
     type: NETATMO_UPDATE,
@@ -70,11 +60,10 @@ export function updateNetatmoAverages(data) {
   };
 }
 
-export function fetchWeather(lat, long) {
+export function fetchWeather(lat, lon) {
   return (dispatch) => {
-    return getWeatherFromYr(lat, long).then(
-      weather => dispatch(updateWeather(weather, lat, long)),
-      weather => dispatch(updateWeatherLong(weather, lat, long)),
+    return getWeatherFromYr(lat, lon).then(
+      weather => dispatch(updateWeather(weather, lat, lon)),
     );
   };
 }

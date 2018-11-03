@@ -77,7 +77,7 @@ export default async function getWeatherFromYr(lat, long) {
   // Overwrite cache
   store.set(`weather_${localStorageKey}`, weatherOut);
 
-  return weatherOut;
+  return { weather: weatherOut, long: sixesOut };
 }
 
 function initWeather() {

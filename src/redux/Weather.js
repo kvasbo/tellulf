@@ -2,7 +2,7 @@ import Moment from 'moment';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import SunCalc from 'suncalc';
-import { UPDATE_WEATHER, UPDATE_WEATHER_LONG } from './actions';
+import { UPDATE_WEATHER } from './actions';
 
 const initialState = {
   weather: undefined,
@@ -17,7 +17,7 @@ export default function Weather(state = initialState, action) {
     case UPDATE_WEATHER: {
       const from = Moment().startOf('day');
       const to = Moment().add(3, 'day').startOf('day');
-      const toFilter = Object.values({ ...state.weather, ...action.data });
+      const toFilter = Object.values({ ...state.weather, ...action.data.weather });
       const filtered = toFilter.filter((w) => {
         return Moment(w.time).isBetween(from, to, null, '[]');
       });
@@ -26,11 +26,8 @@ export default function Weather(state = initialState, action) {
         newWeather[w.time] = w;
       });
       return {
-        ...state, lat: action.lat, long: action.long, weather: newWeather, limits: parseLimits(action.data, action.lat, action.long),
+        ...state, lat: action.lat, lon: action.lon, weather: newWeather, long: { ...action.data.long }, limits: parseLimits(action.data.weather, action.lat, action.lon),
       };
-    }
-    case UPDATE_WEATHER_LONG: {
-      return { ...state, long: { ...state.long, ...action.data } };
     }
     default:
       return state;

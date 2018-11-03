@@ -1,8 +1,7 @@
 import React from 'react';
 import Moment from 'moment';
 import SunCalc from 'suncalc';
-// import Image from 'react-native-remote-svg'
-// import weatherSymbols from '../weatherIcons';
+import weatherSymbols from '../weather/symbolMap';
 
 class DagHeaderWeather extends React.PureComponent {
   getWeatherData() {
@@ -34,7 +33,7 @@ class DagHeaderWeather extends React.PureComponent {
     if (this.props.weather.length === 0) return null;
     const weather = this.getWeatherData();
     return (
-      <div style={{ flexDirection: 'row', flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
         { renderWeatherCell(weather.first) }
         { renderWeatherCell(weather.second) }
         { renderWeatherCell(weather.third) }
@@ -48,9 +47,9 @@ function renderWeatherCell(data) {
   if (!data) return <div style={{ flex: 1 }} />;
   const icon = getIcon(data);
   return (
-    <div style={{ flex: 1, justifyContent: 'center', flexDirection: 'row', margin: 5, padding: 0 }}>
+    <div style={{ display: 'flex', flex: 1, justifyContent: 'center', flexDirection: 'column', margin: 5, padding: 0 }}>
       <div style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
-        
+        <img src={`./WeatherIcons/${icon}`} alt={icon} height={20} />
       </div>
       <div style={{ marginLeft: 5, justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ color: '#FFFFFF' }}>{Math.round(data.temp)}</div>
@@ -60,15 +59,12 @@ function renderWeatherCell(data) {
 }
 
 function getIcon(data) {
-  return null;
-  /*
   let icon = weatherSymbols.blank;
   const nattdag = (getDayTime(data)) ? 'day' : 'night';
   if (data.symbol in weatherSymbols[nattdag]) {
     icon = weatherSymbols[nattdag][data.symbol];
   }
   return icon;
-  */
 }
 
 function getDayTime(data) {
