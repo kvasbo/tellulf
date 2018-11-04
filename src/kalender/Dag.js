@@ -8,7 +8,7 @@ class Dag extends React.PureComponent {
   getDinner() {
     if (!this.props.dinner) return null;
     return (
-      <div>🍴 {this.props.dinner.events[0].name}</div>
+      <div>{this.props.dinner.events[0].name}</div>
     );
   }
 

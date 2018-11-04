@@ -8,6 +8,7 @@ const localStorageKey = '1';
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
   const { start, end } = getTimeLimits();
+  const now = Moment();
 
   const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
   const parsed = XML.parse(data.data);
@@ -74,10 +75,19 @@ export default async function getWeatherFromYr(lat, long) {
     }
   });
 
+  // Get today minmax
+  const todayMinMax = { min: 999, max: -999 };
+  Object.values(weatherOut).forEach((p) => {
+    const time = Moment(p.time);
+    if (!time.isSame(now, 'day')) return;
+    if (p.temp < todayMinMax.min) todayMinMax.min = p.temp;
+    if (p.temp > todayMinMax.max) todayMinMax.max = p.temp;
+  });
+
   // Overwrite cache
   store.set(`weather_${localStorageKey}`, weatherOut);
 
-  return { weather: weatherOut, long: sixesOut };
+  return { weather: weatherOut, long: sixesOut, todayMinMax };
 }
 
 function initWeather() {
