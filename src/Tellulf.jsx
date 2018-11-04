@@ -7,7 +7,6 @@ import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo';
 import Klokke from './Klokke';
-import './cssReset.css';
 import './tellulf.css';
 
 function startReloadLoop() {

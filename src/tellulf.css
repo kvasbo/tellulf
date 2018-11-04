@@ -1,6 +1,7 @@
 body {
   font-family: -apple-system, arial, sans-serif;
   font-weight: 200;
+  font-size: 11pt;
   height: 100vh;
   width: 100vw;
   overflow: hidden;

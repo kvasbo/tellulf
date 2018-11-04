@@ -32,7 +32,7 @@ class Dag extends React.PureComponent {
     const dateHeaderFormats = {
       sameDay: '[I dag]',
       nextDay: '[I morgen]',
-      nextWeek: 'dddd DD.',
+      nextWeek: 'dddd D.',
       sameElse: 'dddd DD. MMM',
     };
     const dateStr = Moment(date).calendar(null, dateHeaderFormats);

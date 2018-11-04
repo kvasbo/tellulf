@@ -22,7 +22,7 @@ class Kalender extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      kalenderData: {},
+      kalenderData: { ...primeDays(7) },
       dinners: {},
     };
   }
@@ -43,7 +43,9 @@ class Kalender extends React.PureComponent {
   }
 
   async getIcal(url, prime = false) {
-    const parsedEvents = {};
+    
+    let parsedEvents = {};
+
     try {
     const now = Moment();
     const data = await Axios.get(url);
@@ -69,12 +71,7 @@ class Kalender extends React.PureComponent {
 
     // Prime array for events.
     if (prime) {
-      for (let i = 0; i < 7; i += 1) {
-        const m = new Moment();
-        m.add(i, 'day');
-        const s = m.format('YYYY-MM-DD');
-        parsedEvents[s] = initDay(s);
-      }
+      parsedEvents = { ...primeDays(7) };
     }
 
     sorted.occurrences.forEach((e) => {
@@ -167,8 +164,20 @@ class Kalender extends React.PureComponent {
   }
 }
 
+function primeDays(number) {
+  // Prime array for events.
+  const out = {};
+  for (let i = 0; i < 7; i += 1) {
+    const m = new Moment();
+    m.add(i, 'day');
+    const s = m.format('YYYY-MM-DD');
+    out[s] = initDay(s);
+  }
+  return out;
+}
+
 function initDay(sortString) {
-  return { events: [], sortString, sortStamp: parseInt(Moment(sortString, "YYYY-MM-DD").format('x'), 10) }
+  return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) }
 }
 
 const mapStateToProps = state => {
