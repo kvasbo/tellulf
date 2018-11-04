@@ -2,5 +2,11 @@
   "rules": "firebase_rules.json",
   "hosting": {
     "public": "build"
+  },
+  "database": {
+    "rules": "firebase_rules.json"
+  },
+  "functions": {
+    
   }
 }
