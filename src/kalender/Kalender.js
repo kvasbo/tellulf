@@ -10,14 +10,14 @@ const calUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvp
 
 const dinnerUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics';
 
-// const cal = encodeURIComponent(calUrl);
-// const dinner = encodeURIComponent(dinnerUrl);
+const cal = encodeURIComponent(calUrl);
+const dinner = encodeURIComponent(dinnerUrl);
 
-// const proxy = 'http://192.168.1.5:3333';
+const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 const proxy2 = 'https://cors-anywhere.herokuapp.com';
 
-const calP = `${proxy2}/${calUrl}`;
-const dinP = `${proxy2}/${dinnerUrl}`;
+const calP = `${proxy}/${cal}`;
+const dinP = `${proxy}/${dinner}`;
 
 class Kalender extends React.PureComponent {
   constructor(props) {
