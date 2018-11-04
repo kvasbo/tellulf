@@ -1,5 +1,10 @@
 image: node:10
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - node_modules/
+
 deploy_production:
   stage: deploy
   environment: Production
