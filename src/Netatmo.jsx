@@ -19,7 +19,6 @@ class Netatmo extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props.minMax);
     if (!this.props.netatmo || !this.props.averages) return null;
     return (
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
