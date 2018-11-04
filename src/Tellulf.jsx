@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Moment from 'moment';
 import ErrorBoundary from './ErrorBoundary';
 import Solceller from './solceller/Solceller';
@@ -47,5 +48,9 @@ class Tellulf extends React.PureComponent {
     );
   }
 }
+
+Tellulf.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+};
 
 export default Tellulf;
