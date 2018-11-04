@@ -11,14 +11,15 @@ deploy_production:
   only:
     - master
   script:
-    - npm install -g firebase-tools
+    # - npm install -g firebase-tools
+    - yarn add firebase-tools
     - cd /builds/kvasbo/tellulf-client
     - yarn install --non-interactive --pure-lockfile
     - CI=false yarn run build
     - cd /builds/kvasbo/tellulf-client/functions
     - yarn install --non-interactive --pure-lockfile
     - cd /builds/kvasbo/tellulf-client
-    - firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY
+    - /node_modules/firebase_tools/node_modules/firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY
   artifacts:
     name: "$CI_JOB_NAME"
     paths:
