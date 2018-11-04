@@ -5,14 +5,16 @@ const express = require('express');
 const app = express();
 
 app.use((req, res, next) => {
+  console.log("middleware");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Credentials", "false");
   next();
 });
 
 app.get('/:url', (req, res) => {
-  console.log('Get', req.params.url);
-  axios.get(req.params.url).then((data) => {
+  console.log('Get', req.query.url);
+  axios.get(req.query.url).then((data) => {
     res.send(data.data);
   }).catch((err) => {
     console.log(err);

@@ -16,8 +16,8 @@ const dinner = encodeURIComponent(dinnerUrl);
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 const proxy2 = 'https://cors-anywhere.herokuapp.com';
 
-const calP = `${proxy}/${cal}`;
-const dinP = `${proxy}/${dinner}`;
+const calP = `${proxy}/?url=${cal}`;
+const dinP = `${proxy}/?url=${dinner}`;
 
 class Kalender extends React.PureComponent {
   constructor(props) {
