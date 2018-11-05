@@ -27,7 +27,7 @@ class Netatmo extends React.PureComponent {
         }}
         >
           <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.min(this.props.averages.temperature, this.props.minMax.min)}°</span>
-          <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 66 }}>{this.props.averages.temperature}°</span>
+          <span style={{ color: 'rgb(255,255,255)', fontSize: 66 }}>{this.props.averages.temperature}°</span>
           <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.max(this.props.averages.temperature, this.props.minMax.max)}°</span>
         </div>
         <div
