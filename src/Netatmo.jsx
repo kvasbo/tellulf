@@ -23,7 +23,7 @@ class Netatmo extends React.PureComponent {
     return (
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
         <div style={{
-          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center', fontSize: 60,
+          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center', fontSize: 66,
         }}
         >
           <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.min(this.props.averages.temperature, this.props.minMax.min)}°</span>
