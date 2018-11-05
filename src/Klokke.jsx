@@ -21,7 +21,7 @@ class Clock extends React.PureComponent {
       >
         <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', display: 'flex', color: '#ffffff', fontSize: 100, paddingTop: 30, fontWeight: '200' }}>{this.state.time.format('HH:mm')}</div>
         <div style={{ flex: 0.7, color: '#ffffff', fontSize: 35, fontWeight: '100' }}>{this.state.time.format('dddd Do MMMM')}</div>
-        { this.state.debug && <span><img alt="pipeline status" src="https://gitlab.com/kvasbo/tellulf-client/badges/master/pipeline.svg" /></span>}
+        { this.state.debug && <span><img alt="pipeline status" src="https://gitlab.com/kvasbo/tellulf-client/badges/master/pipeline.svg" /><span onClick={() => window.location.reload()}>Last inn på nytt</span></span>}
       </div>
     );
   }
