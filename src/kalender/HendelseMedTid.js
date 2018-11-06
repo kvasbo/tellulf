@@ -1,13 +1,15 @@
 import React from 'react';
 import Moment from 'moment';
 
+const style = {
+  backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 10, borderRadius: '0.5vw',
+};
 class HendelseMedTid extends React.PureComponent {
-
   render() {
     return (
-      <div style={{ backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 15, borderRadius: 5 }}>
-        <div style={{ color: '#FFFFFF' }} >{this.props.data.name}</div>
-        <div style={{ color: '#FFFFFF' }} >{getTimeString(this.props.data)}</div>
+      <div style={style}>
+        <div>{this.props.data.name}</div>
+        <div>{getTimeString(this.props.data)}</div>
       </div>
     );
   }

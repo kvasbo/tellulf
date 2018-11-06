@@ -22,8 +22,6 @@ import {
   updateInitStatus,
 } from '../redux/actions';
 
-import './style.css';
-
 const nettleie = 0.477;
 const lat = 59.9409;
 const long = 10.6991;
@@ -222,10 +220,10 @@ class Solceller extends React.PureComponent {
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               margin={{
-                top: 30,
-                right: 20,
-                left: 30,
-                bottom: 10,
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
               }}
               data={data}
             >
@@ -329,9 +327,7 @@ class Solceller extends React.PureComponent {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          color: 'white',
           padding: 0,
-          height: 50,
         }}
         >
           <div>Dag: {getRoundedNumber(Number(this.props.current.today) / 1000)} kWh / {this.getMoneySavedToday()} kr</div>

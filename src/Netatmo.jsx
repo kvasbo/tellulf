@@ -32,7 +32,7 @@ class Netatmo extends React.PureComponent {
         </div>
         <div
           style={{
-            flex: 0.3, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center',
+            flex: 0.4, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center',
           }}
         >
           <div>{this.props.netatmo.inneTemp}°</div>

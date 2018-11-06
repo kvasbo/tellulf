@@ -83,7 +83,7 @@ class Yr extends React.PureComponent {
           <ComposedChart
             isAnimationActive={false}
             margin={{
-              top: 10, right: 20, left: 30, bottom: 10,
+              top: 0, right: 0, left: 0, bottom: 0,
             }}
             data={data}
           >
@@ -172,7 +172,7 @@ class Yr extends React.PureComponent {
           </ComposedChart>
         </ResponsiveContainer>
         <div style={{
-          display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 10, margin: 0, paddingTop: 0, color: 'white',
+          display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 0,
         }}
         >
           <label htmlFor="oslo">

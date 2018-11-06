@@ -41,8 +41,8 @@ class Dag extends React.PureComponent {
 
   render() {
     return (
-      <div style={{ padding: 5, margin: 5, backgroundColor: '#000000' }} >
-        <div style={{ color: '#FFFFFF', padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
         <DagHeaderWeather weather={this.props.weather} date={this.props.date} />
         {this.getDinner()}
         {this.getEvents()}

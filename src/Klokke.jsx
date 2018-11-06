@@ -16,11 +16,11 @@ class Clock extends React.PureComponent {
   render() {
     return (
       <div style={{
-        display: 'flex', flex: 1, height: '100%', flexDirection: 'column', backgroundColor: '#000000', justifyContent: 'space-evenly', alignItems: 'center',
+        display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
       }} onClick={() => this.setState({ debug: !this.state.debug })}
       >
-        <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', display: 'flex', color: '#ffffff', fontSize: 100, paddingTop: 30, fontWeight: '200' }}>{this.state.time.format('HH:mm')}</div>
-        <div style={{ flex: 0.7, color: '#ffffff', fontSize: 35, fontWeight: '100' }}>{this.state.time.format('dddd Do MMMM')}</div>
+        <span style={{ alignItems: 'center', color: '#ffffff', fontSize: 100, fontWeight: '200' }}>{this.state.time.format('HH:mm')}</span>
+        <span style={{ color: '#ffffff', fontSize: 35, fontWeight: '100' }}>{this.state.time.format('dddd Do MMMM')}</span>
         { this.state.debug && <span><img alt="pipeline status" src="https://gitlab.com/kvasbo/tellulf-client/badges/master/pipeline.svg" /><span onClick={() => window.location.reload()}>Last inn på nytt</span></span>}
       </div>
     );

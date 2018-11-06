@@ -162,10 +162,10 @@ function parseIcalEvent(e, useItem = false) {
   }
 }
 
-function primeDays(number) {
+function primeDays(number = 7) {
   // Prime array for events.
   const out = {};
-  for (let i = 0; i < 7; i += 1) {
+  for (let i = 0; i < number; i += 1) {
     const m = new Moment();
     m.add(i, 'day');
     const s = m.format('YYYY-MM-DD');
@@ -175,13 +175,13 @@ function primeDays(number) {
 }
 
 function initDay(sortString) {
-  return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) }
+  return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) };
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     weather: state.Weather.long,
   };
-}
+};
 
 export default connect(mapStateToProps)(Kalender);

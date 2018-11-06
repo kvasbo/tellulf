@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import './cssReset.css';
 import './login.css';
 
-
-class Login extends Component {
+class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { user: '', pass: '' };
