@@ -83,7 +83,7 @@ class Yr extends React.PureComponent {
           <ComposedChart
             isAnimationActive={false}
             margin={{
-              top: 0, right: 0, left: 0, bottom: 0,
+              top: 0, right: 10, left: 10, bottom: 0,
             }}
             data={data}
           >

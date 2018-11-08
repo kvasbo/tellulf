@@ -221,8 +221,8 @@ class Solceller extends React.PureComponent {
             <ComposedChart
               margin={{
                 top: 0,
-                right: 0,
-                left: 0,
+                right: 10,
+                left: 10,
                 bottom: 0,
               }}
               data={data}
@@ -333,7 +333,7 @@ class Solceller extends React.PureComponent {
           <div>Dag: {getRoundedNumber(Number(this.props.current.today) / 1000)} kWh / {this.getMoneySavedToday()} kr</div>
           <div>Måned: {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}</div>
           <div>År: {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}</div>
-          <div>Total: {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}</div>
+          <div>Totalt: {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}</div>
         </div>
       </div>
     );
