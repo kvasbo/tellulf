@@ -17,7 +17,7 @@ class HendelseMedTid extends React.PureComponent {
 
 export function getTimeString(event) {
   let timeString = '';
-  if (event.fullDay){ // Full day events
+  if (event.fullDay) { // Full day events
     if (!event.oneDay) {
       timeString = Moment(event.start).calendar(null, fullDayFormats());
       // subtract one, as we only want the last included day

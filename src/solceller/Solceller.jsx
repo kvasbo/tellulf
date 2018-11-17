@@ -403,9 +403,9 @@ function getDataPointObject() {
 function getRoundedNumber(number) {
   if (number < 10) {
     return number.toFixed(3);
-  } else if (number < 100) {
+  } if (number < 100) {
     return number.toFixed(2);
-  } else if (number < 1000) {
+  } if (number < 1000) {
     return number.toFixed(1);
   }
   return number.toFixed(0);

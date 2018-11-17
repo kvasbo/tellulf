@@ -32,7 +32,7 @@ class Kalender extends React.PureComponent {
     setInterval(() => this.updateData(), 1000 * 60);
   }
 
-  async getIcal(url, prime = false) {    
+  async getIcal(url, prime = false) {
     let parsedEvents = {};
     try {
       const now = Moment();
@@ -67,7 +67,7 @@ class Kalender extends React.PureComponent {
           const event = parseIcalEvent(e, true);
           if (!parsedEvents[event.groupString]) {
             parsedEvents[event.groupString] = initDay(event.groupString);
-          } 
+          }
           parsedEvents[event.groupString].events.push(event);
         } catch (err) {
           console.log(err);
@@ -156,7 +156,9 @@ function parseIcalEvent(e, useItem = false) {
       groupString = now.format('YYYY-MM-DD');
     }
     const id = (e.uid) ? e.uid : e.item.uid;
-    return { id, name, start, end, fullDay, oneDay, groupString };
+    return {
+      id, name, start, end, fullDay, oneDay, groupString,
+    };
   } catch (err) {
     console.log(err);
   }

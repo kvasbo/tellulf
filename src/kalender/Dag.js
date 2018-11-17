@@ -14,7 +14,7 @@ class Dag extends React.PureComponent {
 
   getEvents() {
     if (!this.props.events) return null;
-    const events = this.props.events.events.sort((a,b) => {
+    const events = this.props.events.events.sort((a, b) => {
       return (a.start.isBefore(b.start)) ? -1 : 1;
     });
     const out = [];

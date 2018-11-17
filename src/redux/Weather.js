@@ -27,7 +27,13 @@ export default function Weather(state = initialState, action) {
         newWeather[w.time] = w;
       });
       return {
-        ...state, lat: action.lat, lon: action.lon, weather: newWeather, long: { ...action.data.long }, todayMinMax: action.data.todayMinMax, limits: parseLimits(action.data.weather, action.lat, action.lon),
+        ...state,
+        lat: action.lat,
+        lon: action.lon,
+        weather: newWeather,
+        long: { ...action.data.long },
+        todayMinMax: action.data.todayMinMax,
+        limits: parseLimits(action.data.weather, action.lat, action.lon),
       };
     }
     default:
