@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Moment from 'moment';
 import { connect } from 'react-redux';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import firebase from './firebase';
@@ -19,7 +20,19 @@ class Netatmo extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.netatmo || !this.props.averages) return null;
+    // Ikke rendre om ikke data
+    if (!this.props.netatmo.updated || !this.props.averages.time) return null;
+    // Finn alder på data
+    const avgTime = Moment(this.props.averages.time * 1000);
+    const ourTime = Moment(this.props.netatmo.updated);
+    const dataAgeAvg = Moment().diff(avgTime, 'minutes');
+    const dataAgeOur = Moment().diff(ourTime, 'minutes');
+    if (dataAgeAvg + dataAgeOur > 60) {
+      return (
+        <div>Altfor gamle data</div>
+      );
+    }
+
     return (
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
         <div style={{
