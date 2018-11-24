@@ -5,6 +5,7 @@ import NetatmoAverages from './NetatmoAverages';
 import Init from './Init';
 import Solar from './Solar';
 import PowerPrices from './PowerPrices';
+import Trains from './Trains';
 
 const tellulfReducer = combineReducers({
   Init,
@@ -12,6 +13,7 @@ const tellulfReducer = combineReducers({
   NetatmoAverages,
   Solar,
   PowerPrices,
+  Trains,
   Weather,
 });
 

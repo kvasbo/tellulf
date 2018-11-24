@@ -1,73 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
-import axios from 'axios';
 import Tog from './Tog';
+import { fetchTrains } from '../redux/actions';
 import './ruter.css';
 
-export default class Ruter extends Component {
+class Ruter extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      tog: [],
-    };
     this.oppdateringsFrekvens = 10;
   }
 
   componentDidMount() {
+    // Ny
     setInterval(() => {
-      this.getRuterData();
+      this.props.dispatch(fetchTrains(this.props.stasjon, this.props.retning));
     }, 1000 * this.oppdateringsFrekvens);
-    this.getRuterData();
-  }
-
-  getTrains(data) {
-    const tog = [];
-    // Loop backwards
-    for (let i = data.length - 1; i > -1; i -= 1) {
-      const t = getTrain(data[i]);
-      tog.push(t);
-    }
-    this.setState({ tog });
+    this.props.dispatch(fetchTrains(this.props.stasjon, this.props.retning));
   }
 
   getTrainObjects() {
+    const tog = [];
+    const trains = Object.values(this.props.trains);
+    for (let i = trains.length - 1; i > -1; i -= 1) {
+      const t = parseTrain(trains[i]);
+      tog.push(t);
+    }
+
     const out = [];
-    for (let i = 0; i < this.state.tog.length; i += 1) {
-      out.push(<Tog key={this.state.tog[i].id} info={this.state.tog[i]} />);
+    for (let i = 0; i < tog.length; i += 1) {
+      out.push(<Tog key={tog[i].id} info={tog[i]} />);
     }
     return out;
   }
-
-  async getRuterData() {
-    try {
-      const url = `https://reisapi.ruter.no/StopVisit/GetDepartures/${this.props.stasjon}?json=true`;
-      const result = await axios.get(url);
-      const jsonData = result.data;
-
-      if (result.status !== 200) throw Error('Couldnt fetch ruter data');
-
-      const trainData = [];
-
-      jsonData.forEach((t) => {
-        if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === this.props.retning) {
-          const d = t.MonitoredVehicleJourney.MonitoredCall;
-          const out = {};
-          out.ruteTid = new Date(d.AimedArrivalTime);
-          out.faktiskTid = new Date(d.ExpectedArrivalTime);
-          out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
-          out.linje = t.MonitoredVehicleJourney.PublishedLineName;
-          out.Endestasjon = t.MonitoredVehicleJourney.DestinationName;
-          trainData.push(out);
-        }
-      });
-
-      this.getTrains(trainData);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
 
   render() {
     return (
@@ -76,7 +42,7 @@ export default class Ruter extends Component {
   }
 }
 
-function getTrain(data) {
+function parseTrain(data) {
   const train = {};
   const now = new Moment();
   train.id = data.id;
@@ -93,4 +59,14 @@ function getTrain(data) {
 Ruter.propTypes = {
   stasjon: PropTypes.string.isRequired,
   retning: PropTypes.string.isRequired,
+  trains: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
+
+function mapStateToProps(state) {
+  return {
+    trains: state.Trains,
+  };
+}
+
+export default connect(mapStateToProps)(Ruter);

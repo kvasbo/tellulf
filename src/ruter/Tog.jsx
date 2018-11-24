@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const secondsToShow = 3600;
 const totalWidth = 766;
 const pixelsPerSecond = totalWidth / secondsToShow;
 
-export default class Tog extends Component {
+export default class Tog extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { showTime: false };
@@ -28,14 +28,18 @@ export default class Tog extends Component {
 
   getText() {
     if (this.state.showTime) {
-      return this.props.info.faktiskTid;
+      return this.props.info.faktiskTid.format('HH:MM');
     }
     return this.props.info.fromNowM;
   }
 
+  showTime() {
+    this.setState(prevState => ({ showTime: !prevState.showTime }));
+  }
+
   render() {
     return (
-      <div className="train" style={this.getStyles()}>{this.getText()}</div>
+      <div className="train" style={this.getStyles()} onClick={() => this.showTime()}>{this.getText()}</div>
     );
   }
 }
