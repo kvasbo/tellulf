@@ -41,13 +41,14 @@ class Solceller extends React.PureComponent {
 
   componentDidMount() {
     setInterval(() => { this.reloadTime(); }, 60000);
-    setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
+    // setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
     this.getPowerPrice();
     this.attachMaxListeners();
     const dbRef = window.firebase.database().ref('steca/currentData');
     dbRef.on('value', (snapshot) => {
       try {
         const val = snapshot.val();
+        const dataTime = (typeof val.averages.time !== 'undefined') ? Moment(val.averages.time) : null;
         const now = (typeof val.effect.val !== 'undefined') ? val.effect.val : null;
         const today = (typeof val.today.val !== 'undefined') ? val.today.val : null;
         const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
@@ -55,11 +56,10 @@ class Solceller extends React.PureComponent {
         const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
         const averageFull = (typeof val.averages.full !== 'undefined') ? val.averages.full : null;
         const averageMinute = (typeof val.averages['1'] !== 'undefined') ? val.averages['1'] : null;
-        // const averageShort = (typeof val.averages.short !== 'undefined') ? val.averages.short : null;
         const byHour = (typeof val.todayByHour.val !== 'undefined') ? parseByHour(val.todayByHour.val) : null;
-        const currentTime = Moment().valueOf();
+        const currentTime = Moment();
         const state = {
-          now, today, month, year, total, byHour, currentTime, averageFull, averageMinute,
+          now, today, month, year, total, byHour, currentTime, averageFull, averageMinute, dataTime,
         };
         this.props.dispatch(updateSolarCurrent(state));
         this.props.dispatch(updateInitStatus('solar'));
@@ -210,6 +210,8 @@ class Solceller extends React.PureComponent {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+    const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
+    const textColor = (dataAge < 120) ? '#FFFFFF' : '#FF0000'; // Rød tekst om data er over to minutter gamle
     const data = this.getData();
     return (
       <div style={{
@@ -308,14 +310,14 @@ class Solceller extends React.PureComponent {
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.current.now}
-                x={this.props.current.currentTime}
+                x={this.props.current.currentTime.valueOf()}
                 r={3}
                 fill="#ffffff44"
                 stroke="#ffffff"
                 label={{
                   value: `${this.props.current.averageMinute}W`,
-                  stroke: 'white',
-                  fill: 'white',
+                  stroke: textColor,
+                  fill: textColor,
                   fontSize: 50,
                   position: this.getCurrentLabelPosition(),
                 }}
