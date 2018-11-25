@@ -1,23 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 import Tog from './Tog';
-import { fetchTrains } from '../redux/actions';
 import './ruter.css';
 
 class Ruter extends React.PureComponent {
   constructor(props) {
     super(props);
     this.oppdateringsFrekvens = 10;
-  }
-
-  componentDidMount() {
-    // Ny
-    setInterval(() => {
-      this.props.dispatch(fetchTrains(this.props.stasjon, this.props.retning));
-    }, 1000 * this.oppdateringsFrekvens);
-    this.props.dispatch(fetchTrains(this.props.stasjon, this.props.retning));
   }
 
   getTrainObjects() {
@@ -52,16 +42,7 @@ function parseTrain(data) {
 }
 
 Ruter.propTypes = {
-  stasjon: PropTypes.string.isRequired,
-  retning: PropTypes.string.isRequired,
   trains: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    trains: state.Trains,
-  };
-}
-
-export default connect(mapStateToProps)(Ruter);
+export default Ruter;

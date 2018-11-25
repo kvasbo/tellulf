@@ -41,7 +41,6 @@ class App extends React.PureComponent {
   }
 
   render() {
-    // if (!this.state.loggedIn) return this.getLoggingIn();
     return this.getApp();
   }
 }

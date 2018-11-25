@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import ErrorBoundary from './ErrorBoundary';
 import Solceller from './solceller/Solceller';
@@ -8,6 +9,7 @@ import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo';
 import Klokke from './Klokke';
+import { fetchTrains } from './redux/actions';
 import './tellulf.css';
 
 function startReloadLoop() {
@@ -18,9 +20,26 @@ function startReloadLoop() {
     window.location.reload();
   }, diff);
 }
+
 class Tellulf extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.doLoadData = this.doLoadData.bind(this);
+  }
+
   componentDidMount() {
     startReloadLoop();
+    setInterval(this.doLoadData, 1000);
+    this.doLoadData(true);
+  }
+
+  doLoadData(force = false) {
+    const now = Moment();
+    const sec = now.seconds();
+    // console.log('loadData', sec);
+
+    // Laste tog
+    if (force || sec % 10 === 0) this.props.dispatch(fetchTrains('3012315', '1 (Retning sentrum)'));
   }
 
   render() {
@@ -36,7 +55,7 @@ class Tellulf extends React.PureComponent {
           <ErrorBoundary><Yr /></ErrorBoundary>
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '5 / 5' }} className="block">
-          <ErrorBoundary><Ruter stasjon="3012315" retning="1 (Retning sentrum)" /></ErrorBoundary>
+          <ErrorBoundary><Ruter trains={this.props.trains} /></ErrorBoundary>
         </div>
         <div style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }} className="block">
           <ErrorBoundary><Netatmo /></ErrorBoundary>
@@ -51,6 +70,14 @@ class Tellulf extends React.PureComponent {
 
 Tellulf.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  trains: PropTypes.object.isRequired,
 };
 
-export default Tellulf;
+function mapStateToProps(state) {
+  return {
+    trains: state.Trains,
+  };
+}
+
+export default connect(mapStateToProps)(Tellulf);
