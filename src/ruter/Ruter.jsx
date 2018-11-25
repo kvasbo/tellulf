@@ -43,13 +43,8 @@ class Ruter extends React.PureComponent {
 }
 
 function parseTrain(data) {
-  const train = {};
-  const now = new Moment();
-  train.id = data.id;
-  train.faktiskTid = new Moment(data.faktiskTid);
-  train.ruteTid = new Moment(data.ruteTid);
-  train.goingTo = data.Endestasjon;
-  train.linje = data.linje;
+  const train = { ...data };
+  const now = Moment();
   train.fromNow = train.faktiskTid.diff(now, 's');
   train.fromNowM = train.faktiskTid.diff(now, 'm');
   train.ruteDiff = train.faktiskTid.diff(train.ruteTid, 'm');

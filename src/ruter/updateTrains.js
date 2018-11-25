@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Moment from 'moment';
 
 export default async function getTrains(station, direction) {
   const trainData = await getRuterData(station, direction);
@@ -19,11 +20,11 @@ async function getRuterData(station, direction) {
       if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === direction) {
         const d = t.MonitoredVehicleJourney.MonitoredCall;
         const out = {};
-        out.ruteTid = new Date(d.AimedArrivalTime);
-        out.faktiskTid = new Date(d.ExpectedArrivalTime);
+        out.ruteTid = Moment(d.AimedArrivalTime);
+        out.faktiskTid = Moment(d.ExpectedArrivalTime);
         out.id = `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`;
         out.linje = t.MonitoredVehicleJourney.PublishedLineName;
-        out.Endestasjon = t.MonitoredVehicleJourney.DestinationName;
+        out.skalTil = t.MonitoredVehicleJourney.DestinationName;
         trains[out.id] = out;
       }
     });
