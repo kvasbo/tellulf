@@ -1,6 +1,8 @@
 import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
+import { netatmoStore } from './Netatmo';
+
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const NETATMO_UPDATE_AVERAGES = 'NETATMO_UPDATE_AVERAGES';
@@ -18,14 +20,14 @@ export function updateInitStatus(key, value = true) {
   };
 }
 
-export function updateTrains(trains) {
+export function updateTrains(trains: {}) {
   return {
     type: UPDATE_TRAINS,
     trains,
   };
 }
 
-export function updateWeather(data, lat, lon) {
+export function updateWeather(data: {}, lat: number, lon: number) {
   return {
     type: UPDATE_WEATHER,
     data,
@@ -34,35 +36,35 @@ export function updateWeather(data, lat, lon) {
   };
 }
 
-export function updatePowerPrices(data) {
+export function updatePowerPrices(data: {}) {
   return {
     type: UPDATE_POWER_PRICES,
     data,
   };
 }
 
-export function updateSolarMax(data) {
+export function updateSolarMax(data: {}) {
   return {
     type: UPDATE_SOLAR_MAX,
     data,
   };
 }
 
-export function updateSolarCurrent(data) {
+export function updateSolarCurrent(data: {}) {
   return {
     type: UPDATE_SOLAR_CURRENT,
     data,
   };
 }
 
-export function updateNetatmo(data) {
+export function updateNetatmo(data: netatmoStore) {
   return {
     type: NETATMO_UPDATE,
     data,
   };
 }
 
-export function updateNetatmoAverages(data) {
+export function updateNetatmoAverages(data: {}) {
   return {
     type: NETATMO_UPDATE_AVERAGES,
     data,

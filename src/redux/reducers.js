@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import Weather from './Weather.ts';
 import Netatmo from './Netatmo.ts';
 import NetatmoAverages from './NetatmoAverages.ts';

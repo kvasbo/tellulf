@@ -10,7 +10,7 @@ interface state {
   limits: {} | undefined,
   lat: number | undefined,
   lon: number | undefined,
-  todayMinMax: { min: number | undefined, max: number | undefined },
+  todayMinMax: { min: number | null, max: number | null },
 }
 
 interface weatherData {
@@ -32,7 +32,7 @@ const initialState = {
   limits: undefined,
   lat: undefined,
   lon: undefined,
-  todayMinMax: { min: undefined, max: undefined },
+  todayMinMax: { min: null, max: null },
 };
 
 export default function Weather(state: state = initialState, action: { type: string, data: any, lat: number, lon: number }) {
@@ -65,7 +65,7 @@ export default function Weather(state: state = initialState, action: { type: str
   }
 }
 
-function parseLimits(data, lat, long) {
+function parseLimits(data: {}, lat: number, long: number) {
   const dataArray = Object.values(data);
   const maxRainPoint = maxBy(dataArray, 'rainMax');
   const maxRain = maxRainPoint.rainMax;
@@ -93,7 +93,7 @@ function parseLimits(data, lat, long) {
   return out;
 }
 
-function getSunMeta(lat, long) {
+function getSunMeta(lat: number, long: number) {
   const now = Moment();
   const yesterday = Moment(now).subtract(1, 'days');
   const sunTimes = SunCalc.getTimes(new Date(), lat, long);

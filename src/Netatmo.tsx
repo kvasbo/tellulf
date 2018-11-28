@@ -1,19 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { netatmoStore } from './redux/Netatmo';
 import Moment from 'moment';
 import { connect } from 'react-redux';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import firebase from './firebase';
 
 type Props = {
-  Netatmo: { updated: number, inneTemp: number, co2: number, inneFukt: number, inneTrykk: number },
+  Netatmo: netatmoStore,
   dispatch: Function,
   NetatmoAverages: { time: number, temperature: number, },
   minMax: { min: number, max: number },
 }
 
 type State = {
-  Netatmo: { updated: number, inneTemp: number, co2: number, inneFukt: number, inneTrykk: number },
+  Netatmo: netatmoStore,
   NetatmoAverages: { time: number, temperature: number, },
   Weather: { todayMinMax: { min: number, max: number } },
 }
@@ -26,7 +26,7 @@ class Netatmo extends React.PureComponent<Props> {
     const dbRef = firebase.database().ref('netatmo/currentData');
     dbRef.on('value', (snapshot) => {
       if(snapshot) {
-        const data = snapshot.val();
+        const data: netatmoStore = snapshot.val() as netatmoStore;
         this.props.dispatch(updateNetatmo(data));
       }
     });
