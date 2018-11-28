@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "lib": ["es2017", "dom"],
     "allowJs": true,
     "skipLibCheck": false,
     "esModuleInterop": true,
@@ -17,5 +18,5 @@
   },
   "include": [
     "src"
-  ]
+  ],
 }
