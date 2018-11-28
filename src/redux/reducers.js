@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import Weather from './Weather';
-import Netatmo from './Netatmo';
-import NetatmoAverages from './NetatmoAverages';
-import Init from './Init';
-import Solar from './Solar';
-import PowerPrices from './PowerPrices';
-import Trains from './Trains';
+import Weather from './Weather.ts';
+import Netatmo from './Netatmo.ts';
+import NetatmoAverages from './NetatmoAverages.ts';
+import Init from './Init.ts';
+import Solar from './Solar.ts';
+import PowerPrices from './PowerPrices.ts';
+import Trains from './Trains.ts';
 
 const tellulfReducer = combineReducers({
   Init,

@@ -1,6 +1,6 @@
 import { UPDATE_TRAINS } from './actions';
 
-export default function Trains(state = {}, action) {
+export default function Trains(state: {} = {}, action) {
   switch (action.type) {
     case UPDATE_TRAINS: {
       return { ...action.trains };
