@@ -7,7 +7,7 @@ import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
-import Netatmo from './Netatmo';
+import Netatmo from './Netatmo.tsx';
 import Klokke from './Klokke.tsx';
 import { fetchTrains } from './redux/actions';
 import './tellulf.css';
