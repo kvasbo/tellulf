@@ -13,7 +13,7 @@ interface state {
   todayMinMax: { min: number | null, max: number | null },
 }
 
-interface weatherData {
+export interface weatherData {
   temp: number | null,
   rain: number | null,
   rainMin: number | null,

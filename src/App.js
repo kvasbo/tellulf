@@ -3,8 +3,8 @@ import Moment from 'moment';
 import { Provider } from 'react-redux';
 import 'moment/locale/nb';
 import Tellulf from './Tellulf';
-import firebase from './firebase';
-import { store } from './redux/store';
+import firebase from './firebase.ts';
+import { store } from './redux/store.ts';
 
 Moment.locale('nb');
 

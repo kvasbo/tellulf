@@ -7,8 +7,8 @@ import Moment from 'moment';
 import {
   ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea,
 } from 'recharts';
-import { fetchWeather } from '../redux/actions';
-import { getTimeLimits } from './updateWeather';
+import { fetchWeather } from '../redux/actions.ts';
+import { getTimeLimits } from './updateWeather.ts';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import './yr.css';

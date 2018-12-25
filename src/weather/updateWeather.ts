@@ -3,6 +3,8 @@ import Moment from 'moment';
 import store from 'store';
 import XML from 'pixl-xml';
 
+import { weatherData } from '../redux/Weather';
+
 const localStorageKey = '1';
 
 export default async function getWeatherFromYr(lat, long) {
@@ -40,8 +42,8 @@ export default async function getWeatherFromYr(lat, long) {
     const time = Moment(p.from);
     const key = time.valueOf();
     if (key in weatherOut) {
-      weatherOut[key].temp = Number(p.location.temperature.value);
-      const clouds = Number(p.location.cloudiness.percent) / 100;
+      weatherOut[key].temp = p.location.temperature.value * 1;
+      const clouds =p.location.cloudiness.percent * 1 / 100;
       weatherOut[key].clouds = clouds;
       weatherOut[key].cloudsNeg = 1 - clouds;
       weatherOut[key].wind = Number(p.location.windSpeed.mps);
@@ -54,10 +56,10 @@ export default async function getWeatherFromYr(lat, long) {
     const key = from.valueOf();
     const to = Moment(s.to);
     const time = Moment(from).add(3, 'hours');
-    const rain = Number(s.location.precipitation.value, 10);
+    const rain = Number(s.location.precipitation.value);
     const symbol = s.location.symbol.id;
-    const minTemp = Number(s.location.minTemperature.value, 10);
-    const maxTemp = Number(s.location.maxTemperature.value, 10);
+    const minTemp = Number(s.location.minTemperature.value);
+    const maxTemp = Number(s.location.maxTemperature.value);
     const temp = (minTemp + maxTemp) / 2;
     sixesOut[key] = {
       from: key, to: to.valueOf(), time: time.valueOf(), temp, minTemp, maxTemp, rain, symbol,
@@ -78,10 +80,12 @@ export default async function getWeatherFromYr(lat, long) {
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
   Object.values(weatherOut).forEach((p) => {
-    const time = Moment(p.time);
+    const d = p as weatherData;
+    if (!d) return;
+    const time = Moment(d.time);
     if (!time.isSame(now, 'day')) return;
-    if (p.temp < todayMinMax.min) todayMinMax.min = p.temp;
-    if (p.temp > todayMinMax.max) todayMinMax.max = p.temp;
+    if (d.temp && d.temp < todayMinMax.min) todayMinMax.min = d.temp;
+    if (d.temp && d.temp > todayMinMax.max) todayMinMax.max = d.temp;
   });
 
   // Overwrite cache
@@ -97,7 +101,7 @@ function initWeather() {
     const key = start.valueOf();
     out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time: start.valueOf(),
-    };
+    } as weatherData;
     start.add(1, 'hours');
   }
 
@@ -115,7 +119,7 @@ function initWeather() {
 }
 
 export function getTimeLimits() {
-  const start = new Moment().startOf('day');
-  const end = new Moment().add(3, 'day').startOf('day');
+  const start = Moment().startOf('day');
+  const end = Moment().add(3, 'day').startOf('day');
   return { start, end };
 }
