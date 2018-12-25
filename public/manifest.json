@@ -1,15 +1,15 @@
 {
+  "background_color": "#000000",
+  "name": "Tellulf",
   "short_name": "Tellulf",
-  "name": "Tellulf client",
+  "lang": "nb-NO",
+  "start_url": "/index.html",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "favicon.png"
     }
-  ],
-  "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#000000"
+  ]
 }
