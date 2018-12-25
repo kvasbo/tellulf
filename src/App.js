@@ -26,14 +26,6 @@ class App extends React.PureComponent {
     });
   }
 
-  getApp() {
-    return (
-      <Provider store={store}>
-        <Tellulf loggedIn={this.state.loggedIn} />
-      </Provider>
-    );
-  }
-
   getLoggingIn() {
     return (
       <div>Logger inn...</div>
@@ -41,7 +33,12 @@ class App extends React.PureComponent {
   }
 
   render() {
-    return this.getApp();
+    if (!this.state.loggedIn) return this.getLoggingIn();
+    return (
+      <Provider store={store}>
+        <Tellulf loggedIn={this.state.loggedIn} />
+      </Provider>
+    );
   }
 }
 
