@@ -5,10 +5,12 @@ import 'moment/locale/nb';
 import Tellulf from './Tellulf';
 import firebase from './firebase.ts';
 import { store } from './redux/store.ts';
+import tibberUpdater from './tibberUpdater.ts';
 
 Moment.locale('nb');
 
 window.firebase = firebase;
+const tibber = new tibberUpdater(store);
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -18,6 +20,7 @@ class App extends React.PureComponent {
 
   componentDidMount() {
     firebase.auth().signInAnonymously();
+    tibber.updatePowePrices();
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

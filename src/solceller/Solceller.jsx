@@ -2,7 +2,6 @@ import React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import {
   XAxis,
   YAxis,
@@ -18,11 +17,9 @@ import SunCalc from 'suncalc';
 import {
   updateSolarMax,
   updateSolarCurrent,
-  updatePowerPrices,
   updateInitStatus,
-} from '../redux/actions';
+} from '../redux/actions.ts';
 
-const nettleie = 0.477;
 const lat = 59.9409;
 const long = 10.6991;
 const sunMax = 0.75;
@@ -41,8 +38,6 @@ class Solceller extends React.PureComponent {
 
   componentDidMount() {
     setInterval(() => { this.reloadTime(); }, 60000);
-    // setInterval(() => this.getPowerPrice(), 60 * 60 * 1000);
-    this.getPowerPrice();
     this.attachMaxListeners();
     const dbRef = window.firebase.database().ref('steca/currentData');
     dbRef.on('value', (snapshot) => {
@@ -67,33 +62,6 @@ class Solceller extends React.PureComponent {
         console.log(err);
       }
     });
-  }
-
-  async getPowerPrice() {
-    try {
-      const data = await axios({
-        url: 'https://api.tibber.com/v1-beta/gql',
-        method: 'post',
-        headers: { Authorization: 'bearer 1a3772d944bcf972f1ee84cf45d769de1c80e4f0173d665328287d1e2a746004' },
-        data: {
-          query: `
-            {viewer {homes {currentSubscription {priceInfo {today {total energy tax startsAt }}}}}}
-            `,
-        },
-      });
-      if (data.status === 200) {
-        const prices = data.data.data.viewer.homes[0].currentSubscription.priceInfo.today;
-        const powerPrices = {};
-        prices.forEach((p) => {
-          const h = Moment(p.startsAt).hours();
-          powerPrices[h] = { total: p.total + nettleie };
-        });
-        this.props.dispatch(updatePowerPrices(powerPrices));
-        this.props.dispatch(updateInitStatus('powerPrices'));
-      }
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   getCurrentLabelPosition() {
