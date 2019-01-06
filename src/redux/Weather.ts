@@ -93,8 +93,7 @@ function parseLimits(data: {}, lat: number, long: number) {
   return out;
 }
 
-function getSunMeta(lat: number, long: number) {
-  const now = Moment();
+function getSunMeta(lat: number, long: number, now = Moment()) {
   const yesterday = Moment(now).subtract(1, 'days');
   const sunTimes = SunCalc.getTimes(new Date(), lat, long);
   const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);

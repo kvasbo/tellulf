@@ -20,8 +20,8 @@ import {
   updateInitStatus,
 } from '../redux/actions.ts';
 
-const lat = 59.9409;
-const long = 10.6991;
+const defaultLatitude = 59.9409;
+const defaultLongitude = 10.6991;
 const sunMax = 0.75;
 const sunMaxThreshold = 3000;
 
@@ -78,9 +78,15 @@ class Solceller extends React.PureComponent {
       if (h.time in dataSet) {
         dataSet[h.time].production = h.production;
         const hour = new Date(h.time);
+        const inAWeek = Moment(h.time).add(1, 'week').toDate();
+        const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
+        const inAMonth = Moment(h.time).add(1, 'month').toDate();
         const hr = hour.getHours();
         const price = this.props.powerPrices[hr];
-        dataSet[h.time].sun = getSunForTime(hour);
+        dataSet[h.time].sun = getSunForTime(hour, this.props.latitude, this.props.longitude);
+        dataSet[h.time].sunInAWeek = getSunForTime(inAWeek, this.props.latitude, this.props.longitude);
+        dataSet[h.time].sunInTwoWeeks = getSunForTime(inTwoWeeks, this.props.latitude, this.props.longitude);
+        dataSet[h.time].sunInAMonth = getSunForTime(inAMonth, this.props.latitude, this.props.longitude);
         dataSet[h.time].price = price.total;
       }
     });
@@ -249,6 +255,9 @@ class Solceller extends React.PureComponent {
               />
               <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
               <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
+              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAWeek" stroke="#FFFFFF55" />
+              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInTwoWeeks" stroke="#FFFFFF33" />
+              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAMonth" stroke="#FFFFFF22" />
               <Area
                 yAxisId="kwh"
                 dot={false}
@@ -268,7 +277,7 @@ class Solceller extends React.PureComponent {
               />
               <ReferenceDot
                 x={this.state.currentTime}
-                y={getSunForTime(this.state.currentTime)}
+                y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
                 yAxisId="sun"
                 fill="url(#sunGradient)"
                 stroke="none"
@@ -310,6 +319,11 @@ class Solceller extends React.PureComponent {
   }
 }
 
+Solceller.defaultProps = {
+  latitude: defaultLatitude,
+  longitude: defaultLongitude,
+};
+
 Solceller.propTypes = {
   dispatch: PropTypes.func.isRequired,
   current: PropTypes.object.isRequired,
@@ -317,6 +331,8 @@ Solceller.propTypes = {
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
   powerPrices: PropTypes.object.isRequired,
+  latitude: PropTypes.number,
+  longitude: PropTypes.number,
 };
 
 const mapStateToProps = (state) => {
@@ -331,27 +347,27 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps)(Solceller);
 
-function getSunForTime(time) {
-  const s = SunCalc.getPosition(Moment(time).toDate(), lat, long);
+function getSunForTime(time, latitude = defaultLatitude, longitude = defaultLongitude) {
+  const s = SunCalc.getPosition(Moment(time).toDate(), latitude, longitude);
   return Math.max(0, s.altitude);
 }
 
-function getMaxSunHeight() {
+function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitude) {
   try {
     // Get max height of sun in position
     const solstice = Moment('2018-06-21').toDate();
-    const sunTimes = SunCalc.getTimes(solstice, lat, long);
-    const data = SunCalc.getPosition(sunTimes.solarNoon, lat, long);
+    const sunTimes = SunCalc.getTimes(solstice, latitude, longitude);
+    const data = SunCalc.getPosition(sunTimes.solarNoon, latitude, longitude);
     return data.altitude;
   } catch (err) {
     return 1;
   }
 }
 
-function getColorForSun() {
+function getColorForSun(latitude = defaultLatitude, longitude = defaultLongitude) {
   const cutoff = 0.35;
   const base = 120;
-  const altitude = getSunForTime(new Date());
+  const altitude = getSunForTime(new Date(), latitude, longitude);
   if (altitude > cutoff) return '#FFD700';
   const percent = altitude / cutoff;
   const percentRed = Math.min(215, base + (215 * percent));
