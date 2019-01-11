@@ -51,7 +51,7 @@ class Tellulf extends React.PureComponent {
         <div style={{ gridColumn: '1 / 2', gridRow: '3 / 4' }} className="block">
           {this.props.loggedIn && <ErrorBoundary><Solceller /></ErrorBoundary>}
         </div>
-        <div style={{ gridColumn: '1 / 2', gridRow: '4 / 5' }} className="block">
+        <div style={{ gridColumn: '1 / 3', gridRow: '4 / 5' }} className="block">
           <ErrorBoundary><Yr /></ErrorBoundary>
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '5 / 5' }} className="block">
@@ -60,7 +60,7 @@ class Tellulf extends React.PureComponent {
         <div style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }} className="block">
           <ErrorBoundary><Netatmo /></ErrorBoundary>
         </div>
-        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 5' }} className="block">
+        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 4' }} className="block">
           <ErrorBoundary><Kalender /></ErrorBoundary>
         </div>
       </div>

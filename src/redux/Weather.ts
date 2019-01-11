@@ -3,6 +3,7 @@ import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import SunCalc from 'suncalc';
 import { UPDATE_WEATHER } from './actions';
+import { parseLimits } from '../weather/updateWeather';
 
 interface state {
   weather: {} | undefined,
@@ -63,34 +64,6 @@ export default function Weather(state: state = initialState, action: { type: str
     default:
       return state;
   }
-}
-
-function parseLimits(data: {}, lat: number, long: number) {
-  const dataArray = Object.values(data);
-  const maxRainPoint = maxBy(dataArray, 'rainMax');
-  const maxRain = maxRainPoint.rainMax;
-  const maxRainTime = maxRainPoint.time;
-  const maxTempPoint = maxBy(dataArray, 'temp');
-  const maxTemp = maxTempPoint.temp;
-  const maxTempTime = maxTempPoint.time;
-  const minTempPoint = minBy(dataArray, 'temp');
-  const minTemp = minTempPoint.temp;
-  const minTempTime = minTempPoint.time;
-  const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
-  const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
-  const lowerRange = Math.min(0, roundedMin);
-  const upperRange = Math.max(roundedMin + 30, roundedMax);
-
-  const ticks: number[] = [];
-  for (let i = lowerRange; i <= upperRange; i += 10) {
-    ticks.push(i);
-  }
-
-  const sunData = getSunMeta(lat, long);
-  const out = {
-    lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData,
-  };
-  return out;
 }
 
 function getSunMeta(lat: number, long: number, now = Moment()) {

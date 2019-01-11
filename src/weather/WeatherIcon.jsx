@@ -19,9 +19,9 @@ class WeatherIcon extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.cy) return null;
-    const t = new Date(this.props.payload.time).getHours();
-    if (t % 4 !== 0) return null;
+    if (!this.props.cy) {
+      return null;
+    }
     return (
       <svg>
         <text x={this.props.cx} y={this.props.cy + 20} textAnchor="middle" fontFamily="sans-serif" fontSize="13px" fill="white">{this.getTemp()}</text>
