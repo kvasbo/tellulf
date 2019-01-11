@@ -32,7 +32,8 @@ class Dag extends React.PureComponent {
     const dateHeaderFormats = {
       sameDay: '[I dag]',
       nextDay: '[I morgen]',
-      nextWeek: 'dddd D.',
+      nextWeek: 'dddd',
+      nextMonth: 'dddd D.',
       sameElse: 'dddd DD. MMM',
     };
     const dateStr = Moment(date).calendar(null, dateHeaderFormats);
@@ -43,7 +44,7 @@ class Dag extends React.PureComponent {
     return (
       <div style={{ marginBottom: 10 }}>
         <div style={{ padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
-        <DagHeaderWeather weather={this.props.weather} date={this.props.date} />
+        {false && <DagHeaderWeather weather={this.props.weather} date={this.props.date} />}
         {this.getDinner()}
         {this.getEvents()}
       </div>

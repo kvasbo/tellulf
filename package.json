@@ -10,7 +10,7 @@
     "axios": "^0.18.0",
     "cors": "^2.8.4",
     "express": "^4.16.4",
-    "firebase": "^5.5.7",
+    "firebase": "^5.7.3",
     "ical-expander": "^2.0.0",
     "jsonp": "^0.2.1",
     "lodash": "^4.17.11",

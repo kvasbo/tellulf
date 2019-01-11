@@ -22,7 +22,7 @@ class Kalender extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      kalenderData: { ...primeDays(7) },
+      kalenderData: { ...primeDays(0) },
       dinners: {},
     };
   }
@@ -59,7 +59,7 @@ class Kalender extends React.PureComponent {
 
       // Prime array for events.
       if (prime) {
-        parsedEvents = { ...primeDays(7) };
+        parsedEvents = { ...primeDays(0) };
       }
 
       sorted.occurrences.forEach((e) => {
@@ -147,7 +147,7 @@ function parseIcalEvent(e, useItem = false) {
     }
 
     if (!fullDay) {
-      if (!start.isSameOrBefore(Moment(end).endOf('day'), 'day')) oneDay = false;
+      oneDay = (start.isSame(end, 'day'));
     }
 
     let groupString = start.format('YYYY-MM-DD');
