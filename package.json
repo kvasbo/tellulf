@@ -25,7 +25,8 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "store": "^2.0.12",
-    "suncalc": "^1.8.0"
+    "suncalc": "^1.8.0",
+    "xhr2": "^0.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

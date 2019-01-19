@@ -7,38 +7,18 @@ import Moment from 'moment';
 import {
   ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea,
 } from 'recharts';
-import { fetchWeather } from '../redux/actions.ts';
 import { getTimeLimits, parseLimits } from './updateWeather.ts';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import './yr.css';
 
-const gridColor = '#FFFFFF55';
-
-const steder = {
-  oslo: { lat: 59.9409, long: 10.6991 },
-  sandefjord: { lat: 59.1347624, long: 10.3250789 },
-};
+const gridColor = '#FFFFFFAA';
+const sundayColor = '#FF0000CC';
 
 class GraphLong extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.reloadTimer = null;
-    this.state = { sted: 'oslo', currentTime: Moment().valueOf(), limits: parseLimits({}) };
-  }
-
-  componentDidMount() {
-    setInterval(() => { this.reloadTime(); }, 60000);
-    setTimeout(() => { this.updateWeather(); }, 1500);
-  }
-
-  setNextReload() {
-    // Start of next hour
-    clearTimeout(this.reloadTimer);
-    const nextReload = Moment().add(1, 'hours').startOf('hour');
-    // const nextReload = Moment().add(1, 'minutes').startOf('minute');
-    const nextReloadDiff = nextReload.diff(Moment());
-    this.reloadTimer = setTimeout(() => this.updateWeather(), nextReloadDiff);
+    this.state = { currentTime: Moment().valueOf(), limits: parseLimits({}) };
   }
 
   getData() {
@@ -50,18 +30,6 @@ class GraphLong extends React.PureComponent {
 
   reloadTime() {
     this.setState({ currentTime: Moment().valueOf() });
-  }
-
-  updateWeather() {
-    this.setNextReload();
-    const { lat, long } = steder[this.state.sted];
-    this.props.dispatch(fetchWeather(lat, long));
-  }
-
-  stedEndra(e) {
-    this.setState({ sted: e.currentTarget.value });
-    const { lat, long } = steder[e.currentTarget.value];
-    this.props.dispatch(fetchWeather(lat, long));
   }
 
   // Stays on
@@ -165,81 +133,52 @@ class GraphLong extends React.PureComponent {
               x={divider0}
               stroke={null}
               strokeDasharray="1 0"
-              label={{ value: divider0m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider0m.format('dddd'), fill: getDayColor(divider0m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider1}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider1m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider1m.format('dddd'), fill: getDayColor(divider1m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider2}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider2m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider2m.format('dddd'), fill: getDayColor(divider2m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider3}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider3m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider3m.format('dddd'), fill: getDayColor(divider3m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider4}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider4m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider4m.format('dddd'), fill: getDayColor(divider4m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider5}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider5m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider5m.format('dddd'), fill: getDayColor(divider5m), position: 'insideTopLeft' }}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider6}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider6m.format('dddd'), fill: gridColor, position: 'insideTopLeft' }}
+              label={{ value: divider6m.format('dddd'), fill: getDayColor(divider6m), position: 'insideTopLeft' }}
             />
           </ComposedChart>
         </ResponsiveContainer>
-        <div style={{
-          display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 0,
-        }}
-        >
-          <label htmlFor="oslo">
-            <input
-              style={{ margin: 10 }}
-              type="radio"
-              id="oslo"
-              name="sted"
-              value="oslo"
-              checked={this.state.sted === 'oslo'}
-              onChange={val => this.stedEndra(val)}
-            />
-            Hjemme
-          </label>
-          <label htmlFor="sandefjord">
-            <input
-              style={{ margin: 10 }}
-              type="radio"
-              id="sandefjord"
-              name="sted"
-              value="sandefjord"
-              checked={this.state.sted === 'sandefjord'}
-              onChange={val => this.stedEndra(val)}
-            />
-            Hytta
-          </label>
-        </div>
       </div>
     );
   }
@@ -255,6 +194,10 @@ function getTicks() {
     start.add(1, 'hours');
   }
   return out;
+}
+
+function getDayColor(time) {
+  return (time.format('d') === '0') ? sundayColor : gridColor;
 }
 
 function formatTick(data) {

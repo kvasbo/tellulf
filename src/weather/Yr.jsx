@@ -16,7 +16,7 @@ class Yr extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.updateWeather();
+    setTimeout(() => { this.updateWeather(); }, 1500);
   }
   
   updateWeather() {
@@ -33,7 +33,38 @@ class Yr extends React.PureComponent {
   // Stays on
   render() {
     return (
-      <GraphLong />
+      <div className="yr-container">
+        <GraphLong />
+        <div style={{
+          display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 0,
+        }}
+        >
+          <label htmlFor="oslo">
+            <input
+              style={{ margin: 10 }}
+              type="radio"
+              id="oslo"
+              name="sted"
+              value="oslo"
+              checked={this.state.sted === 'oslo'}
+              onChange={val => this.stedEndra(val)}
+            />
+            Hjemme
+          </label>
+          <label htmlFor="sandefjord">
+            <input
+              style={{ margin: 10 }}
+              type="radio"
+              id="sandefjord"
+              name="sted"
+              value="sandefjord"
+              checked={this.state.sted === 'sandefjord'}
+              onChange={val => this.stedEndra(val)}
+            />
+            Hytta
+          </label>
+        </div>
+      </div>
     );
   }
 }
