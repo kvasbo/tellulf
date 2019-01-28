@@ -12,11 +12,15 @@ const calUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvp
 
 const dinnerUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics';
 
+const birthdayUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_upelraeuo31neuoq31f9decudg%40group.calendar.google.com/private-6718a3a9f7b74d60372a3f2be75804d6/basic.ics';
+
 const cal = encodeURIComponent(calUrl);
 const dinner = encodeURIComponent(dinnerUrl);
+const birthday = encodeURIComponent(birthdayUrl);
 
 const calP = `${proxy}/?url=${cal}`;
 const dinP = `${proxy}/?url=${dinner}`;
+const bdP = `${proxy}/?url=${birthday}`;
 
 class Kalender extends React.PureComponent {
   constructor(props) {
@@ -24,12 +28,24 @@ class Kalender extends React.PureComponent {
     this.state = {
       kalenderData: { ...primeDays(0) },
       dinners: {},
+      birthdays: {},
     };
   }
 
   componentDidMount() {
     this.updateData();
     setInterval(() => this.updateData(), 1000 * 60);
+  }
+
+  async updateData() {
+    try {
+      const kalenderData = await this.getIcal(calP, true);
+      const dinners = await this.getIcal(dinP, false);
+      const birthdays = await this.getIcal(bdP, false);
+      this.setState({ kalenderData, dinners, birthdays });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async getIcal(url, prime = false) {
@@ -103,24 +119,17 @@ class Kalender extends React.PureComponent {
 
   getDays() {
     const out = [];
-    const data = Object.values(this.state.kalenderData).sort((a, b) => {
-      return a.sortStamp - b.sortStamp;
-    });
-    data.forEach((d) => {
-      const weather = this.getWeather(d.sortString);
-      out.push(<Dag key={d.sortStamp} date={d.sortString} weather={weather} events={d} dinner={this.state.dinners[d.sortStamp]} />);
+    const dayKeys = getDayKeys(30);
+    dayKeys.forEach((d) => {
+      const cald = this.state.kalenderData[d];
+      const birthdays = this.state.birthdays[d];
+      const dinners = this.state.dinners[d];
+      const weather = this.getWeather(d);
+      if (cald || birthdays || dinners) {
+        out.push(<Dag key={d} date={d} weather={weather} events={cald} dinner={dinners} birthdays={birthdays} />);
+      }
     });
     return out;
-  }
-
-  async updateData() {
-    try {
-      const kalenderData = await this.getIcal(calP, true);
-      const dinners = await this.getIcal(dinP, false);
-      this.setState({ kalenderData, dinners });
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   render() {
@@ -178,6 +187,16 @@ function primeDays(number = 7) {
 
 function initDay(sortString) {
   return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) };
+}
+
+function getDayKeys(max = 100) {
+  const start = Moment().startOf('day');
+  const out = [];
+  for (let i = 0; i < max; i += 1) {
+    out.push(start.format('YYYY-MM-DD'));
+    start.add(1, 'days');
+  }
+  return out;
 }
 
 const mapStateToProps = (state) => {

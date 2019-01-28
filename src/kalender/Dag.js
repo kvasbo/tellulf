@@ -1,6 +1,5 @@
 import React from 'react';
 import Moment from 'moment';
-import DagHeaderWeather from './DagHeaderWeather';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 
@@ -10,6 +9,24 @@ class Dag extends React.PureComponent {
     return (
       <div>{this.props.dinner.events[0].name}</div>
     );
+  }
+
+  getBirthdays() {
+    if (!this.props.birthdays) return null;
+    const out = [];
+    // console.log(this.props.birthdays);
+    this.props.birthdays.events.forEach((b) => {
+      const matches = b.name.match(/\d+$/);
+      let name = b.name;
+      if (matches) {
+        const number = parseInt(matches[0], 10);
+        const age = new Date().getFullYear() - number;
+        name = name.substring(0, name.length - 5);
+        name = `${name} (${age})`;
+      }
+      out.push(<div style={{ padding: 10 }} key={b.id}>{name}</div>);
+    });
+    return out;
   }
 
   getEvents() {
@@ -44,8 +61,8 @@ class Dag extends React.PureComponent {
     return (
       <div style={{ marginBottom: 10 }}>
         <div style={{ padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
-        {false && <DagHeaderWeather weather={this.props.weather} date={this.props.date} />}
-        {this.getDinner()}
+        {false && this.getDinner()}
+        {this.getBirthdays()}
         {this.getEvents()}
       </div>
     );
