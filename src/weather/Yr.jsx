@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchWeather } from '../redux/actions.ts';
 import GraphLong from './GraphLong';
@@ -18,7 +19,7 @@ class Yr extends React.PureComponent {
   componentDidMount() {
     setTimeout(() => { this.updateWeather(); }, 1500);
   }
-  
+
   updateWeather() {
     const { lat, long } = steder[this.state.sted];
     this.props.dispatch(fetchWeather(lat, long));
@@ -69,5 +70,8 @@ class Yr extends React.PureComponent {
   }
 }
 
+Yr.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(Yr);

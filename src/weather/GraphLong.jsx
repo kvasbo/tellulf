@@ -18,7 +18,7 @@ const sundayColor = '#FF0000CC';
 class GraphLong extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { currentTime: Moment().valueOf(), limits: parseLimits({}) };
+    this.state = { currentTime: Moment().valueOf() };
   }
 
   getData() {
@@ -106,7 +106,7 @@ class GraphLong extends React.PureComponent {
               domain={[0, 9]}
             />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
-            { limits.lowerRange < 0 && <ReferenceArea y1={0} y2={limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.2" /> }
+            { limits.lowerRange < 0 && <ReferenceArea y1={0} y2={limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.35" /> }
             <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
@@ -172,6 +172,12 @@ class GraphLong extends React.PureComponent {
             />
             <ReferenceLine
               yAxisId="temp"
+              y={0}
+              stroke={gridColor}
+              strokeDasharray="1 0"
+            />
+            <ReferenceLine
+              yAxisId="temp"
               x={divider6}
               stroke={gridColor}
               strokeDasharray="2 2"
@@ -212,8 +218,8 @@ GraphLong.defaultProps = {
 
 GraphLong.propTypes = {
   weather: PropTypes.object,
-  dispatch: PropTypes.func.isRequired,
   limits: PropTypes.object,
+  weatherLong: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
