@@ -38,6 +38,7 @@
     "analyze": "source-map-explorer build/static/js/main.*"
   },
   "devDependencies": {
+    "@firebase/util": "^0.2.7-0",
     "@types/node": "^10.12.10",
     "@types/react-redux": "^6.0.10",
     "awesome-typescript-loader": "^5.2.1",
