@@ -183,7 +183,7 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   const minTempTime = minTempPoint.time;
   const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
   const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
-  const lowerRange = Math.min(0, roundedMin);
+  const lowerRange = (minTemp > 0) ? 0 : Math.min(0, roundedMin);
   const upperRange = Math.max(roundedMin + 30, roundedMax);
 
   const ticks: number[] = [];
