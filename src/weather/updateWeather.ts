@@ -77,7 +77,7 @@ export default async function getWeatherFromYr(lat, long) {
     const symbolNumber = Number(s.location.symbol.number);
     const minTemp = Number(s.location.minTemperature.value);
     const maxTemp = Number(s.location.maxTemperature.value);
-    const temp = (minTemp + maxTemp) / 2;
+    const temp = Math.round((minTemp + maxTemp) / 2);
     const out = {
       from, to, fromNice, time: time.valueOf(), temp, minTemp, maxTemp, rain, rainMax, rainMin, symbol, symbolNumber
     }
