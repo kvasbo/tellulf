@@ -26,22 +26,6 @@ export default async function getWeatherFromYr(lat, long) {
     return false;
   });
 
-  const hours = parsed.product.time.filter((d) => {
-    const from = Moment(d.from);
-    const to = Moment(d.to);
-    if (!(to.diff(from, 'hours') === 1)) return false;
-    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-    return false;
-  });
-
-  const sixes = parsed.product.time.filter((d) => {
-    const fromUtc = Moment(d.from).utc().hours();
-    if (fromUtc % 6 !== 0) return false;
-    const from = Moment(d.from);
-    const to = Moment(d.to);
-    if ((to.diff(from, 'hours') === 6)) return true;
-    return false;
-  });
   singlePoints.forEach((p) => {
     const time = Moment(p.from);
     const key = time.valueOf();
@@ -54,16 +38,27 @@ export default async function getWeatherFromYr(lat, long) {
       weatherOut[key].time = time.valueOf();
     }
   });
-  const sixesOut = {};
+
+  // Six hour forecasts
+  const sixes = parsed.product.time.filter((d) => {
+    const fromUtc = Moment(d.from).utc().hours();
+    if (fromUtc % 6 !== 0) return false;
+    const from = Moment(d.from);
+    const to = Moment(d.to);
+    if ((to.diff(from, 'hours') === 6)) return true;
+    return false;
+  });
+
+  const sixesOut = initWeatherLong();
   sixes.forEach((s) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
     const from = f.valueOf();
-    const fromNice = f.toISOString();
-    const key = f.valueOf();
     const to = t.valueOf();
+    const fromNice = f.toISOString();
     const diff = t.diff(f, 'hours');
     const time = f.add(diff / 2, 'hours');
+    const key = time.toISOString();
     const rain = Number(s.location.precipitation.value);
     let rainMax = rain;
     let rainMin = rain;
@@ -83,6 +78,15 @@ export default async function getWeatherFromYr(lat, long) {
     }
     sixesOut[key] = out;
   });
+
+  const hours = parsed.product.time.filter((d) => {
+    const from = Moment(d.from);
+    const to = Moment(d.to);
+    if (!(to.diff(from, 'hours') === 1)) return false;
+    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+    return false;
+  });
+
   hours.forEach((p) => {
     const time = Moment(p.from);
     const key = time.valueOf();
@@ -115,15 +119,19 @@ export default async function getWeatherFromYr(lat, long) {
 
 // Init the six hours forecast
 function initWeatherLong() {
+  const spanToUseInHours = 6;
   const out = {};
-  const start = Moment().utc().startOf('day');
-  const end = Moment(start).add(8, 'day').startOf('day');
-  while (start.isSameOrBefore(end)) {
-    const time = start.valueOf();
-    out[time] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time,
+  const time = Moment().utc().startOf('day');
+  const spanEnd = Moment(time).add(8, 'day').startOf('day');
+  while (time.isSameOrBefore(spanEnd)) {
+    const startTime = Moment(time);
+    const endTime = Moment(time).add(spanToUseInHours, 'hours');
+    const diff = endTime.diff(startTime, 'hours');
+    const midTime = startTime.add(diff / 2, 'hours');
+    out[midTime.toISOString()] = {
+      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: midTime.valueOf(),
     } as weatherData;
-    start.add(6, 'hours');
+    time.add(spanToUseInHours, 'hours');
   }
 
   // Load localstore if applicable, and write to output item if applicable
