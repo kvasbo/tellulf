@@ -8,7 +8,7 @@ import XML from 'pixl-xml';
 
 import { weatherData } from '../redux/Weather';
 
-const localStorageKey = '2';
+const localStorageKey = '4';
 
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
@@ -57,8 +57,8 @@ export default async function getWeatherFromYr(lat, long) {
     const to = t.valueOf();
     const fromNice = f.toISOString();
     const diff = t.diff(f, 'hours');
-    const time = f.add(diff / 2, 'hours');
-    const key = time.toISOString();
+    const time = Moment(f).add(diff / 2, 'hours');
+    const key = createKeyBasedOnStamps(f, t);
     const rain = Number(s.location.precipitation.value);
     let rainMax = rain;
     let rainMin = rain;
@@ -126,9 +126,10 @@ function initWeatherLong() {
   while (time.isSameOrBefore(spanEnd)) {
     const startTime = Moment(time);
     const endTime = Moment(time).add(spanToUseInHours, 'hours');
+    const key = createKeyBasedOnStamps(startTime, endTime);
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
-    out[midTime.toISOString()] = {
+    out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: midTime.valueOf(),
     } as weatherData;
     time.add(spanToUseInHours, 'hours');
@@ -167,6 +168,13 @@ function initWeather() {
     });
   }
   return out;
+}
+
+function createKeyBasedOnStamps(from, to) {
+  const f = Moment(from);
+  const t = Moment(to);
+  const key = `${f.toISOString()}->${t.toISOString()}`;
+  return key;
 }
 
 export function getTimeLimits(days = 3) {
