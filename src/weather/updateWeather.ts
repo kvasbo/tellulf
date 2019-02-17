@@ -8,7 +8,7 @@ import XML from 'pixl-xml';
 
 import { weatherData } from '../redux/Weather';
 
-const localStorageKey = '1';
+const localStorageKey = '2';
 
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
