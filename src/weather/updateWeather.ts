@@ -8,36 +8,15 @@ import XML from 'pixl-xml';
 
 import { weatherData } from '../redux/Weather';
 
-const localStorageKey = '4';
+const localStorageKey = '5';
 
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
-  const weatherOutLong = initWeatherLong();
   const { start, end } = getTimeLimits(3);
   const now = Moment();
 
   const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
   const parsed = XML.parse(data.data);
-
-  const singlePoints = parsed.product.time.filter((d) => {
-    if (d.from !== d.to) return false;
-    const from = Moment(d.from);
-    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-    return false;
-  });
-
-  singlePoints.forEach((p) => {
-    const time = Moment(p.from);
-    const key = time.valueOf();
-    if (key in weatherOut) {
-      weatherOut[key].temp = p.location.temperature.value * 1;
-      const clouds =p.location.cloudiness.percent * 1 / 100;
-      weatherOut[key].clouds = clouds;
-      weatherOut[key].cloudsNeg = 1 - clouds;
-      weatherOut[key].wind = Number(p.location.windSpeed.mps);
-      weatherOut[key].time = time.valueOf();
-    }
-  });
 
   // Six hour forecasts
   const sixes = parsed.product.time.filter((d) => {
@@ -79,6 +58,29 @@ export default async function getWeatherFromYr(lat, long) {
     sixesOut[key] = out;
   });
 
+
+  const singlePoints = parsed.product.time.filter((d) => {
+    if (d.from !== d.to) return false;
+    const from = Moment(d.from);
+    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
+    return false;
+  });
+
+  singlePoints.forEach((p) => {
+    const time = Moment(p.from);
+    // Fake an hour!
+    const to = Moment(p.from).add(1, 'hours');
+    const key = createKeyBasedOnStamps(p.from, to);
+    if (key in weatherOut) {
+      weatherOut[key].temp = p.location.temperature.value * 1;
+      const clouds =p.location.cloudiness.percent * 1 / 100;
+      weatherOut[key].clouds = clouds;
+      weatherOut[key].cloudsNeg = 1 - clouds;
+      weatherOut[key].wind = Number(p.location.windSpeed.mps);
+      weatherOut[key].time = time.valueOf();
+    }
+  });
+
   const hours = parsed.product.time.filter((d) => {
     const from = Moment(d.from);
     const to = Moment(d.to);
@@ -88,8 +90,10 @@ export default async function getWeatherFromYr(lat, long) {
   });
 
   hours.forEach((p) => {
+    // console.log(p);
     const time = Moment(p.from);
-    const key = time.valueOf();
+    // const key = time.valueOf();
+    const key = createKeyBasedOnStamps(p.from, p.to);
     if (key in weatherOut) {
       weatherOut[key].rain = Number(p.location.precipitation.value);
       weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
@@ -152,7 +156,10 @@ function initWeather() {
   const { start, end } = getTimeLimits(3);
   while (start.isSameOrBefore(end)) {
     const time = start.valueOf();
-    out[time] = {
+    const from = Moment(start);
+    const to = Moment(from).add(1, 'hours');
+    const key = createKeyBasedOnStamps(from, to);
+    out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time,
     } as weatherData;
     start.add(1, 'hours');
@@ -184,9 +191,12 @@ export function getTimeLimits(days = 3) {
 }
 
 export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6991) {
+  
   const dataArray = Object.values(data);
+  const sunData = getSunMeta(lat, long);
+  
   if (dataArray.length === 0) {
-    return { lowerRange: 0, upperRange: 30, maxRain: 0, maxRainTime: 0, maxTemp: 10, maxTempTime: 0, minTemp: 0, minTempTime: 0 }
+    return { lowerRange: 0, upperRange: 30, maxRain: 0, maxRainTime: 0, maxTemp: 10, maxTempTime: 0, minTemp: 0, minTempTime: 0, ticks: [], ...sunData }
   }
   const maxRainPoint = maxBy(dataArray, 'rainMax');
   const maxRain = maxRainPoint.rainMax;
@@ -206,8 +216,6 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   for (let i = lowerRange; i <= upperRange; i += 10) {
     ticks.push(i);
   }
-
-  const sunData = getSunMeta(lat, long);
 
   const out = {
     lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData
