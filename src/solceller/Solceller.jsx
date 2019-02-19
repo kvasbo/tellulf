@@ -306,13 +306,15 @@ class Solceller extends React.PureComponent {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          padding: 0,
+          padding: 10,
+          color: '#CCCCCC',
+          fontSize: '10pt',
         }}
         >
-          <div>Dag: {getRoundedNumber(Number(this.props.current.today) / 1000)} kWh / {this.getMoneySavedToday()} kr</div>
-          <div>Måned: {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}</div>
-          <div>År: {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}</div>
-          <div>Totalt: {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}</div>
+          <div>Dag {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh / {this.getMoneySavedToday()} kr / {this.props.max.maxDay}W</div>
+          <div>Mnd {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh / {this.props.max.maxMonth}W</div>
+          <div>År {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh / {this.props.max.maxYear}W</div>
+          <div>Tot {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh / {this.props.max.maxEver}W</div>
         </div>
       </div>
     );
