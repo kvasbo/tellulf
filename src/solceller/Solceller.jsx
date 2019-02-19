@@ -18,6 +18,7 @@ import {
   updateSolarMax,
   updateSolarCurrent,
   updateInitStatus,
+  updateSetting,
 } from '../redux/actions.ts';
 
 const defaultLatitude = 59.9409;
@@ -182,7 +183,15 @@ class Solceller extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
-    const maxPower = (this.props.max.maxEver) ? Number(this.props.max.maxEver, 10) : 4500;
+    let maxPower = 4500;
+    let ticks = [1000, 2000, 3000, 4000];
+    // Dynamic scale
+    if (this.props.settingSolarMaxDynamic) {
+      maxPower = Math.ceil(Number(this.props.max.maxDay, 10) / 100) * 100;
+      ticks = [];
+    } else {
+      maxPower = (this.props.max.maxEver) ? Number(this.props.max.maxEver, 10) : 4500;
+    }
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
@@ -239,10 +248,11 @@ class Solceller extends React.PureComponent {
                   position: 'left',
                 }}
                 yAxisId="kwh"
-                ticks={[1000, 2000, 3000, 4000]}
+                ticks={[...ticks]}
                 type="number"
                 tickFormatter={formatYTick}
                 domain={[0, maxPower]}
+                onClick={() => { this.props.dispatch(updateSetting('solarMaxDynamic', !this.props.settingSolarMaxDynamic)); }}
               />
               <YAxis
                 width={25}
@@ -307,9 +317,9 @@ class Solceller extends React.PureComponent {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          padding: 10,
+          padding: 5,
           color: '#CCCCCC',
-          fontSize: '10pt',
+          fontSize: '7pt',
         }}
         >
           <div>Dag {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh / {this.getMoneySavedToday()} kr / {this.props.max.maxDay}W</div>
@@ -336,6 +346,7 @@ Solceller.propTypes = {
   powerPrices: PropTypes.object.isRequired,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
+  settingSolarMaxDynamic: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -345,6 +356,7 @@ const mapStateToProps = (state) => {
     powerPrices: state.PowerPrices,
     currentSolar: Math.round(state.Solar.current.now / 100) * 100,
     initState: state.Init,
+    settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
   };
 };
 

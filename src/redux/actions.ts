@@ -11,10 +11,19 @@ export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
 export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
 export const UPDATE_TRAINS = 'UPDATE_TRAINS';
+export const UPDATE_SETTING = 'UPDATE_SETTING';
 
 export function updateInitStatus(key, value = true) {
   return {
     type: UPDATE_INIT_STATUS,
+    key,
+    value,
+  };
+}
+
+export function updateSetting(key, value) {
+  return {
+    type: UPDATE_SETTING,
     key,
     value,
   };
