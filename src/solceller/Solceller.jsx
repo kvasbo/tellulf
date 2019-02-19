@@ -182,6 +182,7 @@ class Solceller extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
+    const maxPower = (this.props.max.maxEver) ? Number(this.props.max.maxEver, 10) : 4500;
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
     const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
@@ -241,7 +242,7 @@ class Solceller extends React.PureComponent {
                 ticks={[1000, 2000, 3000, 4000]}
                 type="number"
                 tickFormatter={formatYTick}
-                domain={[0, 4000]}
+                domain={[0, maxPower]}
               />
               <YAxis
                 width={25}
