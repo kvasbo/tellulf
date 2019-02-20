@@ -1,7 +1,7 @@
 import { UPDATE_SOLAR_CURRENT, UPDATE_SOLAR_MAX } from './actions';
 
 const initialState = {
-  max: {},
+  max: { maxDay: 0, maxMonth: 0, maxYear: 0, maxEver: 0 }, 
   current: {},
 };
 

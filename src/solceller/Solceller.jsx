@@ -188,6 +188,7 @@ class Solceller extends React.PureComponent {
     // Dynamic scale
     if (this.props.settingSolarMaxDynamic) {
       maxPower = Math.ceil(Number(this.props.max.maxDay, 10) / 100) * 100;
+      maxPower = Math.max(100, maxPower);
       ticks = [];
     } else {
       maxPower = (this.props.max.maxEver) ? Number(this.props.max.maxEver, 10) : 4500;
