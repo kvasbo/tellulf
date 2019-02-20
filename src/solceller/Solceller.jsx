@@ -74,14 +74,21 @@ class Solceller extends React.PureComponent {
 
   getData() {
     const dataSet = getDataPointObject();
+    const dstAdd = Moment().isDST() ? 3600000 : 0;
+    const timeZoneAdd = 3600000;
     // Map production data
     this.props.current.byHour.forEach((h) => {
+      // Correct production time for UTC
+      const correctedTime = h.time + timeZoneAdd + dstAdd;
+      if (correctedTime in dataSet) {
+        dataSet[correctedTime].production = h.production;
+      }
+      // Sun data
       if (h.time in dataSet) {
-        dataSet[h.time].production = h.production;
         const hour = new Date(h.time);
-        const inAWeek = Moment(h.time).add(1, 'week').toDate();
-        const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
-        const inAMonth = Moment(h.time).add(1, 'month').toDate();
+        const inAWeek = new Date(h.time + 604800000);
+        const inTwoWeeks = new Date(h.time + 1209600000);
+        const inAMonth = new Date(h.time + 2592000000);
         const hr = hour.getHours();
         const price = this.props.powerPrices[hr];
         dataSet[h.time].sun = getSunForTime(hour, this.props.latitude, this.props.longitude);
