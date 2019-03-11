@@ -9,7 +9,7 @@ import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo.tsx';
 import Klokke from './Klokke.tsx';
-import { fetchTrains } from './redux/actions';
+import { fetchTrains } from './redux/actions.ts';
 import './tellulf.css';
 
 function startReloadLoop() {
