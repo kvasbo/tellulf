@@ -101,6 +101,7 @@ export default async function getWeatherFromYr(lat, long) {
     // const key = time.valueOf();
     const key = createKeyBasedOnStamps(p.from, p.to);
     if (key in weatherOut) {
+      weatherOut[key].time = time.valueOf();
       weatherOut[key].rain = Number(p.location.precipitation.value);
       weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
       weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
@@ -121,10 +122,23 @@ export default async function getWeatherFromYr(lat, long) {
   });
 
   // Overwrite cache
-  store.set(`weather_${localStorageKey}`, weatherOut);
-  store.set(`weatherLong_${localStorageKey}`, sixesOut);
+  storeToLocalStore(`weather_${localStorageKey}`, weatherOut, start, end);
+  storeToLocalStore(`weatherLong_${localStorageKey}`, sixesOut, start, end);
 
   return { weather: weatherOut, long: sixesOut, todayMinMax };
+}
+
+// Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
+function storeToLocalStore(key, data, from, to) {
+  const toStore = {};
+  Object.keys(data).forEach(k => {
+    const d = data[k];
+    if (!d.time) return;
+    if (Moment(d.time).isBetween(from, to, undefined, '[]')) {
+      toStore[k] = d;
+    }
+  });
+  store.set(key, toStore);
 }
 
 // Init the six hours forecast
