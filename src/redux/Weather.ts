@@ -65,20 +65,3 @@ export default function Weather(state: state = initialState, action: { type: str
       return state;
   }
 }
-
-function getSunMeta(lat: number, long: number, now = Moment()) {
-  const yesterday = Moment(now).subtract(1, 'days');
-  const sunTimes = SunCalc.getTimes(new Date(), lat, long);
-  const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
-  const sunriseM = Moment(sunTimes.sunrise);
-  const sunsetM = Moment(sunTimes.sunset);
-  const sunriseYesterday = Moment(sunTimesYesterday.sunrise);
-  const sunsetYesterday = Moment(sunTimesYesterday.sunset);
-  const diffRise = sunriseM.diff(sunriseYesterday, 'minutes') - 1440;
-  const diffSet = sunsetM.diff(sunsetYesterday, 'minutes') - 1440;
-  const sunrise = sunriseM.valueOf();
-  const sunset = sunsetM.valueOf();
-  return {
-    sunrise, sunset, diffRise, diffSet,
-  };
-}
