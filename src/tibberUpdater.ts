@@ -10,7 +10,7 @@ export default class tibberUpdater {
   constructor(store: { dispatch: Function }) {
     this.store = store;
   }
-  async updatePowePrices() {
+  async updatePowerPrices() {
     try {
       const data = await axios({
         url: "https://api.tibber.com/v1-beta/gql",

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Moment from 'moment';
+import firebase from './firebase';
 
 Moment.locale('nb');
 
@@ -29,9 +30,9 @@ class Clock extends React.PureComponent<any, any> {
         </span>
         <span
           style={{ color: '#ffffff', fontSize: 35, fontWeight: 100 }}
-        >{this.state.time.format('dddd Do MMMM')}
+        >{!this.state.debug && this.state.time.format('dddd Do MMMM')}
         </span>
-        { this.state.debug && <span><img alt="pipeline status" src="https://gitlab.com/kvasbo/tellulf-client/badges/master/pipeline.svg" /><button type="button" onClick={() => window.location.reload()}>Last inn på nytt</button></span>}
+        { this.state.debug && <span><button type="button" onClick={() => firebase.auth().signOut()}>Logg ut</button><button type="button" onClick={() => window.location.reload()}>Last inn på nytt</button></span>}
       </div>
     );
   }
