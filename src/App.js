@@ -20,7 +20,7 @@ const tibber = new tibberUpdater(store);
 class App extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { loggedIn: false, user: null };
+    this.state = { loggedIn: false, user: null, username: '', password: '' };
   }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ class App extends React.PureComponent {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ loggedIn: true, user, username: null, password: null });
+        this.setState({ loggedIn: true, user });
       }
     });
   }

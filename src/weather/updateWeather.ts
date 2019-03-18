@@ -12,7 +12,7 @@ const localStorageKey = '5';
 
 export default async function getWeatherFromYr(lat, long) {
   const weatherOut = initWeather();
-  const { start, end } = getTimeLimits(3);
+  const { start, end } = getTimeLimits(7);
   const now = Moment();
 
   const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
@@ -32,6 +32,12 @@ export default async function getWeatherFromYr(lat, long) {
   sixes.forEach((s) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
+
+    // Kill!
+    if(f.isBefore(start) || t.isAfter(end)) {
+      return;
+    }
+
     const from = f.valueOf();
     const to = t.valueOf();
     const fromNice = f.toISOString();
