@@ -34,7 +34,7 @@ class GraphLong extends React.PureComponent {
 
   // Stays on
   render() {
-    if (!this.props.weather || !this.props.limits) {
+    if (!this.props.weatherLong || !this.props.limits) {
       return null;
     }
     const data = this.getData();
@@ -107,10 +107,10 @@ class GraphLong extends React.PureComponent {
             />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
             { limits.lowerRange < 0 && <ReferenceArea y1={0} y2={limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.35" /> }
-            <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" />
-            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" />
-            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" />
-            <Line dot={false} yAxisId="wind" connectNulls={false} type="natural" dataKey="wind" stroke="#ffffff77" strokeDasharray="3 5" />
+            <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" isAnimationActive={false} />
+            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" isAnimationActive={false} />
+            <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" isAnimationActive={false} />
+            <Line dot={false} yAxisId="wind" connectNulls={false} type="natural" dataKey="wind" stroke="#ffffff77" strokeDasharray="3 5" isAnimationActive={false} />
             <Line
               dot={<WeatherIcon symbolMap={symbolMap} sunrise={this.props.limits.sunrise} sunset={this.props.limits.sunset} />}
               yAxisId="temp"
@@ -212,19 +212,19 @@ function formatTick(data) {
 }
 
 GraphLong.defaultProps = {
-  weather: undefined,
+  // weather: undefined,
   limits: undefined,
 };
 
 GraphLong.propTypes = {
-  weather: PropTypes.object,
+  // weather: PropTypes.object,
   limits: PropTypes.object,
   weatherLong: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    weather: state.Weather.weather,
+    // weather: state.Weather.weather,
     weatherLong: state.Weather.long,
     limits: state.Weather.limits,
   };
