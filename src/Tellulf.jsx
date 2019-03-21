@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Moment from 'moment';
-import ErrorBoundary from './ErrorBoundary';
 import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
 import Kalender from './kalender/Kalender';
@@ -46,22 +45,22 @@ class Tellulf extends React.PureComponent {
     return (
       <div className="grid">
         <div style={{ gridColumn: '1 / 2', gridRow: '1 / 2' }} className="block">
-          <ErrorBoundary><Klokke /></ErrorBoundary>
+          <Klokke />
         </div>
         <div style={{ gridColumn: '1 / 2', gridRow: '3 / 4' }} className="block">
-          {this.props.loggedIn && <ErrorBoundary><Solceller /></ErrorBoundary>}
+          {this.props.loggedIn && <Solceller />}
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '4 / 5' }} className="block">
-          <ErrorBoundary><Yr /></ErrorBoundary>
+          <Yr />
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '5 / 5' }} className="block">
-          <ErrorBoundary><Ruter trains={this.props.trains} /></ErrorBoundary>
+          <Ruter trains={this.props.trains} />
         </div>
         <div style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }} className="block">
-          <ErrorBoundary><Netatmo /></ErrorBoundary>
+          <Netatmo />
         </div>
         <div style={{ gridColumn: '2 / 3', gridRow: '1 / 4' }} className="block">
-          <ErrorBoundary><Kalender /></ErrorBoundary>
+          <Kalender />
         </div>
       </div>
     );

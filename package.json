@@ -3,6 +3,8 @@
   "version": "1.0.58",
   "private": true,
   "dependencies": {
+    "@bugsnag/js": "^6.0.0",
+    "@bugsnag/plugin-react": "^6.0.0",
     "@sentry/browser": "^4.6.4",
     "axios": "^0.18.0",
     "cors": "^2.8.4",
