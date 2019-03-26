@@ -35,6 +35,12 @@ class Solceller extends React.PureComponent {
     this.reloadTimer = null;
     this.state = {
       currentTime: Moment().valueOf(),
+      power: 0,
+      accumulatedPower: 0,
+      accumulatedCost: 0,
+      averagePower: 0,
+      maxPower: 0,
+      minPower: 0,
     };
   }
 
@@ -71,6 +77,17 @@ class Solceller extends React.PureComponent {
       return 'bottom';
     }
     return 'top';
+  }
+
+  setPowerData(data) {
+    if (data.power && data.accumulatedConsumption && data.accumulatedCost && data.averagePower && data.maxPower && data.minPower) {
+      const {
+        power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
+      } = data;
+      this.setState({
+        power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
+      });
+    }
   }
 
   getData() {
@@ -216,7 +233,7 @@ class Solceller extends React.PureComponent {
             token="d1007ead2dc84a2b82f0de19451c5fb22112f7ae11d19bf2bedb224a003ff74a" 
             homeId="68e6938b-91a6-4199-a0d4-f24c22be87bb"
             display={false}
-            onData={(powerData) => { console.log(powerData); }}
+            onData={(powerData) => { this.setPowerData(powerData); }}
           />
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
