@@ -29,6 +29,11 @@ const sunMaxThreshold = 3000;
 
 const maxSunHeight = getMaxSunHeight();
 
+const smallStyle = {
+  fontSize: '10pt',
+  color: '#999999',
+};
+
 class Solceller extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -36,7 +41,7 @@ class Solceller extends React.PureComponent {
     this.state = {
       currentTime: Moment().valueOf(),
       power: 0,
-      accumulatedPower: 0,
+      accumulatedConsumption: 0,
       accumulatedCost: 0,
       averagePower: 0,
       maxPower: 0,
@@ -210,6 +215,8 @@ class Solceller extends React.PureComponent {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     let maxPower = 4500;
     let ticks = [1000, 2000, 3000, 4000];
+    const currentPower = this.state.power + this.props.current.now; // Find actual current usage
+    const producedPercent = (this.state.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.state.accumulatedConsumption : 0;
     // Dynamic scale
     if (this.props.settingSolarMaxDynamic) {
       maxPower = Math.ceil(Number(this.props.max.maxDay, 10) / 100) * 100;
@@ -228,137 +235,196 @@ class Solceller extends React.PureComponent {
         display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
       }}
       >
-        <div style={{ display: 'flex', flex: 1 }}>
+        <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
           <TibberRealtimeConsumptionWrapper
-            token="d1007ead2dc84a2b82f0de19451c5fb22112f7ae11d19bf2bedb224a003ff74a" 
+            token="d1007ead2dc84a2b82f0de19451c5fb22112f7ae11d19bf2bedb224a003ff74a"
             homeId="68e6938b-91a6-4199-a0d4-f24c22be87bb"
             display={false}
             onData={(powerData) => { this.setPowerData(powerData); }}
           />
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
-              margin={{
-                top: 0,
-                right: 10,
-                left: 10,
-                bottom: 0,
-              }}
-              data={data}
-            >
-              <defs>
-                <radialGradient id="sunGradient">
-                  <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
-                  <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
-                  <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
-              <YAxis
-                width={25}
-                yAxisId="price"
-                ticks={[0.5, 1.0, 1.5, 2]}
-                orientation="right"
-                type="number"
-                domain={[0, 2]}
-                label={{
-                  angle: 90,
-                  value: 'kr',
-                  stroke: '#ffffff55',
-                  fill: '#ffffff55',
-                  fontSize: 15,
-                  position: 'right',
+          <div style={{ flex: 5 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart
+                margin={{
+                  top: 0,
+                  right: 10,
+                  left: 10,
+                  bottom: 0,
                 }}
-              />
-              <YAxis
-                width={25}
-                label={{
-                  angle: -90,
-                  value: 'kwh',
-                  stroke: '#ffffff55',
-                  fill: '#ffffff55',
-                  fontSize: 15,
-                  position: 'left',
-                }}
-                yAxisId="kwh"
-                ticks={[...ticks]}
-                type="number"
-                tickFormatter={formatYTick}
-                domain={[0, maxPower]}
-                onClick={() => { this.props.dispatch(updateSetting('solarMaxDynamic', !this.props.settingSolarMaxDynamic)); }}
-              />
-              <YAxis
-                width={25}
-                yAxisId="sun"
-                hide
-                allowDataOverflow
-                ticks={[]}
-                type="number"
-                orientation="right"
-                domain={[0, maxSunHeight]}
-              />
-              <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
-              <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
-              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAWeek" stroke="#FFFFFF55" />
-              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInTwoWeeks" stroke="#FFFFFF33" />
-              <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAMonth" stroke="#FFFFFF22" />
-              <Area
-                yAxisId="kwh"
-                dot={false}
-                type="monotone"
-                dataKey="production"
-                fill="#00FF00"
-                stroke="#00FF00"
-                fillOpacity="0.2"
-                strokeOpacity="0.2"
-              />
-              <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
-              <ReferenceLine
-                yAxisId="kwh"
-                y={this.props.max.maxDay}
-                stroke="#FFFF0088"
-                strokeDasharray="3 3"
-              />
-              <ReferenceDot
-                x={this.state.currentTime}
-                y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
-                yAxisId="sun"
-                fill="url(#sunGradient)"
-                stroke="none"
-                r={90}
-              />
-              {(this.props.current.now > 0) && (
-              <ReferenceDot
-                yAxisId="kwh"
-                y={this.props.current.now}
-                x={this.props.current.currentTime.valueOf()}
-                r={3}
-                fill="#ffffff44"
-                stroke="#ffffff"
-                label={{
-                  value: `${this.props.current.averageMinute}W`,
-                  stroke: textColor,
-                  fill: textColor,
-                  fontSize: 50,
-                  position: this.getCurrentLabelPosition(),
-                }}
-              />)}
-            </ComposedChart>
-          </ResponsiveContainer>
+                data={data}
+              >
+                <defs>
+                  <radialGradient id="sunGradient">
+                    <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
+                    <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
+                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
+                <YAxis
+                  width={25}
+                  yAxisId="price"
+                  ticks={[0.5, 1.0, 1.5, 2]}
+                  orientation="right"
+                  type="number"
+                  domain={[0, 2]}
+                  label={{
+                    angle: 90,
+                    value: 'kr',
+                    stroke: '#ffffff55',
+                    fill: '#ffffff55',
+                    fontSize: 15,
+                    position: 'right',
+                  }}
+                />
+                <YAxis
+                  width={25}
+                  label={{
+                    angle: -90,
+                    value: 'kwh',
+                    stroke: '#ffffff55',
+                    fill: '#ffffff55',
+                    fontSize: 15,
+                    position: 'left',
+                  }}
+                  yAxisId="kwh"
+                  ticks={[...ticks]}
+                  type="number"
+                  tickFormatter={formatYTick}
+                  domain={[0, maxPower]}
+                  onClick={() => { this.props.dispatch(updateSetting('solarMaxDynamic', !this.props.settingSolarMaxDynamic)); }}
+                />
+                <YAxis
+                  width={25}
+                  yAxisId="sun"
+                  hide
+                  allowDataOverflow
+                  ticks={[]}
+                  type="number"
+                  orientation="right"
+                  domain={[0, maxSunHeight]}
+                />
+                <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
+                <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
+                <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAWeek" stroke="#FFFFFF55" />
+                <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInTwoWeeks" stroke="#FFFFFF33" />
+                <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAMonth" stroke="#FFFFFF22" />
+                <Area
+                  yAxisId="kwh"
+                  dot={false}
+                  type="monotone"
+                  dataKey="production"
+                  fill="#00FF00"
+                  stroke="#00FF00"
+                  fillOpacity="0.2"
+                  strokeOpacity="0.2"
+                />
+                <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
+                <ReferenceLine
+                  yAxisId="kwh"
+                  y={this.props.max.maxDay}
+                  stroke="#FFFF0088"
+                  strokeDasharray="3 3"
+                />
+                <ReferenceDot
+                  x={this.state.currentTime}
+                  y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
+                  yAxisId="sun"
+                  fill="url(#sunGradient)"
+                  stroke="none"
+                  r={90}
+                />
+                {(this.props.current.now > 0) &&
+                (
+                <ReferenceDot
+                  yAxisId="kwh"
+                  y={this.props.current.now}
+                  x={this.props.current.currentTime.valueOf()}
+                  r={3}
+                  fill="#ffffff44"
+                  stroke="#ffffff"
+                  label={{
+                    value: `${this.props.current.averageMinute}W`,
+                    stroke: textColor,
+                    fill: textColor,
+                    fontSize: 50,
+                    position: this.getCurrentLabelPosition(),
+                  }}
+                />)
+                }
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{
+            flex: 2, display: 'flex', flexDirection: 'row', justifyContent: 'top', alignItems: 'center',
+            }}>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
+              <span style={smallStyle}>forbruk</span>
+              <br />
+              {currentPower}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
+              <span style={smallStyle}>produksjon</span>
+              <br />
+              {this.props.current.now}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
+              <span style={smallStyle}>sum</span>
+              <br />
+              {this.state.power}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
+              <span style={smallStyle}>produsert %</span>
+              <br />
+              {Math.round(producedPercent * 100) / 100}%
+            </div>
+          </div>
+          <div style={{ flex: 1.2, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>bruk dag</span><br />{Math.round(this.state.accumulatedConsumption * 1000) / 1000}kWh
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>bruk min</span><br />{this.state.minPower}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>bruk snitt</span><br />{Math.round(this.state.averagePower)}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>bruk max</span><br />{this.state.maxPower}W
+            </div>
+          </div>
+          <div style={{ flex: 1.5, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>prod dag</span>
+              <br />
+              {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh
+              <br />
+              {this.props.max.maxDay}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>prod måned</span>
+              <br />
+              {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh
+              <br />
+              {this.props.max.maxMonth}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>prod år</span>
+              <br />
+              {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh
+              <br />
+              {this.props.max.maxYear}W
+            </div>
+            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
+              <span style={smallStyle}>prod totalt</span>
+              <br />
+              {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh
+              <br />
+              {this.props.max.maxEver}W
+            </div>
+          </div>
         </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          padding: 5,
-          color: '#CCCCCC',
-          fontSize: '7pt',
-        }}
-        >
-          <div>Dag {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh / {this.getMoneySavedToday()} kr / {this.props.max.maxDay}W</div>
-          <div>Mnd {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh / {this.props.max.maxMonth}W</div>
-          <div>År {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh / {this.props.max.maxYear}W</div>
-          <div>Tot {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh / {this.props.max.maxEver}W</div>
-        </div>
+
       </div>
     );
   }
