@@ -20,6 +20,8 @@ function startReloadLoop() {
   }, diff);
 }
 
+// Todo: Flytte listeners ut i egen tråd!
+
 class Tellulf extends React.PureComponent {
   constructor(props) {
     super(props);

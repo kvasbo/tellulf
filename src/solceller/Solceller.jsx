@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
+import TibberRealtimeConsumptionWrapper from '@kvasbo/react-tibber-consumption';
 import SunCalc from 'suncalc';
 import {
   updateSolarMax,
@@ -211,6 +212,12 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1 }}>
+          <TibberRealtimeConsumptionWrapper
+            token="d1007ead2dc84a2b82f0de19451c5fb22112f7ae11d19bf2bedb224a003ff74a" 
+            homeId="68e6938b-91a6-4199-a0d4-f24c22be87bb"
+            display={false}
+            onData={(powerData) => { console.log(powerData); }}
+          />
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               margin={{
