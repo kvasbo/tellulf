@@ -18,6 +18,10 @@ type State = {
   Weather: { todayMinMax: { min: number, max: number } },
 }
 
+const netatmoBox = {
+  padding: 10,
+}
+
 class Netatmo extends React.PureComponent<Props> {
 
   static defaultProps = { minMax: { max: -9999, min: 9999 } };
@@ -56,7 +60,7 @@ class Netatmo extends React.PureComponent<Props> {
     return (
       <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
         <div style={{
-          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center',
+          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center', margin: 10
         }}
         >
           <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.min(this.props.NetatmoAverages.temperature, this.props.minMax.min)}°</span>
@@ -65,13 +69,13 @@ class Netatmo extends React.PureComponent<Props> {
         </div>
         <div
           style={{
-            flex: 0.4, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center',
+            flex: 0.4, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center', margin: 10
           }}
         >
-          <div>{this.props.Netatmo.inneTemp}°</div>
-          <div>{this.props.Netatmo.co2} ppm</div>
-          <div>{Math.round(this.props.Netatmo.inneFukt)}%</div>
-          <div>{Math.round(this.props.Netatmo.inneTrykk)} mb</div>
+          <div style={netatmoBox}>{this.props.Netatmo.inneTemp}°</div>
+          <div style={netatmoBox}>{this.props.Netatmo.co2} ppm</div>
+          <div style={netatmoBox}>{Math.round(this.props.Netatmo.inneFukt)}%</div>
+          <div style={netatmoBox}>{Math.round(this.props.Netatmo.inneTrykk)} mb</div>
         </div>
       </div>
     );

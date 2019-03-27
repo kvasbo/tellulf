@@ -24,7 +24,7 @@ class Clock extends React.PureComponent<any, any> {
         onClick={() => this.setState({ debug: !this.state.debug })}
       >
         <span style={{
-          alignItems: 'center', color: '#ffffff', fontSize: 100, fontWeight: 200,
+          alignItems: 'center', color: '#ffffff', fontSize: 90, fontWeight: 200,
         }}
         >{this.state.time.format('HH:mm')}
         </span>
