@@ -104,14 +104,12 @@ class Solceller extends React.PureComponent {
   }
 
   setPowerData(data) {
-    if (data.power && data.accumulatedConsumption && data.accumulatedCost && data.averagePower && data.maxPower && data.minPower) {
-      const {
-        power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
-      } = data;
-      this.setState({
-        power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
-      });
-    }
+    const {
+      power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
+    } = data;
+    this.setState({
+      power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
+    });
   }
 
   getData() {
