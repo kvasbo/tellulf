@@ -17,7 +17,7 @@ export default class tibberUpdater {
         method: "post",
         headers: {
           Authorization:
-            "bearer 1a3772d944bcf972f1ee84cf45d769de1c80e4f0173d665328287d1e2a746004"
+            "bearer 272e9af8673aa8bcef149c9869e0697cdbfad92644893145887dc256829212d7"
         },
         data: {
           query: `
