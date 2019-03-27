@@ -359,7 +359,7 @@ class Solceller extends React.PureComponent {
             flex: 2, display: 'flex', flexDirection: 'row', justifyContent: 'top', alignItems: 'center',
             }}>
             <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>forbruk</span>
+              <span style={smallStyle}>reelt forbruk</span>
               <br />
               {currentPower}W
             </div>
@@ -369,7 +369,7 @@ class Solceller extends React.PureComponent {
               {this.props.current.now}W
             </div>
             <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>sum</span>
+              <span style={smallStyle}>betalt forbruk</span>
               <br />
               {this.state.power}W
             </div>
@@ -399,12 +399,16 @@ class Solceller extends React.PureComponent {
               <br />
               {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh
               <br />
+              <span style={smallStyle}>max dag</span>
+              <br />
               {this.props.max.maxDay}W
             </div>
             <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
               <span style={smallStyle}>prod måned</span>
               <br />
               {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh
+              <br />
+              <span style={smallStyle}>max måned</span>
               <br />
               {this.props.max.maxMonth}W
             </div>
@@ -413,12 +417,16 @@ class Solceller extends React.PureComponent {
               <br />
               {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh
               <br />
+              <span style={smallStyle}>max år</span>
+              <br />
               {this.props.max.maxYear}W
             </div>
             <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
               <span style={smallStyle}>prod totalt</span>
               <br />
               {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh
+              <br />
+              <span style={smallStyle}>max totalt</span>
               <br />
               {this.props.max.maxEver}W
             </div>
