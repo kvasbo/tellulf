@@ -57,7 +57,7 @@ class Solceller extends React.PureComponent {
 
     // Load (and init) settings
     const settingsRef = window.firebase.database().ref('settings');
-    settingsRef.once('value', (snapshot) => {
+    settingsRef.on('value', (snapshot) => {
       const settings = snapshot.val();
       console.log('Tibber settings', settings);
       if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
