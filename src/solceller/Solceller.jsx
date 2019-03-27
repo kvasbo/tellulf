@@ -42,17 +42,36 @@ class Solceller extends React.PureComponent {
       currentTime: Moment().valueOf(),
       power: 0,
       accumulatedConsumption: 0,
-      accumulatedCost: 0,
+      // accumulatedCost: 0,
       averagePower: 0,
       maxPower: 0,
       minPower: 0,
+      tibberApiKey: null,
+      tibberHomeKey: null,
     };
   }
 
   componentDidMount() {
     setInterval(() => { this.reloadTime(); }, 60000);
     this.attachMaxListeners();
+
+    // Load (and init) settings
+    const settingsRef = window.firebase.database().ref('settings');
+    settingsRef.once('value', (snapshot) => {
+      const settings = snapshot.val();
+      console.log('Tibber settings', settings);
+      if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
+        settingsRef.set({ tibberApiKey: false, tibberHomeKey: false });
+        return;
+      }
+      const { tibberApiKey, tibberHomeKey } = settings;
+      this.setState({
+        tibberApiKey, tibberHomeKey,
+      });
+    });
+
     const dbRef = window.firebase.database().ref('steca/currentData');
+
     dbRef.on('value', (snapshot) => {
       try {
         const val = snapshot.val();
@@ -236,12 +255,14 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+          {this.state.tibberApiKey && this.state.tibberHomeKey && (
           <TibberRealtimeConsumptionWrapper
-            token="d1007ead2dc84a2b82f0de19451c5fb22112f7ae11d19bf2bedb224a003ff74a"
-            homeId="68e6938b-91a6-4199-a0d4-f24c22be87bb"
+            token={this.state.tibberApiKey}
+            homeId={this.state.tibberHomeKey}
             display={false}
             onData={(powerData) => { this.setPowerData(powerData); }}
           />
+          )}
           <div style={{ flex: 5 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart

@@ -5,7 +5,11 @@
       ".write": "auth.provider === 'password'"
     },
    	"steca" : {
-      ".read": "auth != null",
+      ".read": "true",
+      ".write": "auth.provider === 'password'"
+    },
+    "settings": {
+      ".read": "auth.provider === 'password'",
       ".write": "auth.provider === 'password'"
     }
   }
