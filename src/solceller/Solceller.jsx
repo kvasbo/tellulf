@@ -13,7 +13,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import TibberRealtimeConsumptionWrapper from '@kvasbo/react-tibber-consumption';
+import TibberConnector from 'tibber-pulse-connector';
 import SunCalc from 'suncalc';
 import {
   updateSolarMax,
@@ -61,13 +61,15 @@ class Solceller extends React.PureComponent {
       const settings = snapshot.val();
       console.log('Tibber settings', settings);
       if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
-        settingsRef.set({ tibberApiKey: false, tibberHomeKey: false });
+        console.log('Tibber settings not found', settings);
         return;
       }
       const { tibberApiKey, tibberHomeKey } = settings;
-      this.setState({
-        tibberApiKey, tibberHomeKey,
-      });
+
+      // Create tibber listener
+      this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.setPowerData(data.data.liveMeasurement); });
+      this.tibberSocket.start();
+
     });
 
     const dbRef = window.firebase.database().ref('steca/currentData');
@@ -253,14 +255,6 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-          {this.state.tibberApiKey && this.state.tibberHomeKey && (
-          <TibberRealtimeConsumptionWrapper
-            token={this.state.tibberApiKey}
-            homeId={this.state.tibberHomeKey}
-            display={false}
-            onData={(powerData) => { this.setPowerData(powerData); }}
-          />
-          )}
           <div style={{ flex: 5 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart
@@ -451,7 +445,6 @@ class Solceller extends React.PureComponent {
             </div>
           </div>
         </div>
-
       </div>
     );
   }
