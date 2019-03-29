@@ -1,0 +1,25 @@
+.smallStyle {
+  font-size: 10pt;
+  color: #999999;
+}
+
+.energyTableRow {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.energyTableBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 12pt;
+}
+
+.energyTableBoxLarge {
+  font-size: 20pt;
+}

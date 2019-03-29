@@ -30,11 +30,6 @@ const sunMaxThreshold = 3000;
 
 const maxSunHeight = getMaxSunHeight();
 
-const smallStyle = {
-  fontSize: '10pt',
-  color: '#999999',
-};
-
 class Solceller extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -366,80 +361,77 @@ class Solceller extends React.PureComponent {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <div style={{
-            flex: 2, display: 'flex', flexDirection: 'row', justifyContent: 'top', alignItems: 'center',
-            }}>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>reelt forbruk</span>
-              <br />
-              {currentPower}W
+          <div style={{ flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly' }}>
+            <div className="energyTableRow">
+              <div className="energyTableBox energyTableBoxLarge">
+                <span className="smallStyle">reelt forbruk</span>
+                {currentPower}W
+              </div>
+              <div className="energyTableBox energyTableBoxLarge">
+                <span className="smallStyle">produksjon</span>
+                {this.props.current.now}W
+              </div>
+              <div className="energyTableBox energyTableBoxLarge">
+                <span className="smallStyle">betalt forbruk</span>
+                {this.state.power}W
+              </div>
+              <div className="energyTableBox energyTableBoxLarge">
+                <span className="smallStyle">produsert %</span>
+                {Math.round(producedPercent * 100) / 100}%
+              </div>
             </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>produksjon</span>
-              <br />
-              {this.props.current.now}W
+            <div className="energyTableRow">
+              <div className="energyTableBox">
+                <span className="smallStyle">bruk dag</span>
+                {Math.round(this.state.accumulatedConsumption * 1000) / 1000}kWh
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">bruk min</span>{this.state.minPower}W
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">bruk snitt</span>
+                {Math.round(this.state.averagePower)}W
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">bruk max</span>
+                {this.state.maxPower}W
+              </div>
             </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>betalt forbruk</span>
-              <br />
-              {this.state.power}W
+            <div className="energyTableRow">
+              <div className="energyTableBox">
+                <span className="smallStyle">prod dag</span>
+                {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh             
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">prod måned</span>
+                {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh          
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">prod år</span>
+                {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">prod totalt</span>
+                {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh                
+              </div>
             </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '20pt' }}>
-              <span style={smallStyle}>produsert %</span>
-              <br />
-              {Math.round(producedPercent * 100) / 100}%
-            </div>
-          </div>
-          <div style={{ flex: 1.2, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>bruk dag</span><br />{Math.round(this.state.accumulatedConsumption * 1000) / 1000}kWh
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>bruk min</span><br />{this.state.minPower}W
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>bruk snitt</span><br />{Math.round(this.state.averagePower)}W
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>bruk max</span><br />{this.state.maxPower}W
-            </div>
-          </div>
-          <div style={{ flex: 1.5, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>prod dag</span>
-              <br />
-              {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh
-              <br />
-              <span style={smallStyle}>max dag</span>
-              <br />
-              {this.props.max.maxDay}W
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>prod måned</span>
-              <br />
-              {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh
-              <br />
-              <span style={smallStyle}>max måned</span>
-              <br />
-              {this.props.max.maxMonth}W
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>prod år</span>
-              <br />
-              {getRoundedNumber(parseFloat(this.props.current.year) / 1000)}kWh
-              <br />
-              <span style={smallStyle}>max år</span>
-              <br />
-              {this.props.max.maxYear}W
-            </div>
-            <div style={{ flex: 1, textAlign: 'center', fontSize: '12pt' }}>
-              <span style={smallStyle}>prod totalt</span>
-              <br />
-              {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh
-              <br />
-              <span style={smallStyle}>max totalt</span>
-              <br />
-              {this.props.max.maxEver}W
+            <div className="energyTableRow">
+              <div className="energyTableBox">
+                <span className="smallStyle">max dag</span>
+                {this.props.max.maxDay}W
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">max måned</span>
+                {this.props.max.maxMonth}W
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">max år</span>
+                {this.props.max.maxYear}W
+              </div>
+              <div className="energyTableBox">
+                <span className="smallStyle">max totalt</span>
+                {this.props.max.maxEver}W
+              </div>
             </div>
           </div>
         </div>
