@@ -61,7 +61,7 @@ class Tellulf extends React.PureComponent {
         <div style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }} className="block">
           <Netatmo />
         </div>
-        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 4' }} className="block">
+        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 4', overflow: 'auto' }} className="block">
           <Kalender />
         </div>
       </div>
