@@ -21,6 +21,7 @@ import {
   updateInitStatus,
   updateSetting,
 } from '../redux/actions.ts';
+import './solceller.css';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
@@ -46,8 +47,6 @@ class Solceller extends React.PureComponent {
       averagePower: 0,
       maxPower: 0,
       minPower: 0,
-      tibberApiKey: null,
-      tibberHomeKey: null,
     };
   }
 
@@ -69,7 +68,6 @@ class Solceller extends React.PureComponent {
       // Create tibber listener
       this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.setPowerData(data.data.liveMeasurement); });
       this.tibberSocket.start();
-
     });
 
     const dbRef = window.firebase.database().ref('steca/currentData');
@@ -128,9 +126,9 @@ class Solceller extends React.PureComponent {
       // Sun data
       if (h.time in dataSet) {
         const hour = new Date(h.time);
-        const inAWeek = new Date(h.time + 604800000);
-        const inTwoWeeks = new Date(h.time + 1209600000);
-        const inAMonth = new Date(h.time + 2592000000);
+        const inAWeek = Moment(h.time).add(1, 'week').toDate();
+        const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
+        const inAMonth = Moment(h.time).add(1, 'month').toDate();
         const hr = hour.getHours();
         const price = this.props.powerPrices[hr];
         dataSet[h.time].sun = getSunForTime(hour, this.props.latitude, this.props.longitude);
