@@ -12,6 +12,8 @@ export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
 export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
 export const UPDATE_TRAINS = 'UPDATE_TRAINS';
 export const UPDATE_SETTING = 'UPDATE_SETTING';
+export const UPDATE_TIBBER_REALTIME_CONSUMPTION = 'UPDATE_TIBBER_REALTIME_CONSUMPTION';
+export const UPDATE_TIBBER_POWER_USAGE = 'UPDATE_TIBBER_POWER_USAGE';
 
 export function updateInitStatus(key, value = true) {
   return {
@@ -42,6 +44,20 @@ export function updateWeather(data: {}, lat: number, lon: number) {
     data,
     lat,
     lon,
+  };
+}
+
+export function updateRealtimeConsumption(data : {}) {
+  return {
+    type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
+    data,
+  };
+}
+
+export function updatePowerUsage(data : {}) {
+  return {
+    type: UPDATE_TIBBER_POWER_USAGE,
+    data,
   };
 }
 

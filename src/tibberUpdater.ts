@@ -1,7 +1,7 @@
 import axios from "axios";
 import Moment from "moment";
 
-import { updatePowerPrices, updateInitStatus } from "./redux/actions";
+import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption } from "./redux/actions";
 
 const nettleie = 0.477;
 
