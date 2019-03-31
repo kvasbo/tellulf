@@ -78,7 +78,7 @@ class Solceller extends React.PureComponent {
   getData() {
     const dataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
-    const timeZoneAdd = 3600000;
+    const timeZoneAdd = 0; // 3600000; // This was not right.
     // Map production data
     this.props.current.byHour.forEach((h) => {
       // Correct production time for UTC
@@ -86,19 +86,30 @@ class Solceller extends React.PureComponent {
       if (correctedTime in dataSet) {
         dataSet[correctedTime].production = h.production;
       }
-      // Sun data
+      // Sun data and consumpton
       if (h.time in dataSet) {
         const hour = new Date(h.time);
         const inAWeek = Moment(h.time).add(1, 'week').toDate();
         const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
         const inAMonth = Moment(h.time).add(1, 'month').toDate();
         const hr = hour.getHours();
+        
+        // Consumption
+        if (hr in this.props.usedPower) {
+          const usage = this.props.usedPower[hr];
+          const kwh = Number(usage.consumption, 10) * 1000;
+          dataSet[h.time].consumption = kwh;
+        }
+
+        // Price
         const price = this.props.powerPrices[hr];
+        dataSet[h.time].price = price.total;
+
+        // Sun data
         dataSet[h.time].sun = getSunForTime(hour, this.props.latitude, this.props.longitude);
         dataSet[h.time].sunInAWeek = getSunForTime(inAWeek, this.props.latitude, this.props.longitude);
         dataSet[h.time].sunInTwoWeeks = getSunForTime(inTwoWeeks, this.props.latitude, this.props.longitude);
         dataSet[h.time].sunInAMonth = getSunForTime(inAMonth, this.props.latitude, this.props.longitude);
-        dataSet[h.time].price = price.total;
       }
     });
     return Object.values(dataSet);
@@ -195,10 +206,10 @@ class Solceller extends React.PureComponent {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     const currentPower = this.props.realtimePower.power + this.props.current.now; // Find actual current usage
     const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
-    let maxPower = Math.max(Number(this.props.max.maxEver, 10), Number(this.props.realtimePower.maxPower, 10), 4500);
+    let maxPower = Math.max(Number(this.props.max.maxEver, 10), 4500);
     maxPower = Math.ceil(maxPower / 1000) * 1000;
     const ticks = [];
-    for (let i = 0; i <= maxPower; i += 1000) {
+    for (let i = 0; i < maxPower; i += 1000) {
       ticks.push(i);
     }
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
@@ -230,7 +241,7 @@ class Solceller extends React.PureComponent {
                     <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
                   </radialGradient>
                 </defs>
-                <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} ticks={getXTicks()} domain={['dataMin', 'dataMax']} />
+                <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} allowDataOverflow={false} ticks={getXTicks()} domain={getXAxis()} />
                 <YAxis
                   width={25}
                   yAxisId="price"
@@ -258,10 +269,12 @@ class Solceller extends React.PureComponent {
                     position: 'left',
                   }}
                   yAxisId="kwh"
-                  ticks={[...ticks]}
+                  // ticks={[...ticks]}
+                  // interval={0}
                   type="number"
                   tickFormatter={formatYTick}
-                  domain={[0, maxPower]}
+                  domain={[0, dataMax => Math.max(dataMax, 4500)]}
+                  // domain={[0, maxPower]}
                   onClick={() => { this.props.dispatch(updateSetting('solarMaxDynamic', !this.props.settingSolarMaxDynamic)); }}
                 />
                 <YAxis
@@ -288,6 +301,18 @@ class Solceller extends React.PureComponent {
                   stroke="#00FF00"
                   fillOpacity="0.2"
                   strokeOpacity="0.2"
+                  stackId="1"
+                />
+                <Area
+                  yAxisId="kwh"
+                  dot={false}
+                  type="monotone"
+                  dataKey="consumption"
+                  fill="#FF0000"
+                  stroke="#FF0000"
+                  fillOpacity="0.15"
+                  strokeOpacity="0.15"
+                  stackId="1"
                 />
                 <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
                 <ReferenceLine
@@ -411,7 +436,7 @@ class Solceller extends React.PureComponent {
 Solceller.defaultProps = {
   latitude: defaultLatitude,
   longitude: defaultLongitude,
-  tibberLastDay: {},
+  usedPower: {},
 };
 
 Solceller.propTypes = {
@@ -425,7 +450,7 @@ Solceller.propTypes = {
   longitude: PropTypes.number,
   settingSolarMaxDynamic: PropTypes.bool.isRequired,
   realtimePower: PropTypes.object.isRequired,
-  tibberLastDay: PropTypes.object,
+  usedPower: PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
@@ -476,7 +501,9 @@ function getDataPointObject() {
   const time = Moment().startOf('day');
   for (let i = 0; i < 144; i += 1) {
     const key = time.valueOf();
-    out[key] = { time: key, production: null, price: null };
+    out[key] = {
+      time: key, production: null, price: null, consumption: null,
+    };
     time.add(10, 'minutes');
   }
   return out;
@@ -501,6 +528,12 @@ function parseByHour(data) {
     return { time: time.valueOf(), production: d.production };
   });
   return out;
+}
+
+function getXAxis() {
+  const from = Moment().startOf('day').valueOf();
+  const to = Moment().endOf('day').valueOf();
+  return [from, to];
 }
 
 function getXTicks() {

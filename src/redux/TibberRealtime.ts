@@ -19,7 +19,6 @@ export default function TibberRealTime(state = { power: 0, accumulatedConsumptio
         } = action.data;
         // Calculate weighted average
         const avgLastHourStamp = Moment(timestamp).format("dddHH");
-        console.log(avgLastHourStamp);
         let avgLastHourSamples = state.avgLastHourSamples + 1;
         let avgLastHour = Math.round(state.avgLastHour + ((power - state.avgLastHour) / avgLastHourSamples));
         if (state.avgLastHourStamp !== avgLastHourStamp) {
