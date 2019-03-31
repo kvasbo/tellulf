@@ -4,6 +4,7 @@ import firebase from "./firebase";
 import TibberConnector from 'tibber-pulse-connector';
 
 import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from "./redux/actions";
+import { settings } from "cluster";
 
 const nettleie = 0.477;
 
@@ -46,14 +47,9 @@ export default class tibberUpdater {
   }
 
   async updatePowerPrices() {
-    const settings:any = await new Promise((resolve, reject) => {
-      const settingsRef = firebase.database().ref('settings');
-      settingsRef.once('value', (snapshot: any) => {
-        const settings = snapshot.val();
-        resolve(settings);
-      });
-    });
-    
+
+    const settings = await this.getTibberSettings();
+
     try {
       const data = await axios({
         url: "https://api.tibber.com/v1-beta/gql",
@@ -67,7 +63,7 @@ export default class tibberUpdater {
         }
       });
       if (data.status === 200) {
-        console.log('d', data.data.data.viewer.home);
+        // Parse power prices
         const prices =
           data.data.data.viewer.home.currentSubscription.priceInfo.today;
         const powerPrices = {};
@@ -75,6 +71,11 @@ export default class tibberUpdater {
           const h = Moment(p.startsAt).hours();
           powerPrices[h] = { total: p.total + nettleie };
         });
+
+        // Parse usage
+        const usage = data.data.data.viewer.home.consumption.nodes;
+        console.log('usage', usage);
+
         this.store.dispatch(updatePowerPrices(powerPrices));
         this.store.dispatch(updateInitStatus("powerPrices"));
       }
@@ -83,22 +84,27 @@ export default class tibberUpdater {
     }
   }
 
+  // Create and start websocket connection
   async subscribeToRealTime() {
-    // Load (and init) settings
-    const settingsRef = firebase.database().ref('settings');
-    settingsRef.on('value', (snapshot: any) => {
-      const settings = snapshot.val();
-      console.log('Tibber settings initiated', settings);
-      if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
-        console.log('Tibber settings not found', settings);
-        return;
-      }
-      const { tibberApiKey, tibberHomeKey } = settings;
 
-      // Create tibber listener
-      this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.store.dispatch(updateRealtimeConsumption(data)); });
-      this.tibberSocket.start();
-    });
+    const settings:any = await this.getTibberSettings();
+    const { tibberApiKey, tibberHomeKey } = settings;
+    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.store.dispatch(updateRealtimeConsumption(data)); });
+    this.tibberSocket.start();
+
   }
+
+  // Get tibber settings from firebase
+  async getTibberSettings() {
+    const settings:{ tibberApiKey:string, tibberHomeKey:string} = await new Promise((resolve, reject) => {
+      const settingsRef = firebase.database().ref('settings');
+      settingsRef.once('value', (snapshot: any) => {
+        const settings = snapshot.val();
+        resolve(settings);
+      });
+    });
+    return settings;
+  }
+
 }
 
