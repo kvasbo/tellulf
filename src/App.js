@@ -30,6 +30,7 @@ class App extends React.PureComponent {
   componentDidMount() {
     // firebase.auth().signInAnonymously();
     tibber.updatePowerPrices();
+    tibber.subscribeToRealTime();
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

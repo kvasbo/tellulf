@@ -13,7 +13,6 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import TibberConnector from 'tibber-pulse-connector';
 import SunCalc from 'suncalc';
 import {
   updateSolarMax,
@@ -36,34 +35,12 @@ class Solceller extends React.PureComponent {
     this.reloadTimer = null;
     this.state = {
       currentTime: Moment().valueOf(),
-      power: 0,
-      accumulatedConsumption: 0,
-      // accumulatedCost: 0,
-      averagePower: 0,
-      maxPower: 0,
-      minPower: 0,
     };
   }
 
   componentDidMount() {
     setInterval(() => { this.reloadTime(); }, 60000);
     this.attachMaxListeners();
-
-    // Load (and init) settings
-    const settingsRef = window.firebase.database().ref('settings');
-    settingsRef.on('value', (snapshot) => {
-      const settings = snapshot.val();
-      console.log('Tibber settings', settings);
-      if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
-        console.log('Tibber settings not found', settings);
-        return;
-      }
-      const { tibberApiKey, tibberHomeKey } = settings;
-
-      // Create tibber listener
-      this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.setPowerData(data.data.liveMeasurement); });
-      this.tibberSocket.start();
-    });
 
     const dbRef = window.firebase.database().ref('steca/currentData');
 
@@ -96,15 +73,6 @@ class Solceller extends React.PureComponent {
       return 'bottom';
     }
     return 'top';
-  }
-
-  setPowerData(data) {
-    const {
-      power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
-    } = data;
-    this.setState({
-      power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower,
-    });
   }
 
   getData() {
@@ -227,8 +195,8 @@ class Solceller extends React.PureComponent {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
     let maxPower = 4500;
     let ticks = [1000, 2000, 3000, 4000];
-    const currentPower = this.state.power + this.props.current.now; // Find actual current usage
-    const producedPercent = (this.state.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.state.accumulatedConsumption : 0;
+    const currentPower = this.props.realtimePower.power + this.props.current.now; // Find actual current usage
+    const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
     // Dynamic scale
     if (this.props.settingSolarMaxDynamic) {
       maxPower = Math.ceil(Number(this.props.max.maxDay, 10) / 100) * 100;
@@ -373,7 +341,7 @@ class Solceller extends React.PureComponent {
               </div>
               <div className="energyTableBox energyTableBoxLarge">
                 <span className="smallStyle">betalt forbruk</span>
-                {this.state.power}W
+                {this.props.realtimePower.power}W
               </div>
               <div className="energyTableBox energyTableBoxLarge">
                 <span className="smallStyle">produsert %</span>
@@ -383,18 +351,18 @@ class Solceller extends React.PureComponent {
             <div className="energyTableRow">
               <div className="energyTableBox">
                 <span className="smallStyle">bruk dag</span>
-                {Math.round(this.state.accumulatedConsumption * 1000) / 1000}kWh
+                {Math.round(this.props.realtimePower.accumulatedConsumption * 1000) / 1000}kWh
               </div>
               <div className="energyTableBox">
-                <span className="smallStyle">bruk min</span>{this.state.minPower}W
+                <span className="smallStyle">bruk min</span>{this.props.realtimePower.minPower}W
               </div>
               <div className="energyTableBox">
                 <span className="smallStyle">bruk snitt</span>
-                {Math.round(this.state.averagePower)}W
+                {Math.round(this.props.realtimePower.averagePower)}W
               </div>
               <div className="energyTableBox">
                 <span className="smallStyle">bruk max</span>
-                {this.state.maxPower}W
+                {this.props.realtimePower.maxPower}W
               </div>
             </div>
             <div className="energyTableRow">
@@ -455,6 +423,7 @@ Solceller.propTypes = {
   latitude: PropTypes.number,
   longitude: PropTypes.number,
   settingSolarMaxDynamic: PropTypes.bool.isRequired,
+  realtimePower: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -465,6 +434,7 @@ const mapStateToProps = (state) => {
     currentSolar: Math.round(state.Solar.current.now / 100) * 100,
     initState: state.Init,
     settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
+    realtimePower: state.TibberRealTime,
   };
 };
 

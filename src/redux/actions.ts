@@ -47,10 +47,14 @@ export function updateWeather(data: {}, lat: number, lon: number) {
   };
 }
 
-export function updateRealtimeConsumption(data : {}) {
+export function updateRealtimeConsumption(data : { data: { liveMeasurement: object } }) {
+  if (!data.data || !data.data.liveMeasurement)  {
+    console.log('Bad tibber data received', data);
+    return;
+  }
   return {
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
-    data,
+    data: { ...data.data.liveMeasurement } ,
   };
 }
 

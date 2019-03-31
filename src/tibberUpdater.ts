@@ -1,12 +1,15 @@
 import axios from "axios";
 import Moment from "moment";
+import firebase from "./firebase";
+import TibberConnector from 'tibber-pulse-connector';
 
-import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption } from "./redux/actions";
+import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from "./redux/actions";
 
 const nettleie = 0.477;
 
 export default class tibberUpdater {
   store: { dispatch: Function };
+  tibberSocket: any;
   constructor(store: { dispatch: Function }) {
     this.store = store;
   }
@@ -39,5 +42,22 @@ export default class tibberUpdater {
     } catch (err) {
       console.log(err);
     }
+  }
+  async subscribeToRealTime() {
+    // Load (and init) settings
+    const settingsRef = firebase.database().ref('settings');
+    settingsRef.on('value', (snapshot: any) => {
+      const settings = snapshot.val();
+      console.log('Tibber settings initiated', settings);
+      if (!settings || !settings.tibberApiKey || !settings.tibberHomeKey) {
+        console.log('Tibber settings not found', settings);
+        return;
+      }
+      const { tibberApiKey, tibberHomeKey } = settings;
+
+      // Create tibber listener
+      this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.store.dispatch(updateRealtimeConsumption(data)); });
+      this.tibberSocket.start();
+    });
   }
 }

@@ -8,6 +8,8 @@ import Solar from './Solar';
 import Settings from './settings';
 import PowerPrices from './PowerPrices';
 import Trains from './Trains';
+import TibberRealTime from './TibberRealTime';
+import TibberLastDay from './TibberLastDay';
 
 const tellulfReducer = combineReducers({
   Init,
@@ -17,6 +19,8 @@ const tellulfReducer = combineReducers({
   Settings,
   PowerPrices,
   Trains,
+  TibberRealTime,
+  TibberLastDay,
   Weather,
 });
 
