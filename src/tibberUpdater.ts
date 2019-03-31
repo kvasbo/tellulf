@@ -8,37 +8,6 @@ import { settings } from "cluster";
 
 const nettleie = 0.477;
 
-const query = `
-{
-  viewer {
-    home(id: "2b05f8c5-3241-465d-92b8-9e7ad567f78f") {
-      consumption(resolution: HOURLY, last: 24) {
-        nodes {
-          from
-          to
-          totalCost
-          unitCost
-          unitPrice
-          unitPriceVAT
-          consumption
-          consumptionUnit
-        }
-      }
-      currentSubscription {
-        priceInfo {
-          today {
-            total
-            energy
-            tax
-            startsAt
-          }
-        }
-      }
-    }
-  }
-}
-`;
-
 export default class tibberUpdater {
   store: { dispatch: Function };
   tibberSocket: any;
@@ -50,6 +19,46 @@ export default class tibberUpdater {
 
     const settings = await this.getTibberSettings();
 
+    const queryPrices = `
+    {
+      viewer {
+        home(id: "${settings.tibberHomeKey}") {
+          currentSubscription {
+            priceInfo {
+              today {
+                total
+                energy
+                tax
+                startsAt
+              }
+            }
+          }
+        }
+      }
+    }
+`;
+
+    const queryUsage = `
+    {
+      viewer {
+        home(id: "${settings.tibberHomeKey}") {
+          consumption(resolution: HOURLY, last: 24) {
+            nodes {
+              from
+              to
+              totalCost
+              unitCost
+              unitPrice
+              unitPriceVAT
+              consumption
+              consumptionUnit
+            }
+          }
+        }
+      }
+    }
+`;
+
     try {
       const data = await axios({
         url: "https://api.tibber.com/v1-beta/gql",
@@ -59,7 +68,7 @@ export default class tibberUpdater {
             `bearer ${settings.tibberApiKey}`
         },
         data: {
-          query: query
+          query: queryPrices
         }
       });
       if (data.status === 200) {
@@ -71,17 +80,33 @@ export default class tibberUpdater {
           const h = Moment(p.startsAt).hours();
           powerPrices[h] = { total: p.total + nettleie };
         });
-
-        // Parse usage
-        const usage = data.data.data.viewer.home.consumption.nodes;
-        console.log('usage', usage);
-
         this.store.dispatch(updatePowerPrices(powerPrices));
         this.store.dispatch(updateInitStatus("powerPrices"));
       }
     } catch (err) {
       console.log(err);
     }
+
+    try {
+      const data = await axios({
+        url: "https://api.tibber.com/v1-beta/gql",
+        method: "post",
+        headers: {
+          Authorization:
+            `bearer ${settings.tibberApiKey}`
+        },
+        data: {
+          query: queryUsage
+        }
+      });
+      if (data.status === 200) {
+        const usage = data.data.data.viewer.home.consumption.nodes;
+        this.store.dispatch(updatePowerUsage(usage));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
   }
 
   // Create and start websocket connection
@@ -107,4 +132,3 @@ export default class tibberUpdater {
   }
 
 }
-

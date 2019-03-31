@@ -193,17 +193,13 @@ class Solceller extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
-    let maxPower = 4500;
-    let ticks = [1000, 2000, 3000, 4000];
     const currentPower = this.props.realtimePower.power + this.props.current.now; // Find actual current usage
     const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
-    // Dynamic scale
-    if (this.props.settingSolarMaxDynamic) {
-      maxPower = Math.ceil(Number(this.props.max.maxDay, 10) / 100) * 100;
-      maxPower = Math.max(100, maxPower);
-      ticks = [];
-    } else {
-      maxPower = (this.props.max.maxEver) ? Number(this.props.max.maxEver, 10) : 4500;
+    let maxPower = Math.max(Number(this.props.max.maxEver, 10), Number(this.props.realtimePower.maxPower, 10), 4500);
+    maxPower = Math.ceil(maxPower / 1000) * 1000;
+    const ticks = [];
+    for (let i = 0; i <= maxPower; i += 1000) {
+      ticks.push(i);
     }
     const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
     const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
@@ -308,28 +304,32 @@ class Solceller extends React.PureComponent {
                   stroke="none"
                   r={90}
                 />
-                {(this.props.current.now > 0) &&
-                (
-                <ReferenceDot
-                  yAxisId="kwh"
-                  y={this.props.current.now}
-                  x={this.props.current.currentTime.valueOf()}
-                  r={3}
-                  fill="#ffffff44"
-                  stroke="#ffffff"
-                  label={{
-                    value: `${this.props.current.averageMinute}W`,
-                    stroke: textColor,
-                    fill: textColor,
-                    fontSize: 50,
-                    position: this.getCurrentLabelPosition(),
-                  }}
-                />)
+                {(this.props.current.now > 0)
+                && (
+                  <ReferenceDot
+                    yAxisId="kwh"
+                    y={this.props.current.now}
+                    x={this.props.current.currentTime.valueOf()}
+                    r={3}
+                    fill="#ffffff44"
+                    stroke="#ffffff"
+                    label={{
+                      value: `${this.props.current.averageMinute}W`,
+                      stroke: textColor,
+                      fill: textColor,
+                      fontSize: 50,
+                      position: this.getCurrentLabelPosition(),
+                    }}
+                  />
+                )
                 }
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly' }}>
+          <div style={{
+            flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly'
+          }}
+          >
             <div className="energyTableRow">
               <div className="energyTableBox energyTableBoxLarge">
                 <span className="smallStyle">reelt forbruk</span>
@@ -368,11 +368,11 @@ class Solceller extends React.PureComponent {
             <div className="energyTableRow">
               <div className="energyTableBox">
                 <span className="smallStyle">prod dag</span>
-                {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh             
+                {getRoundedNumber(Number(this.props.current.today) / 1000)}kWh
               </div>
               <div className="energyTableBox">
                 <span className="smallStyle">prod måned</span>
-                {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh          
+                {getRoundedNumber(parseFloat(this.props.current.month) / 1000)}kWh
               </div>
               <div className="energyTableBox">
                 <span className="smallStyle">prod år</span>
@@ -380,7 +380,7 @@ class Solceller extends React.PureComponent {
               </div>
               <div className="energyTableBox">
                 <span className="smallStyle">prod totalt</span>
-                {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh                
+                {getRoundedNumber(parseFloat(this.props.current.total) / 1000)}kWh
               </div>
             </div>
             <div className="energyTableRow">
@@ -411,6 +411,7 @@ class Solceller extends React.PureComponent {
 Solceller.defaultProps = {
   latitude: defaultLatitude,
   longitude: defaultLongitude,
+  tibberLastDay: {},
 };
 
 Solceller.propTypes = {
@@ -424,6 +425,7 @@ Solceller.propTypes = {
   longitude: PropTypes.number,
   settingSolarMaxDynamic: PropTypes.bool.isRequired,
   realtimePower: PropTypes.object.isRequired,
+  tibberLastDay: PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
@@ -435,6 +437,7 @@ const mapStateToProps = (state) => {
     initState: state.Init,
     settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
     realtimePower: state.TibberRealTime,
+    usedPower: state.TibberLastDay,
   };
 };
 
