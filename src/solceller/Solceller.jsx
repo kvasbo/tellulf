@@ -78,7 +78,7 @@ class Solceller extends React.PureComponent {
   getData() {
     const dataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
-    const timeZoneAdd = 0; // 3600000; // This was not right.
+    const timeZoneAdd = 3600000;
     // Map production data
     this.props.current.byHour.forEach((h) => {
       // Correct production time for UTC
