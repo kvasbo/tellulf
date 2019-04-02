@@ -10,10 +10,12 @@ import {
 import { getTimeLimits, parseLimits } from './updateWeather.ts';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
+import { getNorwegianDaysOff } from '../external';
 import './yr.css';
 
 const gridColor = '#FFFFFFAA';
 const sundayColor = '#FF0000CC';
+const redDays = getNorwegianDaysOff();
 
 class GraphLong extends React.PureComponent {
   constructor(props) {
@@ -203,7 +205,11 @@ function getTicks() {
 }
 
 function getDayColor(time) {
-  return (time.format('d') === '0') ? sundayColor : gridColor;
+  const d = Moment(time);
+  if (d.day() === 0) return sundayColor;
+  const dString = d.format('MMDD');
+  if (dString in redDays) return sundayColor;
+  return gridColor;
 }
 
 function formatTick(data) {
