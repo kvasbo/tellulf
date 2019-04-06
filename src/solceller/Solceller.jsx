@@ -375,7 +375,7 @@ class Solceller extends React.PureComponent {
             </div>
             <div className="energyTableRow">
               <div className="energyTableBox">
-                <span className="smallStyle">bruk dag</span>
+                <span className="smallStyle">fakturert dag</span>
                 {Math.round(this.props.realtimePower.accumulatedConsumption * 1000) / 1000}kWh
               </div>
               <div className="energyTableBox">
