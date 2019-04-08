@@ -2,9 +2,7 @@ import axios from "axios";
 import Moment from "moment";
 import firebase from "./firebase";
 import TibberConnector from 'tibber-pulse-connector';
-
 import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from "./redux/actions";
-import { settings } from "cluster";
 
 const nettleie = 0.477;
 
