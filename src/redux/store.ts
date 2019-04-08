@@ -20,7 +20,6 @@ export const loadState = () => {
 
 export const saveState = (state) => {
   try {
-    // console.log('saving state!');
     const serializedState = JSON.stringify(state);
     localStorage.setItem('state', serializedState);
   } catch {
@@ -34,10 +33,11 @@ console.log("State loaded", persistedState);
 
 // eslint-disable-next-line import/prefer-default-export
 const store = createStore(
-  tellulfReducer, persistedState,
+  tellulfReducer, /* persistedState , */
   composeEnhancers(applyMiddleware(thunk)),
 );
 
+/*
 store.subscribe(throttle(() => {
   saveState({
     TibberRealTime: store.getState().TibberRealTime,
@@ -45,5 +45,6 @@ store.subscribe(throttle(() => {
     Weather: store.getState().Weather,
   });
 }, 1000));
+*/
 
 export { store };
