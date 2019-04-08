@@ -129,8 +129,6 @@ class Solceller extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
-    const currentPower = this.props.realtimePower.power + this.props.current.now; // Find actual current usage
-    const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.current.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
     let maxPower = Math.max(Number(this.props.max.maxEver, 10), 4500);
     maxPower = Math.ceil(maxPower / 1000) * 1000;
     const ticks = [];
@@ -357,17 +355,6 @@ function getDataPointObject() {
     time.add(10, 'minutes');
   }
   return out;
-}
-
-function getRoundedNumber(number) {
-  if (number < 10) {
-    return number.toFixed(3);
-  } if (number < 100) {
-    return number.toFixed(2);
-  } if (number < 1000) {
-    return number.toFixed(1);
-  }
-  return number.toFixed(0);
 }
 
 function getXAxis() {

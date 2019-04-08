@@ -86,15 +86,20 @@ class TallPanelDisplay extends React.PureComponent {
   }
 }
 
+TallPanelDisplay.defaultProps = {
+  consumptionMinimum: 0,
+  consumptionMaximum: 0,
+}
+
 TallPanelDisplay.propTypes = {
   currentPower: PropTypes.number.isRequired,
   currentProduction: PropTypes.number.isRequired,
   currentConsumption: PropTypes.number.isRequired,
   producedPercent: PropTypes.number.isRequired,
   accumulatedConsumption: PropTypes.number.isRequired,
-  consumptionMinimum: PropTypes.number.isRequired,
+  consumptionMinimum: PropTypes.number,
   consumptionAverage: PropTypes.number.isRequired,
-  consumptionMaximum: PropTypes.number.isRequired,
+  consumptionMaximum: PropTypes.number,
   localProductionDay: PropTypes.string.isRequired,
   localProductionMonth: PropTypes.string.isRequired,
   localProductionYear: PropTypes.string.isRequired,
