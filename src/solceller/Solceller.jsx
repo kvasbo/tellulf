@@ -14,10 +14,8 @@ import {
   CartesianGrid,
 } from 'recharts';
 import SunCalc from 'suncalc';
+import TallPanel from './TallPanel';
 import {
-  updateSolarMax,
-  updateSolarCurrent,
-  updateInitStatus,
   updateSetting,
 } from '../redux/actions.ts';
 import './solceller.css';
@@ -40,32 +38,6 @@ class Solceller extends React.PureComponent {
 
   componentDidMount() {
     setInterval(() => { this.reloadTime(); }, 60000);
-    this.attachMaxListeners();
-
-    const dbRef = window.firebase.database().ref('steca/currentData');
-
-    dbRef.on('value', (snapshot) => {
-      try {
-        const val = snapshot.val();
-        const dataTime = (typeof val.averages.time !== 'undefined') ? Moment(val.averages.time) : null;
-        const now = (typeof val.effect.val !== 'undefined') ? val.effect.val : null;
-        const today = (typeof val.today.val !== 'undefined') ? val.today.val : null;
-        const month = (typeof val.month.val !== 'undefined') ? val.month.val : null;
-        const year = (typeof val.year.val !== 'undefined') ? val.year.val : null;
-        const total = (typeof val.total.val !== 'undefined') ? val.total.val : null;
-        const averageFull = (typeof val.averages.full !== 'undefined') ? val.averages.full : null;
-        const averageMinute = (typeof val.averages['1'] !== 'undefined') ? val.averages['1'] : null;
-        const byHour = (typeof val.todayByHour.val !== 'undefined') ? parseByHour(val.todayByHour.val) : null;
-        const currentTime = Moment();
-        const state = {
-          now, today, month, year, total, byHour, currentTime, averageFull, averageMinute, dataTime,
-        };
-        this.props.dispatch(updateSolarCurrent(state));
-        this.props.dispatch(updateInitStatus('solar'));
-      } catch (err) {
-        console.log(err);
-      }
-    });
   }
 
   getCurrentLabelPosition() {
@@ -149,53 +121,6 @@ class Solceller extends React.PureComponent {
       console.log(err);
       return '?';
     }
-  }
-
-  async attachMaxListeners() {
-    const now = Moment();
-    const y = now.format('YYYY');
-    const m = now.format('MM');
-    const d = now.format('DD');
-    const refDay = `steca/maxValues/daily/${y}/${m}/${d}`;
-    const refMonth = `steca/maxValues/monthly/${y}/${m}`;
-    const refYear = `steca/maxValues/yearly/${y}`;
-    const refEver = 'steca/maxValues/ever/';
-
-    const dbRefDayMax = window.firebase.database().ref(refDay);
-    dbRefDayMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxDay: val.value };
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefMonthMax = window.firebase.database().ref(refMonth);
-    dbRefMonthMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxMonth: val.value };
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefYearMax = window.firebase.database().ref(refYear);
-    dbRefYearMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxYear: val.value };
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
-
-    const dbRefEverMax = window.firebase.database().ref(refEver);
-    dbRefEverMax.on('value', (snapshot) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxEver: val.value };
-        this.props.dispatch(updateSolarMax(state));
-      }
-    });
   }
 
   reloadTime() {
@@ -352,7 +277,7 @@ class Solceller extends React.PureComponent {
             </ResponsiveContainer>
           </div>
           <div style={{
-            flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly'
+            flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly',
           }}
           >
             <div className="energyTableRow">
@@ -518,16 +443,6 @@ function getRoundedNumber(number) {
     return number.toFixed(1);
   }
   return number.toFixed(0);
-}
-
-function parseByHour(data) {
-  const startOfDay = Moment().startOf('day');
-
-  const out = data.map((d) => {
-    const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
-    return { time: time.valueOf(), production: d.production };
-  });
-  return out;
 }
 
 function getXAxis() {

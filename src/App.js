@@ -8,11 +8,13 @@ import Tellulf from './Tellulf';
 import firebase from './firebase.ts';
 import { store } from './redux/store.ts';
 import tibberUpdater from './tibberUpdater.ts';
+import solarUpdater from './solarUpdater.ts';
 
 Moment.locale('nb');
 
 window.firebase = firebase;
 const tibber = new tibberUpdater(store);
+const solar = new solarUpdater(store);
 
 const bugsnagClient = bugsnag({
   apiKey: '4676dc34576830eae89fbdd54dd96c96',
@@ -28,13 +30,13 @@ class App extends React.PureComponent {
   }
 
   componentDidMount() {
-    // firebase.auth().signInAnonymously();
-    tibber.updatePowerPrices();
-    tibber.subscribeToRealTime();
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true, user });
+        tibber.updatePowerPrices();
+        tibber.subscribeToRealTime();
+        solar.attachListeners();
+        solar.attachMaxListeners();
       }
     });
   }

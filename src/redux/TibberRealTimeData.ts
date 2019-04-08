@@ -53,8 +53,6 @@ export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0
           timestamp,
         } = action.data;
 
-        console.log(action.data);
-
         // Calculate weighted average for hour
         const stamp = Moment(timestamp);
 
