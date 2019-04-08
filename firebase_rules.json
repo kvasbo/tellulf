@@ -11,6 +11,10 @@
     "settings": {
       ".read": "auth.provider === 'password'",
       ".write": "auth.provider === 'password'"
+    },
+    "tibber" : {
+      ".read": "auth.provider === 'password'",
+      ".write": "auth.provider === 'password'"
     }
   }
 }
