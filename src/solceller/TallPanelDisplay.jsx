@@ -6,7 +6,7 @@ class TallPanelDisplay extends React.PureComponent {
   render() {
     return (
       <div style={{
-        flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly',
+        flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly',
       }}
       >
         <div className="energyTableRow">
@@ -25,6 +25,24 @@ class TallPanelDisplay extends React.PureComponent {
           <div className="energyTableBox energyTableBoxLarge">
             <span className="smallStyle">produsert %</span>
             {this.props.producedPercent}%
+          </div>
+        </div>
+        <div className="energyTableRow">
+          <div className="energyTableBox">
+            <span className="smallStyle">fakturert dag</span>
+            {this.props.accumulatedConsumption}kWh
+          </div>
+          <div className="energyTableBox">
+            <span className="smallStyle">bruk min</span>
+            {this.props.consumptionMinimum}W
+          </div>
+          <div className="energyTableBox">
+            <span className="smallStyle">bruk snitt</span>
+            {this.props.consumptionAverage}W
+          </div>
+          <div className="energyTableBox">
+            <span className="smallStyle">bruk max</span>
+            {this.props.consumptionMaximum}W
           </div>
         </div>
         <div className="energyTableRow">
@@ -89,7 +107,7 @@ class TallPanelDisplay extends React.PureComponent {
 TallPanelDisplay.defaultProps = {
   consumptionMinimum: 0,
   consumptionMaximum: 0,
-}
+};
 
 TallPanelDisplay.propTypes = {
   currentPower: PropTypes.number.isRequired,

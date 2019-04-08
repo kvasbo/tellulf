@@ -146,7 +146,7 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-          <div style={{ flex: 5 }}>
+          <div style={{ flex: 1 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart
                 margin={{
