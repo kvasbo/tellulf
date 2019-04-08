@@ -2,14 +2,28 @@ import { UPDATE_TIBBER_REALTIME_CONSUMPTION } from './actions';
 import Moment from 'moment';
 
 interface realtimeData {
-  power: number;
-  accumulatedCost: number,
-  accumulatedConsumption: number;
+  accumulatedConsumption?: number;
+  accumulatedCost?: number;
+  accumulatedProduction?: number;
+  accumulatedReward?: number;
   averagePower: number;
-  maxPower: number;
-  minPower: number;
-  timestamp: string;
-  lastHourByTenMinutes: {};
+  currency?: string;
+  lastMeterConsumption?: number;
+  lastMeterProduction?: number;
+  maxPower?: number;
+  maxPowerProduction?: number;
+  minPower?: number;
+  minPowerProduction?: number;
+  power: number; 
+  powerProduction?: number;
+  timestamp?: string;
+}
+
+interface state extends realtimeData {
+  lastHourByTenMinutes?: {};
+  avgLastHour: number;
+  avgLastHourSamples?: number;
+  avgLastHourStamp?: string;
 }
 
 interface powerMinute {
@@ -18,16 +32,35 @@ interface powerMinute {
   samples: number,
 }
 
-export default function TibberRealTime(state = { power: 0, accumulatedConsumption: 0, accumulatedCost: 0, averagePower: 0, maxPower: 0, minPower: 0, avgLastHour: 0, avgLastHourSamples: 0, avgLastHourStamp: "heioghopp" , lastHourByTenMinutes: {}}, action: { type: string, data: realtimeData } ) {
+export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0, averagePower: 0 }, action: { type: string, data: realtimeData } ) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
         const {
-          power, accumulatedConsumption, accumulatedCost, averagePower, maxPower, minPower, timestamp
+          accumulatedConsumption,
+          accumulatedCost,
+          accumulatedProduction,
+          accumulatedReward,
+          averagePower,
+          currency,
+          lastMeterConsumption,
+          lastMeterProduction,
+          maxPower,
+          maxPowerProduction,
+          minPower,
+          minPowerProduction,
+          power,
+          powerProduction,
+          timestamp,
         } = action.data;
+
+        console.log(action.data);
+
         // Calculate weighted average for hour
         const stamp = Moment(timestamp);
+
         const avgLastHourStamp = stamp.format("dddHH");
-        let avgLastHourSamples = state.avgLastHourSamples + 1;
+
+        let avgLastHourSamples = (state.avgLastHourSamples) ? state.avgLastHourSamples + 1 : 1;
         let avgLastHour = Math.round(state.avgLastHour + ((power - state.avgLastHour) / avgLastHourSamples));
         if (state.avgLastHourStamp !== avgLastHourStamp) {
           avgLastHour = Math.round(power);
@@ -56,7 +89,28 @@ export default function TibberRealTime(state = { power: 0, accumulatedConsumptio
 
         // TODO: Clean data by time. Store by minute.
         
-        return { ...state, power, accumulatedConsumption, accumulatedCost, averagePower: Math.round(averagePower), maxPower, minPower, timestamp, avgLastHour, avgLastHourSamples, avgLastHourStamp, lastHourByTenMinutes };
+        return {
+          ...state, 
+          accumulatedConsumption,
+          accumulatedCost,
+          accumulatedProduction,
+          accumulatedReward,
+          averagePower,
+          currency,
+          lastMeterConsumption,
+          lastMeterProduction,
+          maxPower,
+          maxPowerProduction,
+          minPower,
+          minPowerProduction,
+          power,
+          powerProduction,
+          timestamp,
+          avgLastHour,
+          avgLastHourSamples,
+          avgLastHourStamp,
+          lastHourByTenMinutes
+        };
     }
     default:
       return state;

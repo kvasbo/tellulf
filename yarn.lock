@@ -10075,10 +10075,10 @@ thunky@^1.0.2:
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.0.3.tgz#f5df732453407b09191dae73e2a8cc73f381a826"
   integrity sha512-YwT8pjmNcAXBZqrubu22P4FYsh2D4dxRmnWBOL8Jk8bUcRUtc5326kx32tuTmFDAZtLOGEVNl8POAR8j896Iow==
 
-tibber-pulse-connector@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/tibber-pulse-connector/-/tibber-pulse-connector-1.0.8.tgz#c41ef17c7ceac67fc9d5cd13c9878a7af9b3775c"
-  integrity sha512-G7X4pp0tVIhmA+7T5u5XWLT7kV6PJNGf9PF2Lvdozw8cqjBdksFWIoLHMofwPuXE9dOh2SgFrptlnqLtHeckSw==
+tibber-pulse-connector@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tibber-pulse-connector/-/tibber-pulse-connector-1.1.0.tgz#6eb4ae1149ea238b03979d31173d0c0617f26589"
+  integrity sha512-ZDXc2Oz8IUk6fc1GcaY/UhoZcsHsF0hH01P5vA/Mbdmg66P/98fOBtIiIdN+ng2YF1yc2p3Tpk+K70QT/I9x/Q==
   dependencies:
     apollo-cache-inmemory "^1.5.1"
     apollo-client "^2.5.1"

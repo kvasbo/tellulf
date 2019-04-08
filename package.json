@@ -25,7 +25,7 @@
     "redux-thunk": "^2.3.0",
     "store": "^2.0.12",
     "suncalc": "^1.8.0",
-    "tibber-pulse-connector": "^1.0.8",
+    "tibber-pulse-connector": "^1.1.0",
     "xhr2": "^0.1.4"
   },
   "scripts": {
