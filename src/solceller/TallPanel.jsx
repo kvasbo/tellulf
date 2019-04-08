@@ -6,14 +6,20 @@ import TallPanelDisplay from './TallPanelDisplay';
 class TallPanel extends React.PureComponent {
   render() {
     const currentPower = this.props.realtimePower.power + this.props.currentSolar.now; // Find actual current usage
+    
     // Todo: Fix percentage
     const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.currentSolar.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
+
+    // Finn nåværende forbruk (eller produksjon!)
+    const currentConsumption = (this.props.realtimePower.powerProduction > 0) ? (-1 * this.props.realtimePower.powerProduction) : this.props.realtimePower.power;
+
+    const costDay = Math.round(this.props.realtimePower.accumulatedCost * 100) / 100;
 
     return (
       <TallPanelDisplay
         currentPower={Math.round(currentPower)}
         currentProduction={Math.round(this.props.currentSolar.now)}
-        currentConsumption={this.props.realtimePower.power}
+        currentConsumption={Math.round(currentConsumption)}
         producedPercent={Math.round(producedPercent)}
         accumulatedConsumption={Math.round(this.props.realtimePower.accumulatedConsumption * 100) / 100}
         consumptionMinimum={this.props.realtimePower.minPower}
@@ -27,6 +33,10 @@ class TallPanel extends React.PureComponent {
         localProductionMaxMonth={this.props.max.maxMonth}
         localProductionMaxYear={this.props.max.maxYear}
         localProductionMaxTotal={this.props.max.maxEver}
+        accumulatedReward={this.props.realtimePower.accumulatedReward}
+        maxPowerProduction={this.props.realtimePower.maxPowerProduction}
+        accumulatedCost={costDay}
+        netDay={costDay - this.props.realtimePower.accumulatedReward}
       />
     );
   }

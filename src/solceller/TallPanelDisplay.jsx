@@ -29,7 +29,7 @@ class TallPanelDisplay extends React.PureComponent {
         </div>
         <div className="energyTableRow">
           <div className="energyTableBox">
-            <span className="smallStyle">fakturert dag</span>
+            <span className="smallStyle">fakturert forbruk dag</span>
             {this.props.accumulatedConsumption}kWh
           </div>
           <div className="energyTableBox">
@@ -47,20 +47,20 @@ class TallPanelDisplay extends React.PureComponent {
         </div>
         <div className="energyTableRow">
           <div className="energyTableBox">
-            <span className="smallStyle">fakturert dag</span>
-            {this.props.accumulatedConsumption}kWh
+            <span className="smallStyle">fortjeneste dag</span>
+            {this.props.accumulatedReward} kr
           </div>
           <div className="energyTableBox">
-            <span className="smallStyle">bruk min</span>
-            {this.props.consumptionMinimum}W
+            <span className="smallStyle">kost dag</span>
+            {this.props.accumulatedCost} kr
           </div>
           <div className="energyTableBox">
-            <span className="smallStyle">bruk snitt</span>
-            {this.props.consumptionAverage}W
+            <span className="smallStyle">netto dag</span>
+            {this.props.netDay} kr
           </div>
           <div className="energyTableBox">
-            <span className="smallStyle">bruk max</span>
-            {this.props.consumptionMaximum}W
+            <span className="smallStyle">max produksjon dag</span>
+            {this.props.maxPowerProduction}W
           </div>
         </div>
         <div className="energyTableRow">
@@ -126,6 +126,10 @@ TallPanelDisplay.propTypes = {
   localProductionMaxMonth: PropTypes.number.isRequired,
   localProductionMaxYear: PropTypes.number.isRequired,
   localProductionMaxTotal: PropTypes.number.isRequired,
+  accumulatedReward: PropTypes.number.isRequired,
+  maxPowerProduction: PropTypes.number.isRequired,
+  accumulatedCost: PropTypes.number.isRequired,
+  netDay: PropTypes.number.isRequired,
 };
 
 export default TallPanelDisplay;
