@@ -276,6 +276,7 @@ class Solceller extends React.PureComponent {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
+          { false &&
           <div style={{
             flex: 4.5, display: 'flex', flexDirection: 'column', alignItems: 'space-evenly',
           }}
@@ -351,7 +352,8 @@ class Solceller extends React.PureComponent {
                 {this.props.max.maxEver}W
               </div>
             </div>
-          </div>
+          </div> }
+          <TallPanel />
         </div>
       </div>
     );
