@@ -13,7 +13,7 @@ class TallPanel extends React.PureComponent {
     // Finn nåværende forbruk (eller produksjon!)
     const currentConsumption = (this.props.realtimePower.powerProduction > 0) ? (-1 * this.props.realtimePower.powerProduction) : this.props.realtimePower.power;
 
-    const costDay = Math.round(this.props.realtimePower.accumulatedCost * 100) / 100;
+    const costDay = roundToNumberOfDecimals(this.props.realtimePower.accumulatedCost, 2);
 
     return (
       <TallPanelDisplay
@@ -33,10 +33,10 @@ class TallPanel extends React.PureComponent {
         localProductionMaxMonth={this.props.max.maxMonth}
         localProductionMaxYear={this.props.max.maxYear}
         localProductionMaxTotal={this.props.max.maxEver}
-        accumulatedReward={this.props.realtimePower.accumulatedReward}
+        accumulatedReward={roundToNumberOfDecimals(this.props.realtimePower.accumulatedReward, 2)}
         maxPowerProduction={this.props.realtimePower.maxPowerProduction}
         accumulatedCost={costDay}
-        netDay={costDay - this.props.realtimePower.accumulatedReward}
+        netDay={roundToNumberOfDecimals(costDay - this.props.realtimePower.accumulatedReward, 2)}
       />
     );
   }
@@ -70,4 +70,9 @@ function getRoundedNumber(number) {
     return number.toFixed(1);
   }
   return number.toFixed(0);
+}
+
+function roundToNumberOfDecimals(number, decimals) {
+  const factor = 10 ** decimals;
+  return Math.round(factor * number) / factor;
 }
