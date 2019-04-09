@@ -26,8 +26,6 @@ class TallPanel extends React.PureComponent {
       currentConsumption = -1 * this.lastProduction;
     }
 
-    console.log(this.lastProduction, this.props.realtimePower.powerProduction, currentConsumption);
-
     const costDay = roundToNumberOfDecimals(this.props.realtimePower.accumulatedCost, 2);
 
     return (
