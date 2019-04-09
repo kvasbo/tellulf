@@ -4,14 +4,29 @@ import { connect } from 'react-redux';
 import TallPanelDisplay from './TallPanelDisplay';
 
 class TallPanel extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.lastProduction = 0;
+  }
+
   render() {
     const currentPower = this.props.realtimePower.power + this.props.currentSolar.now; // Find actual current usage
-    
+
     // Todo: Fix percentage
     const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.currentSolar.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
 
     // Finn nåværende forbruk (eller produksjon!)
-    const currentConsumption = (this.props.realtimePower.powerProduction > 0) ? (-1 * this.props.realtimePower.powerProduction) : this.props.realtimePower.power;
+    /*const currentConsumption = (this.props.realtimePower.powerProduction > 0) ? (-1 * this.props.realtimePower.powerProduction) : this.props.realtimePower.power;*/
+
+    let currentConsumption = this.props.realtimePower.power;
+    if (!currentConsumption) { // We are producing
+      if (this.props.realtimePower.powerProduction > 0) {
+        this.lastProduction = this.props.realtimePower.powerProduction;
+      }
+      currentConsumption = -1 * this.lastProduction;
+    }
+
+    console.log(this.lastProduction, this.props.realtimePower.powerProduction, currentConsumption);
 
     const costDay = roundToNumberOfDecimals(this.props.realtimePower.accumulatedCost, 2);
 
