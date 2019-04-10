@@ -18,7 +18,7 @@ class TellulfInfoCell extends React.PureComponent {
   render() {
     let text = '-';
     let unit = '';
-    if (this.props.info) {
+    if (this.props.info || this.props.info === 0) {
       // eslint-disable-next-line prefer-destructuring
       unit = this.props.unit;
       if (!Number.isNaN(this.props.info)) {

@@ -15,8 +15,10 @@ interface realtimeData {
   minPower?: number;
   minPowerProduction?: number;
   power: number; 
-  powerProduction?: number;
+  powerProduction: number;
   timestamp?: string;
+  calculatedConsumption: number;
+  previousMeasuredProduction: number;
 }
 
 interface state extends realtimeData {
@@ -32,7 +34,7 @@ interface powerMinute {
   samples: number,
 }
 
-export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0, averagePower: 0 }, action: { type: string, data: realtimeData } ) {
+export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0, averagePower: 0, calculatedConsumption: 0, previousMeasuredProduction: 0, powerProduction: 0}, action: { type: string, data: realtimeData } ) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
         const {
@@ -67,6 +69,17 @@ export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0
 
         const lastHourByTenMinutes = (state.lastHourByTenMinutes) ? state.lastHourByTenMinutes : {};
         
+        // Calculate realtime production
+        let calculatedConsumption = power;
+        let previousMeasuredProduction = state.previousMeasuredProduction;
+        // We are producing!
+        if (!calculatedConsumption || calculatedConsumption === 0) {
+          if (powerProduction > 0) {
+            previousMeasuredProduction = powerProduction; // Remember this!
+          }
+          calculatedConsumption = -1 * previousMeasuredProduction;
+        }
+
         try {
           const lastHourByTenMinutes = (state.lastHourByTenMinutes) ? state.lastHourByTenMinutes : {};
           // calculate per minute
@@ -107,7 +120,9 @@ export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0
           avgLastHour,
           avgLastHourSamples,
           avgLastHourStamp,
-          lastHourByTenMinutes
+          lastHourByTenMinutes,
+          calculatedConsumption,
+          previousMeasuredProduction,
         };
     }
     default:

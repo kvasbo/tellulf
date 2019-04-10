@@ -15,41 +15,28 @@ class TallPanel extends React.PureComponent {
     // Todo: Fix percentage
     const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.currentSolar.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
 
-    // Finn nåværende forbruk (eller produksjon!)
-    /*const currentConsumption = (this.props.realtimePower.powerProduction > 0) ? (-1 * this.props.realtimePower.powerProduction) : this.props.realtimePower.power;*/
-
-    let currentConsumption = this.props.realtimePower.power;
-    if (!currentConsumption) { // We are producing
-      if (this.props.realtimePower.powerProduction > 0) {
-        this.lastProduction = this.props.realtimePower.powerProduction;
-      }
-      currentConsumption = -1 * this.lastProduction;
-    }
-
-    const costDay = roundToNumberOfDecimals(this.props.realtimePower.accumulatedCost, 2);
-
     return (
       <TallPanelDisplay
-        currentPower={Math.round(currentPower)}
-        currentProduction={Math.round(this.props.currentSolar.now)}
-        currentConsumption={Math.round(currentConsumption)}
-        producedPercent={Math.round(producedPercent)}
-        accumulatedConsumption={Math.round(this.props.realtimePower.accumulatedConsumption * 100) / 100}
+        currentPower={currentPower}
+        currentProduction={this.props.currentSolar.now}
+        currentConsumption={this.props.realtimePower.calculatedConsumption}
+        producedPercent={producedPercent}
+        accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
         consumptionMinimum={this.props.realtimePower.minPower}
         consumptionMaximum={this.props.realtimePower.maxPower}
         consumptionAverage={this.props.realtimePower.averagePower}
-        localProductionDay={getRoundedNumber(Number(this.props.currentSolar.today) / 1000)}
-        localProductionMonth={getRoundedNumber(Number(this.props.currentSolar.month) / 1000)}
-        localProductionYear={getRoundedNumber(Number(this.props.currentSolar.year) / 1000)}
-        localProductionTotal={getRoundedNumber(Number(this.props.currentSolar.total) / 1000)}
+        localProductionDay={this.props.currentSolar.today}
+        localProductionMonth={this.props.currentSolar.month}
+        localProductionYear={this.props.currentSolar.year}
+        localProductionTotal={this.props.currentSolar.total}
         localProductionMaxDay={this.props.max.maxDay}
         localProductionMaxMonth={this.props.max.maxMonth}
         localProductionMaxYear={this.props.max.maxYear}
         localProductionMaxTotal={this.props.max.maxEver}
-        accumulatedReward={roundToNumberOfDecimals(this.props.realtimePower.accumulatedReward, 2)}
+        accumulatedReward={this.props.realtimePower.accumulatedReward}
         maxPowerProduction={this.props.realtimePower.maxPowerProduction}
-        accumulatedCost={costDay}
-        netDay={roundToNumberOfDecimals(costDay - this.props.realtimePower.accumulatedReward, 2)}
+        accumulatedCost={this.props.realtimePower.accumulatedCost}
+        netDay={this.props.realtimePower.accumulatedCost - this.props.realtimePower.accumulatedReward}
       />
     );
   }
@@ -73,17 +60,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(TallPanel);
-
-function getRoundedNumber(number) {
-  if (number < 10) {
-    return number.toFixed(3);
-  } if (number < 100) {
-    return number.toFixed(2);
-  } if (number < 1000) {
-    return number.toFixed(1);
-  }
-  return number.toFixed(0);
-}
 
 function roundToNumberOfDecimals(number, decimals) {
   const factor = 10 ** decimals;
