@@ -73,6 +73,10 @@ class Solceller extends React.PureComponent {
           dataSet[h.time].consumption = kwh;
         }
 
+        if (Moment(hour).isSame(Moment(), 'hour')) {
+          dataSet[h.time].consumption = this.props.realtimePower.avgLastHour;
+        }
+
         // Price
         const price = this.props.powerPrices[hr];
         dataSet[h.time].price = price.total;
