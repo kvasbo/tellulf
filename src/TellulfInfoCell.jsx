@@ -22,7 +22,7 @@ class TellulfInfoCell extends React.PureComponent {
       // eslint-disable-next-line prefer-destructuring
       unit = this.props.unit;
       if (!Number.isNaN(this.props.info)) {
-        text = roundToNumberOfDecimals(this.props.info, this.props.decimals);
+        text = roundToNumberOfDecimals(this.props.info, this.props.decimals).toLocaleString();
       } else {
         text = this.props.info;
       }
