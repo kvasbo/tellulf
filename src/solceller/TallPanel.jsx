@@ -10,7 +10,7 @@ class TallPanel extends React.PureComponent {
   }
 
   render() {
-    const currentPower = this.props.realtimePower.power + this.props.currentSolar.now; // Find actual current usage
+    const currentPower = this.props.realtimePower.calculatedConsumption + this.props.currentSolar.now; // Find actual current usage
 
     // Calculate percentage of usage
     let producedPercent = 0;
@@ -31,13 +31,14 @@ class TallPanel extends React.PureComponent {
         currentConsumption={this.props.realtimePower.calculatedConsumption}
         producedPercent={producedPercent}
         accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
+        accumulatedProduction={this.props.realtimePower.accumulatedProduction}
         consumptionMinimum={this.props.realtimePower.minPower}
         consumptionMaximum={this.props.realtimePower.maxPower}
         consumptionAverage={this.props.realtimePower.averagePower}
-        localProductionDay={this.props.currentSolar.today}
-        localProductionMonth={this.props.currentSolar.month}
-        localProductionYear={this.props.currentSolar.year}
-        localProductionTotal={this.props.currentSolar.total}
+        localProductionDay={this.props.currentSolar.today / 1000}
+        localProductionMonth={this.props.currentSolar.month / 1000}
+        localProductionYear={this.props.currentSolar.year / 1000}
+        localProductionTotal={this.props.currentSolar.total / 1000}
         localProductionMaxDay={this.props.max.maxDay}
         localProductionMaxMonth={this.props.max.maxMonth}
         localProductionMaxYear={this.props.max.maxYear}
