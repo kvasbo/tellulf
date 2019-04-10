@@ -7,7 +7,7 @@ class Dag extends React.PureComponent {
   getDinner() {
     if (!this.props.dinner) return null;
     return (
-      <div>{this.props.dinner.events[0].name}</div>
+      <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>
     );
   }
 
@@ -61,7 +61,7 @@ class Dag extends React.PureComponent {
     return (
       <div style={{ marginBottom: 10 }}>
         <div style={{ padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
-        {false && this.getDinner()}
+        {this.getDinner()}
         {this.getBirthdays()}
         {this.getEvents()}
       </div>
