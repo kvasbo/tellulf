@@ -34,6 +34,7 @@ class TallPanelDisplay extends React.PureComponent {
             unit="%"
             header="produsert %"
             large
+            decimals={2}
           />
         </div>
         <div className="energyTableRow">
@@ -168,10 +169,10 @@ TallPanelDisplay.propTypes = {
   consumptionMinimum: PropTypes.number,
   consumptionAverage: PropTypes.number,
   consumptionMaximum: PropTypes.number,
-  localProductionDay: PropTypes.string,
-  localProductionMonth: PropTypes.string,
-  localProductionYear: PropTypes.string,
-  localProductionTotal: PropTypes.string,
+  localProductionDay: PropTypes.number,
+  localProductionMonth: PropTypes.number,
+  localProductionYear: PropTypes.number,
+  localProductionTotal: PropTypes.number,
   localProductionMaxDay: PropTypes.number,
   localProductionMaxMonth: PropTypes.number,
   localProductionMaxYear: PropTypes.number,

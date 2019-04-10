@@ -28,13 +28,37 @@ interface state extends realtimeData {
   avgLastHourStamp?: string;
 }
 
+const defaultState:state = {
+  accumulatedConsumption: 0,
+  accumulatedCost: 0,
+  accumulatedProduction: 0,
+  accumulatedReward: 0,
+  averagePower: 0,
+  currency: "NOK",
+  lastMeterConsumption: 0,
+  lastMeterProduction: 0,
+  maxPower: 0,
+  maxPowerProduction: 0,
+  minPower: 0,
+  minPowerProduction: 0,
+  power: 0, 
+  powerProduction: 0,
+  timestamp: new Date().toISOString(),
+  calculatedConsumption: 0,
+  previousMeasuredProduction: 0,
+  lastHourByTenMinutes: {},
+  avgLastHour: 0,
+  avgLastHourSamples: 0,
+  avgLastHourStamp: new Date().toISOString(),
+}
+
 interface powerMinute {
   startTime: string,
   usage: number,
   samples: number,
 }
 
-export default function TibberRealTime(state: state = { power: 0, avgLastHour: 0, averagePower: 0, calculatedConsumption: 0, previousMeasuredProduction: 0, powerProduction: 0}, action: { type: string, data: realtimeData } ) {
+export default function TibberRealTime(state: state = defaultState, action: { type: string, data: realtimeData } ) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
         const {

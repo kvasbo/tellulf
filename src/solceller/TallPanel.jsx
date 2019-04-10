@@ -12,8 +12,17 @@ class TallPanel extends React.PureComponent {
   render() {
     const currentPower = this.props.realtimePower.power + this.props.currentSolar.now; // Find actual current usage
 
-    // Todo: Fix percentage
-    const producedPercent = (this.props.realtimePower.accumulatedConsumption > 0) ? (this.props.currentSolar.today / 10) / this.props.realtimePower.accumulatedConsumption : 0;
+    // Calculate percentage of usage
+    let producedPercent = 0;
+    try {
+      if (this.props.realtimePower.accumulatedConsumption) {
+        // Brukt = laget hjemme + betalt for - solgt
+        const spent = this.props.currentSolar.today + (this.props.realtimePower.accumulatedConsumption * 1000) - (this.props.realtimePower.accumulatedProduction * 1000);
+        producedPercent = this.props.currentSolar.today / spent * 100;
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
     return (
       <TallPanelDisplay
@@ -60,8 +69,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(TallPanel);
-
-function roundToNumberOfDecimals(number, decimals) {
-  const factor = 10 ** decimals;
-  return Math.round(factor * number) / factor;
-}
