@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TellulfInfoCell from '../TellulfInfoCell';
 import './solceller.css';
 
 class TallPanelDisplay extends React.PureComponent {
@@ -10,94 +11,125 @@ class TallPanelDisplay extends React.PureComponent {
       }}
       >
         <div className="energyTableRow">
-          <div className="energyTableBox energyTableBoxLarge">
-            <span className="smallStyle">reelt forbruk</span>
-            {this.props.currentPower}W
-          </div>
-          <div className="energyTableBox energyTableBoxLarge">
-            <span className="smallStyle">produksjon</span>
-            {this.props.currentProduction}W
-          </div>
-          <div className="energyTableBox energyTableBoxLarge">
-            <span className="smallStyle">betalt forbruk</span>
-            {this.props.currentConsumption}W
-          </div>
-          <div className="energyTableBox energyTableBoxLarge">
-            <span className="smallStyle">produsert %</span>
-            {this.props.producedPercent}%
-          </div>
+          <TellulfInfoCell
+            info={this.props.currentPower}
+            unit="W"
+            header="reelt forbruk"
+            large
+          />
+          <TellulfInfoCell
+            info={this.props.currentProduction}
+            unit="W"
+            header="produksjon"
+            large
+          />
+          <TellulfInfoCell
+            info={this.props.currentConsumption}
+            unit="W"
+            header="betalt forbruk"
+            large
+          />
+          <TellulfInfoCell
+            info={this.props.producedPercent}
+            unit="%"
+            header="produsert %"
+            large
+          />
         </div>
         <div className="energyTableRow">
-          <div className="energyTableBox">
-            <span className="smallStyle">fakturert forbruk dag</span>
-            {this.props.accumulatedConsumption}kWh
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">bruk min</span>
-            {this.props.consumptionMinimum}W
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">bruk snitt</span>
-            {this.props.consumptionAverage}W
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">bruk max</span>
-            {this.props.consumptionMaximum}W
-          </div>
+          <TellulfInfoCell
+            info={this.props.accumulatedConsumption}
+            unit="kWh"
+            header="bruk i dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.consumptionMinimum}
+            unit="kWh"
+            header="bruk min"
+          />
+          <TellulfInfoCell
+            info={this.props.consumptionAverage}
+            unit="W"
+            header="bruk snitt"
+          />
+          <TellulfInfoCell
+            info={this.props.consumptionMaximum}
+            unit="W"
+            header="bruk max"
+          />
         </div>
         <div className="energyTableRow">
-          <div className="energyTableBox">
-            <span className="smallStyle">fortjeneste dag</span>
-            {this.props.accumulatedReward} kr
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">kost dag</span>
-            {this.props.accumulatedCost} kr
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">netto dag</span>
-            {this.props.netDay} kr
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">max produksjon dag</span>
-            {this.props.maxPowerProduction}W
-          </div>
+          <TellulfInfoCell
+            info={this.props.accumulatedCost}
+            unit=" kr"
+            header="kost dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.accumulatedReward}
+            unit=" kr"
+            header="fortjeneste dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.netDay}
+            unit=" kr"
+            header="netto dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.maxPowerProduction}
+            unit="W"
+            header="max produksjon dag"
+          />
         </div>
         <div className="energyTableRow">
-          <div className="energyTableBox">
-            <span className="smallStyle">prod dag</span>
-            {this.props.localProductionDay}kWh
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">prod måned</span>
-            {this.props.localProductionMonth}kWh
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">prod år</span>
-            {this.props.localProductionYear}kWh
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">prod totalt</span>
-            {this.props.localProductionTotal}kWh
-          </div>
+          <TellulfInfoCell
+            info={this.props.localProductionDay}
+            unit="kWh"
+            header="prod dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMonth}
+            unit="kWh"
+            header="prod måned"
+            decimals={1}
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionYear}
+            unit="kWh"
+            header="prod år"
+            decimals={1}
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionTotal}
+            unit="kWh"
+            header="prod totalt"
+          />
         </div>
         <div className="energyTableRow">
-          <div className="energyTableBox">
-            <span className="smallStyle">max dag</span>
-            {this.props.localProductionMaxDay}W
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">max måned</span>
-            {this.props.localProductionMaxMonth}W
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">max år</span>
-            {this.props.localProductionMaxYear}W
-          </div>
-          <div className="energyTableBox">
-            <span className="smallStyle">max totalt</span>
-            {this.props.localProductionMaxTotal}W
-          </div>
+          <TellulfInfoCell
+            info={this.props.localProductionMaxDay}
+            unit="kWh"
+            header="max dag"
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxMonth}
+            unit="kWh"
+            header="max måned"
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxYear}
+            unit="kWh"
+            header="max år"
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxTotal}
+            unit="kWh"
+            header="max totalt"
+          />
         </div>
       </div>
     );
@@ -105,31 +137,49 @@ class TallPanelDisplay extends React.PureComponent {
 }
 
 TallPanelDisplay.defaultProps = {
-  consumptionMinimum: 0,
-  consumptionMaximum: 0,
+  currentPower: undefined,
+  currentProduction: undefined,
+  currentConsumption: undefined,
+  producedPercent: undefined,
+  accumulatedConsumption: undefined,
+  consumptionMinimum: undefined,
+  consumptionAverage: undefined,
+  consumptionMaximum: undefined,
+  localProductionDay: undefined,
+  localProductionMonth: undefined,
+  localProductionYear: undefined,
+  localProductionTotal: undefined,
+  localProductionMaxDay: undefined,
+  localProductionMaxMonth: undefined,
+  localProductionMaxYear: undefined,
+  localProductionMaxTotal: undefined,
+  accumulatedReward: undefined,
+  maxPowerProduction: undefined,
+  accumulatedCost: undefined,
+  netDay: undefined,
 };
 
 TallPanelDisplay.propTypes = {
-  currentPower: PropTypes.number.isRequired,
-  currentProduction: PropTypes.number.isRequired,
-  currentConsumption: PropTypes.number.isRequired,
-  producedPercent: PropTypes.number.isRequired,
-  accumulatedConsumption: PropTypes.number.isRequired,
+  currentPower: PropTypes.number,
+  currentProduction: PropTypes.number,
+  currentConsumption: PropTypes.number,
+  producedPercent: PropTypes.number,
+  accumulatedConsumption: PropTypes.number,
   consumptionMinimum: PropTypes.number,
-  consumptionAverage: PropTypes.number.isRequired,
+  consumptionAverage: PropTypes.number,
   consumptionMaximum: PropTypes.number,
-  localProductionDay: PropTypes.string.isRequired,
-  localProductionMonth: PropTypes.string.isRequired,
-  localProductionYear: PropTypes.string.isRequired,
-  localProductionTotal: PropTypes.string.isRequired,
-  localProductionMaxDay: PropTypes.number.isRequired,
-  localProductionMaxMonth: PropTypes.number.isRequired,
-  localProductionMaxYear: PropTypes.number.isRequired,
-  localProductionMaxTotal: PropTypes.number.isRequired,
-  accumulatedReward: PropTypes.number.isRequired,
-  maxPowerProduction: PropTypes.number.isRequired,
-  accumulatedCost: PropTypes.number.isRequired,
-  netDay: PropTypes.number.isRequired,
+  localProductionDay: PropTypes.string,
+  localProductionMonth: PropTypes.string,
+  localProductionYear: PropTypes.string,
+  localProductionTotal: PropTypes.string,
+  localProductionMaxDay: PropTypes.number,
+  localProductionMaxMonth: PropTypes.number,
+  localProductionMaxYear: PropTypes.number,
+  localProductionMaxTotal: PropTypes.number,
+  accumulatedReward: PropTypes.number,
+  maxPowerProduction: PropTypes.number,
+  accumulatedCost: PropTypes.number,
+  netDay: PropTypes.number,
 };
 
 export default TallPanelDisplay;

@@ -112,7 +112,13 @@ export default class tibberUpdater {
 
     const settings:any = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
-    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => { this.store.dispatch(updateRealtimeConsumption(data)); });
+    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => {
+      if(!data.error) {
+        this.store.dispatch(updateRealtimeConsumption(data)); 
+      } else {
+        throw new Error(data.error);
+      }
+    });
     this.tibberSocket.start();
 
   }

@@ -27,9 +27,9 @@ export const saveState = (state) => {
   }
 };
 
-const persistedState = loadState();
+//const persistedState = loadState();
 
-console.log("State loaded", persistedState);
+// console.log("State loaded", persistedState);
 
 // eslint-disable-next-line import/prefer-default-export
 const store = createStore(
