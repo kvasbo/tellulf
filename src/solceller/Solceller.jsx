@@ -51,6 +51,8 @@ class Solceller extends React.PureComponent {
     const dataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
     const timeZoneAdd = 3600000;
+    const now = new Date();
+
     // Map production data
     this.props.current.byHour.forEach((h) => {
       // Correct production time for UTC
@@ -61,21 +63,11 @@ class Solceller extends React.PureComponent {
       // Sun data and consumpton
       if (h.time in dataSet) {
         const hour = new Date(h.time);
+
         const inAWeek = Moment(h.time).add(1, 'week').toDate();
         const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
         const inAMonth = Moment(h.time).add(1, 'month').toDate();
         const hr = hour.getHours();
-        
-        // Consumption
-        if (hr in this.props.usedPower) {
-          const usage = this.props.usedPower[hr];
-          const kwh = Number(usage.consumption, 10) * 1000;
-          dataSet[h.time].consumption = kwh;
-        }
-
-        if (Moment(hour).isSame(Moment(), 'hour')) {
-          dataSet[h.time].consumption = this.props.realtimePower.avgLastHour;
-        }
 
         // Price
         const price = this.props.powerPrices[hr];
@@ -86,45 +78,22 @@ class Solceller extends React.PureComponent {
         dataSet[h.time].sunInAWeek = getSunForTime(inAWeek, this.props.latitude, this.props.longitude);
         dataSet[h.time].sunInTwoWeeks = getSunForTime(inTwoWeeks, this.props.latitude, this.props.longitude);
         dataSet[h.time].sunInAMonth = getSunForTime(inAMonth, this.props.latitude, this.props.longitude);
+
+        // Consumption
+        if (hour < now) {
+          if (hr in this.props.usedPower) {
+            const usage = this.props.usedPower[hr];
+            const kwh = Number(usage.consumption, 10) * 1000;
+            dataSet[h.time].consumption = kwh;
+          }
+
+          if (Moment(hour).isSame(Moment(), 'hour')) {
+            dataSet[h.time].consumption = this.props.realtimePower.avgLastHour;
+          }
+        }
       }
     });
     return Object.values(dataSet);
-  }
-
-  getProductionForHour(hour) {
-    try {
-      const start = Moment().hour(hour).startOf('hour');
-      const end = Moment().hour(hour).endOf('hour');
-
-      const samplesForHour = this.props.current.byHour.filter((h) => {
-        return Moment(h.time).isBetween(start, end);
-      });
-
-      let sum = 0;
-      samplesForHour.forEach((h) => {
-        sum += h.production;
-      });
-      if (!samplesForHour || samplesForHour.length === 0) return 0;
-      return sum / samplesForHour.length;
-    } catch (err) {
-      return 0;
-    }
-  }
-
-  getMoneySavedToday() {
-    try {
-      let sum = 0;
-      for (let i = 0; i < 24; i += 1) {
-        const production = this.getProductionForHour(i);
-        const price = this.props.powerPrices[i];
-        const savedThisHour = (production * price.total) / 1000;
-        sum += savedThisHour;
-      }
-      return Math.round(sum * 100) / 100;
-    } catch (err) {
-      console.log(err);
-      return '?';
-    }
   }
 
   reloadTime() {
