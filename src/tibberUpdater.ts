@@ -36,27 +36,6 @@ export default class tibberUpdater {
     }
 `;
 
-    const queryUsage = `
-    {
-      viewer {
-        home(id: "${settings.tibberHomeKey}") {
-          consumption(resolution: HOURLY, last: 24) {
-            nodes {
-              from
-              to
-              totalCost
-              unitCost
-              unitPrice
-              unitPriceVAT
-              consumption
-              consumptionUnit
-            }
-          }
-        }
-      }
-    }
-`;
-
     try {
       const data = await axios({
         url: "https://api.tibber.com/v1-beta/gql",
@@ -84,6 +63,31 @@ export default class tibberUpdater {
     } catch (err) {
       console.log(err);
     }
+
+  }
+
+  async updateConsumption() {
+    const settings = await this.getTibberSettings();
+    const queryUsage = `
+    {
+      viewer {
+        home(id: "${settings.tibberHomeKey}") {
+          consumption(resolution: HOURLY, last: 24) {
+            nodes {
+              from
+              to
+              totalCost
+              unitCost
+              unitPrice
+              unitPriceVAT
+              consumption
+              consumptionUnit
+            }
+          }
+        }
+      }
+    }
+`;
 
     try {
       const data = await axios({

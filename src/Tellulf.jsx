@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
-import Kalender from './kalender/Kalender.jsx';
+import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo.tsx';
 import Klokke from './Klokke.tsx';

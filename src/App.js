@@ -35,6 +35,8 @@ class App extends React.PureComponent {
         this.setState({ loggedIn: true, user });
         tibber.updatePowerPrices();
         tibber.subscribeToRealTime();
+        tibber.updateConsumption();
+        setInterval(() => tibber.updateConsumption(), 60*1000); // Every minute
         solar.attachListeners();
         solar.attachMaxListeners();
       }
