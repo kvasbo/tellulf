@@ -33,7 +33,13 @@ class Solceller extends React.PureComponent {
             max={this.props.max}
             current={this.props.current}
           />
-          <TallPanel />
+          <TallPanel
+            currentSolar={this.props.current}
+            max={this.props.max}
+            solarNow={this.props.currentSolar}
+            realtimePower={this.props.realtimePower}
+            userdPower={this.props.usedPower}
+          />
         </div>
       </div>
     );
