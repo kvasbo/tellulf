@@ -1,7 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
   XAxis,
   YAxis,
@@ -14,19 +13,17 @@ import {
   CartesianGrid,
 } from 'recharts';
 import SunCalc from 'suncalc';
-import {
-  updateSetting,
-} from '../redux/actions.ts';
 import './solceller.css';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
+
 const sunMax = 0.75;
 const sunMaxThreshold = 3000;
 
 const maxSunHeight = getMaxSunHeight();
 
-class Solceller extends React.PureComponent {
+class EnergyGraph extends React.PureComponent {
   constructor(props) {
     super(props);
     this.reloadTimer = null;
@@ -168,7 +165,6 @@ class Solceller extends React.PureComponent {
               tickFormatter={formatYTick}
               domain={[0, dataMax => Math.max(dataMax, 4500)]}
               // domain={[0, maxPower]}
-              onClick={() => { this.props.dispatch(updateSetting('solarMaxDynamic', !this.props.settingSolarMaxDynamic)); }}
             />
             <YAxis
               width={25}
@@ -248,40 +244,23 @@ class Solceller extends React.PureComponent {
   }
 }
 
-Solceller.defaultProps = {
-  latitude: defaultLatitude,
-  longitude: defaultLongitude,
+EnergyGraph.defaultProps = {
   usedPower: {},
 };
 
-Solceller.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+EnergyGraph.propTypes = {
   current: PropTypes.object.isRequired,
   currentSolar: PropTypes.number.isRequired,
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
   powerPrices: PropTypes.object.isRequired,
-  latitude: PropTypes.number,
-  longitude: PropTypes.number,
-  settingSolarMaxDynamic: PropTypes.bool.isRequired,
+  latitude: PropTypes.number.isRequired,
+  longitude: PropTypes.number.isRequired,
   realtimePower: PropTypes.object.isRequired,
   usedPower: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    current: state.Solar.current,
-    max: state.Solar.max,
-    powerPrices: state.PowerPrices,
-    currentSolar: Math.round(state.Solar.current.now / 100) * 100,
-    initState: state.Init,
-    settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
-    realtimePower: state.TibberRealTime,
-    usedPower: state.TibberLastDay,
-  };
-};
-
-export default connect(mapStateToProps)(Solceller);
+export default EnergyGraph;
 
 function getSunForTime(time, latitude = defaultLatitude, longitude = defaultLongitude) {
   const s = SunCalc.getPosition(Moment(time).toDate(), latitude, longitude);

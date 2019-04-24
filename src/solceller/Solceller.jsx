@@ -22,7 +22,17 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-          <EnergyGraph />
+          <EnergyGraph
+            latitude={this.props.latitude}
+            longitude={this.props.longitude}
+            usedPower={this.props.usedPower}
+            realtimePower={this.props.realtimePower}
+            initState={this.props.initState}
+            currentSolar={this.props.currentSolar}
+            powerPrices={this.props.powerPrices}
+            max={this.props.max}
+            current={this.props.current}
+          />
           <TallPanel />
         </div>
       </div>
@@ -37,7 +47,6 @@ Solceller.defaultProps = {
 };
 
 Solceller.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   current: PropTypes.object.isRequired,
   currentSolar: PropTypes.number.isRequired,
   max: PropTypes.object.isRequired,
@@ -45,7 +54,6 @@ Solceller.propTypes = {
   powerPrices: PropTypes.object.isRequired,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
-  settingSolarMaxDynamic: PropTypes.bool.isRequired,
   realtimePower: PropTypes.object.isRequired,
   usedPower: PropTypes.object,
 };
