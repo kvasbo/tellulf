@@ -28,7 +28,6 @@ class Solceller extends React.PureComponent {
             usedPower={this.props.usedPower}
             realtimePower={this.props.realtimePower}
             initState={this.props.initState}
-            currentSolar={this.props.currentSolar}
             powerPrices={this.props.powerPrices}
             max={this.props.max}
             current={this.props.current}

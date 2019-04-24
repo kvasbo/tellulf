@@ -14,12 +14,10 @@ import {
 } from 'recharts';
 import SunCalc from 'suncalc';
 import './solceller.css';
+import { roundToNumberOfDecimals } from '../TellulfInfoCell';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
-
-const sunMax = 0.75;
-const sunMaxThreshold = 3000;
 
 const maxSunHeight = getMaxSunHeight();
 
@@ -33,7 +31,7 @@ class EnergyGraph extends React.PureComponent {
   }
 
   componentDidMount() {
-    setInterval(() => { this.reloadTime(); }, 60000);
+    setInterval(() => { this.reloadTime(); }, 300000); // Flytt sola hvert femte minutt
   }
 
   getCurrentLabelPosition() {
@@ -98,17 +96,11 @@ class EnergyGraph extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
-    let maxPower = Math.max(Number(this.props.max.maxEver, 10), 4500);
-    maxPower = Math.ceil(maxPower / 1000) * 1000;
-    const ticks = [];
-    for (let i = 0; i < maxPower; i += 1000) {
-      ticks.push(i);
-    }
-    const currentSun = Math.min(sunMaxThreshold, this.props.currentSolar);
-    const sunPercent = (currentSun / sunMaxThreshold) * sunMax;
+
     const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
     const textColor = (dataAge < 120) ? '#FFFFFF' : '#FF0000'; // Rød tekst om data er over to minutter gamle
     const data = this.getData();
+
     return (
       <div style={{
         display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
@@ -124,14 +116,15 @@ class EnergyGraph extends React.PureComponent {
             }}
             data={data}
           >
-            <defs>
-              <radialGradient id="sunGradient">
-                <stop offset="7%" stopColor={getColorForSun()} stopOpacity="1" />
-                <stop offset="14%" stopColor={getColorForSun()} stopOpacity={sunPercent} />
-                <stop offset="95%" stopColor="#FFFFFF" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <XAxis dataKey="time" type="number" scale="time" tickFormatter={formatTick} allowDataOverflow={false} ticks={getXTicks()} domain={getXAxis()} />
+            <XAxis
+              dataKey="time"
+              type="number"
+              scale="time"
+              tickFormatter={formatTick}
+              allowDataOverflow={false}
+              ticks={getXTicks()}
+              domain={getXAxis()}
+            />
             <YAxis
               width={25}
               yAxisId="price"
@@ -159,12 +152,9 @@ class EnergyGraph extends React.PureComponent {
                 position: 'left',
               }}
               yAxisId="kwh"
-              // ticks={[...ticks]}
-              // interval={0}
               type="number"
               tickFormatter={formatYTick}
               domain={[0, dataMax => Math.max(dataMax, 4500)]}
-              // domain={[0, maxPower]}
             />
             <YAxis
               width={25}
@@ -214,9 +204,9 @@ class EnergyGraph extends React.PureComponent {
               x={this.state.currentTime}
               y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
               yAxisId="sun"
-              fill="url(#sunGradient)"
+              fill="#FFFF00"
               stroke="none"
-              r={90}
+              r={8}
             />
             {(this.props.current.now > 0)
             && (
@@ -250,7 +240,6 @@ EnergyGraph.defaultProps = {
 
 EnergyGraph.propTypes = {
   current: PropTypes.object.isRequired,
-  currentSolar: PropTypes.number.isRequired,
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
   powerPrices: PropTypes.object.isRequired,
@@ -277,17 +266,6 @@ function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitud
   } catch (err) {
     return 1;
   }
-}
-
-function getColorForSun(latitude = defaultLatitude, longitude = defaultLongitude) {
-  const cutoff = 0.35;
-  const base = 120;
-  const altitude = getSunForTime(new Date(), latitude, longitude);
-  if (altitude > cutoff) return '#FFD700';
-  const percent = altitude / cutoff;
-  const percentRed = Math.min(215, base + (215 * percent));
-  const redString = Math.round(percentRed).toString(16);
-  return `#FF${redString}00`;
 }
 
 function getDataPointObject() {
@@ -327,7 +305,8 @@ function formatTick(data) {
 }
 
 function formatYTick(data) {
-  return `${data / 1000}`;
+  // return Number(data, 10).toLocaleString();
+  return `${roundToNumberOfDecimals(data / 1000, 1)}`;
 }
 
 export function getTimeLimits() {

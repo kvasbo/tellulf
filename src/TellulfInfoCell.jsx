@@ -57,7 +57,7 @@ TellulfInfoCell.propTypes = {
   unit: PropTypes.string,
 };
 
-function roundToNumberOfDecimals(number, decimals) {
+export function roundToNumberOfDecimals(number, decimals) {
   const factor = 10 ** decimals;
   return Math.round(factor * number) / factor;
 }
