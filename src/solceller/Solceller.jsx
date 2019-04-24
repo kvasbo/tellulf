@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import SunCalc from 'suncalc';
 import TallPanel from './TallPanel';
+import EnergyGraph from './EnergyGraph';
 import {
   updateSetting,
 } from '../redux/actions.ts';
@@ -119,6 +120,8 @@ class Solceller extends React.PureComponent {
       }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+          <EnergyGraph />
+          { false &&
           <div style={{ flex: 1 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart
@@ -246,7 +249,7 @@ class Solceller extends React.PureComponent {
                 }
               </ComposedChart>
             </ResponsiveContainer>
-          </div>
+          </div> }
           <TallPanel />
         </div>
       </div>
