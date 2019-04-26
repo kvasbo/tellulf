@@ -87,6 +87,7 @@ class EnergyGraph extends React.PureComponent {
         }
       }
     });
+    // console.log(Object.values(dataSet));
     return Object.values(dataSet);
   }
 

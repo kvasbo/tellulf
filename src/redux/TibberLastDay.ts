@@ -7,7 +7,6 @@ export default function TibberLastDay(state = {}, action: { type: string, data: 
       const now = Moment();
       const newState = {};
       action.data.forEach((d:any) => {
-        // console.log(d);
         const to = Moment(d.to);
         const from = Moment(d.from);
         if (to.isSame(now, 'day') && from.isSame(now, 'day')) {
