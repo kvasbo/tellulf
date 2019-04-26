@@ -4,6 +4,7 @@ import Moment from 'moment';
 import { connect } from 'react-redux';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import firebase from './firebase';
+import TellulfInfoCell from './TellulfInfoCell.jsx';
 
 type Props = {
   Netatmo: netatmoStore,
@@ -16,10 +17,6 @@ type State = {
   Netatmo: netatmoStore,
   NetatmoAverages: { time: number, temperature: number, },
   Weather: { todayMinMax: { min: number, max: number } },
-}
-
-const netatmoBox = {
-  padding: 10,
 }
 
 class Netatmo extends React.PureComponent<Props> {
@@ -58,24 +55,24 @@ class Netatmo extends React.PureComponent<Props> {
     }
 
     return (
-      <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', height: '100%', flexDirection: 'column', justifyContent: 'space-evenly' }}>
         <div style={{
-          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center', margin: 10
+          display: 'flex', flex: 1, justifyContent: 'space-evenly', alignItems: 'center', margin: 0
         }}
         >
-          <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.min(this.props.NetatmoAverages.temperature, this.props.minMax.min)}°</span>
-          <span style={{ color: 'rgb(255,255,255)', fontSize: 66 }}>{this.props.NetatmoAverages.temperature}°</span>
-          <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 40 }}>{Math.max(this.props.NetatmoAverages.temperature, this.props.minMax.max)}°</span>
+          <TellulfInfoCell info={Math.min(this.props.NetatmoAverages.temperature, this.props.minMax.min)} unit='°' fontSize={30} color="rgba(255,255,255,0.45)" header="min" />
+          <TellulfInfoCell info={this.props.NetatmoAverages.temperature} unit='°' decimals={1} fontSize={60} />
+          <TellulfInfoCell info={Math.max(this.props.NetatmoAverages.temperature, this.props.minMax.max)} unit='°' fontSize={30} color="rgba(255,255,255,0.45)" header="max" />
         </div>
         <div
           style={{
-            flex: 0.4, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center', margin: 10
+            flex: 0.8, display: 'flex', justifyContent: 'space-evenly', width: '100%', alignItems: 'center', margin: 0
           }}
         >
-          <div style={netatmoBox}>{this.props.Netatmo.inneTemp}°</div>
-          <div style={netatmoBox}>{this.props.Netatmo.co2} ppm</div>
-          <div style={netatmoBox}>{Math.round(this.props.Netatmo.inneFukt)}%</div>
-          <div style={netatmoBox}>{Math.round(this.props.Netatmo.inneTrykk)} mb</div>
+          <TellulfInfoCell info={Number(this.props.Netatmo.inneTemp)} decimals={1} unit='°' header="inne" />
+          <TellulfInfoCell info={Number(this.props.Netatmo.co2)} decimals={1} unit='ppm' header="co2" />
+          <TellulfInfoCell info={Number(this.props.Netatmo.inneFukt)} decimals={1} unit='%' header="fukt" />
+          <TellulfInfoCell info={Number(this.props.Netatmo.inneTrykk)} decimals={1} unit='°' header="trykk" />
         </div>
       </div>
     );
