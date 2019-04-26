@@ -17,22 +17,20 @@ const headerStyle = {
 class TellulfInfoCell extends React.PureComponent {
   render() {
     let text = '-';
-    let unit = '';
-    if (this.props.info || this.props.info === 0) {
-      // eslint-disable-next-line prefer-destructuring
-      unit = this.props.unit;
-      if (!Number.isNaN(this.props.info)) {
-        text = roundToNumberOfDecimals(this.props.info, this.props.decimals).toLocaleString();
-      } else {
-        text = this.props.info;
-      }
+
+    // Don't even try
+    if (Number.isNaN(this.props.info)) {
+      return null;
     }
 
+    text = roundToNumberOfDecimals(this.props.info, this.props.decimals).toLocaleString();
+
     const fontSize = (this.props.large) ? 24 : 16;
+    const space = (this.props.unitSpace) ? ' ' : null;
     return (
       <div style={{ ...cellStyle, fontSize }}>
         {this.props.header && <span style={headerStyle}>{this.props.header}</span>}
-        <span>{text}{unit}</span>
+        <span>{text}{space}{this.props.unit}</span>
       </div>
     );
   }
@@ -44,17 +42,16 @@ TellulfInfoCell.defaultProps = {
   large: false,
   decimals: 0,
   unit: null,
+  unitSpace: false,
 };
 
 TellulfInfoCell.propTypes = {
   header: PropTypes.string,
-  info: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
+  info: PropTypes.number,
   large: PropTypes.bool,
   decimals: PropTypes.number,
   unit: PropTypes.string,
+  unitSpace: PropTypes.bool,
 };
 
 export function roundToNumberOfDecimals(number, decimals) {

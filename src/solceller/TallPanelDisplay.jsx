@@ -19,10 +19,11 @@ class TallPanelDisplay extends React.PureComponent {
           />
           <TellulfInfoCell
             info={this.props.netDay}
-            unit=" kr"
+            unit="kr"
             header="netto dag"
             decimals={2}
             large
+            unitSpace
           />
           <TellulfInfoCell
             info={this.props.currentConsumption}
@@ -70,13 +71,15 @@ class TallPanelDisplay extends React.PureComponent {
           />
           <TellulfInfoCell
             info={this.props.accumulatedCost}
-            unit=" kr"
+            unit="kr"
+            unitSpace
             header="kost dag"
             decimals={2}
           />
           <TellulfInfoCell
             info={this.props.accumulatedReward}
-            unit=" kr"
+            unit="kr"
+            unitSpace
             header="fortjeneste dag"
             decimals={2}
           />
