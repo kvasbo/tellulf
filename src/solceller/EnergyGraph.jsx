@@ -52,7 +52,7 @@ class EnergyGraph extends React.PureComponent {
       // Correct production time for UTC
       const correctedTime = h.time + timeZoneAdd + dstAdd;
       if (correctedTime in dataSet) {
-        dataSet[correctedTime].production = h.production;
+        dataSet[correctedTime].production = (h.production / 1000);
       }
       // Sun data and consumpton
       if (h.time in dataSet) {
@@ -77,12 +77,12 @@ class EnergyGraph extends React.PureComponent {
         if (hour < now) {
           if (hr in this.props.usedPower) {
             const usage = this.props.usedPower[hr];
-            const kwh = Number(usage.consumption, 10) * 1000;
+            const kwh = Number(usage.consumption, 10);
             dataSet[h.time].consumption = kwh;
           }
 
           if (Moment(hour).isSame(Moment(), 'hour')) {
-            dataSet[h.time].consumption = this.props.realtimePower.avgLastHour;
+            dataSet[h.time].consumption = this.props.realtimePower.avgLastHour / 1000;
           }
         }
       }
@@ -146,7 +146,7 @@ class EnergyGraph extends React.PureComponent {
               width={25}
               label={{
                 angle: -90,
-                value: 'kwh',
+                value: 'kw',
                 stroke: '#ffffff55',
                 fill: '#ffffff55',
                 fontSize: 15,
@@ -154,8 +154,9 @@ class EnergyGraph extends React.PureComponent {
               }}
               yAxisId="kwh"
               type="number"
-              tickFormatter={formatYTick}
-              domain={[0, dataMax => Math.max(dataMax, 4500)]}
+              allowDataOverFlow={false}
+              tickFormatter={formatEnergyScaleTick}
+              domain={[0, getEnergyScaleMax]}
             />
             <YAxis
               width={25}
@@ -194,7 +195,7 @@ class EnergyGraph extends React.PureComponent {
               strokeOpacity="0.15"
               stackId="1"
             />
-            <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
+            <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} yAxisId="kwh" />
             <ReferenceLine
               yAxisId="kwh"
               y={this.props.max.maxDay}
@@ -269,6 +270,17 @@ function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitud
   }
 }
 
+// Get maximum value for energy scale axis
+function getEnergyScaleMax(data) {
+  const maxVal = Math.ceil(data / 1000);
+  return Math.max(5, maxVal);
+}
+
+function formatEnergyScaleTick(data) {
+  // return Number(data, 10).toLocaleString();
+  return `${roundToNumberOfDecimals(data, 1)}`;
+}
+
 function getDataPointObject() {
   const out = {};
   const time = Moment().startOf('day');
@@ -303,11 +315,6 @@ function getXTicks() {
 function formatTick(data) {
   const time = Moment(data).local();
   return time.format('HH');
-}
-
-function formatYTick(data) {
-  // return Number(data, 10).toLocaleString();
-  return `${roundToNumberOfDecimals(data / 1000, 1)}`;
 }
 
 export function getTimeLimits() {
