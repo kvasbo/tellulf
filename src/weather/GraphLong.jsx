@@ -206,9 +206,9 @@ function getTicks() {
 
 function getDayColor(time) {
   const d = Moment(time);
-  if (d.day() === 0) return sundayColor;
+  if (d.day() === 0 || d.day() === 6) return sundayColor;
   const dString = d.format('MMDD');
-  if (dString in redDays) return sundayColor;
+  if (redDays.includes(dString)) return sundayColor;
   return gridColor;
 }
 
