@@ -102,14 +102,6 @@ class EnergyGraph extends React.PureComponent {
     // const textColor = (dataAge < 120) ? '#FFFFFF' : '#FF0000'; // Rød tekst om data er over to minutter gamle
     const data = this.getData();
 
-    let consumptionPosition = 'top';
-    let productionPosition = 'bottom';
-
-    if (this.props.currentSolarProduction.averageMinute > this.props.currentNetConsumption) {
-      consumptionPosition = 'bottom';
-      productionPosition = 'top';
-    }
-
     return (
       <div style={{
         display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
@@ -232,7 +224,7 @@ class EnergyGraph extends React.PureComponent {
                   stroke: '#FF0000',
                   fill: '#FF0000',
                   fontSize: 35,
-                  position: consumptionPosition,
+                  position: 'left',
                 }}
               />
             )
@@ -251,7 +243,7 @@ class EnergyGraph extends React.PureComponent {
                   stroke: '#00FF00',
                   fill: '#00FF00',
                   fontSize: 35,
-                  position: productionPosition,
+                  position: 'right',
                 }}
               />
             )
