@@ -16,6 +16,10 @@ class Solceller extends React.PureComponent {
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
+
+    // Regne ut felles verdier.
+    const currentNetConsumption = this.props.realtimePower.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
+
     return (
       <div style={{
         display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
@@ -30,14 +34,14 @@ class Solceller extends React.PureComponent {
             initState={this.props.initState}
             powerPrices={this.props.powerPrices}
             max={this.props.max}
-            current={this.props.current}
+            currentSolarProduction={this.props.currentSolarProduction}
+            currentNetConsumption={currentNetConsumption}
           />
           <TallPanel
-            currentSolar={this.props.current}
+            currentSolarProduction={this.props.currentSolarProduction}
             max={this.props.max}
-            solarNow={this.props.currentSolar}
             realtimePower={this.props.realtimePower}
-            userdPower={this.props.usedPower}
+            currentNetConsumption={currentNetConsumption}
           />
         </div>
       </div>
@@ -52,8 +56,7 @@ Solceller.defaultProps = {
 };
 
 Solceller.propTypes = {
-  current: PropTypes.object.isRequired,
-  currentSolar: PropTypes.number.isRequired,
+  currentSolarProduction: PropTypes.object.isRequired,
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
   powerPrices: PropTypes.object.isRequired,
@@ -65,10 +68,9 @@ Solceller.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    current: state.Solar.current,
+    currentSolarProduction: state.Solar.current,
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
-    currentSolar: Math.round(state.Solar.current.now / 100) * 100,
     initState: state.Init,
     settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
     realtimePower: state.TibberRealTime,

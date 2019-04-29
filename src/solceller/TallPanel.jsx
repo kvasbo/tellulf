@@ -9,15 +9,13 @@ class TallPanel extends React.PureComponent {
   }
 
   render() {
-    const currentPower = this.props.realtimePower.calculatedConsumption + this.props.currentSolar.now; // Find actual current usage
-
     // Calculate percentage of usage
     let producedPercent = 0;
     try {
       if (this.props.realtimePower.accumulatedConsumption) {
         // Brukt = laget hjemme + betalt for - solgt
-        const spent = this.props.currentSolar.today + (this.props.realtimePower.accumulatedConsumption * 1000) - (this.props.realtimePower.accumulatedProduction * 1000);
-        producedPercent = this.props.currentSolar.today / spent * 100;
+        const spent = this.props.currentSolarProduction.today + (this.props.realtimePower.accumulatedConsumption * 1000) - (this.props.realtimePower.accumulatedProduction * 1000);
+        producedPercent = this.props.currentSolarProduction.today / spent * 100;
       }
     } catch (err) {
       console.log(err);
@@ -25,8 +23,8 @@ class TallPanel extends React.PureComponent {
 
     return (
       <TallPanelDisplay
-        currentPower={currentPower}
-        currentProduction={this.props.currentSolar.now}
+        currentPower={this.props.currentNetConsumption}
+        currentProduction={this.props.currentSolarProduction.now}
         currentConsumption={this.props.realtimePower.calculatedConsumption}
         producedPercent={producedPercent}
         accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
@@ -34,10 +32,10 @@ class TallPanel extends React.PureComponent {
         consumptionMinimum={this.props.realtimePower.minPower}
         consumptionMaximum={this.props.realtimePower.maxPower}
         consumptionAverage={this.props.realtimePower.averagePower}
-        localProductionDay={this.props.currentSolar.today / 1000}
-        localProductionMonth={this.props.currentSolar.month / 1000}
-        localProductionYear={this.props.currentSolar.year / 1000}
-        localProductionTotal={this.props.currentSolar.total / 1000}
+        localProductionDay={this.props.currentSolarProduction.today / 1000}
+        localProductionMonth={this.props.currentSolarProduction.month / 1000}
+        localProductionYear={this.props.currentSolarProduction.year / 1000}
+        localProductionTotal={this.props.currentSolarProduction.total / 1000}
         localProductionMaxDay={this.props.max.maxDay}
         localProductionMaxMonth={this.props.max.maxMonth}
         localProductionMaxYear={this.props.max.maxYear}
@@ -52,9 +50,10 @@ class TallPanel extends React.PureComponent {
 }
 
 TallPanel.propTypes = {
-  currentSolar: PropTypes.object.isRequired,
+  currentSolarProduction: PropTypes.object.isRequired,
   realtimePower: PropTypes.object.isRequired,
   max: PropTypes.object.isRequired,
+  currentNetConsumption: PropTypes.number.isRequired,
 };
 
 export default TallPanel;

@@ -35,10 +35,10 @@ class EnergyGraph extends React.PureComponent {
   }
 
   getCurrentLabelPosition() {
-    if (this.props.current.averagefull > 3300) {
-      return 'bottom';
+    if (this.props.currentSolarProduction.averagefull > 3300) {
+      return 'right';
     }
-    return 'top';
+    return 'right';
   }
 
   getData() {
@@ -48,7 +48,7 @@ class EnergyGraph extends React.PureComponent {
     const now = new Date();
 
     // Map production data
-    this.props.current.byHour.forEach((h) => {
+    this.props.currentSolarProduction.byHour.forEach((h) => {
       // Correct production time for UTC
       const correctedTime = h.time + timeZoneAdd + dstAdd;
       if (correctedTime in dataSet) {
@@ -98,9 +98,17 @@ class EnergyGraph extends React.PureComponent {
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
 
-    const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
-    const textColor = (dataAge < 120) ? '#FFFFFF' : '#FF0000'; // Rød tekst om data er over to minutter gamle
+    // const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
+    // const textColor = (dataAge < 120) ? '#FFFFFF' : '#FF0000'; // Rød tekst om data er over to minutter gamle
     const data = this.getData();
+
+    let consumptionPosition = 'top';
+    let productionPosition = 'bottom';
+
+    if (this.props.currentSolarProduction.averageMinute > this.props.currentNetConsumption) {
+      consumptionPosition = 'bottom';
+      productionPosition = 'top';
+    }
 
     return (
       <div style={{
@@ -210,21 +218,40 @@ class EnergyGraph extends React.PureComponent {
               stroke="none"
               r={8}
             />
-            {(this.props.current.now > 0)
+            {(this.props.currentNetConsumption && this.props.currentNetConsumption > 0)
             && (
               <ReferenceDot
                 yAxisId="kwh"
-                y={this.props.current.now / 1000}
-                x={this.props.current.currentTime.valueOf()}
+                y={this.props.currentNetConsumption / 1000}
+                x={this.props.currentSolarProduction.currentTime.valueOf()}
                 r={3}
                 fill="#ffffff44"
                 stroke="#ffffff"
                 label={{
-                  value: `${Number(this.props.current.averageMinute).toLocaleString()}W`,
-                  stroke: textColor,
-                  fill: textColor,
-                  fontSize: 50,
-                  position: this.getCurrentLabelPosition(),
+                  value: `${Number(this.props.currentNetConsumption).toLocaleString()}`,
+                  stroke: '#FF0000',
+                  fill: '#FF0000',
+                  fontSize: 35,
+                  position: consumptionPosition,
+                }}
+              />
+            )
+            }
+            {(this.props.currentSolarProduction.now > 0)
+            && (
+              <ReferenceDot
+                yAxisId="kwh"
+                y={this.props.currentSolarProduction.now / 1000}
+                x={this.props.currentSolarProduction.currentTime.valueOf()}
+                r={3}
+                fill="#ffffff44"
+                stroke="#ffffff"
+                label={{
+                  value: `${Number(this.props.currentSolarProduction.averageMinute).toLocaleString()}`,
+                  stroke: '#00FF00',
+                  fill: '#00FF00',
+                  fontSize: 35,
+                  position: productionPosition,
                 }}
               />
             )
@@ -241,7 +268,8 @@ EnergyGraph.defaultProps = {
 };
 
 EnergyGraph.propTypes = {
-  current: PropTypes.object.isRequired,
+  currentSolarProduction: PropTypes.object.isRequired,
+  currentNetConsumption: PropTypes.number.isRequired,
   max: PropTypes.object.isRequired,
   initState: PropTypes.object.isRequired,
   powerPrices: PropTypes.object.isRequired,
