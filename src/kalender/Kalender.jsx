@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Moment from 'moment';
 import Axios from 'axios';
 import { connect } from 'react-redux';
@@ -37,86 +38,6 @@ class Kalender extends React.PureComponent {
     setInterval(() => this.updateData(), 1000 * 60);
   }
 
-  async updateData() {
-    try {
-      const kalenderData = await this.getIcal(calP, true);
-      const dinners = await this.getIcal(dinP, false);
-      const birthdays = await this.getIcal(bdP, false);
-      this.setState({ kalenderData, dinners, birthdays });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async getIcal(url, prime = false) {
-    let parsedEvents = {};
-    try {
-      const now = Moment();
-      const data = await Axios.get(url);
-
-      if (data.status !== 200) throw Error('Couldnt fetch calendar data');
-
-      const icalExpander = new IcalExpander({ ics: data.data, maxIterations: 1000 });
-      const events = icalExpander.between(now.toDate(), now.add(60, 'days').toDate());
-
-      const sorted = {};
-
-      sorted.events = events.events.sort((a, b) => {
-        const start = a.startDate.toJSDate();
-        const end = b.startDate.toJSDate();
-        return start - end;
-      });
-
-      sorted.occurrences = events.occurrences.sort((a, b) => {
-        const start = a.item.startDate.toJSDate();
-        const end = b.item.startDate.toJSDate();
-        return start - end;
-      });
-
-      // Prime array for events.
-      if (prime) {
-        parsedEvents = { ...primeDays(0) };
-      }
-
-      sorted.occurrences.forEach((e) => {
-        try {
-          const event = parseIcalEvent(e, true);
-          if (!parsedEvents[event.groupString]) {
-            parsedEvents[event.groupString] = initDay(event.groupString);
-          }
-          parsedEvents[event.groupString].events.push(event);
-        } catch (err) {
-          console.log(err);
-        }
-      });
-
-      sorted.events.forEach((e) => {
-        try {
-          const event = parseIcalEvent(e, false);
-          if (!parsedEvents[event.groupString]) {
-            parsedEvents[event.groupString] = initDay(event.groupString);
-          }
-          parsedEvents[event.groupString].events.push(event);
-        } catch (err) {
-          console.log(err);
-        }
-      });
-    } catch (err) {
-      console.log(err);
-    }
-
-    return parsedEvents;
-  }
-
-  getWeather(day) {
-    if (!this.props.weather) return [];
-    const from = Moment(day).startOf('day').valueOf();
-    const to = Moment(day).endOf('day').valueOf();
-    return Object.values(this.props.weather).filter((w) => {
-      return (w.time >= from && w.time <= to);
-    });
-  }
-
   getDays() {
     const out = [];
     const dayKeys = getDayKeys(30);
@@ -130,6 +51,26 @@ class Kalender extends React.PureComponent {
       }
     });
     return out;
+  }
+
+  getWeather(day) {
+    if (!this.props.weather) return [];
+    const from = Moment(day).startOf('day').valueOf();
+    const to = Moment(day).endOf('day').valueOf();
+    return Object.values(this.props.weather).filter((w) => {
+      return (w.time >= from && w.time <= to);
+    });
+  }
+
+  async updateData() {
+    try {
+      const kalenderData = await getIcal(calP, true);
+      const dinners = await getIcal(dinP, false);
+      const birthdays = await getIcal(bdP, false);
+      this.setState({ kalenderData, dinners, birthdays });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {
@@ -170,6 +111,7 @@ function parseIcalEvent(e, useItem = false) {
     };
   } catch (err) {
     console.log(err);
+    throw new Error('Could not parse iCal event');
   }
 }
 
@@ -199,6 +141,10 @@ function getDayKeys(max = 100) {
   return out;
 }
 
+Kalender.propTypes = {
+  weather: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = (state) => {
   return {
     weather: state.Weather.long,
@@ -206,3 +152,63 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(Kalender);
+
+async function getIcal(url, prime = false) {
+  let parsedEvents = {};
+  try {
+    const now = Moment();
+    const data = await Axios.get(url);
+
+    if (data.status !== 200) throw Error('Couldnt fetch calendar data');
+
+    const icalExpander = new IcalExpander({ ics: data.data, maxIterations: 1000 });
+    const events = icalExpander.between(now.toDate(), now.add(60, 'days').toDate());
+
+    const sorted = {};
+
+    sorted.events = events.events.sort((a, b) => {
+      const start = a.startDate.toJSDate();
+      const end = b.startDate.toJSDate();
+      return start - end;
+    });
+
+    sorted.occurrences = events.occurrences.sort((a, b) => {
+      const start = a.item.startDate.toJSDate();
+      const end = b.item.startDate.toJSDate();
+      return start - end;
+    });
+
+    // Prime array for events.
+    if (prime) {
+      parsedEvents = { ...primeDays(0) };
+    }
+
+    sorted.occurrences.forEach((e) => {
+      try {
+        const event = parseIcalEvent(e, true);
+        if (!parsedEvents[event.groupString]) {
+          parsedEvents[event.groupString] = initDay(event.groupString);
+        }
+        parsedEvents[event.groupString].events.push(event);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    sorted.events.forEach((e) => {
+      try {
+        const event = parseIcalEvent(e, false);
+        if (!parsedEvents[event.groupString]) {
+          parsedEvents[event.groupString] = initDay(event.groupString);
+        }
+        parsedEvents[event.groupString].events.push(event);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
+  return parsedEvents;
+}
