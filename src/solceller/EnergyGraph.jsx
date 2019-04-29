@@ -198,7 +198,7 @@ class EnergyGraph extends React.PureComponent {
             <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} yAxisId="kwh" />
             <ReferenceLine
               yAxisId="kwh"
-              y={this.props.max.maxDay}
+              y={this.props.max.maxDay / 1000}
               stroke="#FFFF0088"
               strokeDasharray="3 3"
             />
@@ -214,13 +214,13 @@ class EnergyGraph extends React.PureComponent {
             && (
               <ReferenceDot
                 yAxisId="kwh"
-                y={this.props.current.now}
+                y={this.props.current.now / 1000}
                 x={this.props.current.currentTime.valueOf()}
                 r={3}
                 fill="#ffffff44"
                 stroke="#ffffff"
                 label={{
-                  value: `${this.props.current.averageMinute}W`,
+                  value: `${Number(this.props.current.averageMinute).toLocaleString()}W`,
                   stroke: textColor,
                   fill: textColor,
                   fontSize: 50,
