@@ -9,13 +9,14 @@ cache:
 
 install:
 - npm install -g firebase-tools
-- CI=false yarn run build
+- yarn install --non-interactive --pure-lockfile
 - cd "functions" && yarn install --non-interactive --pure-lockfile
 
 script:
 #- cd functions
 # - yarn install --non-interactive --pure-lockfile
 #- cd ..
+- CI=false yarn run build
 - firebase deploy -m "Travis Build $TRAVIS_BUILD_NUMBER, commit $TRAVIS_COMMIT" --non-interactive --token $FIREBASE_TOKEN
 
 env:
