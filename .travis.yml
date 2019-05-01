@@ -2,7 +2,7 @@
 if: branch = master
 
 language: node_js
-node_js: '10'
+node_js: '8'
 cache:
   - yarn
   - npm
