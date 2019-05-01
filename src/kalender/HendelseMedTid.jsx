@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Moment from 'moment';
 
 const style = {
@@ -62,5 +63,9 @@ function normalDayToFormats() {
     sameElse: 'HH:mm',
   };
 }
+
+HendelseMedTid.propTypes = {
+  data: PropTypes.object.isRequired,
+};
 
 export default HendelseMedTid;

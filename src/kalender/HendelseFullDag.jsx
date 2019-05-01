@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getTimeString } from './HendelseMedTid';
 
 const style = {
@@ -15,5 +16,9 @@ class HendelseFullDag extends React.PureComponent {
     );
   }
 }
+
+HendelseFullDag.propTypes = {
+  data: PropTypes.object.isRequired,
+};
 
 export default HendelseFullDag;

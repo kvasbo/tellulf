@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Moment from 'moment';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
@@ -17,7 +18,7 @@ class Dag extends React.PureComponent {
     // console.log(this.props.birthdays);
     this.props.birthdays.events.forEach((b) => {
       const matches = b.name.match(/\d+$/);
-      let name = b.name;
+      let name = { b };
       if (matches) {
         const number = parseInt(matches[0], 10);
         const age = new Date().getFullYear() - number;
@@ -45,22 +46,11 @@ class Dag extends React.PureComponent {
     return out;
   }
 
-  getDayHeader(date) {
-    const dateHeaderFormats = {
-      sameDay: '[I dag]',
-      nextDay: '[I morgen]',
-      nextWeek: 'dddd',
-      nextMonth: 'dddd D.',
-      sameElse: 'dddd DD. MMM',
-    };
-    const dateStr = Moment(date).calendar(null, dateHeaderFormats);
-    return dateStr;
-  }
 
   render() {
     return (
       <div style={{ marginBottom: 10 }}>
-        <div style={{ padding: 5 }}>{this.getDayHeader(this.props.date)}</div>
+        <div style={{ padding: 5 }}>{getDayHeader(this.props.date)}</div>
         {this.getDinner()}
         {this.getBirthdays()}
         {this.getEvents()}
@@ -69,4 +59,30 @@ class Dag extends React.PureComponent {
   }
 }
 
+Dag.defaultProps = {
+  dinner: {},
+  birthdays: {},
+  events: {},
+};
+
+Dag.propTypes = {
+  dinner: PropTypes.object,
+  birthdays: PropTypes.object,
+  events: PropTypes.object,
+  date: PropTypes.any.isRequired,
+};
+
 export default Dag;
+
+
+function getDayHeader(date) {
+  const dateHeaderFormats = {
+    sameDay: '[I dag]',
+    nextDay: '[I morgen]',
+    nextWeek: 'dddd',
+    nextMonth: 'dddd D.',
+    sameElse: 'dddd DD. MMM',
+  };
+  const dateStr = Moment(date).calendar(null, dateHeaderFormats);
+  return dateStr;
+}
