@@ -34,8 +34,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "./node_modules/.bin/eslint src --ext .js,.jsx",
-    "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix",
-    "analyze": "source-map-explorer build/static/js/main.*"
+    "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix"
   },
   "devDependencies": {
     "@firebase/app-types": "0.x",
@@ -53,7 +52,6 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
-    "source-map-loader": "^0.2.4",
     "typescript": "3.4.5"
   },
   "browserslist": [
