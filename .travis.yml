@@ -13,5 +13,6 @@ script:
   - cd functions
   - yarn install --non-interactive --pure-lockfile
   # deploy
-  - cd ../kvasbo/tellulf-client
+  - cd ..
+  - cd kvasbo/tellulf-client
   # - firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_DEPLOY_KEY
