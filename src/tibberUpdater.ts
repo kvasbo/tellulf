@@ -6,6 +6,19 @@ import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updateP
 
 const nettleie = 0.477;
 
+const netPriceSettings = {
+  Hjemme: {
+    fast: 100,
+    kwh: 0.4795,
+    kwpProd: 0.07,
+  },
+  Hytta: {
+    fast: 287.50,
+    kwh: 0.41913,
+    kwhProd: 0.07,
+  }
+}
+
 export default class tibberUpdater {
   store: { dispatch: Function };
   tibberSocket: any;
@@ -14,9 +27,7 @@ export default class tibberUpdater {
   }
 
   async updatePowerPrices() {
-
     const settings = await this.getTibberSettings();
-
     const queryPrices = `
     {
       viewer {
@@ -127,9 +138,73 @@ export default class tibberUpdater {
 
   }
 
+  async updateConsumptionMonthlyAndCalculateBills() {
+    const settings = await this.getTibberSettings();
+    const queryUsage = `
+    {
+      viewer {
+        homes {
+          id
+          appNickname
+          consumption(resolution: MONTHLY, last: 3) {
+            nodes {
+              from
+              to
+              totalCost
+              unitCost
+              unitPrice
+              unitPriceVAT
+              consumption
+              consumptionUnit
+            }
+          }
+        }
+      }
+    }
+`;
+
+    try {
+      const data = await axios({
+        url: "https://api.tibber.com/v1-beta/gql",
+        method: "post",
+        headers: {
+          Authorization:
+            `bearer ${settings.tibberApiKey}`
+        },
+        data: {
+          query: queryUsage
+        }
+      });
+      if (data.status === 200) {
+        const usage = data.data.data.viewer.homes;
+        usage.forEach((u: { appNickname: string, consumption: { nodes: [] }}) => {
+          console.group(u.appNickname);
+          console.info("OBS: Mangler produksjonsdata!")
+          u.consumption.nodes.forEach((n: { from: string, to: string, totalCost: number, consumption: number }) => {
+            const from = Moment(n.from).format("MMMM");
+            const tibberPrice = n.totalCost; //.toFixed(2).toLocaleString();
+            const netPrice = (n.consumption * netPriceSettings[u.appNickname].kwh + netPriceSettings[u.appNickname].fast); //.toFixed(2).toLocaleString();
+            const totalPrice = tibberPrice + netPrice;
+            console.group(`${from}: `);
+            console.log(`Strøm: ${tibberPrice.toFixed(2).toLocaleString()}`);
+            console.log(`Nett: ${netPrice.toFixed(2).toLocaleString()}`);
+            console.log(`Totalt: ${totalPrice.toFixed(2).toLocaleString()}`);
+
+            console.groupEnd();
+          });
+          // console.log(u);
+          console.groupEnd();
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+  }
+
   // Get tibber settings from firebase
   async getTibberSettings() {
-    const settings:{ tibberApiKey:string, tibberHomeKey:string} = await new Promise((resolve, reject) => {
+    const settings:{ tibberApiKey:string, tibberHomeKey:string, tibberCabinKey:string } = await new Promise((resolve, reject) => {
       const settingsRef = firebase.database().ref('settings');
       settingsRef.once('value', (snapshot: any) => {
         const settings = snapshot.val();
