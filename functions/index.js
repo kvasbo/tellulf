@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
   console.log('Get', req.query.url);
   axios.get(req.query.url).then((data) => {
     res.send(data.data);
+    return;
   }).catch((err) => {
     console.log(err);
   });
