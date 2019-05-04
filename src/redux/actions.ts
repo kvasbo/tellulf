@@ -15,7 +15,7 @@ export const UPDATE_SETTING = 'UPDATE_SETTING';
 export const UPDATE_TIBBER_REALTIME_CONSUMPTION = 'UPDATE_TIBBER_REALTIME_CONSUMPTION';
 export const UPDATE_TIBBER_POWER_USAGE = 'UPDATE_TIBBER_POWER_USAGE';
 
-export function updateInitStatus(key, value = true) {
+export function updateInitStatus(key: string, value = true) {
   return {
     type: UPDATE_INIT_STATUS,
     key,
@@ -23,7 +23,7 @@ export function updateInitStatus(key, value = true) {
   };
 }
 
-export function updateSetting(key, value) {
+export function updateSetting(key: string, value: any) {
   return {
     type: UPDATE_SETTING,
     key,
@@ -100,16 +100,16 @@ export function updateNetatmoAverages(data: {}) {
   };
 }
 
-export function fetchTrains(station, direction) {
-  return (dispatch) => {
+export function fetchTrains(station: string, direction: string) {
+  return (dispatch: Function) => {
     return getTrains(station, direction).then(
       trains => dispatch(updateTrains(trains)),
     );
   };
 }
 
-export function fetchWeather(lat, lon) {
-  return (dispatch) => {
+export function fetchWeather(lat: number, lon: number) {
+  return (dispatch: Function) => {
     return getWeatherFromYr(lat, lon).then(
       weather => dispatch(updateWeather(weather, lat, lon)),
     );

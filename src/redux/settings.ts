@@ -14,7 +14,7 @@ const initialState = {
 export default function Settings(state: settings = initialState, action: { type: string, key: string, value: any }) {
   switch (action.type) {
     case UPDATE_SETTING: {
-      const newState = { ...state };
+      const newState: any = { ...state };
       newState[action.key] = action.value;
       Cookies.set(action.key, action.value);
       return newState;

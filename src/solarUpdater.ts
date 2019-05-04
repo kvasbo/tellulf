@@ -88,10 +88,10 @@ export default class solarUpdater {
   }
 }
 
-function parseByHour(data) {
+function parseByHour(data: []) {
   const startOfDay = Moment().startOf('day');
 
-  const out = data.map((d) => {
+  const out = data.map((d: { minutesFromMidnight: number, production: number }) => {
     const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
     return { time: time.valueOf(), production: d.production };
   });

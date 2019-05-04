@@ -42,14 +42,15 @@ export default function Weather(state: state = initialState, action: { type: str
       const from = Moment().startOf('day');
       const to = Moment().add(3, 'day').startOf('day');
       const toFilter = Object.values({ ...state.weather as weatherData, ...action.data.weather as weatherData });
-      const filtered = toFilter.filter((w) => {
+      const filtered = toFilter.filter((w: any) => {
         if (!w) return false;
         return Moment(w['time']).isBetween(from, to, undefined, '[]');
       });
-      const newWeather = {};
-      filtered.forEach((w) => {
+      const newWeather: any = {};
+      filtered.forEach((w: any) => {
         if (!w) return false;
         newWeather[w['time']] = w;
+        return true;
       });
       return {
         ...state,

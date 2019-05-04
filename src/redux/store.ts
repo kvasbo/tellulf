@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import throttle from 'lodash.throttle';
+import { throttle } from 'lodash';
 import tellulfReducer from './reducers';
 
 // eslint-disable-next-line no-underscore-dangle
@@ -18,7 +18,7 @@ export const loadState = () => {
   }
 }; 
 
-export const saveState = (state) => {
+export const saveState = (state: object) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem('state', serializedState);

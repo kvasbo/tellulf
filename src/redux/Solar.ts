@@ -5,7 +5,7 @@ const initialState = {
   current: {},
 };
 
-export default function Solar(state = initialState, action) {
+export default function Solar(state = initialState, action: { type: string, data: object }) {
   switch (action.type) {
     case UPDATE_SOLAR_MAX: {
       return { ...state, max: { ...state.max, ...action.data } };

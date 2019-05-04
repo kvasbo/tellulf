@@ -5,16 +5,24 @@ import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import 'moment/locale/nb';
 import Tellulf from './Tellulf';
-import firebase from './firebase.ts';
-import { store } from './redux/store.ts';
-import tibberUpdater from './tibberUpdater.ts';
-import solarUpdater from './solarUpdater.ts';
+import firebase from './firebase';
+import { store } from './redux/store';
+import tibberUpdater from './tibberUpdater';
+import solarUpdater from './solarUpdater';
+import { any } from 'prop-types';
 
 Moment.locale('nb');
 
-window.firebase = firebase;
+// window.firebase = firebase;
 const tibber = new tibberUpdater(store);
 const solar = new solarUpdater(store);
+
+interface AppState {
+  loggedIn: boolean;
+  user: number | null;
+  username: string;
+  password: string;
+} 
 
 const bugsnagClient = bugsnag({
   apiKey: '4676dc34576830eae89fbdd54dd96c96',
@@ -24,7 +32,9 @@ bugsnagClient.use(bugsnagReact, React);
 const ErrorBoundary = bugsnagClient.getPlugin('react');
 
 class App extends React.PureComponent {
-  constructor(props) {
+  state: AppState;
+
+  constructor(props: any) {
     super(props);
     this.state = { loggedIn: false, user: null, username: '', password: '' };
   }
@@ -52,7 +62,7 @@ class App extends React.PureComponent {
 
   doLogin() {
     if (!this.state.username || !this.state.password) alert("Tast inn brukernavn og passord din slask");
-    firebase.auth().signInWithEmailAndPassword(this.state.username, this.state.password).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(this.state.username, this.state.password).catch((error) => {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;

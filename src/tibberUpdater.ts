@@ -1,8 +1,9 @@
 import axios from "axios";
 import Moment from "moment";
 import firebase from "./firebase";
-import TibberConnector from 'tibber-pulse-connector';
+import TibberConnector from "tibber-pulse-connector";
 import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from "./redux/actions";
+import { string, number } from "prop-types";
 
 const nettleie = 0.477;
 
@@ -64,7 +65,7 @@ export default class tibberUpdater {
         const prices =
           data.data.data.viewer.home.currentSubscription.priceInfo.today;
         const powerPrices = {};
-        prices.forEach(p => {
+        prices.forEach((p: { startsAt: string, total: number }) => {
           const h = Moment(p.startsAt).hours();
           powerPrices[h] = { total: p.total + nettleie };
         });
@@ -127,7 +128,7 @@ export default class tibberUpdater {
 
     const settings:any = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
-    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data) => {
+    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: any ) => {
       if(!data.error) {
         this.store.dispatch(updateRealtimeConsumption(data)); 
       } else {

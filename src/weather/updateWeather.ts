@@ -10,16 +10,16 @@ import { weatherData } from '../redux/Weather';
 
 const localStorageKey = '5';
 
-export default async function getWeatherFromYr(lat, long) {
+export default async function getWeatherFromYr(lat: number, long: number) {
   const weatherOut = initWeather();
   const { start, end } = getTimeLimits(7);
   const now = Moment();
 
-  const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat}&lon=${long}`);
+  const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`);
   const parsed = XML.parse(data.data);
 
   // Six hour forecasts
-  const sixes = parsed.product.time.filter((d) => {
+  const sixes = parsed.product.time.filter((d: { from: string, to: string }) => {
     const fromUtc = Moment(d.from).utc().hours();
     if (fromUtc % 6 !== 0) return false;
     const from = Moment(d.from);
@@ -29,7 +29,7 @@ export default async function getWeatherFromYr(lat, long) {
   });
 
   const sixesOut = initWeatherLong();
-  sixes.forEach((s) => {
+  sixes.forEach((s: any) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
 
@@ -43,7 +43,7 @@ export default async function getWeatherFromYr(lat, long) {
     const fromNice = f.toISOString();
     const diff = t.diff(f, 'hours');
     const time = Moment(f).add(diff / 2, 'hours');
-    const key = createKeyBasedOnStamps(f, t);
+    const key = createKeyBasedOnStamps(f.toISOString(), t.toISOString());
     const rain = Number(s.location.precipitation.value);
     let rainMax = rain;
     let rainMin = rain;
@@ -65,18 +65,18 @@ export default async function getWeatherFromYr(lat, long) {
   });
 
 
-  const singlePoints = parsed.product.time.filter((d) => {
+  const singlePoints = parsed.product.time.filter((d: any) => {
     if (d.from !== d.to) return false;
     const from = Moment(d.from);
     if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
     return false;
   });
 
-  singlePoints.forEach((p) => {
+  singlePoints.forEach((p: { from: string, location: any }) => {
     const time = Moment(p.from);
     // Fake an hour!
     const to = Moment(p.from).add(1, 'hours');
-    const key = createKeyBasedOnStamps(p.from, to);
+    const key = createKeyBasedOnStamps(time.toISOString(), to.toISOString());
     if (key in weatherOut) {
       weatherOut[key].temp = p.location.temperature.value * 1;
       const clouds =p.location.cloudiness.percent * 1 / 100;
@@ -87,7 +87,7 @@ export default async function getWeatherFromYr(lat, long) {
     }
   });
 
-  const hours = parsed.product.time.filter((d) => {
+  const hours = parsed.product.time.filter((d: any) => {
     const from = Moment(d.from);
     const to = Moment(d.to);
     if (!(to.diff(from, 'hours') === 1)) return false;
@@ -95,7 +95,7 @@ export default async function getWeatherFromYr(lat, long) {
     return false;
   });
 
-  hours.forEach((p) => {
+  hours.forEach((p: { from: string, to: string, location: any }) => {
     // console.log(p);
     const time = Moment(p.from);
     // const key = time.valueOf();
@@ -129,7 +129,7 @@ export default async function getWeatherFromYr(lat, long) {
 }
 
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
-function storeToLocalStore(key, data, from, to) {
+function storeToLocalStore(key: string, data: any, from: object, to: object) {
   const toStore = {};
   Object.keys(data).forEach(k => {
     const d = data[k];
@@ -150,7 +150,7 @@ function initWeatherLong() {
   while (time.isSameOrBefore(spanEnd)) {
     const startTime = Moment(time);
     const endTime = Moment(time).add(spanToUseInHours, 'hours');
-    const key = createKeyBasedOnStamps(startTime, endTime);
+    const key = createKeyBasedOnStamps(startTime.toISOString(), endTime.toISOString());
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
     out[key] = {
@@ -178,7 +178,7 @@ function initWeather() {
     const time = start.valueOf();
     const from = Moment(start);
     const to = Moment(from).add(1, 'hours');
-    const key = createKeyBasedOnStamps(from, to);
+    const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
     out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time,
     } as weatherData;
@@ -197,7 +197,7 @@ function initWeather() {
   return out;
 }
 
-function createKeyBasedOnStamps(from, to) {
+function createKeyBasedOnStamps(from: string, to: string) {
   const f = Moment(from);
   const t = Moment(to);
   const key = `${f.toISOString()}->${t.toISOString()}`;
@@ -218,13 +218,13 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   if (dataArray.length === 0) {
     return { lowerRange: 0, upperRange: 30, maxRain: 0, maxRainTime: 0, maxTemp: 10, maxTempTime: 0, minTemp: 0, minTempTime: 0, ticks: [], ...sunData }
   }
-  const maxRainPoint = maxBy(dataArray, 'rainMax');
-  const maxRain = maxRainPoint.rainMax;
+  const maxRainPoint: any = maxBy(dataArray, 'rainMax');
+  const maxRain = (maxRainPoint && maxRainPoint.rainMax) ? maxRainPoint.rainMax : 0;
   const maxRainTime = maxRainPoint.time;
-  const maxTempPoint = maxBy(dataArray, 'temp');
+  const maxTempPoint: any = maxBy(dataArray, 'temp');
   const maxTemp = maxTempPoint.temp;
   const maxTempTime = maxTempPoint.time;
-  const minTempPoint = minBy(dataArray, 'temp');
+  const minTempPoint: any = minBy(dataArray, 'temp');
   const minTemp = minTempPoint.temp;
   const minTempTime = minTempPoint.time;
   const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
