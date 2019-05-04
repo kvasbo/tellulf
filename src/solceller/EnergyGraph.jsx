@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import SunCalc from 'suncalc';
 import './solceller.css';
-import { roundToNumberOfDecimals } from '../TellulfInfoCell';
+import { roundToNumberOfDecimals } from '../TellulfInfoCell.tsx';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
