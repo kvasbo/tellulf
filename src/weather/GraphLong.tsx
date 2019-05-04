@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import Moment from 'moment';
 import {
-  ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea,
+  ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea, Label
 } from 'recharts';
-import { getTimeLimits, parseLimits } from './updateWeather.ts';
-import WeatherIcon from './WeatherIcon.tsx';
+import { getTimeLimits, parseLimits } from './updateWeather';
+import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import { getNorwegianDaysOff } from '../external';
 import './yr.css';
@@ -17,8 +16,23 @@ const gridColor = '#FFFFFFAA';
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 
-class GraphLong extends React.PureComponent {
-  constructor(props) {
+interface props {
+  weatherLong: object;
+  limits: any;
+}
+
+interface state {
+  currentTime: number;
+}
+
+class GraphLong extends React.PureComponent<props, {}> {
+  state: state;
+
+  public static defaultProps = {
+    limits: undefined,
+  }
+
+  constructor(props: props) {
     super(props);
     this.state = { currentTime: Moment().valueOf() };
   }
@@ -43,13 +57,13 @@ class GraphLong extends React.PureComponent {
     const limits = parseLimits(data);
     const startTime = Moment().startOf('day').valueOf();
     const endTime = Moment().startOf('day').add(7, 'day').valueOf();
-    const divider0m = new Moment().startOf('day');
-    const divider1m = new Moment().startOf('day').add(1, 'day');
-    const divider2m = new Moment().startOf('day').add(2, 'day');
-    const divider3m = new Moment().startOf('day').add(3, 'day');
-    const divider4m = new Moment().startOf('day').add(4, 'day');
-    const divider5m = new Moment().startOf('day').add(5, 'day');
-    const divider6m = new Moment().startOf('day').add(6, 'day');
+    const divider0m = Moment().startOf('day');
+    const divider1m = Moment().startOf('day').add(1, 'day');
+    const divider2m = Moment().startOf('day').add(2, 'day');
+    const divider3m = Moment().startOf('day').add(3, 'day');
+    const divider4m = Moment().startOf('day').add(4, 'day');
+    const divider5m = Moment().startOf('day').add(5, 'day');
+    const divider6m = Moment().startOf('day').add(6, 'day');
     const divider0 = divider0m.valueOf();
     const divider1 = divider1m.valueOf();
     const divider2 = divider2m.valueOf();
@@ -62,7 +76,6 @@ class GraphLong extends React.PureComponent {
       <div className="yr-container">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
-            isAnimationActive={false}
             margin={{
               top: 0, right: 10, left: 10, bottom: 0,
             }}
@@ -79,14 +92,14 @@ class GraphLong extends React.PureComponent {
             <YAxis
               yAxisId="wind"
               type="number"
-              ticks={null}
+              ticks={[null]}
               domain={[0, 50]}
               hide
             />
             <YAxis
               yAxisId="clouds"
               type="number"
-              ticks={null}
+              ticks={[null]}
               domain={[0, 1]}
               hide
             />
@@ -108,7 +121,7 @@ class GraphLong extends React.PureComponent {
               domain={[0, 9]}
             />
             <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />
-            { limits.lowerRange < 0 && <ReferenceArea y1={0} y2={limits.lowerRange} yAxisId="temp" stroke={null} fill="#0000FF" fillOpacity="0.35" /> }
+            { limits.lowerRange < 0 && <ReferenceArea y1={0} y2={limits.lowerRange} yAxisId="temp" stroke="#00000000" fill="#0000FF" fillOpacity="0.35" /> }
             <Area dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rain" stroke="#8884d8" isAnimationActive={false} />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMin" stroke="#8884d8" strokeDasharray="2 2" isAnimationActive={false} />
             <Line dot={false} yAxisId="rain" connectNulls={false} type="natural" dataKey="rainMax" stroke="#8884d8AA" strokeDasharray="2 2" isAnimationActive={false} />
@@ -128,50 +141,55 @@ class GraphLong extends React.PureComponent {
               stroke="#FF000088"
               strokeWidth={3}
               strokeDasharray="3 3"
-              label={null}
             />
             <ReferenceLine
               yAxisId="temp"
               x={divider0}
-              stroke={null}
+              stroke="#00000000"
               strokeDasharray="1 0"
-              label={{ value: divider0m.format('dddd'), fill: getDayColor(divider0m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider0m.format('dddd')} fill={getDayColor(divider0m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               x={divider1}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider1m.format('dddd'), fill: getDayColor(divider1m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider1m.format('dddd')} fill={getDayColor(divider1m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               x={divider2}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider2m.format('dddd'), fill: getDayColor(divider2m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider2m.format('dddd')} fill={getDayColor(divider2m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               x={divider3}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider3m.format('dddd'), fill: getDayColor(divider3m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider3m.format('dddd')} fill={getDayColor(divider3m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               x={divider4}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider4m.format('dddd'), fill: getDayColor(divider4m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider4m.format('dddd')} fill={getDayColor(divider4m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               x={divider5}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider5m.format('dddd'), fill: getDayColor(divider5m), position: 'insideTopLeft' }}
-            />
+              >
+                <Label value={divider5m.format('dddd')} fill={getDayColor(divider5m)} position='insideTopLeft' />
+              </ReferenceLine>
             <ReferenceLine
               yAxisId="temp"
               y={0}
@@ -183,8 +201,10 @@ class GraphLong extends React.PureComponent {
               x={divider6}
               stroke={gridColor}
               strokeDasharray="2 2"
-              label={{ value: divider6m.format('dddd'), fill: getDayColor(divider6m), position: 'insideTopLeft' }}
-            />
+            >
+              <Label value={divider6m.format('dddd')} fill={getDayColor(divider6m)} position='insideTopLeft' />
+            </ReferenceLine>
+
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -204,7 +224,7 @@ function getTicks() {
   return out;
 }
 
-function getDayColor(time) {
+function getDayColor(time: any) {
   const d = Moment(time);
   if (d.day() === 0 || d.day() === 6) return sundayColor;
   const dString = d.format('MMDD');
@@ -212,25 +232,13 @@ function getDayColor(time) {
   return gridColor;
 }
 
-function formatTick(data) {
+function formatTick(data: any) {
   const time = Moment(data, 'x');
   return time.format('HH');
 }
 
-GraphLong.defaultProps = {
-  // weather: undefined,
-  limits: undefined,
-};
-
-GraphLong.propTypes = {
-  // weather: PropTypes.object,
-  limits: PropTypes.object,
-  weatherLong: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: { Weather: { long: any, limits: any }}) => {
   return {
-    // weather: state.Weather.weather,
     weatherLong: state.Weather.long,
     limits: state.Weather.limits,
   };

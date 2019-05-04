@@ -7,6 +7,7 @@
     "@bugsnag/plugin-react": "^6.0.0",
     "@types/js-cookie": "^2.2.2",
     "@types/lodash": "^4.14.123",
+    "@types/recharts": "^1.1.16",
     "@types/store": "^2.0.1",
     "@types/suncalc": "^1.8.0",
     "axios": "^0.18.0",

@@ -9,7 +9,6 @@ import firebase from './firebase';
 import { store } from './redux/store';
 import tibberUpdater from './tibberUpdater';
 import solarUpdater from './solarUpdater';
-import { any } from 'prop-types';
 
 Moment.locale('nb');
 

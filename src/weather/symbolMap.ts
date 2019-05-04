@@ -1,4 +1,10 @@
-const symbols = {};
+interface symbols {
+  day: any;
+  night: any;
+  blank: string;
+}
+
+const symbols: symbols = { day: {}, night: {}, blank: 'blank.png' };
 
 symbols.day = {};
 symbols.night = {};

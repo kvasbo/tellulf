@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchWeather } from '../redux/actions.ts';
+import { fetchWeather } from '../redux/actions';
 import GraphLong from './GraphLong';
 import './yr.css';
 
@@ -10,8 +10,19 @@ const steder = {
   sandefjord: { lat: 59.1347624, long: 10.3250789 },
 };
 
-class Yr extends React.PureComponent {
-  constructor(props) {
+interface props {
+  dispatch: Function;
+}
+
+interface state {
+  sted: string;
+}
+
+class Yr extends React.PureComponent<props, {}> {
+
+  state: state;
+
+  constructor(props: props) {
     super(props);
     this.state = { sted: 'oslo' };
   }
@@ -25,7 +36,7 @@ class Yr extends React.PureComponent {
     this.props.dispatch(fetchWeather(lat, long));
   }
 
-  stedEndra(e) {
+  stedEndra(e: any) {
     this.setState({ sted: e.currentTarget.value });
     const { lat, long } = steder[e.currentTarget.value];
     this.props.dispatch(fetchWeather(lat, long));
@@ -70,8 +81,10 @@ class Yr extends React.PureComponent {
   }
 }
 
+/*
 Yr.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
+*/
 
 export default connect()(Yr);
