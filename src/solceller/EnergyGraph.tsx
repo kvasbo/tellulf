@@ -30,7 +30,6 @@ interface props {
   realtimePower: { avgLastHour: number };
   initState: any;
   max: any;
-  currentNetProduction: number;
   currentNetConsumption: number;
 }
 

@@ -1,17 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
-import EnergyGraph from './EnergyGraph.tsx';
+import EnergyGraph from './EnergyGraph';
 import './solceller.css';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
+interface props {
+  initState: any;
+  realtimePower: any;
+  currentSolarProduction: any;
+  latitude: number;
+  longitude: number;
+  usedPower: any;
+  powerPrices: any;
+  max: any;
+}
 
-class Solceller extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.reloadTimer = null;
+class Solceller extends React.PureComponent<props, {}> {
+
+  public static defaultProps = {
+    latitude: defaultLatitude,
+    longitude: defaultLongitude,
   }
 
   render() {
@@ -49,24 +59,7 @@ class Solceller extends React.PureComponent {
   }
 }
 
-Solceller.defaultProps = {
-  latitude: defaultLatitude,
-  longitude: defaultLongitude,
-  usedPower: {},
-};
-
-Solceller.propTypes = {
-  currentSolarProduction: PropTypes.object.isRequired,
-  max: PropTypes.object.isRequired,
-  initState: PropTypes.object.isRequired,
-  powerPrices: PropTypes.object.isRequired,
-  latitude: PropTypes.number,
-  longitude: PropTypes.number,
-  realtimePower: PropTypes.object.isRequired,
-  usedPower: PropTypes.object,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: any) => {
   return {
     currentSolarProduction: state.Solar.current,
     max: state.Solar.max,
