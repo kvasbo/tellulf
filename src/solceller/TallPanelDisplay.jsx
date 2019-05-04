@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TellulfInfoCell from '../TellulfInfoCell';
+import TellulfInfoCell from '../TellulfInfoCell.tsx';
 import './solceller.css';
 
 class TallPanelDisplay extends React.PureComponent {

@@ -4,7 +4,7 @@ import Moment from 'moment';
 import { connect } from 'react-redux';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import firebase from './firebase';
-import TellulfInfoCell from './TellulfInfoCell.jsx';
+import TellulfInfoCell from './TellulfInfoCell';
 
 type Props = {
   Netatmo: netatmoStore,

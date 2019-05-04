@@ -6,32 +6,38 @@ import Solceller from './solceller/Solceller';
 import Yr from './weather/Yr';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
-import Netatmo from './Netatmo.tsx';
-import Klokke from './Klokke.tsx';
-import { fetchTrains } from './redux/actions.ts';
+import Netatmo from './Netatmo';
+import Klokke from './Klokke';
+import { fetchTrains } from './redux/actions';
 import './tellulf.css';
-
-function startReloadLoop() {
-  const now = new Moment();
-  const reload = Moment(now).startOf('hour').add(1, 'hour');
-  const diff = reload.diff(now, 'milliseconds');
-  window.reloadTimer = setTimeout(() => {
-    window.location.reload();
-  }, diff);
-}
 
 // Todo: Flytte listeners ut i egen tråd!
 
-class Tellulf extends React.PureComponent {
-  constructor(props) {
+interface props {
+  dispatch: Function;
+  loggedIn: boolean;
+  trains: object;
+}
+
+class Tellulf extends React.PureComponent<props, any> {
+  constructor(props: props) {
     super(props);
     this.doLoadData = this.doLoadData.bind(this);
   }
 
   componentDidMount() {
-    startReloadLoop();
+    this.startReloadLoop();
     setInterval(this.doLoadData, 1000);
     this.doLoadData(true);
+  }
+
+  startReloadLoop() {
+    const now = Moment();
+    const reload = Moment(now).startOf('hour').add(1, 'hour');
+    const diff = reload.diff(now, 'milliseconds');
+    setTimeout(() => {
+      window.location.reload();
+    }, diff);
   }
 
   doLoadData(force = false) {
@@ -69,13 +75,7 @@ class Tellulf extends React.PureComponent {
   }
 }
 
-Tellulf.propTypes = {
-  loggedIn: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  trains: PropTypes.object.isRequired,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state: { Trains: object }) {
   return {
     trains: state.Trains,
   };
