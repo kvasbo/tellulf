@@ -1,9 +1,55 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import TellulfInfoCell from '../TellulfInfoCell.tsx';
+import TellulfInfoCell from '../TellulfInfoCell';
 import './solceller.css';
 
-class TallPanelDisplay extends React.PureComponent {
+interface props {
+  currentPower: number;
+  netDay: number;
+  currentConsumption: number;
+  producedPercent: number;
+  accumulatedConsumption: number;
+  consumptionMinimum: number;
+  consumptionAverage: number;
+  consumptionMaximum: number;
+  accumulatedProduction: number;
+  accumulatedCost: number;
+  accumulatedReward: number;
+  maxPowerProduction: number;
+  localProductionDay: number;
+  localProductionMonth: number;
+  localProductionYear: number;
+  localProductionTotal: number;
+  localProductionMaxDay: number;
+  localProductionMaxMonth: number;
+  localProductionMaxYear: number;
+  localProductionMaxTotal: number;
+}
+
+class TallPanelDisplay extends React.PureComponent<props, {}> {
+
+  public static defaultPropss = {
+    currentPower: 0,
+    netDay: 0,
+    currentConsumption: 0,
+    producedPercent: 0,
+    accumulatedConsumption: 0,
+    consumptionMinimum: 0,
+    consumptionAverage: 0,
+    consumptionMaximum: 0,
+    accumulatedProduction: 0,
+    accumulatedCost: 0,
+    accumulatedReward: 0,
+    maxPowerProduction: 0,
+    localProductionDay: 0,
+    localProductionMonth: 0,
+    localProductionYear: 0,
+    localProductionTotal: 0,
+    localProductionMaxDay: 0,
+    localProductionMaxMonth: 0,
+    localProductionMaxYear: 0,
+    localProductionMaxTotal: 0,
+  }
+
   render() {
     return (
       <div style={{
@@ -141,6 +187,7 @@ class TallPanelDisplay extends React.PureComponent {
   }
 }
 
+/*
 TallPanelDisplay.defaultProps = {
   currentPower: undefined,
   currentConsumption: undefined,
@@ -186,5 +233,6 @@ TallPanelDisplay.propTypes = {
   accumulatedCost: PropTypes.number,
   netDay: PropTypes.number,
 };
+*/
 
 export default TallPanelDisplay;

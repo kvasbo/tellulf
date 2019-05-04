@@ -1,9 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TallPanelDisplay from './TallPanelDisplay';
 
-class TallPanel extends React.PureComponent {
-  constructor(props) {
+interface props {
+  realtimePower: any;
+  currentSolarProduction: any;
+  currentNetConsumption: any;
+  max: { maxDay: number, maxYear: number, maxMonth: number, maxEver: number }
+}
+
+class TallPanel extends React.PureComponent<props, {}> {
+
+  lastProduction: number;
+
+  constructor(props: props) {
     super(props);
     this.lastProduction = 0;
   }
@@ -24,7 +33,6 @@ class TallPanel extends React.PureComponent {
     return (
       <TallPanelDisplay
         currentPower={this.props.currentNetConsumption}
-        currentProduction={this.props.currentSolarProduction.now}
         currentConsumption={this.props.realtimePower.calculatedConsumption}
         producedPercent={producedPercent}
         accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
@@ -48,12 +56,5 @@ class TallPanel extends React.PureComponent {
     );
   }
 }
-
-TallPanel.propTypes = {
-  currentSolarProduction: PropTypes.object.isRequired,
-  realtimePower: PropTypes.object.isRequired,
-  max: PropTypes.object.isRequired,
-  currentNetConsumption: PropTypes.number.isRequired,
-};
 
 export default TallPanel;
