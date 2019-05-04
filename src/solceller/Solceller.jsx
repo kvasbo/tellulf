@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
-import EnergyGraph from './EnergyGraph';
+import EnergyGraph from './EnergyGraph.tsx';
 import './solceller.css';
 
 const defaultLatitude = 59.9409;
