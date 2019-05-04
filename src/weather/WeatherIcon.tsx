@@ -3,7 +3,25 @@ import PropTypes from 'prop-types';
 
 const baseUrl = './WeatherIcons/';
 
-class WeatherIcon extends React.PureComponent {
+interface props {
+  symbolMap: any;
+  payload: any;
+  sunrise: number;
+  sunset: number;
+  cx: number;
+  cy: number;
+}
+
+class WeatherIcon extends React.PureComponent<props, {}> {
+
+  public static defaultProps = {
+    cx: undefined,
+    cy: undefined,
+    payload: undefined,
+    sunrise: 0,
+    sunset: 3484811880000,
+  }
+
   getIconLocation() {
     let icon = this.props.symbolMap.blank;
     const nattdag = (this.props.payload.time % 86400000 >= this.props.sunrise % 86400000 && this.props.payload.time % 86400000 <= this.props.sunset % 86400000) ? 'day' : 'night';
@@ -30,22 +48,5 @@ class WeatherIcon extends React.PureComponent {
     );
   }
 }
-
-WeatherIcon.defaultProps = {
-  cx: undefined,
-  cy: undefined,
-  payload: undefined,
-  sunrise: 0,
-  sunset: 3484811880000,
-};
-
-WeatherIcon.propTypes = {
-  payload: PropTypes.object,
-  cx: PropTypes.number,
-  cy: PropTypes.number,
-  sunrise: PropTypes.number,
-  sunset: PropTypes.number,
-  symbolMap: PropTypes.object.isRequired,
-};
 
 export default WeatherIcon;

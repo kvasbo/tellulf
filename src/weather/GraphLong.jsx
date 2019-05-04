@@ -8,7 +8,7 @@ import {
   ComposedChart, Line, XAxis, YAxis, ResponsiveContainer, Area, CartesianGrid, ReferenceLine, ReferenceArea,
 } from 'recharts';
 import { getTimeLimits, parseLimits } from './updateWeather.ts';
-import WeatherIcon from './WeatherIcon';
+import WeatherIcon from './WeatherIcon.tsx';
 import symbolMap from './symbolMap';
 import { getNorwegianDaysOff } from '../external';
 import './yr.css';
