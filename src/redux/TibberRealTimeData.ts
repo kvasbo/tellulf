@@ -1,7 +1,7 @@
 import { UPDATE_TIBBER_REALTIME_CONSUMPTION } from './actions';
 import Moment from 'moment';
 
-interface realtimeData {
+interface RealtimeData {
   accumulatedConsumption?: number;
   accumulatedCost?: number;
   accumulatedProduction?: number;
@@ -21,14 +21,14 @@ interface realtimeData {
   previousMeasuredProduction: number;
 }
 
-interface state extends realtimeData {
+interface State extends RealtimeData {
   lastHourByTenMinutes?: {};
   avgLastHour: number;
   avgLastHourSamples?: number;
   avgLastHourStamp?: string;
 }
 
-const defaultState: state = {
+const defaultState: State = {
   accumulatedConsumption: 0,
   accumulatedCost: 0,
   accumulatedProduction: 0,
@@ -52,13 +52,13 @@ const defaultState: state = {
   avgLastHourStamp: new Date().toISOString(),
 };
 
-interface powerMinute {
+interface PowerMinute {
   startTime: string;
   usage: number;
   samples: number;
 }
 
-export default function TibberRealTime(state: state = defaultState, action: { type: string; data: realtimeData }) {
+export default function TibberRealTime(state: State = defaultState, action: { type: string; data: RealtimeData }) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
       const {
@@ -114,7 +114,7 @@ export default function TibberRealTime(state: state = defaultState, action: { ty
           .toISOString();
         // console.log(startTime);
 
-        const toStore: powerMinute = { startTime, usage: 0, samples: 0 };
+        // const toStore: PowerMinute = { startTime, usage: 0, samples: 0 };
 
         if (lastHourByTenMinutes[startTime]) {
           // TODO make average!

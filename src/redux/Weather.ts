@@ -3,7 +3,7 @@ import { UPDATE_WEATHER } from './actions';
 import { parseLimits } from '../weather/updateWeather';
 import { WeatherData } from '../types/weather';
 
-interface state {
+interface State {
   weather: {} | undefined;
   long: {};
   limits: {} | undefined;
@@ -22,7 +22,7 @@ const initialState = {
 };
 
 export default function Weather(
-  state: state = initialState,
+  state: State = initialState,
   action: { type: string; data: any; lat: number; lon: number },
 ) {
   switch (action.type) {
