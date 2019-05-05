@@ -1,22 +1,19 @@
 import React from 'react';
 import TallPanelDisplay from './TallPanelDisplay';
 
-interface props {
+interface Props {
   realtimePower: any;
   currentSolarProduction: any;
   currentNetConsumption: any;
   max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 
-class TallPanel extends React.PureComponent<props, {}> {
-  lastProduction: number;
-
-  constructor(props: props) {
+class TallPanel extends React.PureComponent<Props, {}> {
+  public constructor(props: Props) {
     super(props);
-    this.lastProduction = 0;
   }
 
-  render() {
+  public render() {
     // Calculate percentage of usage
     let producedPercent = 0;
     try {

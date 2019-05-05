@@ -10,10 +10,20 @@ interface Props {
   date: string;
 }
 
-interface State {}
+function getDayHeader(date: string) {
+  const dateHeaderFormats = {
+    sameDay: '[I dag]',
+    nextDay: '[I morgen]',
+    nextWeek: 'dddd',
+    nextMonth: 'dddd D.',
+    sameElse: 'dddd DD. MMM',
+  };
+  const dateStr = Moment(date).calendar(undefined, dateHeaderFormats);
+  return dateStr;
+}
 
-class Dag extends React.PureComponent<Props, State> {
-  getDinner() {
+class Dag extends React.PureComponent<Props, {}> {
+  private getDinner() {
     try {
       if (!this.props.dinner || !this.props.dinner.events) return null;
       return <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>;
@@ -23,7 +33,7 @@ class Dag extends React.PureComponent<Props, State> {
     }
   }
 
-  getBirthdays() {
+  private getBirthdays() {
     if (!this.props.birthdays || !this.props.birthdays.events) return null;
     const out: any[] = [];
     try {
@@ -49,7 +59,7 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  getEvents() {
+  private getEvents() {
     if (!this.props.events || !this.props.events.events) return null;
     const out: any[] = [];
 
@@ -71,7 +81,7 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  render() {
+  public render() {
     return (
       <div style={{ marginBottom: 10 }}>
         <div style={{ padding: 5 }}>{getDayHeader(this.props.date)}</div>
@@ -84,15 +94,3 @@ class Dag extends React.PureComponent<Props, State> {
 }
 
 export default Dag;
-
-function getDayHeader(date: string) {
-  const dateHeaderFormats = {
-    sameDay: '[I dag]',
-    nextDay: '[I morgen]',
-    nextWeek: 'dddd',
-    nextMonth: 'dddd D.',
-    sameElse: 'dddd DD. MMM',
-  };
-  const dateStr = Moment(date).calendar(undefined, dateHeaderFormats);
-  return dateStr;
-}
