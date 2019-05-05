@@ -17,13 +17,13 @@
     "noEmit": true,
     "jsx": "preserve",
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [ "./externalLibraryTypes", "./node_modules/@types"],
+    "typeRoots": [ "./externalLibraryTypeDefinitions", "./node_modules/@types"],
     "rootDir": "src"
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "node_modules", "externalLibraryTypes"
+    "node_modules", "externalLibraryTypeDefinitions"
   ]
 }
