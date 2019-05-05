@@ -12,16 +12,23 @@ import {
   CartesianGrid,
   Label,
 } from 'recharts';
-import SunCalc from 'suncalc';
-import './solceller.css';
-import { roundToNumberOfDecimals } from '../TellulfInfoCell';
 
-const defaultLatitude = 59.9409;
-const defaultLongitude = 10.6991;
+import './solceller.css';
+
+import {
+  getMaxSunHeight,
+  getEnergyScaleMax,
+  getSunForTime,
+  formatEnergyScaleTick,
+  getDataPointObject,
+  getXAxis,
+  getXTicks,
+  formatTick,
+} from './energyHelpers';
 
 const maxSunHeight = getMaxSunHeight();
 
-interface props {
+interface Props {
   currentSolarProduction: any;
   powerPrices: object;
   latitude: number;
@@ -33,34 +40,34 @@ interface props {
   currentNetConsumption: number;
 }
 
-interface state {
+interface State {
   currentTime: number;
 }
 
-class EnergyGraph extends React.PureComponent<props, {}> {
-  state: state;
+class EnergyGraph extends React.PureComponent<Props, State> {
+  public state: State;
 
-  constructor(props: props) {
+  public constructor(props: Props) {
     super(props);
     this.state = {
       currentTime: Moment().valueOf(),
     };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     setInterval(() => {
       this.reloadTime();
     }, 300000); // Flytt sola hvert femte minutt
   }
 
-  getCurrentLabelPosition() {
+  private getCurrentLabelPosition() {
     if (this.props.currentSolarProduction.averagefull > 3300) {
       return 'right';
     }
     return 'right';
   }
 
-  getData() {
+  private getData() {
     const dataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
     const timeZoneAdd = 3600000;
@@ -116,11 +123,11 @@ class EnergyGraph extends React.PureComponent<props, {}> {
     return Object.values(dataSet);
   }
 
-  reloadTime() {
+  private reloadTime() {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
-  render() {
+  public render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
 
     // const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');
@@ -271,82 +278,3 @@ class EnergyGraph extends React.PureComponent<props, {}> {
 }
 
 export default EnergyGraph;
-
-function getSunForTime(time: any, latitude = defaultLatitude, longitude = defaultLongitude) {
-  const s = SunCalc.getPosition(Moment(time).toDate(), latitude, longitude);
-  return Math.max(0, s.altitude);
-}
-
-function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitude) {
-  try {
-    // Get max height of sun in position
-    const solstice = Moment('2018-06-21').toDate();
-    const sunTimes = SunCalc.getTimes(solstice, latitude, longitude);
-    const data = SunCalc.getPosition(sunTimes.solarNoon, latitude, longitude);
-    return data.altitude;
-  } catch (err) {
-    return 1;
-  }
-}
-
-// Get maximum value for energy scale axis
-function getEnergyScaleMax(data: number): number {
-  const maxVal = Math.ceil(data / 1000);
-  return Math.max(5, maxVal);
-}
-
-function formatEnergyScaleTick(data: number): string {
-  // return Number(data, 10).toLocaleString();
-  return `${roundToNumberOfDecimals(data, 1)}`;
-}
-
-function getDataPointObject(): {} {
-  const out = {};
-  const time = Moment().startOf('day');
-  for (let i = 0; i < 144; i += 1) {
-    const key = time.valueOf();
-    out[key] = {
-      time: key,
-      production: null,
-      price: null,
-      consumption: null,
-    };
-    time.add(10, 'minutes');
-  }
-  return out;
-}
-
-function getXAxis(): [number, number] {
-  const from = Moment()
-    .startOf('day')
-    .valueOf();
-  const to = Moment()
-    .endOf('day')
-    .valueOf();
-  return [from, to];
-}
-
-function getXTicks(): any[] {
-  const { start, end } = getTimeLimits();
-  const out = [];
-  while (start.isSameOrBefore(end)) {
-    if (start.hours() % 2 === 0) {
-      out.push(start.valueOf());
-    }
-    start.add(1, 'hours');
-  }
-  return out;
-}
-
-function formatTick(data: number): string {
-  const time = Moment(data).local();
-  return time.format('HH');
-}
-
-export function getTimeLimits(): { start: Moment.Moment; end: Moment.Moment } {
-  const start = Moment().startOf('day');
-  const end = Moment()
-    .add(1, 'day')
-    .startOf('day');
-  return { start, end };
-}

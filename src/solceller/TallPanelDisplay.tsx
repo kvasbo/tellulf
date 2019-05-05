@@ -2,7 +2,7 @@ import React from 'react';
 import TellulfInfoCell from '../TellulfInfoCell';
 import './solceller.css';
 
-interface props {
+interface Props {
   currentPower: number;
   netDay: number;
   currentConsumption: number;
@@ -25,7 +25,7 @@ interface props {
   localProductionMaxTotal: number;
 }
 
-class TallPanelDisplay extends React.PureComponent<props, {}> {
+class TallPanelDisplay extends React.PureComponent<Props, {}> {
   public static defaultPropss = {
     currentPower: 0,
     netDay: 0,
@@ -49,7 +49,7 @@ class TallPanelDisplay extends React.PureComponent<props, {}> {
     localProductionMaxTotal: 0,
   };
 
-  render() {
+  public render() {
     return (
       <div
         style={{

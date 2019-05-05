@@ -8,7 +8,7 @@ import './solceller.css';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
-interface props {
+interface Props {
   initState: any;
   realtimePower: any;
   currentSolarProduction: SolarCurrent;
@@ -19,13 +19,13 @@ interface props {
   max: any;
 }
 
-class Solceller extends React.PureComponent<props, {}> {
+class Solceller extends React.PureComponent<Props, {}> {
   public static defaultProps = {
     latitude: defaultLatitude,
     longitude: defaultLongitude,
   };
 
-  render() {
+  public render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
 
     // Regne ut felles verdier.
