@@ -5,11 +5,10 @@ interface props {
   realtimePower: any;
   currentSolarProduction: any;
   currentNetConsumption: any;
-  max: { maxDay: number, maxYear: number, maxMonth: number, maxEver: number }
+  max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 
 class TallPanel extends React.PureComponent<props, {}> {
-
   lastProduction: number;
 
   constructor(props: props) {
@@ -23,8 +22,11 @@ class TallPanel extends React.PureComponent<props, {}> {
     try {
       if (this.props.realtimePower.accumulatedConsumption) {
         // Brukt = laget hjemme + betalt for - solgt
-        const spent = this.props.currentSolarProduction.today + (this.props.realtimePower.accumulatedConsumption * 1000) - (this.props.realtimePower.accumulatedProduction * 1000);
-        producedPercent = this.props.currentSolarProduction.today / spent * 100;
+        const spent =
+          this.props.currentSolarProduction.today +
+          this.props.realtimePower.accumulatedConsumption * 1000 -
+          this.props.realtimePower.accumulatedProduction * 1000;
+        producedPercent = (this.props.currentSolarProduction.today / spent) * 100;
       }
     } catch (err) {
       console.log(err);

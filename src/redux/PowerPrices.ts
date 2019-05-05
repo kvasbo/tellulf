@@ -1,12 +1,15 @@
 import { UPDATE_POWER_PRICES } from './actions';
 
 export interface PowerPrices {
-  [s: number] : { total: number };
+  [s: number]: { total: number };
 }
 
 const initState: PowerPrices = {};
 
-export default function PowerPrices(state: PowerPrices = initState, action: { type: string, data: PowerPrices }) : PowerPrices {
+export default function PowerPrices(
+  state: PowerPrices = initState,
+  action: { type: string; data: PowerPrices },
+): PowerPrices {
   switch (action.type) {
     case UPDATE_POWER_PRICES: {
       try {

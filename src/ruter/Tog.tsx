@@ -2,8 +2,8 @@ import React from 'react';
 import { ExtendedTrainData } from '../types/trains';
 import { Style } from '../types/generic';
 
-const secondsToShow: number = 3600;
-const totalWidth: number = 800;
+const secondsToShow = 3600;
+const totalWidth = 800;
 const pixelsPerSecond: number = totalWidth / secondsToShow;
 
 interface Props {
@@ -50,8 +50,9 @@ export default class Tog extends React.PureComponent<Props, {}> {
 
   render() {
     return (
-      <div className="train" style={this.getStyles()} onClick={() => this.showTime()}>{this.getText()}</div>
+      <div className="train" style={this.getStyles()} onClick={() => this.showTime()}>
+        {this.getText()}
+      </div>
     );
   }
 }
-

@@ -1,9 +1,9 @@
-import axios from "axios";
-import Moment from "moment";
-import firebase from "./firebase";
-import TibberConnector from "tibber-pulse-connector";
-import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from "./redux/actions";
-import { string, number } from "prop-types";
+import axios from 'axios';
+import Moment from 'moment';
+import firebase from './firebase';
+import TibberConnector from 'tibber-pulse-connector';
+import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from './redux/actions';
+import { string, number } from 'prop-types';
 
 const nettleie = 0.477;
 
@@ -14,11 +14,11 @@ const netPriceSettings = {
     kwpProd: 0.07,
   },
   Hytta: {
-    fast: 287.50,
+    fast: 287.5,
     kwh: 0.41913,
     kwhProd: 0.07,
-  }
-}
+  },
+};
 
 export default class tibberUpdater {
   store: { dispatch: Function };
@@ -50,32 +50,29 @@ export default class tibberUpdater {
 
     try {
       const data = await axios({
-        url: "https://api.tibber.com/v1-beta/gql",
-        method: "post",
+        url: 'https://api.tibber.com/v1-beta/gql',
+        method: 'post',
         headers: {
-          Authorization:
-            `bearer ${settings.tibberApiKey}`
+          Authorization: `bearer ${settings.tibberApiKey}`,
         },
         data: {
-          query: queryPrices
-        }
+          query: queryPrices,
+        },
       });
       if (data.status === 200) {
         // Parse power prices
-        const prices =
-          data.data.data.viewer.home.currentSubscription.priceInfo.today;
+        const prices = data.data.data.viewer.home.currentSubscription.priceInfo.today;
         const powerPrices = {};
-        prices.forEach((p: { startsAt: string, total: number }) => {
+        prices.forEach((p: { startsAt: string; total: number }) => {
           const h = Moment(p.startsAt).hours();
           powerPrices[h] = { total: p.total + nettleie };
         });
         this.store.dispatch(updatePowerPrices(powerPrices));
-        this.store.dispatch(updateInitStatus("powerPrices"));
+        this.store.dispatch(updateInitStatus('powerPrices'));
       }
     } catch (err) {
       console.log(err);
     }
-
   }
 
   async updateConsumption() {
@@ -103,15 +100,14 @@ export default class tibberUpdater {
 
     try {
       const data = await axios({
-        url: "https://api.tibber.com/v1-beta/gql",
-        method: "post",
+        url: 'https://api.tibber.com/v1-beta/gql',
+        method: 'post',
         headers: {
-          Authorization:
-            `bearer ${settings.tibberApiKey}`
+          Authorization: `bearer ${settings.tibberApiKey}`,
         },
         data: {
-          query: queryUsage
-        }
+          query: queryUsage,
+        },
       });
       if (data.status === 200) {
         const usage = data.data.data.viewer.home.consumption.nodes;
@@ -120,23 +116,20 @@ export default class tibberUpdater {
     } catch (err) {
       console.log(err);
     }
-
   }
 
   // Create and start websocket connection
   async subscribeToRealTime() {
-
-    const settings:any = await this.getTibberSettings();
+    const settings: any = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
-    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: any ) => {
-      if(!data.error) {
-        this.store.dispatch(updateRealtimeConsumption(data)); 
+    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: any) => {
+      if (!data.error) {
+        this.store.dispatch(updateRealtimeConsumption(data));
       } else {
         throw new Error(data.error);
       }
     });
     this.tibberSocket.start();
-
   }
 
   async updateConsumptionMonthlyAndCalculateBills() {
@@ -166,25 +159,24 @@ export default class tibberUpdater {
 
     try {
       const data = await axios({
-        url: "https://api.tibber.com/v1-beta/gql",
-        method: "post",
+        url: 'https://api.tibber.com/v1-beta/gql',
+        method: 'post',
         headers: {
-          Authorization:
-            `bearer ${settings.tibberApiKey}`
+          Authorization: `bearer ${settings.tibberApiKey}`,
         },
         data: {
-          query: queryUsage
-        }
+          query: queryUsage,
+        },
       });
       if (data.status === 200) {
         const usage = data.data.data.viewer.homes;
-        usage.forEach((u: { appNickname: string, consumption: { nodes: [] }}) => {
+        usage.forEach((u: { appNickname: string; consumption: { nodes: [] } }) => {
           console.group(u.appNickname);
-          console.info("OBS: Mangler produksjonsdata!")
-          u.consumption.nodes.forEach((n: { from: string, to: string, totalCost: number, consumption: number }) => {
-            const from = Moment(n.from).format("MMMM");
+          console.info('OBS: Mangler produksjonsdata!');
+          u.consumption.nodes.forEach((n: { from: string; to: string; totalCost: number; consumption: number }) => {
+            const from = Moment(n.from).format('MMMM');
             const tibberPrice = n.totalCost; //.toFixed(2).toLocaleString();
-            const netPrice = (n.consumption * netPriceSettings[u.appNickname].kwh + netPriceSettings[u.appNickname].fast); //.toFixed(2).toLocaleString();
+            const netPrice = n.consumption * netPriceSettings[u.appNickname].kwh + netPriceSettings[u.appNickname].fast; //.toFixed(2).toLocaleString();
             const totalPrice = tibberPrice + netPrice;
             console.group(`${from}: `);
             console.log(`Strøm: ${tibberPrice.toFixed(2).toLocaleString()}`);
@@ -200,19 +192,19 @@ export default class tibberUpdater {
     } catch (err) {
       console.log(err);
     }
-
   }
 
   // Get tibber settings from firebase
   async getTibberSettings() {
-    const settings:{ tibberApiKey:string, tibberHomeKey:string, tibberCabinKey:string } = await new Promise((resolve, reject) => {
-      const settingsRef = firebase.database().ref('settings');
-      settingsRef.once('value', (snapshot: any) => {
-        const settings = snapshot.val();
-        resolve(settings);
-      });
-    });
+    const settings: { tibberApiKey: string; tibberHomeKey: string; tibberCabinKey: string } = await new Promise(
+      (resolve, reject) => {
+        const settingsRef = firebase.database().ref('settings');
+        settingsRef.once('value', (snapshot: any) => {
+          const settings = snapshot.val();
+          resolve(settings);
+        });
+      },
+    );
     return settings;
   }
-
 }

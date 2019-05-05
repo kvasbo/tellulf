@@ -6,8 +6,8 @@ const initialState: SolarState = {
     maxDay: 0,
     maxMonth: 0,
     maxYear: 0,
-    maxEver: 0
-  }, 
+    maxEver: 0,
+  },
   current: {
     averageFull: 0,
     averageMinute: 0,
@@ -42,12 +42,12 @@ export interface SolarCurrent {
   today: number;
   total: number;
   year: number;
-  byHour: {time: number, production: number}[]
+  byHour: { time: number; production: number }[];
   currentTime: Moment.Moment;
   dataTime: Moment.Moment | null;
 }
 
-export default function Solar(state: SolarState = initialState, action: { type: string, data: object }) : SolarState {
+export default function Solar(state: SolarState = initialState, action: { type: string; data: object }): SolarState {
   switch (action.type) {
     case UPDATE_SOLAR_MAX: {
       return { ...state, max: { ...state.max, ...action.data } };

@@ -15,16 +15,20 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(7);
   const now = Moment();
 
-  const data = await axios.get(`https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`);
+  const data = await axios.get(
+    `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
+  );
   const parsed = XML.parse(data.data);
 
   // Six hour forecasts
-  const sixes = parsed.product.time.filter((d: { from: string, to: string }) => {
-    const fromUtc = Moment(d.from).utc().hours();
+  const sixes = parsed.product.time.filter((d: { from: string; to: string }) => {
+    const fromUtc = Moment(d.from)
+      .utc()
+      .hours();
     if (fromUtc % 6 !== 0) return false;
     const from = Moment(d.from);
     const to = Moment(d.to);
-    if ((to.diff(from, 'hours') === 6)) return true;
+    if (to.diff(from, 'hours') === 6) return true;
     return false;
   });
 
@@ -34,7 +38,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     const t = Moment(s.to);
 
     // Kill!
-    if(f.isBefore(start) || t.isAfter(end)) {
+    if (f.isBefore(start) || t.isAfter(end)) {
       return;
     }
 
@@ -52,18 +56,28 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     }
     if (s.location.precipitation.minvalue) {
       rainMin = Number(s.location.precipitation.minvalue);
-    } 
+    }
     const symbol = s.location.symbol.id;
     const symbolNumber = Number(s.location.symbol.number);
     const minTemp = Number(s.location.minTemperature.value);
     const maxTemp = Number(s.location.maxTemperature.value);
     const temp = Math.round((minTemp + maxTemp) / 2);
     const out = {
-      from, to, fromNice, time: time.valueOf(), temp, minTemp, maxTemp, rain, rainMax, rainMin, symbol, symbolNumber
-    }
+      from,
+      to,
+      fromNice,
+      time: time.valueOf(),
+      temp,
+      minTemp,
+      maxTemp,
+      rain,
+      rainMax,
+      rainMin,
+      symbol,
+      symbolNumber,
+    };
     sixesOut[key] = out;
   });
-
 
   const singlePoints = parsed.product.time.filter((d: any) => {
     if (d.from !== d.to) return false;
@@ -72,14 +86,14 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     return false;
   });
 
-  singlePoints.forEach((p: { from: string, location: any }) => {
+  singlePoints.forEach((p: { from: string; location: any }) => {
     const time = Moment(p.from);
     // Fake an hour!
     const to = Moment(p.from).add(1, 'hours');
     const key = createKeyBasedOnStamps(time.toISOString(), to.toISOString());
     if (key in weatherOut) {
       weatherOut[key].temp = p.location.temperature.value * 1;
-      const clouds =p.location.cloudiness.percent * 1 / 100;
+      const clouds = (p.location.cloudiness.percent * 1) / 100;
       weatherOut[key].clouds = clouds;
       weatherOut[key].cloudsNeg = 1 - clouds;
       weatherOut[key].wind = Number(p.location.windSpeed.mps);
@@ -95,7 +109,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     return false;
   });
 
-  hours.forEach((p: { from: string, to: string, location: any }) => {
+  hours.forEach((p: { from: string; to: string; location: any }) => {
     // console.log(p);
     const time = Moment(p.from);
     // const key = time.valueOf();
@@ -112,7 +126,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
-  Object.values(weatherOut).forEach((p) => {
+  Object.values(weatherOut).forEach(p => {
     const d = p as WeatherData;
     if (!d) return;
     const time = Moment(d.time);
@@ -145,8 +159,12 @@ function storeToLocalStore(key: string, data: any, from: object, to: object) {
 function initWeatherLong() {
   const spanToUseInHours = 6;
   const out = {};
-  const time = Moment().utc().startOf('day');
-  const spanEnd = Moment(time).add(8, 'day').startOf('day');
+  const time = Moment()
+    .utc()
+    .startOf('day');
+  const spanEnd = Moment(time)
+    .add(8, 'day')
+    .startOf('day');
   while (time.isSameOrBefore(spanEnd)) {
     const startTime = Moment(time);
     const endTime = Moment(time).add(spanToUseInHours, 'hours');
@@ -154,7 +172,13 @@ function initWeatherLong() {
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
     out[key] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: midTime.valueOf(),
+      temp: null,
+      rain: null,
+      rainMin: null,
+      rainMax: null,
+      symbol: null,
+      symbolNumber: null,
+      time: midTime.valueOf(),
     } as WeatherData;
     time.add(spanToUseInHours, 'hours');
   }
@@ -162,7 +186,7 @@ function initWeatherLong() {
   // Load localstore if applicable, and write to output item if applicable
   const fromStore = store.get(`weatherLong_${localStorageKey}`);
   if (fromStore) {
-    Object.keys(fromStore).forEach((k) => {
+    Object.keys(fromStore).forEach(k => {
       if (out[k]) {
         out[k] = { ...out[k], ...fromStore[k] };
       }
@@ -180,7 +204,16 @@ function initWeather() {
     const to = Moment(from).add(1, 'hours');
     const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
     out[key] = {
-      temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time,
+      temp: null,
+      rain: null,
+      rainMin: null,
+      rainMax: null,
+      clouds: null,
+      wind: null,
+      symbol: null,
+      symbolNumber: null,
+      sunHeight: null,
+      time,
     } as WeatherData;
     start.add(1, 'hours');
   }
@@ -188,7 +221,7 @@ function initWeather() {
   // Load localstore if applicable, and write to output item if applicable
   const fromStore = store.get(`weather_${localStorageKey}`);
   if (fromStore) {
-    Object.keys(fromStore).forEach((k) => {
+    Object.keys(fromStore).forEach(k => {
       if (out[k]) {
         out[k] = { ...out[k], ...fromStore[k] };
       }
@@ -206,20 +239,32 @@ function createKeyBasedOnStamps(from: string, to: string) {
 
 export function getTimeLimits(days = 3) {
   const start = Moment().startOf('day');
-  const end = Moment().add(days, 'day').startOf('day');
+  const end = Moment()
+    .add(days, 'day')
+    .startOf('day');
   return { start, end };
 }
 
 export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6991) {
-  
   const dataArray = Object.values(data);
   const sunData = getSunMeta(lat, long);
-  
+
   if (dataArray.length === 0) {
-    return { lowerRange: 0, upperRange: 30, maxRain: 0, maxRainTime: 0, maxTemp: 10, maxTempTime: 0, minTemp: 0, minTempTime: 0, ticks: [], ...sunData }
+    return {
+      lowerRange: 0,
+      upperRange: 30,
+      maxRain: 0,
+      maxRainTime: 0,
+      maxTemp: 10,
+      maxTempTime: 0,
+      minTemp: 0,
+      minTempTime: 0,
+      ticks: [],
+      ...sunData,
+    };
   }
   const maxRainPoint: any = maxBy(dataArray, 'rainMax');
-  const maxRain = (maxRainPoint && maxRainPoint.rainMax) ? maxRainPoint.rainMax : 0;
+  const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
   const maxRainTime = maxRainPoint.time;
   const maxTempPoint: any = maxBy(dataArray, 'temp');
   const maxTemp = maxTempPoint.temp;
@@ -229,7 +274,7 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   const minTempTime = minTempPoint.time;
   const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
   const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
-  const lowerRange = (minTemp > 0) ? 0 : Math.min(0, roundedMin);
+  const lowerRange = minTemp > 0 ? 0 : Math.min(0, roundedMin);
   const upperRange = Math.max(lowerRange + 30, roundedMax);
 
   const ticks: number[] = [];
@@ -238,7 +283,16 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   }
 
   const out = {
-    lowerRange, upperRange, maxRain, maxRainTime, maxTemp, maxTempTime, minTemp, minTempTime, ticks, ...sunData
+    lowerRange,
+    upperRange,
+    maxRain,
+    maxRainTime,
+    maxTemp,
+    maxTempTime,
+    minTemp,
+    minTempTime,
+    ticks,
+    ...sunData,
   };
 
   return out;
@@ -257,6 +311,9 @@ function getSunMeta(lat: number, long: number, now = Moment()) {
   const sunrise = sunriseM.valueOf();
   const sunset = sunsetM.valueOf();
   return {
-    sunrise, sunset, diffRise, diffSet,
+    sunrise,
+    sunset,
+    diffRise,
+    diffSet,
   };
 }

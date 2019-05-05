@@ -2,8 +2,8 @@ import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
 import { NetatmoStore } from './Netatmo';
-import  { WeatherDataSet } from '../types/weather';
-import  { TrainDataSet } from '../types/trains';
+import { WeatherDataSet } from '../types/weather';
+import { TrainDataSet } from '../types/trains';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -40,18 +40,18 @@ export function updateWeather(data: WeatherDataSet, lat: number, lon: number) {
   };
 }
 
-export function updateRealtimeConsumption(data : { data: { liveMeasurement: object } }) {
-  if (!data.data || !data.data.liveMeasurement)  {
+export function updateRealtimeConsumption(data: { data: { liveMeasurement: object } }) {
+  if (!data.data || !data.data.liveMeasurement) {
     console.log('Bad tibber data received', data);
     return;
   }
   return {
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
-    data: { ...data.data.liveMeasurement } ,
+    data: { ...data.data.liveMeasurement },
   };
 }
 
-export function updatePowerUsage(data : {}) {
+export function updatePowerUsage(data: {}) {
   return {
     type: UPDATE_TIBBER_POWER_USAGE,
     data,
@@ -95,16 +95,12 @@ export function updateNetatmoAverages(data: {}) {
 
 export function fetchTrains(station: string, direction: string) {
   return (dispatch: Function) => {
-    return getTrains(station, direction).then(
-      trains => dispatch(updateTrains(trains)),
-    );
+    return getTrains(station, direction).then(trains => dispatch(updateTrains(trains)));
   };
 }
 
 export function fetchWeather(lat: number, lon: number) {
   return (dispatch: Function) => {
-    return getWeatherFromYr(lat, lon).then(
-      weather => dispatch(updateWeather(weather, lat, lon)),
-    );
+    return getWeatherFromYr(lat, lon).then(weather => dispatch(updateWeather(weather, lat, lon)));
   };
 }

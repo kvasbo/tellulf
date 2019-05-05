@@ -1,4 +1,4 @@
-export interface WeatherStore {
+export interface WeatherStore {
   weather: WeatherDataSet;
   long: WeatherDataSet;
   lat: number;
@@ -8,16 +8,16 @@ export interface WeatherStore {
 }
 
 export interface WeatherData {
-  temp: number | null,
-  rain: number | null,
-  rainMin: number | null,
-  rainMax: number | null,
-  clouds: number | null,
-  wind: number | null,
-  symbol: string | null,
-  symbolNumber: number | null,
-  sunHeight: number | null,
-  time: string | number,
+  temp: number | null;
+  rain: number | null;
+  rainMin: number | null;
+  rainMax: number | null;
+  clouds: number | null;
+  wind: number | null;
+  symbol: string | null;
+  symbolNumber: number | null;
+  sunHeight: number | null;
+  time: string | number;
 }
 
 export interface WeatherTodayMinMax {

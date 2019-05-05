@@ -2,14 +2,18 @@ import React from 'react';
 import Moment from 'moment';
 
 const style = {
-  backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 10, borderRadius: '0.5vw',
+  backgroundColor: '#222222',
+  margin: 5,
+  padding: 5,
+  paddingLeft: 10,
+  borderRadius: '0.5vw',
 };
 
-interface Props {
+interface Props {
   data: {
     name: string;
     oneDay: boolean;
-  }
+  };
 }
 
 class HendelseMedTid extends React.PureComponent<Props, {}> {
@@ -25,7 +29,8 @@ class HendelseMedTid extends React.PureComponent<Props, {}> {
 
 export function getTimeString(event: any) {
   let timeString = '';
-  if (event.fullDay) { // Full day events
+  if (event.fullDay) {
+    // Full day events
     if (!event.oneDay) {
       timeString = Moment(event.start).calendar(undefined, fullDayFormats());
       // subtract one, as we only want the last included day
@@ -38,7 +43,10 @@ export function getTimeString(event: any) {
     if (!event.oneDay) {
       toFormats = normalFormats();
     }
-    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(undefined, toFormats)}`;
+    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(
+      undefined,
+      toFormats,
+    )}`;
   }
   return timeString;
 }

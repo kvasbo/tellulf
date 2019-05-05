@@ -19,20 +19,37 @@ class Clock extends React.PureComponent<any, any> {
     return (
       <div
         style={{
-          display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
         }}
         onClick={() => this.setState({ debug: !this.state.debug })}
       >
-        <span style={{
-          alignItems: 'center', color: '#ffffff', fontSize: 90, fontWeight: 200,
-        }}
-        >{this.state.time.format('HH:mm')}
-        </span>
         <span
-          style={{ color: '#ffffff', fontSize: 35, fontWeight: 100 }}
-        >{!this.state.debug && this.state.time.format('dddd Do MMMM')}
+          style={{
+            alignItems: 'center',
+            color: '#ffffff',
+            fontSize: 90,
+            fontWeight: 200,
+          }}
+        >
+          {this.state.time.format('HH:mm')}
         </span>
-        { this.state.debug && <span><button type="button" onClick={() => firebase.auth().signOut()}>Logg ut</button><button type="button" onClick={() => window.location.reload()}>Last inn på nytt</button></span>}
+        <span style={{ color: '#ffffff', fontSize: 35, fontWeight: 100 }}>
+          {!this.state.debug && this.state.time.format('dddd Do MMMM')}
+        </span>
+        {this.state.debug && (
+          <span>
+            <button type="button" onClick={() => firebase.auth().signOut()}>
+              Logg ut
+            </button>
+            <button type="button" onClick={() => window.location.reload()}>
+              Last inn på nytt
+            </button>
+          </span>
+        )}
       </div>
     );
   }

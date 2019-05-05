@@ -4,17 +4,20 @@ import Moment from 'moment';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import Dag from './Dag';
-import { AppStore } from '../redux/reducers'
+import { AppStore } from '../redux/reducers';
 
 const IcalExpander = require('ical-expander');
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
-const calUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvpgc50mqms5tu0kk%40group.calendar.google.com/private-7020f002efde8095cc911279983fb92a/basic.ics';
+const calUrl =
+  'https://calendar.google.com/calendar/ical/kvasbo.no_ognucfh1asvpgc50mqms5tu0kk%40group.calendar.google.com/private-7020f002efde8095cc911279983fb92a/basic.ics';
 
-const dinnerUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics';
+const dinnerUrl =
+  'https://calendar.google.com/calendar/ical/kvasbo.no_m3le0buqs8k24ljlumcr1goqqs%40group.calendar.google.com/private-43f7d258dce12c6117d133b621318148/basic.ics';
 
-const birthdayUrl = 'https://calendar.google.com/calendar/ical/kvasbo.no_upelraeuo31neuoq31f9decudg%40group.calendar.google.com/private-6718a3a9f7b74d60372a3f2be75804d6/basic.ics';
+const birthdayUrl =
+  'https://calendar.google.com/calendar/ical/kvasbo.no_upelraeuo31neuoq31f9decudg%40group.calendar.google.com/private-6718a3a9f7b74d60372a3f2be75804d6/basic.ics';
 
 const cal = encodeURIComponent(calUrl);
 const dinner = encodeURIComponent(dinnerUrl);
@@ -24,9 +27,7 @@ const calP = `${proxy}/?url=${cal}`;
 const dinP = `${proxy}/?url=${dinner}`;
 const bdP = `${proxy}/?url=${birthday}`;
 
-interface Props {
-
-}
+interface Props {}
 
 interface State {
   kalenderData: any;
@@ -52,11 +53,11 @@ class Kalender extends React.PureComponent<Props, State> {
   getDays() {
     const out: any = [];
     const dayKeys = getDayKeys(30);
-    dayKeys.forEach((d) => {
+    dayKeys.forEach(d => {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
-      
+
       if (cald || birthdays || dinners) {
         out.push(<Dag key={d} date={d} events={cald} dinner={dinners} birthdays={birthdays} />);
       }
@@ -76,11 +77,7 @@ class Kalender extends React.PureComponent<Props, State> {
   }
 
   render() {
-    return (
-      <div style={{ flex: 1 }}>
-        {this.getDays()}
-      </div>
-    );
+    return <div style={{ flex: 1 }}>{this.getDays()}</div>;
   }
 }
 
@@ -89,17 +86,23 @@ function parseIcalEvent(e: any, useItem = false) {
     const now = Moment();
     const start = Moment(e.startDate.toJSDate());
     const end = Moment(e.endDate.toJSDate());
-    const name = (useItem) ? e.item.summary : e.summary;
+    const name = useItem ? e.item.summary : e.summary;
 
-    const fullDay = (e.startDate.hour === 0) && (e.endDate.hour === 0) && (e.endDate.day !== e.startDate.day);
+    const fullDay = e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;
 
     let oneDay = true;
     if (fullDay) {
-      if (Moment(end).subtract(1, 'day').startOf('day').isAfter(Moment(start).startOf('day'))) oneDay = false;
+      if (
+        Moment(end)
+          .subtract(1, 'day')
+          .startOf('day')
+          .isAfter(Moment(start).startOf('day'))
+      )
+        oneDay = false;
     }
 
     if (!fullDay) {
-      oneDay = (start.isSame(end, 'day'));
+      oneDay = start.isSame(end, 'day');
     }
 
     let groupString = start.format('YYYY-MM-DD');
@@ -107,9 +110,15 @@ function parseIcalEvent(e: any, useItem = false) {
     if (startsBeforeToday) {
       groupString = now.format('YYYY-MM-DD');
     }
-    const id = (e.uid) ? e.uid : e.item.uid;
+    const id = e.uid ? e.uid : e.item.uid;
     return {
-      id, name, start, end, fullDay, oneDay, groupString,
+      id,
+      name,
+      start,
+      end,
+      fullDay,
+      oneDay,
+      groupString,
     };
   } catch (err) {
     console.log(err);
@@ -144,9 +153,7 @@ function getDayKeys(max = 100) {
 }
 
 const mapStateToProps = (state: AppStore) => {
-  return {
-    
-  };
+  return {};
 };
 
 export default connect(mapStateToProps)(Kalender);

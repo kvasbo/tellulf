@@ -25,7 +25,9 @@ async function getRuterData(station: string, direction: string): Promise<TrainDa
         const out: TrainData = {
           ruteTid: Moment(d.AimedArrivalTime),
           faktiskTid: Moment(d.ExpectedArrivalTime),
-          id: `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`,
+          id: `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${
+            t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef
+          }`,
           linje: t.MonitoredVehicleJourney.PublishedLineName,
           skalTil: t.MonitoredVehicleJourney.DestinationName,
         };

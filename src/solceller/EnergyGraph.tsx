@@ -38,7 +38,6 @@ interface state {
 }
 
 class EnergyGraph extends React.PureComponent<props, {}> {
-
   state: state;
 
   constructor(props: props) {
@@ -49,7 +48,9 @@ class EnergyGraph extends React.PureComponent<props, {}> {
   }
 
   componentDidMount() {
-    setInterval(() => { this.reloadTime(); }, 300000); // Flytt sola hvert femte minutt
+    setInterval(() => {
+      this.reloadTime();
+    }, 300000); // Flytt sola hvert femte minutt
   }
 
   getCurrentLabelPosition() {
@@ -70,15 +71,21 @@ class EnergyGraph extends React.PureComponent<props, {}> {
       // Correct production time for UTC
       const correctedTime = h.time + timeZoneAdd + dstAdd;
       if (correctedTime in dataSet) {
-        dataSet[correctedTime].production = (h.production / 1000);
+        dataSet[correctedTime].production = h.production / 1000;
       }
       // Sun data and consumpton
       if (h.time in dataSet) {
         const hour = new Date(h.time);
 
-        const inAWeek = Moment(h.time).add(1, 'week').toDate();
-        const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
-        const inAMonth = Moment(h.time).add(1, 'month').toDate();
+        const inAWeek = Moment(h.time)
+          .add(1, 'week')
+          .toDate();
+        const inTwoWeeks = Moment(h.time)
+          .add(2, 'week')
+          .toDate();
+        const inAMonth = Moment(h.time)
+          .add(1, 'month')
+          .toDate();
         const hr = hour.getHours();
 
         // Price
@@ -121,9 +128,13 @@ class EnergyGraph extends React.PureComponent<props, {}> {
     const data = this.getData();
 
     return (
-      <div style={{
-        display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
-      }}
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          height: '100%',
+        }}
       >
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
@@ -167,15 +178,7 @@ class EnergyGraph extends React.PureComponent<props, {}> {
               tickFormatter={formatEnergyScaleTick}
               domain={[0, getEnergyScaleMax]}
             >
-              <Label 
-                angle={-90}
-                value='kw'
-                stroke='#ffffff55'
-                fill='#ffffff55'
-                fontSize={15}
-                position='left'
-                
-              />
+              <Label angle={-90} value="kw" stroke="#ffffff55" fill="#ffffff55" fontSize={15} position="left" />
             </YAxis>
             <YAxis
               width={25}
@@ -215,12 +218,7 @@ class EnergyGraph extends React.PureComponent<props, {}> {
               stackId="1"
             />
             <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
-            <ReferenceLine
-              yAxisId="kwh"
-              y={this.props.max.maxDay / 1000}
-              stroke="#FFFF0088"
-              strokeDasharray="3 3"
-            />
+            <ReferenceLine yAxisId="kwh" y={this.props.max.maxDay / 1000} stroke="#FFFF0088" strokeDasharray="3 3" />
             <ReferenceDot
               x={this.state.currentTime}
               y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
@@ -229,8 +227,7 @@ class EnergyGraph extends React.PureComponent<props, {}> {
               stroke="none"
               r={8}
             />
-            {(this.props.currentNetConsumption && this.props.currentNetConsumption > 0)
-            && (
+            {this.props.currentNetConsumption && this.props.currentNetConsumption > 0 && (
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.currentNetConsumption / 1000}
@@ -239,18 +236,16 @@ class EnergyGraph extends React.PureComponent<props, {}> {
                 fill="#ffffff44"
                 stroke="#ffffff"
               >
-                <Label 
+                <Label
                   value={`${Number(this.props.currentNetConsumption).toLocaleString()}`}
-                  stroke='#FF0000'
-                  fill='#FF0000'
+                  stroke="#FF0000"
+                  fill="#FF0000"
                   fontSize={35}
-                  position='left'
-              />
+                  position="left"
+                />
               </ReferenceDot>
-            )
-            }
-            {(this.props.currentSolarProduction.now > 0)
-            && (
+            )}
+            {this.props.currentSolarProduction.now > 0 && (
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.currentSolarProduction.now / 1000}
@@ -259,16 +254,15 @@ class EnergyGraph extends React.PureComponent<props, {}> {
                 fill="#ffffff44"
                 stroke="#ffffff"
               >
-                 <Label 
+                <Label
                   value={`${Number(this.props.currentSolarProduction.averageMinute).toLocaleString()}`}
-                  stroke='#00FF00'
-                  fill='#00FF00'
+                  stroke="#00FF00"
+                  fill="#00FF00"
                   fontSize={35}
-                  position='right'
+                  position="right"
                 />
               </ReferenceDot>
-            )
-            }
+            )}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -296,23 +290,26 @@ function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitud
 }
 
 // Get maximum value for energy scale axis
-function getEnergyScaleMax(data: number) : number {
+function getEnergyScaleMax(data: number): number {
   const maxVal = Math.ceil(data / 1000);
   return Math.max(5, maxVal);
 }
 
-function formatEnergyScaleTick(data: number) : string {
+function formatEnergyScaleTick(data: number): string {
   // return Number(data, 10).toLocaleString();
   return `${roundToNumberOfDecimals(data, 1)}`;
 }
 
-function getDataPointObject() : {} {
+function getDataPointObject(): {} {
   const out = {};
   const time = Moment().startOf('day');
   for (let i = 0; i < 144; i += 1) {
     const key = time.valueOf();
     out[key] = {
-      time: key, production: null, price: null, consumption: null,
+      time: key,
+      production: null,
+      price: null,
+      consumption: null,
     };
     time.add(10, 'minutes');
   }
@@ -320,8 +317,12 @@ function getDataPointObject() : {} {
 }
 
 function getXAxis(): [number, number] {
-  const from = Moment().startOf('day').valueOf();
-  const to = Moment().endOf('day').valueOf();
+  const from = Moment()
+    .startOf('day')
+    .valueOf();
+  const to = Moment()
+    .endOf('day')
+    .valueOf();
   return [from, to];
 }
 
@@ -337,13 +338,15 @@ function getXTicks(): any[] {
   return out;
 }
 
-function formatTick(data: number) : string {
+function formatTick(data: number): string {
   const time = Moment(data).local();
   return time.format('HH');
 }
 
-export function getTimeLimits(): { start: Moment.Moment, end: Moment.Moment } {
+export function getTimeLimits(): { start: Moment.Moment; end: Moment.Moment } {
   const start = Moment().startOf('day');
-  const end = Moment().add(1, 'day').startOf('day');
+  const end = Moment()
+    .add(1, 'day')
+    .startOf('day');
   return { start, end };
 }

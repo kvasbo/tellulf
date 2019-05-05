@@ -12,9 +12,12 @@ const initState: NetatmoAverageData = {
   pressure: 0,
   temperature: 0,
   time: 0,
-}
+};
 
-export default function NetatmoAverages(state = initState, action: { type: string, data: NetatmoAverageData }) : NetatmoAverageData {
+export default function NetatmoAverages(
+  state = initState,
+  action: { type: string; data: NetatmoAverageData },
+): NetatmoAverageData {
   switch (action.type) {
     case NETATMO_UPDATE_AVERAGES: {
       try {

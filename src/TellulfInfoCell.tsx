@@ -4,7 +4,7 @@ const defaultFontSize = 16;
 const largeFontSize = 24;
 const labelFontSize = 10;
 
-interface props {
+interface props {
   info: number;
   decimals: number;
   fontSize: number;
@@ -18,7 +18,6 @@ interface props {
 }
 
 class TellulfInfoCell extends React.PureComponent<props, {}> {
-
   public static defaultProps = {
     header: undefined,
     info: '-',
@@ -49,13 +48,28 @@ class TellulfInfoCell extends React.PureComponent<props, {}> {
       fontSize = largeFontSize;
     }
 
-    const space = (this.props.unitSpace) ? ' ' : null;
-    const color = (this.props.info >= 0) ? this.props.color : this.props.colorIfNegative;
+    const space = this.props.unitSpace ? ' ' : null;
+    const color = this.props.info >= 0 ? this.props.color : this.props.colorIfNegative;
 
     return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'spaceAround', alignItems: 'center', fontSize }}>
-        {this.props.header && <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>{this.props.header}</span>}
-        <span style={{ color }}>{text}{space}{this.props.unit}</span>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'spaceAround',
+          alignItems: 'center',
+          fontSize,
+        }}
+      >
+        {this.props.header && (
+          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>{this.props.header}</span>
+        )}
+        <span style={{ color }}>
+          {text}
+          {space}
+          {this.props.unit}
+        </span>
       </div>
     );
   }

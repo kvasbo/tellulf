@@ -14,7 +14,7 @@ interface realtimeData {
   maxPowerProduction?: number;
   minPower?: number;
   minPowerProduction?: number;
-  power: number; 
+  power: number;
   powerProduction: number;
   timestamp?: string;
   calculatedConsumption: number;
@@ -28,20 +28,20 @@ interface state extends realtimeData {
   avgLastHourStamp?: string;
 }
 
-const defaultState:state = {
+const defaultState: state = {
   accumulatedConsumption: 0,
   accumulatedCost: 0,
   accumulatedProduction: 0,
   accumulatedReward: 0,
   averagePower: 0,
-  currency: "NOK",
+  currency: 'NOK',
   lastMeterConsumption: 0,
   lastMeterProduction: 0,
   maxPower: 0,
   maxPowerProduction: 0,
   minPower: 0,
   minPowerProduction: 0,
-  power: 0, 
+  power: 0,
   powerProduction: 0,
   timestamp: new Date().toISOString(),
   calculatedConsumption: 0,
@@ -50,104 +50,107 @@ const defaultState:state = {
   avgLastHour: 0,
   avgLastHourSamples: 0,
   avgLastHourStamp: new Date().toISOString(),
-}
+};
 
 interface powerMinute {
-  startTime: string,
-  usage: number,
-  samples: number,
+  startTime: string;
+  usage: number;
+  samples: number;
 }
 
-export default function TibberRealTime(state: state = defaultState, action: { type: string, data: realtimeData } ) {
+export default function TibberRealTime(state: state = defaultState, action: { type: string; data: realtimeData }) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
-        const {
-          accumulatedConsumption,
-          accumulatedCost,
-          accumulatedProduction,
-          accumulatedReward,
-          averagePower,
-          currency,
-          lastMeterConsumption,
-          lastMeterProduction,
-          maxPower,
-          maxPowerProduction,
-          minPower,
-          minPowerProduction,
-          power,
-          powerProduction,
-          timestamp,
-        } = action.data;
+      const {
+        accumulatedConsumption,
+        accumulatedCost,
+        accumulatedProduction,
+        accumulatedReward,
+        averagePower,
+        currency,
+        lastMeterConsumption,
+        lastMeterProduction,
+        maxPower,
+        maxPowerProduction,
+        minPower,
+        minPowerProduction,
+        power,
+        powerProduction,
+        timestamp,
+      } = action.data;
 
-        // Calculate weighted average for hour
-        const stamp = Moment(timestamp);
+      // Calculate weighted average for hour
+      const stamp = Moment(timestamp);
 
-        const avgLastHourStamp = stamp.format("dddHH");
+      const avgLastHourStamp = stamp.format('dddHH');
 
-        let avgLastHourSamples = (state.avgLastHourSamples) ? state.avgLastHourSamples + 1 : 1;
-        let avgLastHour = Math.round(state.avgLastHour + ((power - state.avgLastHour) / avgLastHourSamples));
-        if (state.avgLastHourStamp !== avgLastHourStamp) {
-          avgLastHour = Math.round(power);
-          avgLastHourSamples = 1;
+      let avgLastHourSamples = state.avgLastHourSamples ? state.avgLastHourSamples + 1 : 1;
+      let avgLastHour = Math.round(state.avgLastHour + (power - state.avgLastHour) / avgLastHourSamples);
+      if (state.avgLastHourStamp !== avgLastHourStamp) {
+        avgLastHour = Math.round(power);
+        avgLastHourSamples = 1;
+      }
+
+      const lastHourByTenMinutes = state.lastHourByTenMinutes ? state.lastHourByTenMinutes : {};
+
+      // Calculate realtime production
+      let calculatedConsumption = power;
+      let previousMeasuredProduction = state.previousMeasuredProduction;
+      // We are producing!
+      if (!calculatedConsumption || calculatedConsumption === 0) {
+        if (powerProduction > 0) {
+          previousMeasuredProduction = powerProduction; // Remember this!
         }
+        calculatedConsumption = -1 * previousMeasuredProduction;
+      }
 
-        const lastHourByTenMinutes = (state.lastHourByTenMinutes) ? state.lastHourByTenMinutes : {};
-        
-        // Calculate realtime production
-        let calculatedConsumption = power;
-        let previousMeasuredProduction = state.previousMeasuredProduction;
-        // We are producing!
-        if (!calculatedConsumption || calculatedConsumption === 0) {
-          if (powerProduction > 0) {
-            previousMeasuredProduction = powerProduction; // Remember this!
-          }
-          calculatedConsumption = -1 * previousMeasuredProduction;
+      try {
+        const lastHourByTenMinutes = state.lastHourByTenMinutes ? state.lastHourByTenMinutes : {};
+        // calculate per minute
+        const startOfMinute = Math.floor(stamp.minutes() / 10);
+        const startTime = Moment(stamp)
+          .minutes(startOfMinute * 10)
+          .startOf('minute')
+          .toISOString();
+        // console.log(startTime);
+
+        const toStore: powerMinute = { startTime, usage: 0, samples: 0 };
+
+        if (lastHourByTenMinutes[startTime]) {
+          // TODO make average!
+        } else {
+          lastHourByTenMinutes[startTime] = { startTime, usage: power, samples: 1 };
         }
+      } catch (err) {
+        console.log(err);
+      }
 
-        try {
-          const lastHourByTenMinutes = (state.lastHourByTenMinutes) ? state.lastHourByTenMinutes : {};
-          // calculate per minute
-          const startOfMinute = Math.floor(stamp.minutes() / 10);
-          const startTime = Moment(stamp).minutes(startOfMinute * 10).startOf('minute').toISOString();
-          // console.log(startTime);
+      // TODO: Clean data by time. Store by minute.
 
-          const toStore:powerMinute = { startTime, usage: 0, samples: 0 }
-
-          if (lastHourByTenMinutes[startTime]) {
-            // TODO make average!
-          } else {
-            lastHourByTenMinutes[startTime] = { startTime, usage: power, samples: 1 };
-          }
-        } catch(err) {
-          console.log(err);
-        }
-
-        // TODO: Clean data by time. Store by minute.
-        
-        return {
-          ...state, 
-          accumulatedConsumption,
-          accumulatedCost,
-          accumulatedProduction,
-          accumulatedReward,
-          averagePower,
-          currency,
-          lastMeterConsumption,
-          lastMeterProduction,
-          maxPower,
-          maxPowerProduction,
-          minPower,
-          minPowerProduction,
-          power,
-          powerProduction,
-          timestamp,
-          avgLastHour,
-          avgLastHourSamples,
-          avgLastHourStamp,
-          lastHourByTenMinutes,
-          calculatedConsumption,
-          previousMeasuredProduction,
-        };
+      return {
+        ...state,
+        accumulatedConsumption,
+        accumulatedCost,
+        accumulatedProduction,
+        accumulatedReward,
+        averagePower,
+        currency,
+        lastMeterConsumption,
+        lastMeterProduction,
+        maxPower,
+        maxPowerProduction,
+        minPower,
+        minPowerProduction,
+        power,
+        powerProduction,
+        timestamp,
+        avgLastHour,
+        avgLastHourSamples,
+        avgLastHourStamp,
+        lastHourByTenMinutes,
+        calculatedConsumption,
+        previousMeasuredProduction,
+      };
     }
     default:
       return state;

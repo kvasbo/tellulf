@@ -16,7 +16,7 @@ export const loadState = () => {
   } catch (err) {
     return undefined;
   }
-}; 
+};
 
 export const saveState = (state: object) => {
   try {
@@ -32,10 +32,7 @@ export const saveState = (state: object) => {
 // console.log("State loaded", persistedState);
 
 // eslint-disable-next-line import/prefer-default-export
-const store = createStore(
-  tellulfReducer, /* persistedState , */
-  composeEnhancers(applyMiddleware(thunk)),
-);
+const store = createStore(tellulfReducer /* persistedState , */, composeEnhancers(applyMiddleware(thunk)));
 
 /*
 store.subscribe(throttle(() => {

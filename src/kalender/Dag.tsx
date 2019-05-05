@@ -10,17 +10,13 @@ interface Props {
   date: string;
 }
 
-interface State {
-
-}
+interface State {}
 
 class Dag extends React.PureComponent<Props, State> {
   getDinner() {
     try {
       if (!this.props.dinner || !this.props.dinner.events) return null;
-      return (
-        <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>
-      );
+      return <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>;
     } catch (err) {
       console.log(err);
       return null;
@@ -29,7 +25,7 @@ class Dag extends React.PureComponent<Props, State> {
 
   getBirthdays() {
     if (!this.props.birthdays || !this.props.birthdays.events) return null;
-    const out: Array<any> = [];
+    const out: any[] = [];
     try {
       this.props.birthdays.events.forEach((b: any) => {
         const matches = b.name.match(/\d+$/);
@@ -41,7 +37,11 @@ class Dag extends React.PureComponent<Props, State> {
           name = name.substring(0, name.length - 5);
           name = `${name} (${age})`;
         }
-        out.push(<div style={{ padding: 10 }} key={b.id}>{name}</div>);
+        out.push(
+          <div style={{ padding: 10 }} key={b.id}>
+            {name}
+          </div>,
+        );
       });
     } catch (err) {
       console.log(err);
@@ -51,11 +51,11 @@ class Dag extends React.PureComponent<Props, State> {
 
   getEvents() {
     if (!this.props.events || !this.props.events.events) return null;
-    const out: Array<any> = [];
+    const out: any[] = [];
 
     try {
       const events = this.props.events.events.sort((a: any, b: any) => {
-        return (a.start.isBefore(b.start)) ? -1 : 1;
+        return a.start.isBefore(b.start) ? -1 : 1;
       });
 
       events.forEach((e: any) => {
@@ -71,7 +71,6 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-
   render() {
     return (
       <div style={{ marginBottom: 10 }}>
@@ -85,7 +84,6 @@ class Dag extends React.PureComponent<Props, State> {
 }
 
 export default Dag;
-
 
 function getDayHeader(date: string) {
   const dateHeaderFormats = {

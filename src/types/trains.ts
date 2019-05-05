@@ -18,5 +18,5 @@ export interface ExtendedTrainData extends TrainData {
 
 // A set of train data
 export interface TrainDataSet {
-  [s: number] : TrainData;
+  [s: number]: TrainData;
 }

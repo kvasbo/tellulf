@@ -7,14 +7,11 @@ interface State {
   pass: string;
 }
 
-interface Props {
-
-}
+interface Props {}
 
 class Login extends React.PureComponent<Props, State> {
-
   state: State;
-  
+
   constructor(props: Props) {
     super(props);
     this.state = { user: '', pass: '' };
@@ -25,18 +22,21 @@ class Login extends React.PureComponent<Props, State> {
 
   handleUsernameChange = (e: any) => {
     this.setState({ user: e.target.value });
-  }
+  };
 
   handlePasswordChange = (e: any) => {
     this.setState({ pass: e.target.value });
-  }
+  };
 
   login() {
-    firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.pass).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log('Login error', errorCode, errorMessage);
-    });
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.user, this.state.pass)
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Login error', errorCode, errorMessage);
+      });
   }
 
   render() {
@@ -49,7 +49,6 @@ class Login extends React.PureComponent<Props, State> {
           <input type="button" value="Logg inn" onClick={this.login} />
         </div>
       </div>
-
     );
   }
 }

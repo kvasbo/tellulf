@@ -9,7 +9,7 @@ const steder = {
   sandefjord: { lat: 59.1347624, long: 10.3250789 },
 };
 
-interface props {
+interface props {
   dispatch: Function;
 }
 
@@ -18,7 +18,6 @@ interface state {
 }
 
 class Yr extends React.PureComponent<props, {}> {
-
   state: state;
 
   constructor(props: props) {
@@ -27,7 +26,9 @@ class Yr extends React.PureComponent<props, {}> {
   }
 
   componentDidMount() {
-    setTimeout(() => { this.updateWeather(); }, 1500);
+    setTimeout(() => {
+      this.updateWeather();
+    }, 1500);
   }
 
   updateWeather() {
@@ -46,9 +47,14 @@ class Yr extends React.PureComponent<props, {}> {
     return (
       <div className="yr-container">
         <GraphLong />
-        <div style={{
-          display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: 0,
-        }}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 0,
+          }}
         >
           <label htmlFor="oslo">
             <input

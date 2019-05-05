@@ -1,13 +1,13 @@
 import { NETATMO_UPDATE } from './actions';
 
 export interface NetatmoStore {
-  co2: number,
-  inneFukt: number,
-  inneTemp: number,
-  inneTrykk: number,
-  inneTrykkTrend: String,
-  updated: number | null,
-  updatedNice: String,
+  co2: number;
+  inneFukt: number;
+  inneTemp: number;
+  inneTrykk: number;
+  inneTrykkTrend: string;
+  updated: number | null;
+  updatedNice: string;
 }
 
 const initialState: NetatmoStore = {
@@ -15,12 +15,15 @@ const initialState: NetatmoStore = {
   inneFukt: 0,
   inneTemp: 0,
   inneTrykk: 0,
-  inneTrykkTrend: "",
+  inneTrykkTrend: '',
   updated: null,
-  updatedNice: "",
+  updatedNice: '',
 };
 
-export default function Netatmo(state: NetatmoStore = initialState, action: { type: string, data: NetatmoStore }): NetatmoStore {
+export default function Netatmo(
+  state: NetatmoStore = initialState,
+  action: { type: string; data: NetatmoStore },
+): NetatmoStore {
   switch (action.type) {
     case NETATMO_UPDATE: {
       return { ...state, ...action.data };

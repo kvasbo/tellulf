@@ -20,22 +20,26 @@ interface props {
 }
 
 class Solceller extends React.PureComponent<props, {}> {
-
   public static defaultProps = {
     latitude: defaultLatitude,
     longitude: defaultLongitude,
-  }
+  };
 
   render() {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
 
     // Regne ut felles verdier.
-    const currentNetConsumption = this.props.realtimePower.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
+    const currentNetConsumption =
+      this.props.realtimePower.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
 
     return (
-      <div style={{
-        display: 'flex', flex: 1, flexDirection: 'column', height: '100%',
-      }}
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          height: '100%',
+        }}
       >
         <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
           <EnergyGraph

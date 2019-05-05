@@ -2,14 +2,18 @@ import React from 'react';
 import { getTimeString } from './HendelseMedTid';
 
 const style = {
-  backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 10, borderRadius: '0.5vw',
+  backgroundColor: '#222222',
+  margin: 5,
+  padding: 5,
+  paddingLeft: 10,
+  borderRadius: '0.5vw',
 };
 
-interface Props {
+interface Props {
   data: {
     name: string;
     oneDay: boolean;
-  }
+  };
 }
 
 class HendelseFullDag extends React.PureComponent<Props, {}> {

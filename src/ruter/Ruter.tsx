@@ -9,7 +9,6 @@ interface props {
 }
 
 class Ruter extends React.PureComponent<props, {}> {
-  
   oppdateringsFrekvens: number;
 
   constructor(props: props) {
@@ -33,15 +32,13 @@ class Ruter extends React.PureComponent<props, {}> {
   }
 
   render() {
-    return (
-      <div style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainObjects()}</div>
-    );
+    return <div style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainObjects()}</div>;
   }
 }
 
 function parseTrain(data: TrainData): ExtendedTrainData {
   const now = Moment();
-  const train: ExtendedTrainData = { 
+  const train: ExtendedTrainData = {
     ...data,
     fromNow: data.faktiskTid.diff(now, 's'),
     fromNowM: data.faktiskTid.diff(now, 'm'),

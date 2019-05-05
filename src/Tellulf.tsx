@@ -34,7 +34,9 @@ class Tellulf extends React.PureComponent<props, any> {
 
   startReloadLoop() {
     const now = Moment();
-    const reload = Moment(now).startOf('hour').add(1, 'hour');
+    const reload = Moment(now)
+      .startOf('hour')
+      .add(1, 'hour');
     const diff = reload.diff(now, 'milliseconds');
     setTimeout(() => {
       window.location.reload();
