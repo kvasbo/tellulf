@@ -11,6 +11,7 @@ import TibberRealTime from './TibberRealTimeData';
 import TibberLastDay from './TibberLastDay';
 
 import { TrainDataSet } from '../types/trains';
+import { WeatherStore } from '../types/weather';
 
 export interface AppStore {
   Init: object;
@@ -21,7 +22,7 @@ export interface AppStore {
   Trains: TrainDataSet;
   TibberRealTime: any;
   TibberLastDay: any;
-  Weather: any;
+  Weather: WeatherStore;
 }
 
 const tellulfReducer = combineReducers({

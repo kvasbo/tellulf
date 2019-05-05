@@ -6,7 +6,7 @@ import SunCalc from 'suncalc';
 import store from 'store';
 import XML from 'pixl-xml';
 
-import { WeatherData } from '../redux/Weather';
+import { WeatherData } from '../types/weather';
 
 const localStorageKey = '5';
 

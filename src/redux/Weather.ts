@@ -1,6 +1,7 @@
 import Moment from 'moment';
 import { UPDATE_WEATHER } from './actions';
 import { parseLimits } from '../weather/updateWeather';
+import { WeatherData } from '../types/weather';
 
 interface state {
   weather: {} | undefined,
@@ -9,19 +10,6 @@ interface state {
   lat: number | undefined,
   lon: number | undefined,
   todayMinMax: { min: number | null, max: number | null },
-}
-
-export interface WeatherData {
-  temp: number | null,
-  rain: number | null,
-  rainMin: number | null,
-  rainMax: number | null,
-  clouds: number | null,
-  wind: number | null,
-  symbol: string | null,
-  symbolNumber: number | null,
-  sunHeight: number | null,
-  time: string | number,
 }
 
 const initialState = {

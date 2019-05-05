@@ -2,7 +2,8 @@ import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
 import { NetatmoStore } from './Netatmo';
-import  { WeatherData } from './Weather';
+import  { WeatherDataSet } from '../types/weather';
+import  { TrainDataSet } from '../types/trains';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -23,14 +24,14 @@ export function updateInitStatus(key: string, value = true) {
   };
 }
 
-export function updateTrains(trains: {}) {
+export function updateTrains(trains: TrainDataSet) {
   return {
     type: UPDATE_TRAINS,
     trains,
   };
 }
 
-export function updateWeather(data: {}, lat: number, lon: number) {
+export function updateWeather(data: WeatherDataSet, lat: number, lon: number) {
   return {
     type: UPDATE_WEATHER,
     data,
