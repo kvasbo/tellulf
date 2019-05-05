@@ -38,8 +38,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "./node_modules/.bin/eslint src --ext .js,.jsx",
-    "lint-fixup": "./node_modules/.bin/eslint src --ext .js,.jsx --fix"
+    "lint": "./node_modules/.bin/eslint src --ext .ts,.tsx",
+    "lint-fixup": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix"
   },
   "devDependencies": {
     "@firebase/app-types": "0.x",
@@ -49,14 +49,20 @@
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.2",
     "@types/react-redux": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "10.0.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-babel": "^5.2.1",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.13.0",
+    "prettier": "^1.17.0",
     "typescript": "3.4.5"
   },
   "browserslist": [
