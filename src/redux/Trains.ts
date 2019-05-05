@@ -1,6 +1,7 @@
 import { UPDATE_TRAINS } from './actions';
+import { TrainDataSet } from '../types/trains';
 
-export default function Trains(state: {} = {}, action: { type: string, trains: object }) {
+export default function Trains(state: TrainDataSet = {}, action: { type: string, trains: TrainDataSet }): TrainDataSet {
   switch (action.type) {
     case UPDATE_TRAINS: {
       return { ...action.trains };
