@@ -1,7 +1,7 @@
 import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
-import { netatmoStore } from './Netatmo';
+import { NetatmoStore } from './Netatmo';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -86,7 +86,7 @@ export function updateSolarCurrent(data: {}) {
   };
 }
 
-export function updateNetatmo(data: netatmoStore) {
+export function updateNetatmo(data: NetatmoStore) {
   return {
     type: NETATMO_UPDATE,
     data,

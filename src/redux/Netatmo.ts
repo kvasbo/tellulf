@@ -1,6 +1,6 @@
 import { NETATMO_UPDATE } from './actions';
 
-export type netatmoStore = {
+export interface NetatmoStore {
   co2: number,
   inneFukt: number,
   inneTemp: number,
@@ -10,7 +10,7 @@ export type netatmoStore = {
   updatedNice: String,
 }
 
-const initialState = {
+const initialState: NetatmoStore = {
   co2: 0,
   inneFukt: 0,
   inneTemp: 0,
@@ -20,7 +20,7 @@ const initialState = {
   updatedNice: "",
 };
 
-export default function Netatmo(state: netatmoStore = initialState, action: { type: string, data: netatmoStore }) {
+export default function Netatmo(state: NetatmoStore = initialState, action: { type: string, data: NetatmoStore }): NetatmoStore {
   switch (action.type) {
     case NETATMO_UPDATE: {
       return { ...state, ...action.data };
