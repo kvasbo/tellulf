@@ -53,7 +53,6 @@ export default function Solar(state: SolarState = initialState, action: { type: 
       return { ...state, max: { ...state.max, ...action.data } };
     }
     case UPDATE_SOLAR_CURRENT: {
-      // console.log(action.data);
       return { ...state, current: { ...state.current, ...action.data } };
     }
     default:

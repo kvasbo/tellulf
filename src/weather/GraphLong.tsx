@@ -10,6 +10,7 @@ import { getTimeLimits, parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import { getNorwegianDaysOff } from '../external';
+import { AppStore } from '../redux/reducers';
 import './yr.css';
 
 const gridColor = '#FFFFFFAA';
@@ -237,7 +238,7 @@ function formatTick(data: any) {
   return time.format('HH');
 }
 
-const mapStateToProps = (state: { Weather: { long: any, limits: any }}) => {
+const mapStateToProps = (state: AppStore) => {
   return {
     weatherLong: state.Weather.long,
     limits: state.Weather.limits,

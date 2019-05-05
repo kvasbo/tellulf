@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
 import EnergyGraph from './EnergyGraph';
+import { SolarCurrent } from '../redux/Solar';
+import { AppStore } from '../redux/reducers';
 import './solceller.css';
 
 const defaultLatitude = 59.9409;
@@ -9,7 +11,7 @@ const defaultLongitude = 10.6991;
 interface props {
   initState: any;
   realtimePower: any;
-  currentSolarProduction: any;
+  currentSolarProduction: SolarCurrent;
   latitude: number;
   longitude: number;
   usedPower: any;
@@ -59,7 +61,7 @@ class Solceller extends React.PureComponent<props, {}> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppStore) => {
   return {
     currentSolarProduction: state.Solar.current,
     max: state.Solar.max,

@@ -3,6 +3,7 @@ import { NetatmoStore } from './redux/Netatmo';
 import Moment from 'moment';
 import { connect } from 'react-redux';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
+import { AppStore } from './redux/reducers';
 import firebase from './firebase';
 import TellulfInfoCell from './TellulfInfoCell';
 
@@ -79,7 +80,7 @@ class Netatmo extends React.PureComponent<Props> {
   }
 }
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: AppStore) {
   return {
     Netatmo: state.Netatmo,
     NetatmoAverages: state.NetatmoAverages,

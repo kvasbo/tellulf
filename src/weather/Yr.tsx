@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchWeather } from '../redux/actions';
 import GraphLong from './GraphLong';
@@ -80,11 +79,5 @@ class Yr extends React.PureComponent<props, {}> {
     );
   }
 }
-
-/*
-Yr.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
-*/
 
 export default connect()(Yr);

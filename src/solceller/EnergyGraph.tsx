@@ -276,24 +276,6 @@ class EnergyGraph extends React.PureComponent<props, {}> {
   }
 }
 
-/*
-EnergyGraph.defaultProps = {
-  usedPower: {},
-};
-
-EnergyGraph.propTypes = {
-  currentSolarProduction: PropTypes.object.isRequired,
-  currentNetConsumption: PropTypes.number.isRequired,
-  max: PropTypes.object.isRequired,
-  initState: PropTypes.object.isRequired,
-  powerPrices: PropTypes.object.isRequired,
-  latitude: PropTypes.number.isRequired,
-  longitude: PropTypes.number.isRequired,
-  realtimePower: PropTypes.object.isRequired,
-  usedPower: PropTypes.object,
-};
-*/
-
 export default EnergyGraph;
 
 function getSunForTime(time: any, latitude = defaultLatitude, longitude = defaultLongitude) {
