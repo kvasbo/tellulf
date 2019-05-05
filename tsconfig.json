@@ -17,7 +17,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [ "./externalLibraryTypes", "./node_modules/@types"]
+    "typeRoots": [ "./externalLibraryTypes", "./node_modules/@types"],
+    "rootDir": "src"
   },
   "include": [
     "src"

@@ -1,11 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Moment from 'moment';
 
 const style = {
   backgroundColor: '#222222', margin: 5, padding: 5, paddingLeft: 10, borderRadius: '0.5vw',
 };
-class HendelseMedTid extends React.PureComponent {
+
+interface Props {
+  data: {
+    name: string;
+    oneDay: boolean;
+  }
+}
+
+class HendelseMedTid extends React.PureComponent<Props, {}> {
   render() {
     return (
       <div style={style}>
@@ -16,22 +23,22 @@ class HendelseMedTid extends React.PureComponent {
   }
 }
 
-export function getTimeString(event) {
+export function getTimeString(event: any) {
   let timeString = '';
   if (event.fullDay) { // Full day events
     if (!event.oneDay) {
-      timeString = Moment(event.start).calendar(null, fullDayFormats());
+      timeString = Moment(event.start).calendar(undefined, fullDayFormats());
       // subtract one, as we only want the last included day
       const newEnd = Moment(event.end);
       newEnd.subtract(1, 'day');
-      timeString += ` → ${Moment(newEnd).calendar(null, fullDayFormats())}`;
+      timeString += ` → ${Moment(newEnd).calendar(undefined, fullDayFormats())}`;
     }
   } else {
     let toFormats = normalDayToFormats();
     if (!event.oneDay) {
       toFormats = normalFormats();
     }
-    timeString = `${Moment(event.start).calendar(null, normalDayToFormats())} → ${Moment(event.end).calendar(null, toFormats)}`;
+    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(undefined, toFormats)}`;
   }
   return timeString;
 }
@@ -63,9 +70,5 @@ function normalDayToFormats() {
     sameElse: 'HH:mm',
   };
 }
-
-HendelseMedTid.propTypes = {
-  data: PropTypes.object.isRequired,
-};
 
 export default HendelseMedTid;

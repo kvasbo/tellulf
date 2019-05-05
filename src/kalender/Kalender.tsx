@@ -4,6 +4,7 @@ import Moment from 'moment';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import Dag from './Dag';
+import { AppStore } from '../redux/reducers'
 
 const IcalExpander = require('ical-expander');
 
@@ -23,8 +24,18 @@ const calP = `${proxy}/?url=${cal}`;
 const dinP = `${proxy}/?url=${dinner}`;
 const bdP = `${proxy}/?url=${birthday}`;
 
-class Kalender extends React.PureComponent {
-  constructor(props) {
+interface Props {
+
+}
+
+interface State {
+  kalenderData: any;
+  birthdays: any;
+  dinners: any;
+}
+
+class Kalender extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       kalenderData: { ...primeDays(0) },
@@ -39,27 +50,18 @@ class Kalender extends React.PureComponent {
   }
 
   getDays() {
-    const out = [];
+    const out: any = [];
     const dayKeys = getDayKeys(30);
     dayKeys.forEach((d) => {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
-      const weather = this.getWeather(d);
+      
       if (cald || birthdays || dinners) {
-        out.push(<Dag key={d} date={d} weather={weather} events={cald} dinner={dinners} birthdays={birthdays} />);
+        out.push(<Dag key={d} date={d} events={cald} dinner={dinners} birthdays={birthdays} />);
       }
     });
     return out;
-  }
-
-  getWeather(day) {
-    if (!this.props.weather) return [];
-    const from = Moment(day).startOf('day').valueOf();
-    const to = Moment(day).endOf('day').valueOf();
-    return Object.values(this.props.weather).filter((w) => {
-      return (w.time >= from && w.time <= to);
-    });
   }
 
   async updateData() {
@@ -82,7 +84,7 @@ class Kalender extends React.PureComponent {
   }
 }
 
-function parseIcalEvent(e, useItem = false) {
+function parseIcalEvent(e: any, useItem = false) {
   try {
     const now = Moment();
     const start = Moment(e.startDate.toJSDate());
@@ -119,7 +121,7 @@ function primeDays(number = 7) {
   // Prime array for events.
   const out = {};
   for (let i = 0; i < number; i += 1) {
-    const m = new Moment();
+    const m = Moment();
     m.add(i, 'day');
     const s = m.format('YYYY-MM-DD');
     out[s] = initDay(s);
@@ -127,7 +129,7 @@ function primeDays(number = 7) {
   return out;
 }
 
-function initDay(sortString) {
+function initDay(sortString: string) {
   return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) };
 }
 
@@ -141,19 +143,15 @@ function getDayKeys(max = 100) {
   return out;
 }
 
-Kalender.propTypes = {
-  weather: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStore) => {
   return {
-    weather: state.Weather.long,
+    
   };
 };
 
 export default connect(mapStateToProps)(Kalender);
 
-async function getIcal(url, prime = false) {
+async function getIcal(url: string, prime = false) {
   let parsedEvents = {};
   try {
     const now = Moment();
@@ -164,15 +162,15 @@ async function getIcal(url, prime = false) {
     const icalExpander = new IcalExpander({ ics: data.data, maxIterations: 1000 });
     const events = icalExpander.between(now.toDate(), now.add(60, 'days').toDate());
 
-    const sorted = {};
+    const sorted: any = {};
 
-    sorted.events = events.events.sort((a, b) => {
+    sorted.events = events.events.sort((a: any, b: any) => {
       const start = a.startDate.toJSDate();
       const end = b.startDate.toJSDate();
       return start - end;
     });
 
-    sorted.occurrences = events.occurrences.sort((a, b) => {
+    sorted.occurrences = events.occurrences.sort((a: any, b: any) => {
       const start = a.item.startDate.toJSDate();
       const end = b.item.startDate.toJSDate();
       return start - end;
@@ -183,7 +181,7 @@ async function getIcal(url, prime = false) {
       parsedEvents = { ...primeDays(0) };
     }
 
-    sorted.occurrences.forEach((e) => {
+    sorted.occurrences.forEach((e: any) => {
       try {
         const event = parseIcalEvent(e, true);
         if (!parsedEvents[event.groupString]) {
@@ -195,7 +193,7 @@ async function getIcal(url, prime = false) {
       }
     });
 
-    sorted.events.forEach((e) => {
+    sorted.events.forEach((e: any) => {
       try {
         const event = parseIcalEvent(e, false);
         if (!parsedEvents[event.groupString]) {
