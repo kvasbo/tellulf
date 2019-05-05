@@ -1,9 +1,21 @@
 import React from 'react';
-
+import firebase from './firebase';
 import './login.css';
 
-class Login extends React.PureComponent {
-  constructor(props) {
+interface State {
+  user: string;
+  pass: string;
+}
+
+interface Props {
+
+}
+
+class Login extends React.PureComponent<Props, State> {
+
+  state: State;
+  
+  constructor(props: Props) {
     super(props);
     this.state = { user: '', pass: '' };
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -11,16 +23,16 @@ class Login extends React.PureComponent {
     this.login = this.login.bind(this);
   }
 
-  handleUsernameChange = (e) => {
+  handleUsernameChange = (e: any) => {
     this.setState({ user: e.target.value });
   }
 
-  handlePasswordChange = (e) => {
+  handlePasswordChange = (e: any) => {
     this.setState({ pass: e.target.value });
   }
 
   login() {
-    window.firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.pass).catch((error) => {
+    firebase.auth().signInWithEmailAndPassword(this.state.user, this.state.pass).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log('Login error', errorCode, errorMessage);
