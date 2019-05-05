@@ -17,12 +17,12 @@
     "noEmit": true,
     "jsx": "preserve",
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [ "./types", "./node_modules/@types"]
+    "typeRoots": [ "./externalLibrarytypes", "./node_modules/@types"]
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "node_modules", "types"
+    "node_modules", "externalLibrarytypes"
   ]
 }
