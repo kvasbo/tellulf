@@ -9,6 +9,7 @@ import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo';
 import Klokke from './Klokke';
 import { fetchTrains } from './redux/actions';
+import { AppStore } from './redux/reducers';
 import './tellulf.css';
 
 // Todo: Flytte listeners ut i egen tråd!
@@ -43,7 +44,6 @@ class Tellulf extends React.PureComponent<props, any> {
   doLoadData(force = false) {
     const now = Moment();
     const sec = now.seconds();
-    // console.log('loadData', sec);
 
     // Laste tog
     if (force || sec % 10 === 0) this.props.dispatch(fetchTrains('3012315', '1 (Retning sentrum)'));
@@ -75,7 +75,7 @@ class Tellulf extends React.PureComponent<props, any> {
   }
 }
 
-function mapStateToProps(state: { Trains: object }) {
+function mapStateToProps(state: AppStore) {
   return {
     trains: state.Trains,
   };

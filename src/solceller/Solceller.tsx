@@ -67,7 +67,6 @@ const mapStateToProps = (state: AppStore) => {
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
     initState: state.Init,
-    settingSolarMaxDynamic: state.Settings.solarMaxDynamic,
     realtimePower: state.TibberRealTime,
     usedPower: state.TibberLastDay,
   };

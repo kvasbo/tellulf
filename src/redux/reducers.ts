@@ -5,7 +5,6 @@ import Netatmo, { NetatmoStore } from './Netatmo';
 import NetatmoAverages, { NetatmoAverageData } from './NetatmoAverages';
 import Init from './Init';
 import Solar, { SolarState } from './Solar';
-import Settings from './settings';
 import PowerPrices from './PowerPrices';
 import Trains from './Trains';
 import TibberRealTime from './TibberRealTimeData';
@@ -16,7 +15,6 @@ export interface AppStore {
   Netatmo: NetatmoStore;
   NetatmoAverages: NetatmoAverageData;
   Solar: SolarState;
-  Settings: any;
   PowerPrices: any;
   Trains: any;
   TibberRealTime: any;
@@ -29,7 +27,6 @@ const tellulfReducer = combineReducers({
   Netatmo,
   NetatmoAverages,
   Solar,
-  Settings,
   PowerPrices,
   Trains,
   TibberRealTime,
