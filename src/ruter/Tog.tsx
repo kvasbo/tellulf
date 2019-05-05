@@ -15,14 +15,14 @@ interface State {
 }
 
 export default class Tog extends React.PureComponent<Props, {}> {
-  state: State;
+  public state: State;
 
-  constructor(props: Props) {
+  public constructor(props: Props) {
     super(props);
     this.state = { showTime: false };
   }
 
-  getStyles(): Style {
+  private getStyles(): Style {
     const styles: Style = {};
     const leftPos = Math.round(this.props.info.fromNow * pixelsPerSecond);
     styles.left = leftPos;
@@ -37,18 +37,18 @@ export default class Tog extends React.PureComponent<Props, {}> {
     return styles;
   }
 
-  getText(): string {
+  private getText(): string {
     if (this.state.showTime) {
       return this.props.info.faktiskTid.format('HH:MM');
     }
     return this.props.info.fromNowM.toString();
   }
 
-  showTime(): void {
+  private showTime(): void {
     this.setState((prevState: State) => ({ showTime: !prevState.showTime }));
   }
 
-  render() {
+  public render() {
     return (
       <div className="train" style={this.getStyles()} onClick={() => this.showTime()}>
         {this.getText()}

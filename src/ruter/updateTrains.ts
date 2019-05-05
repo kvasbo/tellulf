@@ -2,12 +2,6 @@ import axios from 'axios';
 import Moment from 'moment';
 import { TrainData, TrainDataSet } from '../types/trains';
 
-// Just wrapping the thing below.
-export default async function getTrains(station: string, direction: string): Promise<TrainDataSet> {
-  const trainData = await getRuterData(station, direction);
-  return trainData;
-}
-
 // Fetch train data, parse it, and return a train data set
 async function getRuterData(station: string, direction: string): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
@@ -38,4 +32,10 @@ async function getRuterData(station: string, direction: string): Promise<TrainDa
     console.log(err);
   }
   return trains;
+}
+
+// Just wrapping the thing below.
+export default async function getTrains(station: string, direction: string): Promise<TrainDataSet> {
+  const trainData = await getRuterData(station, direction);
+  return trainData;
 }

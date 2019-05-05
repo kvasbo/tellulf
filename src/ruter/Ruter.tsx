@@ -4,19 +4,30 @@ import Tog from './Tog';
 import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
 import './ruter.css';
 
-interface props {
+interface Props {
   trains: TrainDataSet;
 }
 
-class Ruter extends React.PureComponent<props, {}> {
-  oppdateringsFrekvens: number;
+function parseTrain(data: TrainData): ExtendedTrainData {
+  const now = Moment();
+  const train: ExtendedTrainData = {
+    ...data,
+    fromNow: data.faktiskTid.diff(now, 's'),
+    fromNowM: data.faktiskTid.diff(now, 'm'),
+    ruteDiff: data.faktiskTid.diff(data.ruteTid, 'm'),
+  };
+  return train;
+}
 
-  constructor(props: props) {
+class Ruter extends React.PureComponent<Props, {}> {
+  private oppdateringsFrekvens: number;
+
+  public constructor(props: Props) {
     super(props);
     this.oppdateringsFrekvens = 10;
   }
 
-  getTrainObjects() {
+  private getTrainObjects() {
     const tog = [];
     const trains = Object.values(this.props.trains);
     for (let i = trains.length - 1; i > -1; i -= 1) {
@@ -31,20 +42,9 @@ class Ruter extends React.PureComponent<props, {}> {
     return out;
   }
 
-  render() {
+  public render() {
     return <div style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainObjects()}</div>;
   }
-}
-
-function parseTrain(data: TrainData): ExtendedTrainData {
-  const now = Moment();
-  const train: ExtendedTrainData = {
-    ...data,
-    fromNow: data.faktiskTid.diff(now, 's'),
-    fromNowM: data.faktiskTid.diff(now, 'm'),
-    ruteDiff: data.faktiskTid.diff(data.ruteTid, 'm'),
-  };
-  return train;
 }
 
 export default Ruter;
