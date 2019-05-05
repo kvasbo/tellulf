@@ -1,18 +1,29 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { ExtendedTrainData } from '../types/trains';
+import { Style } from '../types/generic';
 
-const secondsToShow = 3600;
-const totalWidth = 766;
-const pixelsPerSecond = totalWidth / secondsToShow;
+const secondsToShow: number = 3600;
+const totalWidth: number = 800;
+const pixelsPerSecond: number = totalWidth / secondsToShow;
 
-export default class Tog extends React.PureComponent {
-  constructor(props) {
+interface Props {
+  info: ExtendedTrainData;
+}
+
+interface State {
+  showTime: boolean;
+}
+
+export default class Tog extends React.PureComponent<Props, {}> {
+  state: State;
+
+  constructor(props: Props) {
     super(props);
     this.state = { showTime: false };
   }
 
-  getStyles() {
-    const styles = {};
+  getStyles(): Style {
+    const styles: Style = {};
     const leftPos = Math.round(this.props.info.fromNow * pixelsPerSecond);
     styles.left = leftPos;
     if (this.props.info.fromNowM < 7) {
@@ -26,15 +37,15 @@ export default class Tog extends React.PureComponent {
     return styles;
   }
 
-  getText() {
+  getText(): string {
     if (this.state.showTime) {
       return this.props.info.faktiskTid.format('HH:MM');
     }
-    return this.props.info.fromNowM;
+    return this.props.info.fromNowM.toString();
   }
 
-  showTime() {
-    this.setState(prevState => ({ showTime: !prevState.showTime }));
+  showTime(): void {
+    this.setState((prevState: State) => ({ showTime: !prevState.showTime }));
   }
 
   render() {
@@ -44,6 +55,3 @@ export default class Tog extends React.PureComponent {
   }
 }
 
-Tog.propTypes = {
-  info: PropTypes.object.isRequired,
-};

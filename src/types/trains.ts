@@ -9,6 +9,13 @@ export interface TrainData {
   skalTil: string;
 }
 
+// With some more data...
+export interface ExtendedTrainData extends TrainData {
+  fromNow: number;
+  fromNowM: number;
+  ruteDiff: number;
+}
+
 // A set of train data
 export interface TrainDataSet {
   [s: number] : TrainData;

@@ -1,11 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Moment from 'moment';
 import Tog from './Tog';
+import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
 import './ruter.css';
 
-class Ruter extends React.PureComponent {
-  constructor(props) {
+interface props {
+  trains: TrainDataSet;
+}
+
+class Ruter extends React.PureComponent<props, {}> {
+  
+  oppdateringsFrekvens: number;
+
+  constructor(props: props) {
     super(props);
     this.oppdateringsFrekvens = 10;
   }
@@ -32,17 +39,15 @@ class Ruter extends React.PureComponent {
   }
 }
 
-function parseTrain(data) {
-  const train = { ...data };
+function parseTrain(data: TrainData): ExtendedTrainData {
   const now = Moment();
-  train.fromNow = train.faktiskTid.diff(now, 's');
-  train.fromNowM = train.faktiskTid.diff(now, 'm');
-  train.ruteDiff = train.faktiskTid.diff(train.ruteTid, 'm');
+  const train: ExtendedTrainData = { 
+    ...data,
+    fromNow: data.faktiskTid.diff(now, 's'),
+    fromNowM: data.faktiskTid.diff(now, 'm'),
+    ruteDiff: data.faktiskTid.diff(data.ruteTid, 'm'),
+  };
   return train;
 }
-
-Ruter.propTypes = {
-  trains: PropTypes.object.isRequired,
-};
 
 export default Ruter;

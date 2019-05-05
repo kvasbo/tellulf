@@ -8,6 +8,7 @@ import Ruter from './ruter/Ruter';
 import Netatmo from './Netatmo';
 import Klokke from './Klokke';
 import { fetchTrains } from './redux/actions';
+import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
 
@@ -16,7 +17,7 @@ import './tellulf.css';
 interface props {
   dispatch: Function;
   loggedIn: boolean;
-  trains: object;
+  trains: TrainDataSet;
 }
 
 class Tellulf extends React.PureComponent<props, any> {
