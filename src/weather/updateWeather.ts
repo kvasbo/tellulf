@@ -6,7 +6,7 @@ import SunCalc from 'suncalc';
 import store from 'store';
 import XML from 'pixl-xml';
 
-import { weatherData } from '../redux/Weather';
+import { WeatherData } from '../redux/Weather';
 
 const localStorageKey = '5';
 
@@ -113,7 +113,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
   Object.values(weatherOut).forEach((p) => {
-    const d = p as weatherData;
+    const d = p as WeatherData;
     if (!d) return;
     const time = Moment(d.time);
     if (!time.isSame(now, 'day')) return;
@@ -155,7 +155,7 @@ function initWeatherLong() {
     const midTime = startTime.add(diff / 2, 'hours');
     out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, symbol: null, symbolNumber: null, time: midTime.valueOf(),
-    } as weatherData;
+    } as WeatherData;
     time.add(spanToUseInHours, 'hours');
   }
 
@@ -181,7 +181,7 @@ function initWeather() {
     const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
     out[key] = {
       temp: null, rain: null, rainMin: null, rainMax: null, clouds: null, wind: null, symbol: null, symbolNumber: null, sunHeight: null, time,
-    } as weatherData;
+    } as WeatherData;
     start.add(1, 'hours');
   }
 

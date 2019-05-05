@@ -2,6 +2,7 @@ import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
 import { NetatmoStore } from './Netatmo';
+import  { WeatherData } from './Weather';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
