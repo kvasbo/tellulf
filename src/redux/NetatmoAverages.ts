@@ -17,7 +17,6 @@ const initState: NetatmoAverages = {
 export default function NetatmoAverages(state = initState, action: { type: string, data: NetatmoAverages }) : NetatmoAverages {
   switch (action.type) {
     case NETATMO_UPDATE_AVERAGES: {
-      console.log(action.data);
       try {
         let newState: NetatmoAverages = state;
         newState.humidity = action.data.humidity;
