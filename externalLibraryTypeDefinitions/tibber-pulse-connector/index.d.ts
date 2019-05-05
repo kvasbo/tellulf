@@ -1,1 +1,1 @@
-declare module 'tibber-pulse-connector'
+declare module 'tibber-pulse-connector';

@@ -17,7 +17,7 @@ interface Props {
 }
 
 class HendelseFullDag extends React.PureComponent<Props, {}> {
-  render() {
+  public render() {
     return (
       <div style={style}>
         <div>{this.props.data.name}</div>

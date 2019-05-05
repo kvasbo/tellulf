@@ -9,48 +9,6 @@ const style = {
   borderRadius: '0.5vw',
 };
 
-interface Props {
-  data: {
-    name: string;
-    oneDay: boolean;
-  };
-}
-
-class HendelseMedTid extends React.PureComponent<Props, {}> {
-  render() {
-    return (
-      <div style={style}>
-        <div>{this.props.data.name}</div>
-        <div>{getTimeString(this.props.data)}</div>
-      </div>
-    );
-  }
-}
-
-export function getTimeString(event: any) {
-  let timeString = '';
-  if (event.fullDay) {
-    // Full day events
-    if (!event.oneDay) {
-      timeString = Moment(event.start).calendar(undefined, fullDayFormats());
-      // subtract one, as we only want the last included day
-      const newEnd = Moment(event.end);
-      newEnd.subtract(1, 'day');
-      timeString += ` → ${Moment(newEnd).calendar(undefined, fullDayFormats())}`;
-    }
-  } else {
-    let toFormats = normalDayToFormats();
-    if (!event.oneDay) {
-      toFormats = normalFormats();
-    }
-    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(
-      undefined,
-      toFormats,
-    )}`;
-  }
-  return timeString;
-}
-
 function fullDayFormats() {
   return {
     lastWeek: 'dddd DD.',
@@ -77,6 +35,48 @@ function normalDayToFormats() {
     nextWeek: 'HH:mm',
     sameElse: 'HH:mm',
   };
+}
+
+export function getTimeString(event: any) {
+  let timeString = '';
+  if (event.fullDay) {
+    // Full day events
+    if (!event.oneDay) {
+      timeString = Moment(event.start).calendar(undefined, fullDayFormats());
+      // subtract one, as we only want the last included day
+      const newEnd = Moment(event.end);
+      newEnd.subtract(1, 'day');
+      timeString += ` → ${Moment(newEnd).calendar(undefined, fullDayFormats())}`;
+    }
+  } else {
+    let toFormats = normalDayToFormats();
+    if (!event.oneDay) {
+      toFormats = normalFormats();
+    }
+    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(
+      undefined,
+      toFormats,
+    )}`;
+  }
+  return timeString;
+}
+
+interface Props {
+  data: {
+    name: string;
+    oneDay: boolean;
+  };
+}
+
+class HendelseMedTid extends React.PureComponent<Props, {}> {
+  public render() {
+    return (
+      <div style={style}>
+        <div>{this.props.data.name}</div>
+        <div>{getTimeString(this.props.data)}</div>
+      </div>
+    );
+  }
 }
 
 export default HendelseMedTid;
