@@ -14,25 +14,25 @@ import './tellulf.css';
 
 // Todo: Flytte listeners ut i egen tråd!
 
-interface props {
+interface Props {
   dispatch: Function;
   loggedIn: boolean;
   trains: TrainDataSet;
 }
 
-class Tellulf extends React.PureComponent<props, any> {
-  constructor(props: props) {
+class Tellulf extends React.PureComponent<Props, {}> {
+  public constructor(props: Props) {
     super(props);
     this.doLoadData = this.doLoadData.bind(this);
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.startReloadLoop();
     setInterval(this.doLoadData, 1000);
     this.doLoadData(true);
   }
 
-  startReloadLoop() {
+  private startReloadLoop() {
     const now = Moment();
     const reload = Moment(now)
       .startOf('hour')
@@ -43,7 +43,7 @@ class Tellulf extends React.PureComponent<props, any> {
     }, diff);
   }
 
-  doLoadData(force = false) {
+  private doLoadData(force = false) {
     const now = Moment();
     const sec = now.seconds();
 
@@ -51,7 +51,7 @@ class Tellulf extends React.PureComponent<props, any> {
     if (force || sec % 10 === 0) this.props.dispatch(fetchTrains('3012315', '1 (Retning sentrum)'));
   }
 
-  render() {
+  public render() {
     return (
       <div className="grid">
         <div style={{ gridColumn: '1 / 2', gridRow: '1 / 2' }} className="block">

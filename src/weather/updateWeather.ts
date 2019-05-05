@@ -2,13 +2,19 @@ import axios from 'axios';
 import Moment from 'moment';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
-import SunCalc from 'suncalc';
-import store from 'store';
+import {
+  getSunMeta,
+  initWeather,
+  initWeatherLong,
+  getTimeLimits,
+  createKeyBasedOnStamps,
+  storeToLocalStore,
+} from './weatherHelpers';
 import XML from 'pixl-xml';
 
 import { WeatherData } from '../types/weather';
 
-const localStorageKey = '5';
+export const localStorageKey = '5';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
   const weatherOut = initWeather();
@@ -142,109 +148,6 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   return { weather: weatherOut, long: sixesOut, todayMinMax };
 }
 
-// Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
-function storeToLocalStore(key: string, data: any, from: object, to: object) {
-  const toStore = {};
-  Object.keys(data).forEach(k => {
-    const d = data[k];
-    if (!d.time) return;
-    if (Moment(d.time).isBetween(from, to, undefined, '[]')) {
-      toStore[k] = d;
-    }
-  });
-  store.set(key, toStore);
-}
-
-// Init the six hours forecast
-function initWeatherLong() {
-  const spanToUseInHours = 6;
-  const out = {};
-  const time = Moment()
-    .utc()
-    .startOf('day');
-  const spanEnd = Moment(time)
-    .add(8, 'day')
-    .startOf('day');
-  while (time.isSameOrBefore(spanEnd)) {
-    const startTime = Moment(time);
-    const endTime = Moment(time).add(spanToUseInHours, 'hours');
-    const key = createKeyBasedOnStamps(startTime.toISOString(), endTime.toISOString());
-    const diff = endTime.diff(startTime, 'hours');
-    const midTime = startTime.add(diff / 2, 'hours');
-    out[key] = {
-      temp: null,
-      rain: null,
-      rainMin: null,
-      rainMax: null,
-      symbol: null,
-      symbolNumber: null,
-      time: midTime.valueOf(),
-    } as WeatherData;
-    time.add(spanToUseInHours, 'hours');
-  }
-
-  // Load localstore if applicable, and write to output item if applicable
-  const fromStore = store.get(`weatherLong_${localStorageKey}`);
-  if (fromStore) {
-    Object.keys(fromStore).forEach(k => {
-      if (out[k]) {
-        out[k] = { ...out[k], ...fromStore[k] };
-      }
-    });
-  }
-  return out;
-}
-
-function initWeather() {
-  const out = {};
-  const { start, end } = getTimeLimits(3);
-  while (start.isSameOrBefore(end)) {
-    const time = start.valueOf();
-    const from = Moment(start);
-    const to = Moment(from).add(1, 'hours');
-    const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
-    out[key] = {
-      temp: null,
-      rain: null,
-      rainMin: null,
-      rainMax: null,
-      clouds: null,
-      wind: null,
-      symbol: null,
-      symbolNumber: null,
-      sunHeight: null,
-      time,
-    } as WeatherData;
-    start.add(1, 'hours');
-  }
-
-  // Load localstore if applicable, and write to output item if applicable
-  const fromStore = store.get(`weather_${localStorageKey}`);
-  if (fromStore) {
-    Object.keys(fromStore).forEach(k => {
-      if (out[k]) {
-        out[k] = { ...out[k], ...fromStore[k] };
-      }
-    });
-  }
-  return out;
-}
-
-function createKeyBasedOnStamps(from: string, to: string) {
-  const f = Moment(from);
-  const t = Moment(to);
-  const key = `${f.toISOString()}->${t.toISOString()}`;
-  return key;
-}
-
-export function getTimeLimits(days = 3) {
-  const start = Moment().startOf('day');
-  const end = Moment()
-    .add(days, 'day')
-    .startOf('day');
-  return { start, end };
-}
-
 export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6991) {
   const dataArray = Object.values(data);
   const sunData = getSunMeta(lat, long);
@@ -296,24 +199,4 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
   };
 
   return out;
-}
-
-function getSunMeta(lat: number, long: number, now = Moment()) {
-  const yesterday = Moment(now).subtract(1, 'days');
-  const sunTimes = SunCalc.getTimes(new Date(), lat, long);
-  const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
-  const sunriseM = Moment(sunTimes.sunrise);
-  const sunsetM = Moment(sunTimes.sunset);
-  const sunriseYesterday = Moment(sunTimesYesterday.sunrise);
-  const sunsetYesterday = Moment(sunTimesYesterday.sunset);
-  const diffRise = sunriseM.diff(sunriseYesterday, 'minutes') - 1440;
-  const diffSet = sunsetM.diff(sunsetYesterday, 'minutes') - 1440;
-  const sunrise = sunriseM.valueOf();
-  const sunset = sunsetM.valueOf();
-  return {
-    sunrise,
-    sunset,
-    diffRise,
-    diffSet,
-  };
 }

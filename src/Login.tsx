@@ -7,12 +7,10 @@ interface State {
   pass: string;
 }
 
-interface Props {}
+class Login extends React.PureComponent<{}, State> {
+  public state: State;
 
-class Login extends React.PureComponent<Props, State> {
-  state: State;
-
-  constructor(props: Props) {
+  public constructor(props: {}) {
     super(props);
     this.state = { user: '', pass: '' };
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -20,15 +18,15 @@ class Login extends React.PureComponent<Props, State> {
     this.login = this.login.bind(this);
   }
 
-  handleUsernameChange = (e: any) => {
+  private handleUsernameChange = (e: any) => {
     this.setState({ user: e.target.value });
   };
 
-  handlePasswordChange = (e: any) => {
+  private handlePasswordChange = (e: any) => {
     this.setState({ pass: e.target.value });
   };
 
-  login() {
+  private login() {
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.user, this.state.pass)
@@ -39,7 +37,7 @@ class Login extends React.PureComponent<Props, State> {
       });
   }
 
-  render() {
+  public render() {
     return (
       <div className="App" id="container">
         <div id="login">

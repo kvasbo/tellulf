@@ -9,41 +9,41 @@ const steder = {
   sandefjord: { lat: 59.1347624, long: 10.3250789 },
 };
 
-interface props {
+interface Props {
   dispatch: Function;
 }
 
-interface state {
+interface State {
   sted: string;
 }
 
-class Yr extends React.PureComponent<props, {}> {
-  state: state;
+class Yr extends React.PureComponent<Props, State> {
+  public state: State;
 
-  constructor(props: props) {
+  public constructor(props: Props) {
     super(props);
     this.state = { sted: 'oslo' };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     setTimeout(() => {
       this.updateWeather();
     }, 1500);
   }
 
-  updateWeather() {
+  private updateWeather() {
     const { lat, long } = steder[this.state.sted];
     this.props.dispatch(fetchWeather(lat, long));
   }
 
-  stedEndra(e: any) {
+  private stedEndra(e: any) {
     this.setState({ sted: e.currentTarget.value });
     const { lat, long } = steder[e.currentTarget.value];
     this.props.dispatch(fetchWeather(lat, long));
   }
 
   // Stays on
-  render() {
+  public render() {
     return (
       <div className="yr-container">
         <GraphLong />

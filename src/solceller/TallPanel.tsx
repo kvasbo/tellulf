@@ -9,10 +9,6 @@ interface Props {
 }
 
 class TallPanel extends React.PureComponent<Props, {}> {
-  public constructor(props: Props) {
-    super(props);
-  }
-
   public render() {
     // Calculate percentage of usage
     let producedPercent = 0;

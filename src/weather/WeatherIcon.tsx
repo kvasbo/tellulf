@@ -1,7 +1,7 @@
 import React from 'react';
 const baseUrl = './WeatherIcons/';
 
-interface props {
+interface Props {
   symbolMap: any;
   payload: any;
   sunrise: number;
@@ -10,7 +10,7 @@ interface props {
   cy: number;
 }
 
-class WeatherIcon extends React.PureComponent<props, {}> {
+class WeatherIcon extends React.PureComponent<Props, {}> {
   public static defaultProps = {
     cx: undefined,
     cy: undefined,
@@ -19,7 +19,7 @@ class WeatherIcon extends React.PureComponent<props, {}> {
     sunset: 3484811880000,
   };
 
-  getIconLocation() {
+  private getIconLocation() {
     let icon = this.props.symbolMap.blank;
     const nattdag =
       this.props.payload.time % 86400000 >= this.props.sunrise % 86400000 &&
@@ -32,12 +32,12 @@ class WeatherIcon extends React.PureComponent<props, {}> {
     return `${baseUrl}${icon}`;
   }
 
-  getTemp() {
+  private getTemp() {
     const temp = Math.round(this.props.payload.temp);
     return temp;
   }
 
-  render() {
+  public render() {
     if (!this.props.cy) {
       return null;
     }

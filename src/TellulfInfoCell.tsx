@@ -4,7 +4,7 @@ const defaultFontSize = 16;
 const largeFontSize = 24;
 const labelFontSize = 10;
 
-interface props {
+interface Props {
   info: number;
   decimals: number;
   fontSize: number;
@@ -17,7 +17,12 @@ interface props {
   unit: string | undefined;
 }
 
-class TellulfInfoCell extends React.PureComponent<props, {}> {
+export function roundToNumberOfDecimals(number: number, decimals: number) {
+  const factor = 10 ** decimals;
+  return Math.round(factor * number) / factor;
+}
+
+class TellulfInfoCell extends React.PureComponent<Props, {}> {
   public static defaultProps = {
     header: undefined,
     info: '-',
@@ -31,7 +36,7 @@ class TellulfInfoCell extends React.PureComponent<props, {}> {
     colorIfNegative: '#FFFFFF',
   };
 
-  render() {
+  public render() {
     let text = '-';
 
     // Don't even try
@@ -73,11 +78,6 @@ class TellulfInfoCell extends React.PureComponent<props, {}> {
       </div>
     );
   }
-}
-
-export function roundToNumberOfDecimals(number: number, decimals: number) {
-  const factor = 10 ** decimals;
-  return Math.round(factor * number) / factor;
 }
 
 export default TellulfInfoCell;

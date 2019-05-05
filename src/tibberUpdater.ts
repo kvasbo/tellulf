@@ -3,7 +3,6 @@ import Moment from 'moment';
 import firebase from './firebase';
 import TibberConnector from 'tibber-pulse-connector';
 import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from './redux/actions';
-import { string, number } from 'prop-types';
 
 const nettleie = 0.477;
 
@@ -20,14 +19,14 @@ const netPriceSettings = {
   },
 };
 
-export default class tibberUpdater {
-  store: { dispatch: Function };
-  tibberSocket: any;
-  constructor(store: { dispatch: Function }) {
+export default class TibberUpdater {
+  private store: { dispatch: Function };
+  private tibberSocket: any;
+  public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
 
-  async updatePowerPrices() {
+  public async updatePowerPrices() {
     const settings = await this.getTibberSettings();
     const queryPrices = `
     {
@@ -75,7 +74,7 @@ export default class tibberUpdater {
     }
   }
 
-  async updateConsumption() {
+  public async updateConsumption() {
     const settings = await this.getTibberSettings();
     const queryUsage = `
     {
@@ -119,7 +118,7 @@ export default class tibberUpdater {
   }
 
   // Create and start websocket connection
-  async subscribeToRealTime() {
+  public async subscribeToRealTime() {
     const settings: any = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
     this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: any) => {
@@ -132,7 +131,7 @@ export default class tibberUpdater {
     this.tibberSocket.start();
   }
 
-  async updateConsumptionMonthlyAndCalculateBills() {
+  public async updateConsumptionMonthlyAndCalculateBills() {
     const settings = await this.getTibberSettings();
     const queryUsage = `
     {
@@ -195,9 +194,9 @@ export default class tibberUpdater {
   }
 
   // Get tibber settings from firebase
-  async getTibberSettings() {
+  public async getTibberSettings() {
     const settings: { tibberApiKey: string; tibberHomeKey: string; tibberCabinKey: string } = await new Promise(
-      (resolve, reject) => {
+      resolve => {
         const settingsRef = firebase.database().ref('settings');
         settingsRef.once('value', (snapshot: any) => {
           const settings = snapshot.val();

@@ -31,14 +31,14 @@ bugsnagClient.use(bugsnagReact, React);
 const ErrorBoundary = bugsnagClient.getPlugin('react');
 
 class App extends React.PureComponent {
-  state: AppState;
+  public state: AppState;
 
-  constructor(props: any) {
+  public constructor(props: any) {
     super(props);
     this.state = { loggedIn: false, user: null, username: '', password: '' };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ loggedIn: true, user });
@@ -53,11 +53,11 @@ class App extends React.PureComponent {
     });
   }
 
-  getLoggingIn() {
+  private getLoggingIn() {
     return <div>Logger inn...</div>;
   }
 
-  doLogin() {
+  private doLogin() {
     if (!this.state.username || !this.state.password) alert('Tast inn brukernavn og passord din slask');
     firebase
       .auth()
@@ -71,7 +71,7 @@ class App extends React.PureComponent {
       });
   }
 
-  getLogin() {
+  private getLogin() {
     return (
       <div
         style={{
@@ -109,7 +109,7 @@ class App extends React.PureComponent {
     );
   }
 
-  render() {
+  public render() {
     if (!this.state.loggedIn) return this.getLogin();
     return (
       <ErrorBoundary>

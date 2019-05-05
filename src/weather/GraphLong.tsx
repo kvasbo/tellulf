@@ -15,51 +15,49 @@ import {
   ReferenceArea,
   Label,
 } from 'recharts';
-import { getTimeLimits, parseLimits } from './updateWeather';
+import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
-import { getNorwegianDaysOff } from '../external';
 import { AppStore } from '../redux/reducers';
+import { getDayColor, getTicks, formatTick } from './weatherHelpers';
 import './yr.css';
 
 const gridColor = '#FFFFFFAA';
-const sundayColor = '#FF0000CC';
-const redDays = getNorwegianDaysOff();
 
-interface props {
+interface Props {
   weatherLong: object;
   limits: any;
 }
 
-interface state {
+interface State {
   currentTime: number;
 }
 
-class GraphLong extends React.PureComponent<props, {}> {
-  state: state;
+class GraphLong extends React.PureComponent<Props, State> {
+  public state: State;
 
   public static defaultProps = {
     limits: undefined,
   };
 
-  constructor(props: props) {
+  public constructor(props: Props) {
     super(props);
     this.state = { currentTime: Moment().valueOf() };
   }
 
-  getData() {
+  private getData() {
     const rawData = Object.values(this.props.weatherLong);
     const uniqueData = uniqBy(rawData, 'time');
     const sortedData = sortBy(uniqueData, 'time');
     return sortedData;
   }
 
-  reloadTime() {
+  private reloadTime() {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
   // Stays on
-  render() {
+  public render() {
     if (!this.props.weatherLong || !this.props.limits) {
       return null;
     }
@@ -245,31 +243,6 @@ class GraphLong extends React.PureComponent<props, {}> {
       </div>
     );
   }
-}
-
-function getTicks() {
-  const { start, end } = getTimeLimits(7);
-  const out = [];
-  while (start.isSameOrBefore(end)) {
-    if (start.hours() % 6 === 0) {
-      out.push(start.valueOf());
-    }
-    start.add(1, 'hours');
-  }
-  return out;
-}
-
-function getDayColor(time: any) {
-  const d = Moment(time);
-  if (d.day() === 0 || d.day() === 6) return sundayColor;
-  const dString = d.format('MMDD');
-  if (redDays.includes(dString)) return sundayColor;
-  return gridColor;
-}
-
-function formatTick(data: any) {
-  const time = Moment(data, 'x');
-  return time.format('HH');
 }
 
 const mapStateToProps = (state: AppStore) => {

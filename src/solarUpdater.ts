@@ -1,16 +1,25 @@
-import axios from 'axios';
 import Moment from 'moment';
 import firebase from './firebase';
 import { updateSolarMax, updateSolarCurrent, updateInitStatus } from './redux/actions';
 
-export default class solarUpdater {
-  store: { dispatch: Function };
+function parseByHour(data: []) {
+  const startOfDay = Moment().startOf('day');
 
-  constructor(store: { dispatch: Function }) {
+  const out = data.map((d: { minutesFromMidnight: number; production: number }) => {
+    const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
+    return { time: time.valueOf(), production: d.production };
+  });
+  return out;
+}
+
+export default class SolarUpdater {
+  private store: { dispatch: Function };
+
+  public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
 
-  async attachListeners() {
+  public async attachListeners() {
     const dbRef = firebase.database().ref('steca/currentData');
 
     dbRef.on('value', (snapshot: any) => {
@@ -49,7 +58,7 @@ export default class solarUpdater {
   /*
   Attach listeners to new max values
   */
-  async attachMaxListeners() {
+  public async attachMaxListeners() {
     const now = Moment();
     const y = now.format('YYYY');
     const m = now.format('MM');
@@ -95,14 +104,4 @@ export default class solarUpdater {
       }
     });
   }
-}
-
-function parseByHour(data: []) {
-  const startOfDay = Moment().startOf('day');
-
-  const out = data.map((d: { minutesFromMidnight: number; production: number }) => {
-    const time = Moment(startOfDay).add(d.minutesFromMidnight, 'minutes');
-    return { time: time.valueOf(), production: d.production };
-  });
-  return out;
 }

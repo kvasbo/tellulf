@@ -4,18 +4,23 @@ import firebase from './firebase';
 
 Moment.locale('nb');
 
-class Clock extends React.PureComponent<any, any> {
-  timer!: any;
-  constructor(props: {}) {
+interface State {
+  time: Moment.Moment;
+  debug: boolean;
+}
+
+class Clock extends React.PureComponent<{}, State> {
+  private timer!: any;
+  public constructor(props: {}) {
     super(props);
     this.state = { time: Moment(), debug: false };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.timer = setInterval(() => this.setState({ time: Moment() }), 1000);
   }
 
-  render() {
+  public render() {
     return (
       <div
         style={{

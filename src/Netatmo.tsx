@@ -21,9 +21,9 @@ interface State {
 }
 
 class Netatmo extends React.PureComponent<Props> {
-  static defaultProps = { minMax: { max: -9999, min: 9999 } };
+  public static defaultProps = { minMax: { max: -9999, min: 9999 } };
 
-  componentDidMount() {
+  public componentDidMount() {
     const dbRef = firebase.database().ref('netatmo/currentData');
     dbRef.on('value', snapshot => {
       if (snapshot) {
@@ -40,7 +40,7 @@ class Netatmo extends React.PureComponent<Props> {
     });
   }
 
-  render() {
+  public render() {
     // Ikke rendre om ikke data
     if (!this.props.Netatmo.updated || !this.props.NetatmoAverages.time) return null;
     // Finn alder på data
