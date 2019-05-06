@@ -1,4 +1,5 @@
 import { UPDATE_SOLAR_CURRENT, UPDATE_SOLAR_MAX } from './actions';
+import { SolarState } from '../types/solar';
 import Moment from 'moment';
 
 const initialState: SolarState = {
@@ -21,31 +22,6 @@ const initialState: SolarState = {
     dataTime: null,
   },
 };
-
-export interface SolarState {
-  max: SolarMax;
-  current: SolarCurrent;
-}
-
-export interface SolarMax {
-  maxDay: number;
-  maxMonth: number;
-  maxYear: number;
-  maxEver: number;
-}
-
-export interface SolarCurrent {
-  averageFull: number;
-  averageMinute: number;
-  month: number;
-  now: number;
-  today: number;
-  total: number;
-  year: number;
-  byHour: { time: number; production: number }[];
-  currentTime: Moment.Moment;
-  dataTime: Moment.Moment | null;
-}
 
 export default function Solar(state: SolarState = initialState, action: { type: string; data: object }): SolarState {
   switch (action.type) {

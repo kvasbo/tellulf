@@ -1,12 +1,12 @@
 import { UPDATE_INIT_STATUS } from './actions';
 
-interface State {
+export interface InitState {
   powerPrices: boolean;
   solar: boolean;
 }
 
 export default function Init(
-  state: State = { powerPrices: false, solar: false },
+  state: InitState = { powerPrices: false, solar: false },
   action: { type: string; key: string; value: any },
 ) {
   switch (action.type) {

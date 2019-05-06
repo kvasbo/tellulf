@@ -19,15 +19,21 @@ const netPriceSettings = {
   },
 };
 
+interface TibberSettings {
+  tibberApiKey: string;
+  tibberHomeKey: string;
+  tibberCabinKey: string;
+}
+
 export default class TibberUpdater {
   private store: { dispatch: Function };
-  private tibberSocket: any;
+  private tibberSocket: { start: Function } | undefined;
   public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
 
   public async updatePowerPrices() {
-    const settings = await this.getTibberSettings();
+    const settings: TibberSettings = await this.getTibberSettings();
     const queryPrices = `
     {
       viewer {
@@ -75,7 +81,7 @@ export default class TibberUpdater {
   }
 
   public async updateConsumption() {
-    const settings = await this.getTibberSettings();
+    const settings: TibberSettings = await this.getTibberSettings();
     const queryUsage = `
     {
       viewer {
@@ -119,16 +125,17 @@ export default class TibberUpdater {
 
   // Create and start websocket connection
   public async subscribeToRealTime() {
-    const settings: any = await this.getTibberSettings();
+    const settings: TibberSettings = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
-    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: { error: any; data: any }) => {
       if (!data.error) {
         this.store.dispatch(updateRealtimeConsumption(data));
       } else {
         throw new Error(data.error);
       }
     });
-    this.tibberSocket.start();
+    if (this.tibberSocket) this.tibberSocket.start();
   }
 
   public async updateConsumptionMonthlyAndCalculateBills() {
@@ -195,15 +202,13 @@ export default class TibberUpdater {
 
   // Get tibber settings from firebase
   public async getTibberSettings() {
-    const settings: { tibberApiKey: string; tibberHomeKey: string; tibberCabinKey: string } = await new Promise(
-      resolve => {
-        const settingsRef = firebase.database().ref('settings');
-        settingsRef.once('value', (snapshot: any) => {
-          const settings = snapshot.val();
-          resolve(settings);
-        });
-      },
-    );
+    const settings: TibberSettings = await new Promise(resolve => {
+      const settingsRef = firebase.database().ref('settings');
+      settingsRef.once('value', (snapshot: { val: Function }) => {
+        const settings = snapshot.val();
+        if (settings) resolve(settings);
+      });
+    });
     return settings;
   }
 }

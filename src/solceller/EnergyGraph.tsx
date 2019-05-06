@@ -26,17 +26,20 @@ import {
   formatTick,
 } from './energyHelpers';
 
+import { SolarCurrent, SolarMax, SolarHour } from '../types/solar';
+import { InitState } from '../redux/Init';
+
 const maxSunHeight = getMaxSunHeight();
 
 interface Props {
-  currentSolarProduction: any;
+  currentSolarProduction: SolarCurrent;
   powerPrices: object;
   latitude: number;
   longitude: number;
   usedPower: object;
   realtimePower: { avgLastHour: number };
-  initState: any;
-  max: any;
+  initState: InitState;
+  max: SolarMax;
   currentNetConsumption: number;
 }
 
@@ -60,13 +63,6 @@ class EnergyGraph extends React.PureComponent<Props, State> {
     }, 300000); // Flytt sola hvert femte minutt
   }
 
-  private getCurrentLabelPosition() {
-    if (this.props.currentSolarProduction.averagefull > 3300) {
-      return 'right';
-    }
-    return 'right';
-  }
-
   private getData() {
     const dataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
@@ -74,7 +70,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
     const now = new Date();
 
     // Map production data
-    this.props.currentSolarProduction.byHour.forEach((h: any) => {
+    this.props.currentSolarProduction.byHour.forEach((h: SolarHour) => {
       // Correct production time for UTC
       const correctedTime = h.time + timeZoneAdd + dstAdd;
       if (correctedTime in dataSet) {
