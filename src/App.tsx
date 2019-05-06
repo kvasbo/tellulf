@@ -33,7 +33,7 @@ const ErrorBoundary = bugsnagClient.getPlugin('react');
 class App extends React.PureComponent {
   public state: AppState;
 
-  public constructor(props: any) {
+  public constructor(props: {}) {
     super(props);
     this.state = { loggedIn: false, user: null, username: '', password: '' };
   }
@@ -51,10 +51,6 @@ class App extends React.PureComponent {
         solar.attachMaxListeners();
       }
     });
-  }
-
-  private getLoggingIn() {
-    return <div>Logger inn...</div>;
   }
 
   private doLogin() {

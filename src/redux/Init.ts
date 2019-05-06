@@ -7,12 +7,12 @@ export interface InitState {
 
 export default function Init(
   state: InitState = { powerPrices: false, solar: false },
-  action: { type: string; key: string; value: any },
+  action: { type: string; key: string; value: boolean },
 ) {
   switch (action.type) {
     case UPDATE_INIT_STATUS: {
-      const newState: any = { ...state };
-      newState[action.key] = !!action.value;
+      const newState: InitState = { ...state };
+      newState[action.key] = action.value;
       return newState;
     }
     default:

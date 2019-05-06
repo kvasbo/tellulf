@@ -1,5 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
+import { Event } from './Dag';
 
 const style = {
   backgroundColor: '#222222',
@@ -37,7 +38,7 @@ function normalDayToFormats() {
   };
 }
 
-export function getTimeString(event: any) {
+export function getTimeString(event: Event) {
   let timeString = '';
   if (event.fullDay) {
     // Full day events
@@ -62,10 +63,7 @@ export function getTimeString(event: any) {
 }
 
 interface Props {
-  data: {
-    name: string;
-    oneDay: boolean;
-  };
+  data: Event;
 }
 
 class HendelseMedTid extends React.PureComponent<Props, {}> {

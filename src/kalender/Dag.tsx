@@ -3,10 +3,25 @@ import Moment from 'moment';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 
+export interface Event {
+  name: string;
+  id: string;
+  start: Moment.Moment;
+  end: Moment.Moment;
+  fullDay: boolean;
+  oneDay: boolean;
+  groupString: string;
+}
 interface Props {
-  dinner: any;
-  birthdays: any;
-  events: any;
+  dinner: {
+    events: [Event];
+  };
+  birthdays: {
+    events: [Event];
+  };
+  events: {
+    events: [Event];
+  };
   date: string;
 }
 
@@ -35,9 +50,9 @@ class Dag extends React.PureComponent<Props, {}> {
 
   private getBirthdays() {
     if (!this.props.birthdays || !this.props.birthdays.events) return null;
-    const out: any[] = [];
+    const out: JSX.Element[] = [];
     try {
-      this.props.birthdays.events.forEach((b: any) => {
+      this.props.birthdays.events.forEach((b: Event) => {
         const matches = b.name.match(/\d+$/);
         // eslint-disable-next-line prefer-destructuring
         let name = b.name;
@@ -61,14 +76,14 @@ class Dag extends React.PureComponent<Props, {}> {
 
   private getEvents() {
     if (!this.props.events || !this.props.events.events) return null;
-    const out: any[] = [];
+    const out: JSX.Element[] = [];
 
     try {
-      const events = this.props.events.events.sort((a: any, b: any) => {
+      const events = this.props.events.events.sort((a: Event, b: Event) => {
         return a.start.isBefore(b.start) ? -1 : 1;
       });
 
-      events.forEach((e: any) => {
+      events.forEach((e: Event) => {
         if (e.fullDay) {
           out.push(<HendelseFullDag key={e.id} data={e} />);
         } else {

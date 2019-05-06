@@ -1,7 +1,7 @@
 import Moment from 'moment';
 import { UPDATE_WEATHER } from './actions';
 import { parseLimits } from '../weather/updateWeather';
-import { WeatherData } from '../types/weather';
+import { WeatherData, WeatherTodayMinMax, WeatherDataSet } from '../types/weather';
 
 interface State {
   weather: {} | undefined;
@@ -23,7 +23,12 @@ const initialState = {
 
 export default function Weather(
   state: State = initialState,
-  action: { type: string; data: any; lat: number; lon: number },
+  action: {
+    type: string;
+    data: { weather: WeatherData; long: WeatherData; todayMinMax: WeatherTodayMinMax };
+    lat: number;
+    lon: number;
+  },
 ) {
   switch (action.type) {
     case UPDATE_WEATHER: {
@@ -36,7 +41,7 @@ export default function Weather(
         if (!w) return false;
         return Moment(w['time']).isBetween(from, to, undefined, '[]');
       });
-      const newWeather: any = {};
+      const newWeather: WeatherDataSet = {};
       filtered.forEach((w: any) => {
         if (!w) return false;
         newWeather[w['time']] = w;

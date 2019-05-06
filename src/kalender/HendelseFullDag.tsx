@@ -1,5 +1,6 @@
 import React from 'react';
 import { getTimeString } from './HendelseMedTid';
+import { Event } from './Dag';
 
 const style = {
   backgroundColor: '#222222',
@@ -10,10 +11,7 @@ const style = {
 };
 
 interface Props {
-  data: {
-    name: string;
-    oneDay: boolean;
-  };
+  data: Event;
 }
 
 class HendelseFullDag extends React.PureComponent<Props, {}> {

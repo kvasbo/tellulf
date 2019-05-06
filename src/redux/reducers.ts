@@ -4,7 +4,7 @@ import Weather from './Weather';
 import Netatmo, { NetatmoStore } from './Netatmo';
 import NetatmoAverages, { NetatmoAverageData } from './NetatmoAverages';
 import Init from './Init';
-import Solar, { SolarState } from './Solar';
+import Solar from './Solar';
 import PowerPrices from './PowerPrices';
 import Trains from './Trains';
 import TibberRealTime from './TibberRealTimeData';
@@ -12,6 +12,7 @@ import TibberLastDay from './TibberLastDay';
 
 import { TrainDataSet } from '../types/trains';
 import { WeatherStore } from '../types/weather';
+import { SolarState } from '../types/solar';
 
 export interface AppStore {
   Init: object;

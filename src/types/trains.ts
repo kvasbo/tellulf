@@ -20,3 +20,19 @@ export interface ExtendedTrainData extends TrainData {
 export interface TrainDataSet {
   [s: number]: TrainData;
 }
+
+export interface RuterApiData {
+  MonitoredVehicleJourney: {
+    MonitoredCall: {
+      DeparturePlatformName: string;
+      AimedArrivalTime: string;
+      ExpectedArrivalTime: string;
+    };
+    PublishedLineName: string;
+    DestinationName: string;
+    FramedVehicleJourneyRef: {
+      DataFrameRef: string;
+      DatedVehicleJourneyRef: string;
+    };
+  };
+}

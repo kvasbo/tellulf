@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Moment from 'moment';
-import { TrainData, TrainDataSet } from '../types/trains';
+import { TrainData, TrainDataSet, RuterApiData } from '../types/trains';
 
 // Fetch train data, parse it, and return a train data set
 async function getRuterData(station: string, direction: string): Promise<TrainDataSet> {
@@ -13,7 +13,7 @@ async function getRuterData(station: string, direction: string): Promise<TrainDa
 
     if (result.status !== 200) throw Error('Couldnt fetch ruter data');
 
-    jsonData.forEach((t: any) => {
+    jsonData.forEach((t: RuterApiData) => {
       if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === direction) {
         const d = t.MonitoredVehicleJourney.MonitoredCall;
         const out: TrainData = {

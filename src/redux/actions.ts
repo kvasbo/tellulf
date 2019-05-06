@@ -2,8 +2,11 @@ import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
 import { NetatmoStore } from './Netatmo';
+import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
+import { SolarCurrent, SolarMax } from '../types/solar';
+import { PowerPrices } from './PowerPrices';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -58,7 +61,7 @@ export function updatePowerUsage(data: {}) {
   };
 }
 
-export function updatePowerPrices(data: {}) {
+export function updatePowerPrices(data: PowerPrices) {
   return {
     type: UPDATE_POWER_PRICES,
     data,
@@ -86,7 +89,7 @@ export function updateNetatmo(data: NetatmoStore) {
   };
 }
 
-export function updateNetatmoAverages(data: {}) {
+export function updateNetatmoAverages(data: NetatmoAverageData) {
   return {
     type: NETATMO_UPDATE_AVERAGES,
     data,

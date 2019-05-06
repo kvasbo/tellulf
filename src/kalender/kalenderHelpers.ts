@@ -1,6 +1,16 @@
 import Moment from 'moment';
 import Axios from 'axios';
 import IcalExpander from 'ical-expander';
+import { Event } from './Dag';
+
+interface APIEvent {
+  startDate: Moment.Moment;
+  endDate: Moment.Moment;
+  item: {
+    summary: string | undefined;
+  };
+  summary: string | undefined;
+}
 
 export function initDay(sortString: string) {
   return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) };
@@ -18,11 +28,11 @@ export function primeDays(number = 7) {
   return out;
 }
 
-export function parseIcalEvent(e: any, useItem = false) {
+export function parseIcalEvent(e: any, useItem = false): Event {
   try {
     const now = Moment();
-    const start = Moment(e.startDate.toJSDate());
-    const end = Moment(e.endDate.toJSDate());
+    const start = Moment(e.startDate.toDate());
+    const end = Moment(e.endDate.toDate());
     const name = useItem ? e.item.summary : e.summary;
 
     const fullDay = e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
 import EnergyGraph from './EnergyGraph';
-import { SolarCurrent } from '../redux/Solar';
+import { SolarCurrent } from '../types/solar';
 import { AppStore } from '../redux/reducers';
 import './solceller.css';
 
