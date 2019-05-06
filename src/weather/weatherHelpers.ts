@@ -2,7 +2,7 @@ import Moment from 'moment';
 import SunCalc from 'suncalc';
 import store from 'store';
 import { getNorwegianDaysOff } from '../external';
-import { WeatherData } from '../types/weather';
+import { WeatherData, WeatherDataSet } from '../types/weather';
 import { localStorageKey } from './updateWeather';
 
 const sundayColor = '#FF0000CC';
@@ -68,8 +68,8 @@ export function createKeyBasedOnStamps(from: string, to: string) {
   return key;
 }
 
-export function initWeather() {
-  const out = {};
+export function initWeather(): WeatherDataSet {
+  const out: WeatherDataSet = {};
   const { start, end } = getTimeLimits(3);
   while (start.isSameOrBefore(end)) {
     const time = start.valueOf();
@@ -104,10 +104,9 @@ export function initWeather() {
   return out;
 }
 
-export // Init the six hours forecast
-function initWeatherLong() {
+export function initWeatherLong(): WeatherDataSet {
   const spanToUseInHours = 6;
-  const out = {};
+  const out: WeatherDataSet = {};
   const time = Moment()
     .utc()
     .startOf('day');

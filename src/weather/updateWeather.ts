@@ -12,12 +12,12 @@ import {
 } from './weatherHelpers';
 import XML from 'pixl-xml';
 
-import { WeatherData } from '../types/weather';
+import { WeatherData, WeatherDataSet } from '../types/weather';
 
 export const localStorageKey = '5';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
-  const weatherOut = initWeather();
+  const weatherOut: WeatherDataSet = initWeather();
   const { start, end } = getTimeLimits(7);
   const now = Moment();
 
@@ -25,6 +25,8 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
   );
   const parsed = XML.parse(data.data);
+
+  if (data.status !== 200) throw Error('Could not fetch Yr data');
 
   // Six hour forecasts
   const sixes = parsed.product.time.filter((d: { from: string; to: string }) => {
@@ -38,7 +40,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     return false;
   });
 
-  const sixesOut = initWeatherLong();
+  const sixesOut: WeatherDataSet = initWeatherLong();
   sixes.forEach((s: any) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
