@@ -1,6 +1,6 @@
-interface Symbols {
-  day: any;
-  night: any;
+export interface Symbols {
+  day: { [s: string]: string };
+  night: { [s: string]: string };
   blank: string;
 }
 

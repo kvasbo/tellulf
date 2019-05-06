@@ -19,14 +19,15 @@ import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import { AppStore } from '../redux/reducers';
+import { WeatherLimits, WeatherDataSet } from '../types/weather';
 import { getDayColor, getTicks, formatTick } from './weatherHelpers';
 import './yr.css';
 
 const gridColor = '#FFFFFFAA';
 
 interface Props {
-  weatherLong: object;
-  limits: any;
+  weatherLong: WeatherDataSet;
+  limits: WeatherLimits;
 }
 
 interface State {

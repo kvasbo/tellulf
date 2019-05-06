@@ -1,9 +1,10 @@
 import React from 'react';
+import { Symbols } from './symbolMap'; // Type
 const baseUrl = './WeatherIcons/';
 
 interface Props {
-  symbolMap: any;
-  payload: any;
+  symbolMap: Symbols;
+  payload: { time: number; symbol: string; temp: number };
   sunrise: number;
   sunset: number;
   cx: number;

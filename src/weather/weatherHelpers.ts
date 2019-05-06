@@ -9,7 +9,7 @@ const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 const gridColor = '#FFFFFFAA';
 
-export function getTimeLimits(days = 3) {
+export function getTimeLimits(days: number = 3) {
   const start = Moment().startOf('day');
   const end = Moment()
     .add(days, 'day')
@@ -29,20 +29,19 @@ export function getTicks() {
   return out;
 }
 
-export function getDayColor(time: any) {
-  const d = Moment(time);
-  if (d.day() === 0 || d.day() === 6) return sundayColor;
-  const dString = d.format('MMDD');
+export function getDayColor(time: Moment.Moment) {
+  if (time.day() === 0 || time.day() === 6) return sundayColor;
+  const dString = time.format('MMDD');
   if (redDays.includes(dString)) return sundayColor;
   return gridColor;
 }
 
-export function formatTick(data: any) {
+export function formatTick(data: number) {
   const time = Moment(data, 'x');
   return time.format('HH');
 }
 
-export function getSunMeta(lat: number, long: number, now = Moment()) {
+export function getSunMeta(lat: number, long: number, now: Moment.Moment = Moment()) {
   const yesterday = Moment(now).subtract(1, 'days');
   const sunTimes = SunCalc.getTimes(new Date(), lat, long);
   const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
@@ -150,7 +149,7 @@ function initWeatherLong() {
 }
 
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
-export function storeToLocalStore(key: string, data: any, from: object, to: object) {
+export function storeToLocalStore(key: string, data: object, from: object, to: object) {
   const toStore = {};
   Object.keys(data).forEach(k => {
     const d = data[k];
