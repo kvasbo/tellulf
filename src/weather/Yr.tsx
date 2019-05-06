@@ -36,10 +36,12 @@ class Yr extends React.PureComponent<Props, State> {
     this.props.dispatch(fetchWeather(lat, long));
   }
 
-  private stedEndra(e: any) {
-    this.setState({ sted: e.currentTarget.value });
-    const { lat, long } = steder[e.currentTarget.value];
-    this.props.dispatch(fetchWeather(lat, long));
+  private stedEndra(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e !== null && e.currentTarget !== null && e.currentTarget.value !== null) {
+      this.setState({ sted: e.currentTarget.value });
+      const { lat, long } = steder[e.currentTarget.value];
+      this.props.dispatch(fetchWeather(lat, long));
+    }
   }
 
   // Stays on
@@ -64,7 +66,7 @@ class Yr extends React.PureComponent<Props, State> {
               name="sted"
               value="oslo"
               checked={this.state.sted === 'oslo'}
-              onChange={val => this.stedEndra(val)}
+              onChange={e => this.stedEndra(e)}
             />
             Hjemme
           </label>
@@ -76,7 +78,7 @@ class Yr extends React.PureComponent<Props, State> {
               name="sted"
               value="sandefjord"
               checked={this.state.sted === 'sandefjord'}
-              onChange={val => this.stedEndra(val)}
+              onChange={e => this.stedEndra(e)}
             />
             Hytta
           </label>
