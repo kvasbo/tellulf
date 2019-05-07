@@ -68,7 +68,9 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
         }}
       >
         {this.props.header && (
-          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>{this.props.header}</span>
+          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>
+            {this.props.header}
+          </span>
         )}
         <span style={{ color }}>
           {text}

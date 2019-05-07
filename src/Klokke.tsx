@@ -10,14 +10,13 @@ interface State {
 }
 
 class Clock extends React.PureComponent<{}, State> {
-  private timer!: any;
   public constructor(props: {}) {
     super(props);
     this.state = { time: Moment(), debug: false };
   }
 
   public componentDidMount() {
-    this.timer = setInterval(() => this.setState({ time: Moment() }), 1000);
+    setInterval(() => this.setState({ time: Moment() }), 1000);
   }
 
   public render() {

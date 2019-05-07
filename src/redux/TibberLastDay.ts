@@ -1,12 +1,17 @@
 import Moment from 'moment';
 import { UPDATE_TIBBER_POWER_USAGE } from './actions';
 
-export default function TibberLastDay(state = {}, action: { type: string; data: [] }) {
+import { TibberUsageAPIData, TibberUsageState } from '../types/tibber';
+
+export default function TibberLastDay(
+  state = {},
+  action: { type: string; data: [TibberUsageAPIData] },
+): TibberUsageState {
   switch (action.type) {
     case UPDATE_TIBBER_POWER_USAGE: {
       const now = Moment();
-      const newState = {};
-      action.data.forEach((d: any) => {
+      const newState: TibberUsageState = {};
+      action.data.forEach(d => {
         const to = Moment(d.to);
         const from = Moment(d.from);
         if (to.isSame(now, 'day') && from.isSame(now, 'day')) {

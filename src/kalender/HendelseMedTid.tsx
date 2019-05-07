@@ -54,10 +54,9 @@ export function getTimeString(event: Event) {
     if (!event.oneDay) {
       toFormats = normalFormats();
     }
-    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(event.end).calendar(
-      undefined,
-      toFormats,
-    )}`;
+    timeString = `${Moment(event.start).calendar(undefined, normalDayToFormats())} → ${Moment(
+      event.end,
+    ).calendar(undefined, toFormats)}`;
   }
   return timeString;
 }

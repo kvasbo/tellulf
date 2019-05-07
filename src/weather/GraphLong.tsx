@@ -218,26 +218,54 @@ class GraphLong extends React.PureComponent<Props, State> {
               strokeDasharray="3 3"
             />
             <ReferenceLine yAxisId="temp" x={divider0} stroke="#00000000" strokeDasharray="1 0">
-              <Label value={divider0m.format('dddd')} fill={getDayColor(divider0m)} position="insideTopLeft" />
+              <Label
+                value={divider0m.format('dddd')}
+                fill={getDayColor(divider0m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" x={divider1} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider1m.format('dddd')} fill={getDayColor(divider1m)} position="insideTopLeft" />
+              <Label
+                value={divider1m.format('dddd')}
+                fill={getDayColor(divider1m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" x={divider2} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider2m.format('dddd')} fill={getDayColor(divider2m)} position="insideTopLeft" />
+              <Label
+                value={divider2m.format('dddd')}
+                fill={getDayColor(divider2m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" x={divider3} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider3m.format('dddd')} fill={getDayColor(divider3m)} position="insideTopLeft" />
+              <Label
+                value={divider3m.format('dddd')}
+                fill={getDayColor(divider3m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" x={divider4} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider4m.format('dddd')} fill={getDayColor(divider4m)} position="insideTopLeft" />
+              <Label
+                value={divider4m.format('dddd')}
+                fill={getDayColor(divider4m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" x={divider5} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider5m.format('dddd')} fill={getDayColor(divider5m)} position="insideTopLeft" />
+              <Label
+                value={divider5m.format('dddd')}
+                fill={getDayColor(divider5m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
             <ReferenceLine yAxisId="temp" y={0} stroke={gridColor} strokeDasharray="1 0" />
             <ReferenceLine yAxisId="temp" x={divider6} stroke={gridColor} strokeDasharray="2 2">
-              <Label value={divider6m.format('dddd')} fill={getDayColor(divider6m)} position="insideTopLeft" />
+              <Label
+                value={divider6m.format('dddd')}
+                fill={getDayColor(divider6m)}
+                position="insideTopLeft"
+              />
             </ReferenceLine>
           </ComposedChart>
         </ResponsiveContainer>

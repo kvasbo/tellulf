@@ -76,7 +76,6 @@ class Kalender extends React.PureComponent<{}, State> {
   }
 
   public render() {
-    console.log(this.state);
     return <div style={{ flex: 1 }}>{this.getDays()}</div>;
   }
 }

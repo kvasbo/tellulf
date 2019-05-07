@@ -2,7 +2,12 @@ import axios from 'axios';
 import Moment from 'moment';
 import firebase from './firebase';
 import TibberConnector from 'tibber-pulse-connector';
-import { updatePowerPrices, updateInitStatus, updateRealtimeConsumption, updatePowerUsage } from './redux/actions';
+import {
+  updatePowerPrices,
+  updateInitStatus,
+  updateRealtimeConsumption,
+  updatePowerUsage,
+} from './redux/actions';
 
 const nettleie = 0.477;
 
@@ -128,13 +133,17 @@ export default class TibberUpdater {
     const settings: TibberSettings = await this.getTibberSettings();
     const { tibberApiKey, tibberHomeKey } = settings;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.tibberSocket = new TibberConnector(tibberApiKey, tibberHomeKey, (data: { error: any; data: any }) => {
-      if (!data.error) {
-        this.store.dispatch(updateRealtimeConsumption(data));
-      } else {
-        throw new Error(data.error);
-      }
-    });
+    this.tibberSocket = new TibberConnector(
+      tibberApiKey,
+      tibberHomeKey,
+      (data: { error: any; data: any }) => {
+        if (!data.error) {
+          this.store.dispatch(updateRealtimeConsumption(data));
+        } else {
+          throw new Error(data.error);
+        }
+      },
+    );
     if (this.tibberSocket) this.tibberSocket.start();
   }
 
@@ -179,18 +188,22 @@ export default class TibberUpdater {
         usage.forEach((u: { appNickname: string; consumption: { nodes: [] } }) => {
           console.group(u.appNickname);
           console.info('OBS: Mangler produksjonsdata!');
-          u.consumption.nodes.forEach((n: { from: string; to: string; totalCost: number; consumption: number }) => {
-            const from = Moment(n.from).format('MMMM');
-            const tibberPrice = n.totalCost; //.toFixed(2).toLocaleString();
-            const netPrice = n.consumption * netPriceSettings[u.appNickname].kwh + netPriceSettings[u.appNickname].fast; //.toFixed(2).toLocaleString();
-            const totalPrice = tibberPrice + netPrice;
-            console.group(`${from}: `);
-            console.log(`Strøm: ${tibberPrice.toFixed(2).toLocaleString()}`);
-            console.log(`Nett: ${netPrice.toFixed(2).toLocaleString()}`);
-            console.log(`Totalt: ${totalPrice.toFixed(2).toLocaleString()}`);
+          u.consumption.nodes.forEach(
+            (n: { from: string; to: string; totalCost: number; consumption: number }) => {
+              const from = Moment(n.from).format('MMMM');
+              const tibberPrice = n.totalCost; //.toFixed(2).toLocaleString();
+              const netPrice =
+                n.consumption * netPriceSettings[u.appNickname].kwh +
+                netPriceSettings[u.appNickname].fast; //.toFixed(2).toLocaleString();
+              const totalPrice = tibberPrice + netPrice;
+              console.group(`${from}: `);
+              console.log(`Strøm: ${tibberPrice.toFixed(2).toLocaleString()}`);
+              console.log(`Nett: ${netPrice.toFixed(2).toLocaleString()}`);
+              console.log(`Totalt: ${totalPrice.toFixed(2).toLocaleString()}`);
 
-            console.groupEnd();
-          });
+              console.groupEnd();
+            },
+          );
           // console.log(u);
           console.groupEnd();
         });

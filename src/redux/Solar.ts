@@ -23,7 +23,10 @@ const initialState: SolarState = {
   },
 };
 
-export default function Solar(state: SolarState = initialState, action: { type: string; data: object }): SolarState {
+export default function Solar(
+  state: SolarState = initialState,
+  action: { type: string; data: object },
+): SolarState {
   switch (action.type) {
     case UPDATE_SOLAR_MAX: {
       return { ...state, max: { ...state.max, ...action.data } };

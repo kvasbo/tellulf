@@ -36,7 +36,10 @@ export default function Weather(
       const to = Moment()
         .add(3, 'day')
         .startOf('day');
-      const toFilter = Object.values({ ...(state.weather as WeatherData), ...(action.data.weather as WeatherData) });
+      const toFilter = Object.values({
+        ...(state.weather as WeatherData),
+        ...(action.data.weather as WeatherData),
+      });
       const filtered = toFilter.filter((w: any) => {
         if (!w) return false;
         return Moment(w['time']).isBetween(from, to, undefined, '[]');

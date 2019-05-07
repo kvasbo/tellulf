@@ -20,10 +20,6 @@ function parseTrain(data: TrainData): ExtendedTrainData {
 }
 
 class Ruter extends React.PureComponent<Props, {}> {
-  public constructor(props: Props) {
-    super(props);
-  }
-
   private getTrainObjects() {
     const tog = [];
     const trains = Object.values(this.props.trains);

@@ -25,7 +25,8 @@ export default class SolarUpdater {
     dbRef.on('value', (snapshot: any) => {
       try {
         const val = snapshot.val();
-        const dataTime = typeof val.averages.time !== 'undefined' ? Moment(val.averages.time) : null;
+        const dataTime =
+          typeof val.averages.time !== 'undefined' ? Moment(val.averages.time) : null;
         const now = typeof val.effect.val !== 'undefined' ? val.effect.val : null;
         const today = typeof val.today.val !== 'undefined' ? val.today.val : null;
         const month = typeof val.month.val !== 'undefined' ? val.month.val : null;
@@ -33,7 +34,8 @@ export default class SolarUpdater {
         const total = typeof val.total.val !== 'undefined' ? val.total.val : null;
         const averageFull = typeof val.averages.full !== 'undefined' ? val.averages.full : null;
         const averageMinute = typeof val.averages['1'] !== 'undefined' ? val.averages['1'] : null;
-        const byHour = typeof val.todayByHour.val !== 'undefined' ? parseByHour(val.todayByHour.val) : null;
+        const byHour =
+          typeof val.todayByHour.val !== 'undefined' ? parseByHour(val.todayByHour.val) : null;
         const currentTime = Moment();
         const state = {
           now,

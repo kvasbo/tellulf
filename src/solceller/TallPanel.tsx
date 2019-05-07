@@ -46,7 +46,9 @@ class TallPanel extends React.PureComponent<Props, {}> {
         accumulatedReward={this.props.realtimePower.accumulatedReward}
         maxPowerProduction={this.props.realtimePower.maxPowerProduction}
         accumulatedCost={this.props.realtimePower.accumulatedCost}
-        netDay={this.props.realtimePower.accumulatedCost - this.props.realtimePower.accumulatedReward}
+        netDay={
+          this.props.realtimePower.accumulatedCost - this.props.realtimePower.accumulatedReward
+        }
       />
     );
   }

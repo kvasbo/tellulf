@@ -61,19 +61,53 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
       >
         <div className="energyTableRow">
           <TellulfInfoCell info={this.props.currentPower} unit="W" header="reelt forbruk" large />
-          <TellulfInfoCell info={this.props.netDay} unit="kr" header="netto dag" decimals={2} large unitSpace />
-          <TellulfInfoCell info={this.props.currentConsumption} unit="W" header="betalt forbruk" large />
-          <TellulfInfoCell info={this.props.producedPercent} unit="%" header="produsert %" large decimals={2} />
+          <TellulfInfoCell
+            info={this.props.netDay}
+            unit="kr"
+            header="netto dag"
+            decimals={2}
+            large
+            unitSpace
+          />
+          <TellulfInfoCell
+            info={this.props.currentConsumption}
+            unit="W"
+            header="betalt forbruk"
+            large
+          />
+          <TellulfInfoCell
+            info={this.props.producedPercent}
+            unit="%"
+            header="produsert %"
+            large
+            decimals={2}
+          />
         </div>
         <div className="energyTableRow">
-          <TellulfInfoCell info={this.props.accumulatedConsumption} unit="kWh" header="bruk i dag" decimals={2} />
+          <TellulfInfoCell
+            info={this.props.accumulatedConsumption}
+            unit="kWh"
+            header="bruk i dag"
+            decimals={2}
+          />
           <TellulfInfoCell info={this.props.consumptionMinimum} unit="W" header="bruk min" />
           <TellulfInfoCell info={this.props.consumptionAverage} unit="W" header="bruk snitt" />
           <TellulfInfoCell info={this.props.consumptionMaximum} unit="W" header="bruk max" />
         </div>
         <div className="energyTableRow">
-          <TellulfInfoCell info={this.props.accumulatedProduction} unit="kWh" header="solgt i dag" decimals={2} />
-          <TellulfInfoCell info={this.props.accumulatedCost} unit="kr" unitSpace header="kost dag" decimals={2} />
+          <TellulfInfoCell
+            info={this.props.accumulatedProduction}
+            unit="kWh"
+            header="solgt i dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.accumulatedCost}
+            unit="kr"
+            unitSpace
+            header="kost dag"
+            decimals={2}
+          />
           <TellulfInfoCell
             info={this.props.accumulatedReward}
             unit="kr"
@@ -81,12 +115,31 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             header="fortjeneste dag"
             decimals={2}
           />
-          <TellulfInfoCell info={this.props.maxPowerProduction} unit="W" header="max produksjon dag" />
+          <TellulfInfoCell
+            info={this.props.maxPowerProduction}
+            unit="W"
+            header="max produksjon dag"
+          />
         </div>
         <div className="energyTableRow">
-          <TellulfInfoCell info={this.props.localProductionDay} unit="kWh" header="prod dag" decimals={2} />
-          <TellulfInfoCell info={this.props.localProductionMonth} unit="kWh" header="prod måned" decimals={1} />
-          <TellulfInfoCell info={this.props.localProductionYear} unit="kWh" header="prod år" decimals={1} />
+          <TellulfInfoCell
+            info={this.props.localProductionDay}
+            unit="kWh"
+            header="prod dag"
+            decimals={2}
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMonth}
+            unit="kWh"
+            header="prod måned"
+            decimals={1}
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionYear}
+            unit="kWh"
+            header="prod år"
+            decimals={1}
+          />
           <TellulfInfoCell info={this.props.localProductionTotal} unit="kWh" header="prod totalt" />
         </div>
         <div className="energyTableRow">

@@ -58,7 +58,10 @@ interface PowerMinute {
   samples: number;
 }
 
-export default function TibberRealTime(state: State = defaultState, action: { type: string; data: RealtimeData }) {
+export default function TibberRealTime(
+  state: State = defaultState,
+  action: { type: string; data: RealtimeData },
+) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
       const {
@@ -85,7 +88,9 @@ export default function TibberRealTime(state: State = defaultState, action: { ty
       const avgLastHourStamp = stamp.format('dddHH');
 
       let avgLastHourSamples = state.avgLastHourSamples ? state.avgLastHourSamples + 1 : 1;
-      let avgLastHour = Math.round(state.avgLastHour + (power - state.avgLastHour) / avgLastHourSamples);
+      let avgLastHour = Math.round(
+        state.avgLastHour + (power - state.avgLastHour) / avgLastHourSamples,
+      );
       if (state.avgLastHourStamp !== avgLastHourStamp) {
         avgLastHour = Math.round(power);
         avgLastHourSamples = 1;

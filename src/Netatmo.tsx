@@ -53,7 +53,14 @@ class Netatmo extends React.PureComponent<Props> {
     }
 
     return (
-      <div style={{ display: 'flex', height: '100%', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+      <div
+        style={{
+          display: 'flex',
+          height: '100%',
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -70,7 +77,12 @@ class Netatmo extends React.PureComponent<Props> {
             color="rgba(255,255,255,0.45)"
             header="min"
           />
-          <TellulfInfoCell info={this.props.NetatmoAverages.temperature} unit="°" decimals={1} fontSize={60} />
+          <TellulfInfoCell
+            info={this.props.NetatmoAverages.temperature}
+            unit="°"
+            decimals={1}
+            fontSize={60}
+          />
           <TellulfInfoCell
             info={Math.max(this.props.NetatmoAverages.temperature, this.props.minMax.max)}
             unit="°"
@@ -89,10 +101,30 @@ class Netatmo extends React.PureComponent<Props> {
             margin: 0,
           }}
         >
-          <TellulfInfoCell info={Number(this.props.Netatmo.inneTemp)} decimals={1} unit="°" header="inne" />
-          <TellulfInfoCell info={Number(this.props.Netatmo.co2)} decimals={1} unit="ppm" header="co2" />
-          <TellulfInfoCell info={Number(this.props.Netatmo.inneFukt)} decimals={1} unit="%" header="fukt" />
-          <TellulfInfoCell info={Number(this.props.Netatmo.inneTrykk)} decimals={1} unit="°" header="trykk" />
+          <TellulfInfoCell
+            info={Number(this.props.Netatmo.inneTemp)}
+            decimals={1}
+            unit="°"
+            header="inne"
+          />
+          <TellulfInfoCell
+            info={Number(this.props.Netatmo.co2)}
+            decimals={1}
+            unit="ppm"
+            header="co2"
+          />
+          <TellulfInfoCell
+            info={Number(this.props.Netatmo.inneFukt)}
+            decimals={1}
+            unit="%"
+            header="fukt"
+          />
+          <TellulfInfoCell
+            info={Number(this.props.Netatmo.inneTrykk)}
+            decimals={1}
+            unit="°"
+            header="trykk"
+          />
         </div>
       </div>
     );

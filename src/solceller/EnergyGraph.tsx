@@ -97,9 +97,21 @@ class EnergyGraph extends React.PureComponent<Props, State> {
 
         // Sun data
         dataSet[h.time].sun = getSunForTime(hour, this.props.latitude, this.props.longitude);
-        dataSet[h.time].sunInAWeek = getSunForTime(inAWeek, this.props.latitude, this.props.longitude);
-        dataSet[h.time].sunInTwoWeeks = getSunForTime(inTwoWeeks, this.props.latitude, this.props.longitude);
-        dataSet[h.time].sunInAMonth = getSunForTime(inAMonth, this.props.latitude, this.props.longitude);
+        dataSet[h.time].sunInAWeek = getSunForTime(
+          inAWeek,
+          this.props.latitude,
+          this.props.longitude,
+        );
+        dataSet[h.time].sunInTwoWeeks = getSunForTime(
+          inTwoWeeks,
+          this.props.latitude,
+          this.props.longitude,
+        );
+        dataSet[h.time].sunInAMonth = getSunForTime(
+          inAMonth,
+          this.props.latitude,
+          this.props.longitude,
+        );
 
         // Consumption
         if (hour < now) {
@@ -181,7 +193,14 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               tickFormatter={formatEnergyScaleTick}
               domain={[0, getEnergyScaleMax]}
             >
-              <Label angle={-90} value="kw" stroke="#ffffff55" fill="#ffffff55" fontSize={15} position="left" />
+              <Label
+                angle={-90}
+                value="kw"
+                stroke="#ffffff55"
+                fill="#ffffff55"
+                fontSize={15}
+                position="left"
+              />
             </YAxis>
             <YAxis
               width={25}
@@ -193,10 +212,23 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               orientation="right"
               domain={[0, maxSunHeight]}
             />
-            <Line yAxisId="price" dot={false} type="step" connectNulls dataKey="price" stroke="#8884d8" />
+            <Line
+              yAxisId="price"
+              dot={false}
+              type="step"
+              connectNulls
+              dataKey="price"
+              stroke="#8884d8"
+            />
             <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
             <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAWeek" stroke="#FFFFFF55" />
-            <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInTwoWeeks" stroke="#FFFFFF33" />
+            <Line
+              dot={false}
+              yAxisId="sun"
+              type="basis"
+              dataKey="sunInTwoWeeks"
+              stroke="#FFFFFF33"
+            />
             <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAMonth" stroke="#FFFFFF22" />
             <Area
               yAxisId="kwh"
@@ -221,7 +253,12 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               stackId="1"
             />
             <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
-            <ReferenceLine yAxisId="kwh" y={this.props.max.maxDay / 1000} stroke="#FFFF0088" strokeDasharray="3 3" />
+            <ReferenceLine
+              yAxisId="kwh"
+              y={this.props.max.maxDay / 1000}
+              stroke="#FFFF0088"
+              strokeDasharray="3 3"
+            />
             <ReferenceDot
               x={this.state.currentTime}
               y={getSunForTime(this.state.currentTime, this.props.latitude, this.props.longitude)}
@@ -258,7 +295,9 @@ class EnergyGraph extends React.PureComponent<Props, State> {
                 stroke="#ffffff"
               >
                 <Label
-                  value={`${Number(this.props.currentSolarProduction.averageMinute).toLocaleString()}`}
+                  value={`${Number(
+                    this.props.currentSolarProduction.averageMinute,
+                  ).toLocaleString()}`}
                   stroke="#00FF00"
                   fill="#00FF00"
                   fontSize={35}

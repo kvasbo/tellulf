@@ -13,7 +13,11 @@ interface APIEvent {
 }
 
 export function initDay(sortString: string) {
-  return { events: [], sortString, sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10) };
+  return {
+    events: [],
+    sortString,
+    sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10),
+  };
 }
 
 export function primeDays(number = 7) {
@@ -35,7 +39,8 @@ export function parseIcalEvent(e: any, useItem = false): Event {
     const end = Moment(e.endDate.toJSDate());
     const name = useItem ? e.item.summary : e.summary;
 
-    const fullDay = e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;
+    const fullDay =
+      e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;
 
     let oneDay = true;
     if (fullDay) {

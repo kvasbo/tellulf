@@ -54,7 +54,8 @@ class App extends React.PureComponent {
   }
 
   private doLogin() {
-    if (!this.state.username || !this.state.password) alert('Tast inn brukernavn og passord din slask');
+    if (!this.state.username || !this.state.password)
+      alert('Tast inn brukernavn og passord din slask');
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
@@ -97,7 +98,10 @@ class App extends React.PureComponent {
           />
         </div>
         <div>
-          <button disabled={!this.state.username && !this.state.password} onClick={() => this.doLogin()}>
+          <button
+            disabled={!this.state.username && !this.state.password}
+            onClick={() => this.doLogin()}
+          >
             Logg inn
           </button>
         </div>
