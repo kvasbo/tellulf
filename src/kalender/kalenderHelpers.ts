@@ -4,12 +4,32 @@ import IcalExpander from 'ical-expander';
 import { Event } from '../types/calendar';
 
 interface APIEvent {
-  startDate: Moment.Moment;
-  endDate: Moment.Moment;
-  item: {
-    summary: string | undefined;
+  startDate: {
+    toJSDate: Function;
+    hour: number;
+    day: number;
   };
-  summary: string | undefined;
+  endDate: {
+    toJSDate: Function;
+    hour: number;
+    day: number;
+  };
+  item?: {
+    summary: string;
+    uid: string;
+    startDate: {
+      toJSDate: Function;
+      hour: number;
+      day: number;
+    };
+    endDate: {
+      toJSDate: Function;
+      hour: number;
+      day: number;
+    };
+  };
+  summary?: string;
+  uid?: string;
 }
 
 export function initDay(sortString: string) {
@@ -32,12 +52,18 @@ export function primeDays(number = 7) {
   return out;
 }
 
-export function parseIcalEvent(e: any, useItem = false): Event {
+export function parseIcalEvent(e: APIEvent): Event {
   try {
     const now = Moment();
     const start = Moment(e.startDate.toJSDate());
     const end = Moment(e.endDate.toJSDate());
-    const name = useItem ? e.item.summary : e.summary;
+
+    let name = 'shiiiiit';
+    if (e.item && e.item.summary) {
+      name = e.item.summary;
+    } else if (e.summary) {
+      name = e.summary;
+    }
 
     const fullDay =
       e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;
@@ -62,7 +88,14 @@ export function parseIcalEvent(e: any, useItem = false): Event {
     if (startsBeforeToday) {
       groupString = now.format('YYYY-MM-DD');
     }
-    const id = e.uid ? e.uid : e.item.uid;
+
+    let id = 'shiiiit';
+    if (e.uid) {
+      id = e.uid;
+    } else if (e.item && e.item.uid) {
+      id = e.item.uid;
+    }
+
     return {
       id,
       name,
@@ -73,9 +106,17 @@ export function parseIcalEvent(e: any, useItem = false): Event {
       groupString,
     };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
     throw new Error('Could not parse iCal event');
   }
+}
+
+interface SortEvent {
+  item: { startDate: { toJSDate: Function } };
+}
+interface SortOccurrence {
+  startDate: { toJSDate: Function };
 }
 
 export async function getIcal(url: string, prime = false) {
@@ -89,15 +130,18 @@ export async function getIcal(url: string, prime = false) {
     const icalExpander = new IcalExpander({ ics: data.data, maxIterations: 1000 });
     const events = icalExpander.between(now.toDate(), now.add(60, 'days').toDate());
 
-    const sorted: any = {};
+    const sorted: {
+      events: APIEvent[];
+      occurrences: APIEvent[];
+    } = { events: [], occurrences: [] };
 
-    sorted.events = events.events.sort((a: any, b: any) => {
+    sorted.events = events.events.sort((a: SortOccurrence, b: SortOccurrence) => {
       const start = a.startDate.toJSDate();
       const end = b.startDate.toJSDate();
       return start - end;
     });
 
-    sorted.occurrences = events.occurrences.sort((a: any, b: any) => {
+    sorted.occurrences = events.occurrences.sort((a: SortEvent, b: SortEvent) => {
       const start = a.item.startDate.toJSDate();
       const end = b.item.startDate.toJSDate();
       return start - end;
@@ -108,30 +152,33 @@ export async function getIcal(url: string, prime = false) {
       parsedEvents = { ...primeDays(0) };
     }
 
-    sorted.occurrences.forEach((e: any) => {
+    sorted.occurrences.forEach((e: APIEvent) => {
       try {
-        const event = parseIcalEvent(e, true);
+        const event = parseIcalEvent(e);
         if (!parsedEvents[event.groupString]) {
           parsedEvents[event.groupString] = initDay(event.groupString);
         }
         parsedEvents[event.groupString].events.push(event);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
       }
     });
 
-    sorted.events.forEach((e: any) => {
+    sorted.events.forEach((e: APIEvent) => {
       try {
-        const event = parseIcalEvent(e, false);
+        const event = parseIcalEvent(e);
         if (!parsedEvents[event.groupString]) {
           parsedEvents[event.groupString] = initDay(event.groupString);
         }
         parsedEvents[event.groupString].events.push(event);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
       }
     });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
   }
 
