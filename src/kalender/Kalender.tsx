@@ -1,7 +1,7 @@
 import React from 'react';
 import Dag from './Dag';
 import { primeDays, getIcal, getDayKeys } from './kalenderHelpers';
-import { Event, EventDataSet } from '../types/calendar';
+import { EventDataSet } from '../types/calendar';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -71,6 +71,7 @@ class Kalender extends React.PureComponent<{}, State> {
       const birthdays = await getIcal(bdP, false);
       this.setState({ kalenderData, dinners, birthdays });
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   }

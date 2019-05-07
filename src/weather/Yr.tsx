@@ -37,11 +37,9 @@ class Yr extends React.PureComponent<Props, State> {
   }
 
   private stedEndra(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e !== null && e.currentTarget !== null && e.currentTarget.value !== null) {
-      this.setState({ sted: e.currentTarget.value });
-      const { lat, long } = steder[e.currentTarget.value];
-      this.props.dispatch(fetchWeather(lat, long));
-    }
+    this.setState({ sted: e.currentTarget.value });
+    const { lat, long } = steder[e.currentTarget.value];
+    this.props.dispatch(fetchWeather(lat, long));
   }
 
   // Stays on

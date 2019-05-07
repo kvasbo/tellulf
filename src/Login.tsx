@@ -18,11 +18,11 @@ class Login extends React.PureComponent<{}, State> {
     this.login = this.login.bind(this);
   }
 
-  private handleUsernameChange = (e: any) => {
+  private handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ user: e.target.value });
   };
 
-  private handlePasswordChange = (e: any) => {
+  private handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ pass: e.target.value });
   };
 
