@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios';
 import Moment from 'moment';
 import firebase from './firebase';
@@ -81,6 +82,7 @@ export default class TibberUpdater {
         this.store.dispatch(updateInitStatus('powerPrices'));
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   }
@@ -124,6 +126,7 @@ export default class TibberUpdater {
         this.store.dispatch(updatePowerUsage(usage));
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   }

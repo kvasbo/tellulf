@@ -52,6 +52,7 @@ export default class SolarUpdater {
         this.store.dispatch(updateSolarCurrent(state));
         this.store.dispatch(updateInitStatus('solar'));
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
       }
     });

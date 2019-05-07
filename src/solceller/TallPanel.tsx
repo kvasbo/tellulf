@@ -22,6 +22,7 @@ class TallPanel extends React.PureComponent<Props, {}> {
         producedPercent = (this.props.currentSolarProduction.today / spent) * 100;
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
 
