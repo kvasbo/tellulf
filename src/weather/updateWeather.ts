@@ -12,7 +12,13 @@ import {
 } from './weatherHelpers';
 import XML from 'pixl-xml';
 
-import { WeatherData, WeatherDataSet } from '../types/weather';
+import {
+  WeatherData,
+  WeatherDataSet,
+  WeatherAPIData,
+  WeatherAPIDataPeriod,
+  WeatherAPIDataSinglePoint,
+} from '../types/weather';
 
 export const localStorageKey = '5';
 
@@ -29,7 +35,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   if (data.status !== 200) throw Error('Could not fetch Yr data');
 
   // Six hour forecasts
-  const sixes = parsed.product.time.filter((d: { from: string; to: string }) => {
+  const sixes = parsed.product.time.filter((d: WeatherAPIData) => {
     const fromUtc = Moment(d.from)
       .utc()
       .hours();
@@ -41,7 +47,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   const sixesOut: WeatherDataSet = initWeatherLong();
-  sixes.forEach((s: any) => {
+  sixes.forEach((s: WeatherAPIDataPeriod) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
 
@@ -87,14 +93,14 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     sixesOut[key] = out;
   });
 
-  const singlePoints = parsed.product.time.filter((d: any) => {
+  const singlePoints = parsed.product.time.filter((d: WeatherAPIDataSinglePoint) => {
     if (d.from !== d.to) return false;
     const from = Moment(d.from);
     if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
     return false;
   });
 
-  singlePoints.forEach((p: { from: string; location: any }) => {
+  singlePoints.forEach((p: WeatherAPIDataSinglePoint) => {
     const time = Moment(p.from);
     // Fake an hour!
     const to = Moment(p.from).add(1, 'hours');
@@ -109,7 +115,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     }
   });
 
-  const hours = parsed.product.time.filter((d: any) => {
+  const hours = parsed.product.time.filter((d: WeatherAPIDataPeriod) => {
     const from = Moment(d.from);
     const to = Moment(d.to);
     if (!(to.diff(from, 'hours') === 1)) return false;
@@ -117,7 +123,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     return false;
   });
 
-  hours.forEach((p: { from: string; to: string; location: any }) => {
+  hours.forEach((p: WeatherAPIDataPeriod) => {
     // console.log(p);
     const time = Moment(p.from);
     // const key = time.valueOf();
@@ -150,8 +156,8 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   return { weather: weatherOut, long: sixesOut, todayMinMax };
 }
 
-export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6991) {
-  const dataArray = Object.values(data);
+export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {
+  const dataArray: WeatherData[] = Object.values(data);
   const sunData = getSunMeta(lat, long);
 
   if (dataArray.length === 0) {
@@ -168,15 +174,16 @@ export function parseLimits(data: {}, lat: number = 59.9409, long: number = 10.6
       ...sunData,
     };
   }
-  const maxRainPoint: any = maxBy(dataArray, 'rainMax');
+  const maxRainPoint: WeatherData | undefined = maxBy(dataArray, 'rainMax');
   const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
-  const maxRainTime = maxRainPoint.time;
-  const maxTempPoint: any = maxBy(dataArray, 'temp');
-  const maxTemp = maxTempPoint.temp;
-  const maxTempTime = maxTempPoint.time;
-  const minTempPoint: any = minBy(dataArray, 'temp');
-  const minTemp = minTempPoint.temp;
-  const minTempTime = minTempPoint.time;
+  const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
+  const maxTempPoint: WeatherData | undefined = maxBy(dataArray, 'temp');
+  const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
+  const maxTempTime = maxTempPoint ? maxTempPoint.time : 0;
+  const minTempPoint: WeatherData | undefined = minBy(dataArray, 'temp');
+  const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
+  const minTempTime = minTempPoint ? minTempPoint.time : 0;
+
   const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
   const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
   const lowerRange = minTemp > 0 ? 0 : Math.min(0, roundedMin);

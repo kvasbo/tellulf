@@ -19,7 +19,7 @@ import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import { AppStore } from '../redux/reducers';
-import { WeatherLimits, WeatherDataSet } from '../types/weather';
+import { WeatherLimits, WeatherDataSet, WeatherData } from '../types/weather';
 import { getDayColor, getTicks, formatTick } from './weatherHelpers';
 import './yr.css';
 
@@ -46,10 +46,10 @@ class GraphLong extends React.PureComponent<Props, State> {
     this.state = { currentTime: Moment().valueOf() };
   }
 
-  private getData() {
-    const rawData = Object.values(this.props.weatherLong);
-    const uniqueData = uniqBy(rawData, 'time');
-    const sortedData = sortBy(uniqueData, 'time');
+  private getData(): WeatherData[] {
+    const rawData: WeatherData[] = Object.values(this.props.weatherLong);
+    const uniqueData: WeatherData[] = uniqBy(rawData, 'time');
+    const sortedData: WeatherData[] = sortBy(uniqueData, 'time');
     return sortedData;
   }
 

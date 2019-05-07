@@ -25,7 +25,7 @@ export default function Weather(
   state: State = initialState,
   action: {
     type: string;
-    data: { weather: WeatherData; long: WeatherData; todayMinMax: WeatherTodayMinMax };
+    data: { weather: WeatherData[]; long: WeatherData; todayMinMax: WeatherTodayMinMax };
     lat: number;
     lon: number;
   },
@@ -38,8 +38,9 @@ export default function Weather(
         .startOf('day');
       const toFilter = Object.values({
         ...(state.weather as WeatherData),
-        ...(action.data.weather as WeatherData),
+        ...(action.data.weather as WeatherData[]),
       });
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const filtered = toFilter.filter((w: any) => {
         if (!w) return false;

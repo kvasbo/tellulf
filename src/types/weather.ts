@@ -17,7 +17,7 @@ export interface WeatherData {
   symbol: string | null;
   symbolNumber: number | null;
   sunHeight: number | null;
-  time: string | number;
+  time: number;
 }
 
 export interface WeatherTodayMinMax {
@@ -43,4 +43,46 @@ export interface WeatherLimits {
   sunset: number;
   diffRise: number;
   diffSet: number;
+}
+
+export interface WeatherAPIData {
+  from: string;
+  to: string;
+}
+
+export interface WeatherAPIDataPeriod extends WeatherAPIData {
+  location: {
+    precipitation: {
+      value: number;
+      maxvalue: number;
+      minvalue: number;
+    };
+    temperature: {
+      value: number;
+    };
+    minTemperature: {
+      value: number;
+    };
+    maxTemperature: {
+      value: number;
+    };
+    symbol: {
+      id: string;
+      number: number;
+    };
+  };
+}
+
+export interface WeatherAPIDataSinglePoint extends WeatherAPIData {
+  location: {
+    temperature: {
+      value: number;
+    };
+    cloudiness: {
+      percent: number;
+    };
+    windSpeed: {
+      mps: number;
+    };
+  };
 }
