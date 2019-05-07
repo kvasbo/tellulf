@@ -1,6 +1,6 @@
 import React from 'react';
 import { getTimeString } from './HendelseMedTid';
-import { Event } from './Dag';
+import { Event } from '../types/calendar';
 
 const style = {
   backgroundColor: '#222222',

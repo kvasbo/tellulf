@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Dag from './Dag';
-import { AppStore } from '../redux/reducers';
 import { primeDays, getIcal, getDayKeys } from './kalenderHelpers';
+import { Event, EventDataSet } from '../types/calendar';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -24,9 +23,15 @@ const dinP = `${proxy}/?url=${dinner}`;
 const bdP = `${proxy}/?url=${birthday}`;
 
 interface State {
-  kalenderData: any;
-  birthdays: any;
-  dinners: any;
+  kalenderData: {
+    [s: string]: EventDataSet;
+  };
+  birthdays: {
+    [s: string]: EventDataSet;
+  };
+  dinners: {
+    [s: string]: EventDataSet;
+  };
 }
 
 class Kalender extends React.PureComponent<{}, State> {
@@ -45,7 +50,7 @@ class Kalender extends React.PureComponent<{}, State> {
   }
 
   private getDays() {
-    const out: any = [];
+    const out: JSX.Element[] = [];
     const dayKeys = getDayKeys(30);
     dayKeys.forEach(d => {
       const cald = this.state.kalenderData[d];
@@ -71,12 +76,9 @@ class Kalender extends React.PureComponent<{}, State> {
   }
 
   public render() {
+    console.log(this.state);
     return <div style={{ flex: 1 }}>{this.getDays()}</div>;
   }
 }
 
-const mapStateToProps = (state: AppStore) => {
-  return {};
-};
-
-export default connect(mapStateToProps)(Kalender);
+export default Kalender;

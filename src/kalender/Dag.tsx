@@ -2,26 +2,11 @@ import React from 'react';
 import Moment from 'moment';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
-
-export interface Event {
-  name: string;
-  id: string;
-  start: Moment.Moment;
-  end: Moment.Moment;
-  fullDay: boolean;
-  oneDay: boolean;
-  groupString: string;
-}
+import { Event, EventDataSet } from '../types/calendar';
 interface Props {
-  dinner: {
-    events: [Event];
-  };
-  birthdays: {
-    events: [Event];
-  };
-  events: {
-    events: [Event];
-  };
+  dinner: EventDataSet;
+  birthdays: EventDataSet;
+  events: EventDataSet;
   date: string;
 }
 
@@ -48,8 +33,8 @@ class Dag extends React.PureComponent<Props, {}> {
     }
   }
 
-  private getBirthdays() {
-    if (!this.props.birthdays || !this.props.birthdays.events) return null;
+  private getBirthdays(): JSX.Element[] {
+    if (!this.props.birthdays || !this.props.birthdays.events) return [];
     const out: JSX.Element[] = [];
     try {
       this.props.birthdays.events.forEach((b: Event) => {
@@ -74,8 +59,8 @@ class Dag extends React.PureComponent<Props, {}> {
     return out;
   }
 
-  private getEvents() {
-    if (!this.props.events || !this.props.events.events) return null;
+  private getEvents(): JSX.Element[] {
+    if (!this.props.events || !this.props.events.events) return [];
     const out: JSX.Element[] = [];
 
     try {

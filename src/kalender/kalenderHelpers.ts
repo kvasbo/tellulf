@@ -1,7 +1,7 @@
 import Moment from 'moment';
 import Axios from 'axios';
 import IcalExpander from 'ical-expander';
-import { Event } from './Dag';
+import { Event } from '../types/calendar';
 
 interface APIEvent {
   startDate: Moment.Moment;

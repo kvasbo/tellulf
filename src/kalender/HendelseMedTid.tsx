@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
-import { Event } from './Dag';
+import { Event } from '../types/calendar';
 
 const style = {
   backgroundColor: '#222222',
