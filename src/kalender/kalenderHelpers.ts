@@ -31,8 +31,8 @@ export function primeDays(number = 7) {
 export function parseIcalEvent(e: any, useItem = false): Event {
   try {
     const now = Moment();
-    const start = Moment(e.startDate.toDate());
-    const end = Moment(e.endDate.toDate());
+    const start = Moment(e.startDate.toJSDate());
+    const end = Moment(e.endDate.toJSDate());
     const name = useItem ? e.item.summary : e.summary;
 
     const fullDay = e.startDate.hour === 0 && e.endDate.hour === 0 && e.endDate.day !== e.startDate.day;

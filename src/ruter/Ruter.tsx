@@ -20,11 +20,8 @@ function parseTrain(data: TrainData): ExtendedTrainData {
 }
 
 class Ruter extends React.PureComponent<Props, {}> {
-  private oppdateringsFrekvens: number;
-
   public constructor(props: Props) {
     super(props);
-    this.oppdateringsFrekvens = 10;
   }
 
   private getTrainObjects() {
