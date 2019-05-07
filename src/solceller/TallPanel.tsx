@@ -1,10 +1,12 @@
 import React from 'react';
 import TallPanelDisplay from './TallPanelDisplay';
+import { SolarCurrent } from '../types/solar';
+import { TibberRealtimeState } from '../types/tibber';
 
 interface Props {
-  realtimePower: any;
-  currentSolarProduction: any;
-  currentNetConsumption: any;
+  realtimePower: TibberRealtimeState;
+  currentSolarProduction: SolarCurrent;
+  currentNetConsumption: number;
   max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 

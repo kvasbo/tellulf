@@ -15,32 +15,36 @@ export interface TibberUsageState {
 }
 
 export interface TibberRealtimeData {
-  accumulatedConsumption?: number;
-  accumulatedCost?: number;
-  accumulatedProduction?: number;
-  accumulatedReward?: number;
+  accumulatedConsumption: number;
+  accumulatedCost: number;
+  accumulatedProduction: number;
+  accumulatedReward: number;
   averagePower: number;
-  currency?: string;
-  lastMeterConsumption?: number;
-  lastMeterProduction?: number;
-  maxPower?: number;
-  maxPowerProduction?: number;
-  minPower?: number;
-  minPowerProduction?: number;
+  currency: string;
+  lastMeterConsumption: number;
+  lastMeterProduction: number;
+  maxPower: number;
+  maxPowerProduction: number;
+  minPower: number;
+  minPowerProduction: number;
   power: number;
   powerProduction: number;
-  timestamp?: string;
+  timestamp: string;
   calculatedConsumption: number;
   previousMeasuredProduction: number;
 }
 
 export interface TibberRealtimeState extends TibberRealtimeData {
-  lastHourByTenMinutes?: {};
+  lastHourByTenMinutes: {};
   avgLastHour: number;
-  avgLastHourSamples?: number;
-  avgLastHourStamp?: string;
+  avgLastHourSamples: number;
+  avgLastHourStamp: string;
+}
+
+export interface PowerPrice {
+  total: number;
 }
 
 export interface PowerPriceState {
-  [s: number]: { total: number };
+  [s: number]: PowerPrice;
 }

@@ -28,6 +28,7 @@ class Dag extends React.PureComponent<Props, {}> {
       if (!this.props.dinner || !this.props.dinner.events) return null;
       return <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>;
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
       return null;
     }
@@ -54,6 +55,7 @@ class Dag extends React.PureComponent<Props, {}> {
         );
       });
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
     return out;
@@ -76,6 +78,7 @@ class Dag extends React.PureComponent<Props, {}> {
         }
       });
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
     return out;

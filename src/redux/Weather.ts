@@ -13,7 +13,7 @@ interface State {
 }
 
 const initialState = {
-  weather: undefined,
+  weather: {},
   long: {},
   limits: undefined,
   lat: undefined,
@@ -40,11 +40,13 @@ export default function Weather(
         ...(state.weather as WeatherData),
         ...(action.data.weather as WeatherData),
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const filtered = toFilter.filter((w: any) => {
         if (!w) return false;
         return Moment(w['time']).isBetween(from, to, undefined, '[]');
       });
       const newWeather: WeatherDataSet = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       filtered.forEach((w: any) => {
         if (!w) return false;
         newWeather[w['time']] = w;

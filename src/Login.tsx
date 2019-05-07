@@ -33,6 +33,7 @@ class Login extends React.PureComponent<{}, State> {
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        // eslint-disable-next-line no-console
         console.log('Login error', errorCode, errorMessage);
       });
   }

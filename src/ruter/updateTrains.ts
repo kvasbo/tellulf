@@ -29,6 +29,7 @@ async function getRuterData(station: string, direction: string): Promise<TrainDa
       }
     });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
   }
   return trains;
