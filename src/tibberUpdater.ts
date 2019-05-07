@@ -139,7 +139,7 @@ export default class TibberUpdater {
     this.tibberSocket = new TibberConnector(
       tibberApiKey,
       tibberHomeKey,
-      (data: { error: any; data: any }) => {
+      (data: { error: string; data: { liveMeasurement: {} } }) => {
         if (!data.error) {
           this.store.dispatch(updateRealtimeConsumption(data));
         } else {

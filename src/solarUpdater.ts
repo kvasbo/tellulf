@@ -1,6 +1,7 @@
 import Moment from 'moment';
 import firebase from './firebase';
 import { updateSolarMax, updateSolarCurrent, updateInitStatus } from './redux/actions';
+import { SolarCurrent } from './types/solar';
 
 function parseByHour(data: []) {
   const startOfDay = Moment().startOf('day');
@@ -20,42 +21,44 @@ export default class SolarUpdater {
   }
 
   public async attachListeners() {
-    const dbRef = firebase.database().ref('steca/currentData');
-
-    dbRef.on('value', (snapshot: any) => {
-      try {
-        const val = snapshot.val();
-        const dataTime =
-          typeof val.averages.time !== 'undefined' ? Moment(val.averages.time) : null;
-        const now = typeof val.effect.val !== 'undefined' ? val.effect.val : null;
-        const today = typeof val.today.val !== 'undefined' ? val.today.val : null;
-        const month = typeof val.month.val !== 'undefined' ? val.month.val : null;
-        const year = typeof val.year.val !== 'undefined' ? val.year.val : null;
-        const total = typeof val.total.val !== 'undefined' ? val.total.val : null;
-        const averageFull = typeof val.averages.full !== 'undefined' ? val.averages.full : null;
-        const averageMinute = typeof val.averages['1'] !== 'undefined' ? val.averages['1'] : null;
-        const byHour =
-          typeof val.todayByHour.val !== 'undefined' ? parseByHour(val.todayByHour.val) : null;
-        const currentTime = Moment();
-        const state = {
-          now,
-          today,
-          month,
-          year,
-          total,
-          byHour,
-          currentTime,
-          averageFull,
-          averageMinute,
-          dataTime,
-        };
-        this.store.dispatch(updateSolarCurrent(state));
-        this.store.dispatch(updateInitStatus('solar'));
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.log(err);
-      }
-    });
+    firebase
+      .database()
+      .ref('steca/currentData')
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        try {
+          if (snapshot === null) return;
+          const val = snapshot.val();
+          const dataTime =
+            typeof val.averages.time !== 'undefined' ? Moment(val.averages.time) : Moment(0);
+          const now = typeof val.effect.val !== 'undefined' ? val.effect.val : 0;
+          const today = typeof val.today.val !== 'undefined' ? val.today.val : 0;
+          const month = typeof val.month.val !== 'undefined' ? val.month.val : 0;
+          const year = typeof val.year.val !== 'undefined' ? val.year.val : 0;
+          const total = typeof val.total.val !== 'undefined' ? val.total.val : 0;
+          const averageFull = typeof val.averages.full !== 'undefined' ? val.averages.full : 0;
+          const averageMinute = typeof val.averages['1'] !== 'undefined' ? val.averages['1'] : 0;
+          const byHour =
+            typeof val.todayByHour.val !== 'undefined' ? parseByHour(val.todayByHour.val) : [];
+          const currentTime = Moment();
+          const state: SolarCurrent = {
+            now,
+            today,
+            month,
+            year,
+            total,
+            byHour,
+            currentTime,
+            averageFull,
+            averageMinute,
+            dataTime,
+          };
+          this.store.dispatch(updateSolarCurrent(state));
+          this.store.dispatch(updateInitStatus('solar'));
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        }
+      });
   }
 
   /*
@@ -71,40 +74,52 @@ export default class SolarUpdater {
     const refYear = `steca/maxValues/yearly/${y}`;
     const refEver = 'steca/maxValues/ever/';
 
-    const dbRefDayMax = firebase.database().ref(refDay);
-    dbRefDayMax.on('value', (snapshot: any) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxDay: val.value };
-        this.store.dispatch(updateSolarMax(state));
-      }
-    });
+    firebase
+      .database()
+      .ref(refDay)
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        if (snapshot === null) return;
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxDay: val.value };
+          this.store.dispatch(updateSolarMax(state));
+        }
+      });
 
-    const dbRefMonthMax = firebase.database().ref(refMonth);
-    dbRefMonthMax.on('value', (snapshot: any) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxMonth: val.value };
-        this.store.dispatch(updateSolarMax(state));
-      }
-    });
+    firebase
+      .database()
+      .ref(refMonth)
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        if (snapshot === null) return;
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxMonth: val.value };
+          this.store.dispatch(updateSolarMax(state));
+        }
+      });
 
-    const dbRefYearMax = firebase.database().ref(refYear);
-    dbRefYearMax.on('value', (snapshot: any) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxYear: val.value };
-        this.store.dispatch(updateSolarMax(state));
-      }
-    });
+    firebase
+      .database()
+      .ref(refYear)
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        if (snapshot === null) return;
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxYear: val.value };
+          this.store.dispatch(updateSolarMax(state));
+        }
+      });
 
-    const dbRefEverMax = firebase.database().ref(refEver);
-    dbRefEverMax.on('value', (snapshot: any) => {
-      const val = snapshot.val();
-      if (val && val.value) {
-        const state = { maxEver: val.value };
-        this.store.dispatch(updateSolarMax(state));
-      }
-    });
+    firebase
+      .database()
+      .ref(refEver)
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        if (snapshot === null) return;
+        const val = snapshot.val();
+        if (val && val.value) {
+          const state = { maxEver: val.value };
+          this.store.dispatch(updateSolarMax(state));
+        }
+      });
   }
 }

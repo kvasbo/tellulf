@@ -1,34 +1,8 @@
 import { UPDATE_TIBBER_REALTIME_CONSUMPTION } from './actions';
 import Moment from 'moment';
+import { TibberRealtimeState, TibberRealtimeData } from '../types/tibber';
 
-interface RealtimeData {
-  accumulatedConsumption?: number;
-  accumulatedCost?: number;
-  accumulatedProduction?: number;
-  accumulatedReward?: number;
-  averagePower: number;
-  currency?: string;
-  lastMeterConsumption?: number;
-  lastMeterProduction?: number;
-  maxPower?: number;
-  maxPowerProduction?: number;
-  minPower?: number;
-  minPowerProduction?: number;
-  power: number;
-  powerProduction: number;
-  timestamp?: string;
-  calculatedConsumption: number;
-  previousMeasuredProduction: number;
-}
-
-interface State extends RealtimeData {
-  lastHourByTenMinutes?: {};
-  avgLastHour: number;
-  avgLastHourSamples?: number;
-  avgLastHourStamp?: string;
-}
-
-const defaultState: State = {
+const defaultState: TibberRealtimeState = {
   accumulatedConsumption: 0,
   accumulatedCost: 0,
   accumulatedProduction: 0,
@@ -59,8 +33,8 @@ interface PowerMinute {
 }
 
 export default function TibberRealTime(
-  state: State = defaultState,
-  action: { type: string; data: RealtimeData },
+  state: TibberRealtimeState = defaultState,
+  action: { type: string; data: TibberRealtimeData },
 ) {
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
@@ -127,6 +101,7 @@ export default function TibberRealTime(
           lastHourByTenMinutes[startTime] = { startTime, usage: power, samples: 1 };
         }
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
       }
 

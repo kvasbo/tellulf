@@ -28,6 +28,7 @@ export default function NetatmoAverages(
         newState.time = action.data.time;
         return { ...state, ...action.data };
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
         return initState;
       }

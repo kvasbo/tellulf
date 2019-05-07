@@ -13,16 +13,17 @@ import TibberLastDay from './TibberLastDay';
 import { TrainDataSet } from '../types/trains';
 import { WeatherStore } from '../types/weather';
 import { SolarState } from '../types/solar';
+import { TibberRealtimeState, TibberUsageState, PowerPriceState } from '../types/tibber';
 
 export interface AppStore {
   Init: object;
   Netatmo: NetatmoStore;
   NetatmoAverages: NetatmoAverageData;
   Solar: SolarState;
-  PowerPrices: any;
+  PowerPrices: PowerPriceState;
   Trains: TrainDataSet;
-  TibberRealTime: any;
-  TibberLastDay: any;
+  TibberRealTime: TibberRealtimeState;
+  TibberLastDay: TibberUsageState;
   Weather: WeatherStore;
 }
 
