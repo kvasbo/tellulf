@@ -27,7 +27,7 @@ import {
 } from './energyHelpers';
 
 import { SolarCurrent, SolarMax, SolarHour } from '../types/solar';
-import { InitState } from '../redux/Init';
+import { InitState } from '../types/initstate';
 
 const maxSunHeight = getMaxSunHeight();
 

@@ -1,9 +1,5 @@
 import { UPDATE_INIT_STATUS } from './actions';
-
-export interface InitState {
-  powerPrices: boolean;
-  solar: boolean;
-}
+import { InitState } from '../types/initstate';
 
 export default function Init(
   state: InitState = { powerPrices: false, solar: false },

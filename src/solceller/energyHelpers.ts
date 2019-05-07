@@ -5,7 +5,11 @@ import { roundToNumberOfDecimals } from '../TellulfInfoCell';
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
 
-export function getSunForTime(time: any, latitude = defaultLatitude, longitude = defaultLongitude) {
+export function getSunForTime(
+  time: Date | string | Moment.Moment | number,
+  latitude = defaultLatitude,
+  longitude = defaultLongitude,
+) {
   const s = SunCalc.getPosition(Moment(time).toDate(), latitude, longitude);
   return Math.max(0, s.altitude);
 }
@@ -67,7 +71,7 @@ export function getTimeLimits(): { start: Moment.Moment; end: Moment.Moment } {
   return { start, end };
 }
 
-export function getXTicks(): any[] {
+export function getXTicks(): number[] {
   const { start, end } = getTimeLimits();
   const out = [];
   while (start.isSameOrBefore(end)) {

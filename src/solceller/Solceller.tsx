@@ -6,10 +6,12 @@ import { SolarCurrent } from '../types/solar';
 import { AppStore } from '../redux/reducers';
 import './solceller.css';
 
+import { InitState } from '../types/initstate';
+
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
 interface Props {
-  initState: any;
+  initState: InitState;
   realtimePower: any;
   currentSolarProduction: SolarCurrent;
   latitude: number;
