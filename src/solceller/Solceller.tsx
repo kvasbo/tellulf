@@ -2,23 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
 import EnergyGraph from './EnergyGraph';
-import { SolarCurrent } from '../types/solar';
 import { AppStore } from '../redux/reducers';
 import './solceller.css';
 
 import { InitState } from '../types/initstate';
+import { PowerPriceState, TibberUsageState, TibberRealtimeState } from '../types/tibber';
+import { SolarCurrent, SolarMax } from '../types/solar';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
 interface Props {
   initState: InitState;
-  realtimePower: any;
+  realtimePower: TibberRealtimeState;
   currentSolarProduction: SolarCurrent;
   latitude: number;
   longitude: number;
-  usedPower: any;
-  powerPrices: any;
-  max: any;
+  usedPower: TibberUsageState;
+  powerPrices: PowerPriceState;
+  max: SolarMax;
 }
 
 class Solceller extends React.PureComponent<Props, {}> {
