@@ -3,12 +3,18 @@ import Moment from 'moment';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import { Event, EventDataSet } from '../types/calendar';
+import { Style } from '../types/generic';
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
   date: string;
 }
+
+const subInfoStyle: Style = {
+  margin: 5,
+  paddingLeft: 10,
+};
 
 function getDayHeader(date: string) {
   const dateHeaderFormats = {
@@ -26,7 +32,18 @@ class Dag extends React.PureComponent<Props, {}> {
   private getDinner() {
     try {
       if (!this.props.dinner || !this.props.dinner.events) return null;
-      return <div style={{ paddingLeft: 15 }}>{this.props.dinner.events[0].name}</div>;
+      return (
+        <div style={{ ...subInfoStyle }}>
+          <img
+            src="dinner.png"
+            width={15}
+            height={15}
+            alt="Dinner"
+            style={{ filter: 'invert(100%)', marginRight: 5 }}
+          />
+          {this.props.dinner.events[0].name}
+        </div>
+      );
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
@@ -49,7 +66,14 @@ class Dag extends React.PureComponent<Props, {}> {
           name = `${name} (${age})`;
         }
         out.push(
-          <div style={{ padding: 10 }} key={b.id}>
+          <div style={{ ...subInfoStyle }} key={b.id}>
+            <img
+              src="kake.png"
+              width={15}
+              height={15}
+              alt="Kake"
+              style={{ filter: 'invert(100%)', marginRight: 5 }}
+            />
             {name}
           </div>,
         );
