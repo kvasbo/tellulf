@@ -8,15 +8,14 @@ export interface WeatherStore {
 }
 
 export interface WeatherData {
-  temp: number | null;
-  rain: number | null;
-  rainMin: number | null;
-  rainMax: number | null;
-  clouds: number | null;
-  wind: number | null;
-  symbol: string | null;
-  symbolNumber: number | null;
-  sunHeight: number | null;
+  temp: number;
+  rain: number;
+  rainMin: number;
+  rainMax: number;
+  clouds: number;
+  wind: number;
+  symbol: string;
+  sunHeight: number;
   time: number;
 }
 

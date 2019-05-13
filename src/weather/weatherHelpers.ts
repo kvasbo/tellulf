@@ -77,15 +77,14 @@ export function initWeather(): WeatherDataSet {
     const to = Moment(from).add(1, 'hours');
     const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
     const d: WeatherData = {
-      temp: null,
-      rain: null,
-      rainMin: null,
-      rainMax: null,
-      clouds: null,
-      wind: null,
-      symbol: null,
-      symbolNumber: null,
-      sunHeight: null,
+      temp: 0,
+      rain: 0,
+      rainMin: 0,
+      rainMax: 0,
+      clouds: 0,
+      wind: 0,
+      symbol: 'blank',
+      sunHeight: 0,
       time,
     };
     out[key] = d;
@@ -120,15 +119,14 @@ export function initWeatherLong(): WeatherDataSet {
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
     const d: WeatherData = {
-      temp: null,
-      rain: null,
-      rainMin: null,
-      rainMax: null,
-      clouds: null,
-      wind: null,
-      symbol: null,
-      symbolNumber: null,
-      sunHeight: null,
+      temp: 0,
+      rain: 0,
+      rainMin: 0,
+      rainMax: 0,
+      clouds: 0,
+      wind: 0,
+      symbol: 'blank',
+      sunHeight: 0,
       time: midTime.valueOf(),
     };
     out[key] = d;
