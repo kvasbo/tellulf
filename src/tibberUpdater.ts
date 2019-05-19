@@ -2,13 +2,13 @@
 import axios from 'axios';
 import Moment from 'moment';
 import firebase from './firebase';
-import TibberConnector from 'tibber-pulse-connector';
 import {
   updatePowerPrices,
   updateInitStatus,
   updateRealtimeConsumption,
   updatePowerUsage,
 } from './redux/actions';
+import { TibberRealtimeData } from './types/tibber';
 
 const nettleie = 0.477;
 
@@ -133,21 +133,36 @@ export default class TibberUpdater {
 
   // Create and start websocket connection
   public async subscribeToRealTime() {
-    const settings: TibberSettings = await this.getTibberSettings();
-    const { tibberApiKey, tibberHomeKey } = settings;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.tibberSocket = new TibberConnector(
-      tibberApiKey,
-      tibberHomeKey,
-      (data: { error: string; data: { liveMeasurement: {} } }) => {
-        if (!data.error) {
+    firebase
+      .database()
+      .ref('tibber/realtime/2b05f8c5-3241-465d-92b8-9e7ad567f78f')
+      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+        try {
+          if (snapshot === null) return;
+          const tmp = snapshot.val();
+          const data: TibberRealtimeData = {
+            accumulatedConsumption: tmp.accumulatedConsumption,
+            accumulatedCost: tmp.accumulatedCost,
+            accumulatedProduction: tmp.accumulatedProduction,
+            accumulatedReward: tmp.accumulatedReward,
+            averagePower: tmp.averagePower,
+            currency: tmp.currency,
+            lastMeterConsumption: tmp.lastMeterConsumption,
+            lastMeterProduction: tmp.lastMeterProduction,
+            maxPower: tmp.maxPower,
+            maxPowerProduction: tmp.maxPowerProduction,
+            minPower: tmp.minPower,
+            minPowerProduction: tmp.minPowerProduction,
+            power: tmp.power,
+            powerProduction: tmp.powerProduction,
+            timestamp: tmp.timestamp,
+          };
           this.store.dispatch(updateRealtimeConsumption(data));
-        } else {
-          throw new Error(data.error);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log(err);
         }
-      },
-    );
-    if (this.tibberSocket) this.tibberSocket.start();
+      });
   }
 
   public async updateConsumptionMonthlyAndCalculateBills() {

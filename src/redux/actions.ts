@@ -6,7 +6,7 @@ import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
 // import { SolarCurrent, SolarMax } from '../types/solar';
-import { PowerPriceState } from '../types/tibber';
+import { PowerPriceState, TibberRealtimeData } from '../types/tibber';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -43,13 +43,10 @@ export function updateWeather(data: WeatherDataSet, lat: number, lon: number) {
   };
 }
 
-export function updateRealtimeConsumption(data: { data: { liveMeasurement: object } }) {
-  if (!data.data || !data.data.liveMeasurement) {
-    return;
-  }
+export function updateRealtimeConsumption(data: TibberRealtimeData) {
   return {
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
-    data: { ...data.data.liveMeasurement },
+    data,
   };
 }
 

@@ -30,8 +30,6 @@ export interface TibberRealtimeData {
   power: number;
   powerProduction: number;
   timestamp: string;
-  calculatedConsumption: number;
-  previousMeasuredProduction: number;
 }
 
 export interface TibberRealtimeState extends TibberRealtimeData {
@@ -39,6 +37,8 @@ export interface TibberRealtimeState extends TibberRealtimeData {
   avgLastHour: number;
   avgLastHourSamples: number;
   avgLastHourStamp: string;
+  calculatedConsumption: number;
+  previousMeasuredProduction: number;
 }
 
 export interface PowerPrice {
