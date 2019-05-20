@@ -28,16 +28,17 @@ import {
 
 import { SolarCurrent, SolarMax, SolarHour } from '../types/solar';
 import { InitState } from '../types/initstate';
+import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 
 const maxSunHeight = getMaxSunHeight();
 
 interface Props {
   currentSolarProduction: SolarCurrent;
-  powerPrices: object;
+  powerPrices: PowerPriceState;
   latitude: number;
   longitude: number;
-  usedPower: object;
-  realtimePower: { avgLastHour: number };
+  usedPower: TibberUsageState;
+  realtimePower: TibberRealtimeState;
   initState: InitState;
   max: SolarMax;
   currentNetConsumption: number;
