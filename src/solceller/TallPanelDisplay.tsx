@@ -91,7 +91,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             unit="W"
             header="betalt forbruk"
             headerIfNegative="nettoproduksjon"
-            colorIfNegative="#FF0000"
+            colorIfNegative="#00FF00"
             absoluteValue
             large
           />
