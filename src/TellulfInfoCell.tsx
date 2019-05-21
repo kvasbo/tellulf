@@ -14,7 +14,10 @@ interface Props {
   colorIfNegative: string;
   labelColor: string;
   header: string | undefined;
+  headerIfNegative: string | undefined;
   unit: string | undefined;
+  invertValue: boolean;
+  absoluteValue: boolean;
 }
 
 export function roundToNumberOfDecimals(number: number, decimals: number) {
@@ -25,6 +28,7 @@ export function roundToNumberOfDecimals(number: number, decimals: number) {
 class TellulfInfoCell extends React.PureComponent<Props, {}> {
   public static defaultProps = {
     header: undefined,
+    headerIfNegative: undefined,
     info: '-',
     large: false,
     fontSize: defaultFontSize,
@@ -34,6 +38,8 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     color: '#FFFFFF',
     labelColor: '#777777',
     colorIfNegative: '#FFFFFF',
+    invertValue: false,
+    absoluteValue: false,
   };
 
   public render() {
@@ -44,7 +50,16 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
       return null;
     }
 
-    text = roundToNumberOfDecimals(this.props.info, this.props.decimals).toLocaleString();
+    // Invert?
+    let valToDisplay = !this.props.invertValue ? this.props.info : this.props.info * -1;
+
+    // absolute?
+    if (this.props.absoluteValue) {
+      valToDisplay = Math.abs(valToDisplay);
+    }
+
+    // Text to show
+    text = roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString();
 
     // Figure out the font size!
     let { fontSize } = this.props;
@@ -55,6 +70,11 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
 
     const space = this.props.unitSpace ? ' ' : null;
     const color = this.props.info >= 0 ? this.props.color : this.props.colorIfNegative;
+
+    let header = this.props.header;
+    if (this.props.info < 0 && this.props.headerIfNegative !== undefined) {
+      header = this.props.headerIfNegative;
+    }
 
     return (
       <div
@@ -68,9 +88,7 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
         }}
       >
         {this.props.header && (
-          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>
-            {this.props.header}
-          </span>
+          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>{header}</span>
         )}
         <span style={{ color }}>
           {text}

@@ -32,6 +32,7 @@ class TallPanel extends React.PureComponent<Props, {}> {
       <TallPanelDisplay
         currentPower={this.props.currentNetConsumption}
         currentConsumption={this.props.realtimePower.calculatedConsumption}
+        currentSolarProduction={this.props.currentSolarProduction.now}
         producedPercent={producedPercent}
         accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
         accumulatedProduction={this.props.realtimePower.accumulatedProduction}
