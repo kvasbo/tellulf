@@ -5,8 +5,13 @@ import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
-// import { SolarCurrent, SolarMax } from '../types/solar';
-import { PowerPriceState, TibberRealtimeData } from '../types/tibber';
+
+import {
+  PowerPriceState,
+  TibberRealtimeData,
+  TibberConsumptionNode,
+  TibberProductionNode,
+} from '../types/tibber';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
@@ -18,6 +23,8 @@ export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
 export const UPDATE_TRAINS = 'UPDATE_TRAINS';
 export const UPDATE_TIBBER_REALTIME_CONSUMPTION = 'UPDATE_TIBBER_REALTIME_CONSUMPTION';
 export const UPDATE_TIBBER_POWER_USAGE = 'UPDATE_TIBBER_POWER_USAGE';
+export const UPDATE_TIBBER_USAGE_MONTH = 'UPDATE_TIBBER_USAGE_MONTH';
+export const UPDATE_TIBBER_PRODUCTION_MONTH = 'UPDATE_TIBBER_PRODUCTION_MONTH';
 
 export function updateInitStatus(key: string, value = true) {
   return {
@@ -40,6 +47,20 @@ export function updateWeather(data: WeatherDataSet, lat: number, lon: number) {
     data,
     lat,
     lon,
+  };
+}
+
+export function updateTibberProductionMonth(data: TibberProductionNode[]) {
+  return {
+    type: UPDATE_TIBBER_PRODUCTION_MONTH,
+    data,
+  };
+}
+
+export function updateTibberConsumptionMonth(data: TibberConsumptionNode[]) {
+  return {
+    type: UPDATE_TIBBER_USAGE_MONTH,
+    data,
   };
 }
 

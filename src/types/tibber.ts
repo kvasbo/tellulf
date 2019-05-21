@@ -48,3 +48,32 @@ export interface PowerPrice {
 export interface PowerPriceState {
   [s: number]: PowerPrice;
 }
+
+export interface TibberConsumptionNode {
+  from: string;
+  to: string;
+  totalCost: number;
+  unitCost: number;
+  unitPrice: number;
+  unitPriceVAT: number;
+  consumption: number;
+  consumptionUnit: string;
+}
+
+export interface TibberConsumptionReturn {
+  nodes: [TibberConsumptionNode];
+}
+
+export interface TibberProductionNode {
+  from: string;
+  to: string;
+  profit: number;
+  unitPrice: number;
+  unitPriceVAT: number;
+  production: number;
+  productionUnit: string;
+}
+
+export interface TibberProductionReturn {
+  nodes: [TibberProductionNode];
+}

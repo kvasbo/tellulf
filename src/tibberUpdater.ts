@@ -7,8 +7,16 @@ import {
   updateInitStatus,
   updateRealtimeConsumption,
   updatePowerUsage,
+  updateTibberConsumptionMonth,
+  updateTibberProductionMonth,
 } from './redux/actions';
-import { TibberRealtimeData } from './types/tibber';
+import {
+  TibberRealtimeData,
+  TibberConsumptionNode,
+  TibberConsumptionReturn,
+  TibberProductionNode,
+  TibberProductionReturn,
+} from './types/tibber';
 
 const nettleie = 0.477;
 
@@ -29,35 +37,6 @@ interface TibberSettings {
   tibberApiKey: string;
   tibberHomeKey: string;
   tibberCabinKey: string;
-}
-
-interface TibberConsumptionNode {
-  from: string;
-  to: string;
-  totalCost: number;
-  unitCost: number;
-  unitPrice: number;
-  unitPriceVAT: number;
-  consumption: number;
-  consumptionUnit: string;
-}
-
-interface TibberConsumptionReturn {
-  nodes: [TibberConsumptionNode];
-}
-
-interface TibberProductionNode {
-  from: string;
-  to: string;
-  profit: number;
-  unitPrice: number;
-  unitPriceVAT: number;
-  production: number;
-  productionUnit: string;
-}
-
-interface TibberProductionReturn {
-  nodes: [TibberProductionNode];
 }
 
 export default class TibberUpdater {
@@ -150,7 +129,7 @@ export default class TibberUpdater {
         },
       });
       if (data.status === 200) {
-        const usage: [TibberProductionNode] = data.data.data.viewer.home.consumption.nodes;
+        const usage: TibberProductionNode[] = data.data.data.viewer.home.consumption.nodes;
         this.store.dispatch(updatePowerUsage(usage));
       }
     } catch (err) {
@@ -265,6 +244,8 @@ export default class TibberUpdater {
             });
           },
         );
+        this.store.dispatch(updateTibberConsumptionMonth(outConsumption));
+        this.store.dispatch(updateTibberProductionMonth(outProduction));
         console.log(outConsumption, outProduction);
       }
     } catch (err) {
