@@ -31,9 +31,37 @@ interface TibberSettings {
   tibberCabinKey: string;
 }
 
+interface TibberConsumptionNode {
+  from: string;
+  to: string;
+  totalCost: number;
+  unitCost: number;
+  unitPrice: number;
+  unitPriceVAT: number;
+  consumption: number;
+  consumptionUnit: string;
+}
+
+interface TibberConsumptionReturn {
+  nodes: [TibberConsumptionNode];
+}
+
+interface TibberProductionNode {
+  from: string;
+  to: string;
+  profit: number;
+  unitPrice: number;
+  unitPriceVAT: number;
+  production: number;
+  productionUnit: string;
+}
+
+interface TibberProductionReturn {
+  nodes: [TibberProductionNode];
+}
+
 export default class TibberUpdater {
   private store: { dispatch: Function };
-  private tibberSocket: { start: Function } | undefined;
   public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
@@ -122,7 +150,7 @@ export default class TibberUpdater {
         },
       });
       if (data.status === 200) {
-        const usage = data.data.data.viewer.home.consumption.nodes;
+        const usage: [TibberProductionNode] = data.data.data.viewer.home.consumption.nodes;
         this.store.dispatch(updatePowerUsage(usage));
       }
     } catch (err) {
@@ -163,6 +191,85 @@ export default class TibberUpdater {
           console.log(err);
         }
       });
+  }
+
+  public async updateConsumptionDaily() {
+    const settings = await this.getTibberSettings();
+    const daysToAskFor = new Date().getDate();
+    const queryUsage = `
+    {
+      viewer {
+        homes {
+          id
+          appNickname
+          consumption(resolution: DAILY, last: ${daysToAskFor}) {
+            nodes {
+              from
+              to
+              totalCost
+              unitCost
+              unitPrice
+              unitPriceVAT
+              consumption
+              consumptionUnit
+            }
+          }
+          production(resolution: DAILY, last: ${daysToAskFor}) {
+            nodes {
+              from
+              to
+              unitPrice
+              unitPriceVAT
+              production
+              productionUnit
+              profit
+            }
+          }
+        }
+      }
+    }
+`;
+
+    try {
+      const data = await axios({
+        url: 'https://api.tibber.com/v1-beta/gql',
+        method: 'post',
+        headers: {
+          Authorization: `bearer ${settings.tibberApiKey}`,
+        },
+        data: {
+          query: queryUsage,
+        },
+      });
+      if (data.status === 200) {
+        const outConsumption: TibberConsumptionNode[] = [];
+        const outProduction: TibberProductionNode[] = [];
+        const now = Moment();
+        const usage = data.data.data.viewer.homes;
+        usage.forEach(
+          (u: {
+            appNickname: string;
+            id: string;
+            consumption: TibberConsumptionReturn;
+            production: TibberProductionReturn;
+          }) => {
+            u.consumption.nodes.forEach(n => {
+              const from = Moment(n.from);
+              if (!from.isSame(now, 'month')) return;
+              outConsumption.push(n);
+            });
+            u.production.nodes.forEach(n => {
+              const from = Moment(n.from);
+              if (!from.isSame(now, 'month')) return;
+              outProduction.push(n);
+            });
+          },
+        );
+        console.log(outConsumption, outProduction);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   public async updateConsumptionMonthlyAndCalculateBills() {
