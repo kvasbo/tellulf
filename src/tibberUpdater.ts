@@ -246,7 +246,7 @@ export default class TibberUpdater {
         );
         this.store.dispatch(updateTibberConsumptionMonth(outConsumption));
         this.store.dispatch(updateTibberProductionMonth(outProduction));
-        console.log(outConsumption, outProduction);
+        // console.log(outConsumption, outProduction);
       }
     } catch (err) {
       console.log(err);
