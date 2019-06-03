@@ -4,11 +4,14 @@ import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import { Event, EventDataSet } from '../types/calendar';
 import { Style } from '../types/generic';
+import './kalender.css';
+
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
   date: string;
+  weatherAsGraph: boolean;
 }
 
 const subInfoStyle: Style = {
@@ -16,19 +19,15 @@ const subInfoStyle: Style = {
   paddingLeft: 10,
 };
 
-function getDayHeader(date: string) {
-  const dateHeaderFormats = {
-    sameDay: '[I dag]',
-    nextDay: '[I morgen]',
-    nextWeek: 'dddd',
-    nextMonth: 'dddd D.',
-    sameElse: 'dddd DD. MMM',
-  };
-  const dateStr = Moment(date).calendar(undefined, dateHeaderFormats);
-  return dateStr;
+function getDayHeader(date: Moment.Moment) {
+  return date.format('dddd D. MMM');
 }
 
 class Dag extends React.PureComponent<Props, {}> {
+  static defaultProps = {
+    weatherAsGraph: false,
+  };
+
   private getDinner() {
     try {
       if (!this.props.dinner || !this.props.dinner.events) return null;
@@ -109,9 +108,12 @@ class Dag extends React.PureComponent<Props, {}> {
   }
 
   public render() {
+    const now = Moment();
+    const day = Moment(this.props.date);
+    const today = now.isSame(day, 'day');
     return (
-      <div style={{ marginBottom: 10 }}>
-        <div style={{ padding: 5 }}>{getDayHeader(this.props.date)}</div>
+      <div className="kalenderDag">
+        <div className="kalenderDato">{getDayHeader(day)}</div>
         {this.getDinner()}
         {this.getBirthdays()}
         {this.getEvents()}
