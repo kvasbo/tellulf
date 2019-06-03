@@ -146,10 +146,8 @@ class EnergyGraph extends React.PureComponent<Props, State> {
     return (
       <div
         style={{
-          display: 'flex',
-          flex: 1,
-          flexDirection: 'column',
-          height: '100%',
+          height: '12vh',
+          width: '100%',
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
