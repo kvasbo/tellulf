@@ -23,23 +23,6 @@ interface State {
 class Netatmo extends React.PureComponent<Props> {
   public static defaultProps = { minMax: { max: -9999, min: 9999 } };
 
-  public componentDidMount() {
-    const dbRef = firebase.database().ref('netatmo/currentData');
-    dbRef.on('value', snapshot => {
-      if (snapshot) {
-        const data: NetatmoStore = snapshot.val() as NetatmoStore;
-        this.props.dispatch(updateNetatmo(data));
-      }
-    });
-    const dbRefAvg = firebase.database().ref('netatmo/areaData');
-    dbRefAvg.on('value', snapshot => {
-      if (snapshot) {
-        const data = snapshot.val();
-        this.props.dispatch(updateNetatmoAverages(data));
-      }
-    });
-  }
-
   public render() {
     // Ikke rendre om ikke data
     if (!this.props.Netatmo.updated || !this.props.NetatmoAverages.time) return null;

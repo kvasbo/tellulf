@@ -9,8 +9,12 @@ interface State {
   debug: boolean;
 }
 
-class Clock extends React.PureComponent<{}, State> {
-  public constructor(props: {}) {
+interface Props {
+  temp: number;
+}
+
+class Clock extends React.PureComponent<Props, State> {
+  public constructor(props: { temp: -999 }) {
     super(props);
     this.state = { time: Moment(), debug: false };
   }
@@ -20,6 +24,7 @@ class Clock extends React.PureComponent<{}, State> {
   }
 
   public render() {
+    console.log(this.props);
     return (
       <div
         style={{
@@ -35,14 +40,14 @@ class Clock extends React.PureComponent<{}, State> {
           style={{
             alignItems: 'center',
             color: '#ffffff',
-            fontSize: 90,
+            fontSize: 75,
             fontWeight: 200,
           }}
         >
           {this.state.time.format('HH:mm')}
         </span>
         <span style={{ color: '#ffffff', fontSize: 35, fontWeight: 100 }}>
-          {!this.state.debug && this.state.time.format('dddd Do MMMM')}
+          {!this.state.debug && this.props.temp}&deg;
         </span>
         {this.state.debug && (
           <span>
