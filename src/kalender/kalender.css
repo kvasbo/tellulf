@@ -1,8 +1,10 @@
 .kalenderDag {
-  padding: 0.5vh 0.5vw 0.5vh 0.5vw;
-  margin: 0.5vh 0.5vw 0.5vh 0.5vw;
+  padding: 0.5vh 1.5vw 0.5vh 1.5vw;
+  margin: 0.5vh 0.5vw 1vh 0.5vw;
+  background-color: rgb(0,0,0);
+  border-radius: 0.5vh;
 }
 
 .kalenderDato {
-  font-size: 25pt;
+  font-size: 22pt;
 }

@@ -169,40 +169,44 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               ticks={getXTicks()}
               domain={getXAxis()}
             />
+            {false && (
+              <YAxis
+                width={25}
+                yAxisId="price"
+                ticks={[0.5, 1.0, 1.5, 2]}
+                orientation="right"
+                type="number"
+                domain={[0, 2]}
+                label={{
+                  angle: 90,
+                  value: 'kr',
+                  stroke: '#ffffff55',
+                  fill: '#ffffff55',
+                  fontSize: 15,
+                  position: 'right',
+                }}
+              />
+            )}
             <YAxis
-              width={25}
-              yAxisId="price"
-              ticks={[0.5, 1.0, 1.5, 2]}
-              orientation="right"
-              type="number"
-              domain={[0, 2]}
-              label={{
-                angle: 90,
-                value: 'kr',
-                stroke: '#ffffff55',
-                fill: '#ffffff55',
-                fontSize: 15,
-                position: 'right',
-              }}
-            />
-            <YAxis
-              width={25}
+              width={10}
               yAxisId="kwh"
               type="number"
               tickFormatter={formatEnergyScaleTick}
               domain={[0, getEnergyScaleMax]}
             >
-              <Label
-                angle={-90}
-                value="kw"
-                stroke="#ffffff55"
-                fill="#ffffff55"
-                fontSize={15}
-                position="left"
-              />
+              {false && (
+                <Label
+                  angle={-90}
+                  value="kw"
+                  stroke="#ffffff55"
+                  fill="#ffffff55"
+                  fontSize={15}
+                  position="insideTop"
+                />
+              )}
             </YAxis>
             <YAxis
-              width={25}
+              width={0}
               yAxisId="sun"
               hide
               allowDataOverflow
@@ -211,14 +215,16 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               orientation="right"
               domain={[0, maxSunHeight]}
             />
-            <Line
-              yAxisId="price"
-              dot={false}
-              type="step"
-              connectNulls
-              dataKey="price"
-              stroke="#8884d8"
-            />
+            {false && (
+              <Line
+                yAxisId="price"
+                dot={false}
+                type="step"
+                connectNulls
+                dataKey="price"
+                stroke="#8884d8"
+              />
+            )}
             <Line dot={false} yAxisId="sun" type="basis" dataKey="sun" stroke="#FFFFFF88" />
             <Line dot={false} yAxisId="sun" type="basis" dataKey="sunInAWeek" stroke="#FFFFFF55" />
             <Line
@@ -251,7 +257,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               strokeOpacity="0.15"
               stackId="1"
             />
-            <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />
+            {false && <CartesianGrid stroke="#FFFFFF55" strokeDasharray="1 2" vertical={false} />}
             <ReferenceLine
               yAxisId="kwh"
               y={this.props.max.maxDay / 1000}
@@ -264,9 +270,9 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               yAxisId="sun"
               fill="#FFFF00"
               stroke="none"
-              r={8}
+              r={4}
             />
-            {this.props.currentNetConsumption && this.props.currentNetConsumption > 0 && (
+            {false && this.props.currentNetConsumption && this.props.currentNetConsumption > 0 && (
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.currentNetConsumption / 1000}
@@ -284,7 +290,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
                 />
               </ReferenceDot>
             )}
-            {this.props.currentSolarProduction.now > 0 && (
+            {false && this.props.currentSolarProduction.now > 0 && (
               <ReferenceDot
                 yAxisId="kwh"
                 y={this.props.currentSolarProduction.now / 1000}
