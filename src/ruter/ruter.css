@@ -13,10 +13,9 @@
   background-color: rgb(30,30,30);
 }
 
-.togListe {
-  list-style: none;
-}
-
 .togStil {
-
+  margin: 10px;
+  padding: 10px;
+  display: block;
+  background-color: red;
 }
