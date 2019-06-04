@@ -54,10 +54,6 @@ class GraphLong extends React.PureComponent<Props, State> {
   private getData(): WeatherData[] {
     const rawData: WeatherData[] = Object.values(this.props.weatherLong);
     const uniqueData: WeatherData[] = uniqBy(rawData, 'time');
-    const filteredData: WeatherData[] = rawData.filter(a => {
-      return Moment(a.time).isBetween(this.props.from, this.props.to);
-    });
-
     const sortedData: WeatherData[] = sortBy(uniqueData, 'time');
     return sortedData;
   }
@@ -71,7 +67,10 @@ class GraphLong extends React.PureComponent<Props, State> {
     if (!this.props.weatherLong || !this.props.limits) {
       return null;
     }
+    const tdata = this.props.weather;
     const data = this.getData();
+    console.log('propsdata', tdata);
+    console.log('data', this.props.weather);
     const limits = parseLimits(data);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
