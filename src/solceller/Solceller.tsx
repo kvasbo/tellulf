@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
+import TellulfInfoCell from '../TellulfInfoCell';
 import EnergyGraph from './EnergyGraph';
 import { AppStore } from '../redux/reducers';
 import './solceller.css';
@@ -44,7 +45,29 @@ class Solceller extends React.PureComponent<Props, {}> {
           height: '100%',
         }}
       >
-        <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}
+        >
+          <TellulfInfoCell
+            info={this.props.currentSolarProduction.averageMinute}
+            header="Produksjon"
+            large
+          />
+          <TellulfInfoCell info={currentNetConsumption} header="Forbruk" large />
+          <TellulfInfoCell
+            info={this.props.realtimePower.calculatedConsumption}
+            header="Faktureres"
+            large
+            colorIfNegative="#00FF00"
+            absoluteValue
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
           <EnergyGraph
             latitude={this.props.latitude}
             longitude={this.props.longitude}
@@ -56,6 +79,8 @@ class Solceller extends React.PureComponent<Props, {}> {
             currentSolarProduction={this.props.currentSolarProduction}
             currentNetConsumption={currentNetConsumption}
           />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <TallPanel
             currentSolarProduction={this.props.currentSolarProduction}
             max={this.props.max}
