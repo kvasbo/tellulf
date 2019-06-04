@@ -1,13 +1,11 @@
 import React from 'react';
 import Moment from 'moment';
 import { Event } from '../types/calendar';
+import './kalender.css';
 
 const style = {
-  backgroundColor: '#222222',
-  margin: 5,
-  padding: 5,
-  paddingLeft: 10,
-  borderRadius: '0.5vw',
+  margin: 10,
+  marginBottom: 0,
 };
 
 function fullDayFormats() {
@@ -68,7 +66,7 @@ interface Props {
 class HendelseMedTid extends React.PureComponent<Props, {}> {
   public render() {
     return (
-      <div style={style}>
+      <div className="kalenderSubInfo">
         <div>{this.props.data.name}</div>
         <div>{getTimeString(this.props.data)}</div>
       </div>

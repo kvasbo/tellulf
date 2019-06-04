@@ -1,10 +1,13 @@
 import React from 'react';
 import Moment from 'moment';
+import uniqBy from 'lodash/uniqBy';
+import sortBy from 'lodash/sortBy';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
+import GraphLong from '../weather/GraphLong';
 import { Event, EventDataSet } from '../types/calendar';
-import { Style } from '../types/generic';
 import './kalender.css';
+import { WeatherForAPlace } from '../types/weather';
 
 interface Props {
   dinner: EventDataSet;
@@ -12,12 +15,8 @@ interface Props {
   events: EventDataSet;
   date: string;
   weatherAsGraph: boolean;
+  weather?: WeatherForAPlace;
 }
-
-const subInfoStyle: Style = {
-  margin: 5,
-  paddingLeft: 10,
-};
 
 function getDayHeader(date: Moment.Moment) {
   return date.format('dddd D. MMM');
@@ -32,7 +31,7 @@ class Dag extends React.PureComponent<Props, {}> {
     try {
       if (!this.props.dinner || !this.props.dinner.events) return null;
       return (
-        <div style={{ ...subInfoStyle }}>
+        <div className="kalenderSubInfo">
           <img
             src="dinner.png"
             width={15}
@@ -65,7 +64,7 @@ class Dag extends React.PureComponent<Props, {}> {
           name = `${name} (${age})`;
         }
         out.push(
-          <div style={{ ...subInfoStyle }} key={b.id}>
+          <div className="kalenderSubInfo" key={b.id}>
             <img
               src="kake.png"
               width={15}
@@ -107,16 +106,50 @@ class Dag extends React.PureComponent<Props, {}> {
     return out;
   }
 
+  private getWeather(date: Moment.Moment) {
+    if (!this.props.weather) return null;
+    const now = Moment();
+    const from = Moment(date).startOf('day');
+    const to = Moment(date)
+      .add(1, 'day')
+      .startOf('day');
+    const daysDiff = from.diff(now, 'days');
+    const weatherFiltered = Object.values(this.props.weather.long).filter(w => {
+      return Moment(w.time).isBetween(from, to, undefined, '[]');
+    });
+    const weatherUnique = uniqBy(weatherFiltered, 'time');
+    const weatherSorted = sortBy(weatherUnique, 'time');
+    if (daysDiff > 5) return null;
+    return (
+      <GraphLong
+        weatherLong={this.props.weather.long}
+        weather={weatherSorted}
+        limits={this.props.weather.limits}
+        from={from}
+        to={to}
+      />
+    );
+  }
+
   public render() {
     const now = Moment();
     const day = Moment(this.props.date);
     const today = now.isSame(day, 'day');
+    const dayDiff = now.diff(day, 'days');
     return (
       <div className="kalenderDag">
-        <div className="kalenderDato">{getDayHeader(day)}</div>
-        {this.getDinner()}
-        {this.getBirthdays()}
-        {this.getEvents()}
+        <div
+          className="kalenderDato"
+          style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
+        >
+          {getDayHeader(day)}
+        </div>
+        <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>{this.getWeather(day)}</div>
+        <div style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '2 / 4' }}>
+          {this.getBirthdays()}
+          {this.getDinner()}
+          {this.getEvents()}
+        </div>
       </div>
     );
   }

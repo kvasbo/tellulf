@@ -1,12 +1,14 @@
 export interface WeatherStore {
-  [s: string]: {
-    weather: {} | undefined;
-    long: {};
-    limits: WeatherLimits;
-    lat: number | undefined;
-    lon: number | undefined;
-    todayMinMax: { min: number | null; max: number | null };
-  };
+  [s: string]: WeatherForAPlace;
+}
+
+export interface WeatherForAPlace {
+  weather: WeatherDataSet;
+  long: WeatherDataSet;
+  limits: WeatherLimits;
+  lat: number | undefined;
+  lon: number | undefined;
+  todayMinMax: { min: number | null; max: number | null };
 }
 
 export interface WeatherData {

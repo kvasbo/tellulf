@@ -28,17 +28,6 @@ class Yr extends React.PureComponent<Props, State> {
     this.state = { sted: 'oslo' };
   }
 
-  public componentDidMount() {
-    setTimeout(() => {
-      this.updateWeather();
-    }, 1500);
-  }
-
-  private updateWeather() {
-    const { lat, long } = steder[this.state.sted];
-    this.props.dispatch(fetchWeather(lat, long, this.state.sted));
-  }
-
   private stedEndra(e: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ sted: e.currentTarget.value });
     const { lat, long } = steder[e.currentTarget.value];
@@ -50,10 +39,6 @@ class Yr extends React.PureComponent<Props, State> {
     if (!this.props.weather['oslo']) return null;
     return (
       <div className="yr-container">
-        <GraphLong
-          weatherLong={this.props.weather['oslo'].long}
-          limits={this.props.weather['oslo'].limits}
-        />
         <div
           style={{
             display: 'flex',
@@ -96,7 +81,6 @@ class Yr extends React.PureComponent<Props, State> {
 const mapStateToProps = (state: AppStore) => {
   return {
     weather: state.Weather,
-    limits: state.Weather,
   };
 };
 

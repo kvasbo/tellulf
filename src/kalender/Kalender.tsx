@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import Yr from '../weather/Yr';
 import Dag from './Dag';
+
 import { primeDays, getIcal, getDayKeys } from './kalenderHelpers';
 import { EventDataSet } from '../types/calendar';
 import { AppStore } from '../redux/reducers';
+import { WeatherStore } from '../types/weather';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -37,8 +39,12 @@ interface State {
   };
 }
 
-class Kalender extends React.PureComponent<{}, State> {
-  public constructor(props: {}) {
+interface Props {
+  weather: WeatherStore;
+}
+
+class Kalender extends React.PureComponent<Props, State> {
+  public constructor(props: Props) {
     super(props);
     this.state = {
       kalenderData: { ...primeDays(0) },
@@ -59,9 +65,19 @@ class Kalender extends React.PureComponent<{}, State> {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
+      const weather = this.props.weather['oslo'] ? this.props.weather['oslo'] : undefined;
 
       if (cald || birthdays || dinners) {
-        out.push(<Dag key={d} date={d} events={cald} dinner={dinners} birthdays={birthdays} />);
+        out.push(
+          <Dag
+            key={d}
+            date={d}
+            events={cald}
+            dinner={dinners}
+            birthdays={birthdays}
+            weather={weather}
+          />,
+        );
       }
     });
     return out;
