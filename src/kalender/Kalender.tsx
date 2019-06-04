@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+// import Yr from '../weather/Yr';
 import Dag from './Dag';
 import { primeDays, getIcal, getDayKeys } from './kalenderHelpers';
 import { EventDataSet } from '../types/calendar';
+import { AppStore } from '../redux/reducers';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -81,4 +84,10 @@ class Kalender extends React.PureComponent<{}, State> {
   }
 }
 
-export default Kalender;
+function mapStateToProps(state: AppStore) {
+  return {
+    weather: state.Weather,
+  };
+}
+
+export default connect(mapStateToProps)(Kalender);

@@ -1,3 +1,4 @@
+import { Action } from 'redux';
 import { UPDATE_SOLAR_CURRENT, UPDATE_SOLAR_MAX } from './actions';
 import { SolarState } from '../types/solar';
 import Moment from 'moment';
@@ -23,10 +24,16 @@ const initialState: SolarState = {
   },
 };
 
+interface KnownAction {
+  type: string;
+  data: object;
+}
+
 export default function Solar(
   state: SolarState = initialState,
-  action: { type: string; data: object },
+  incomingAction: Action,
 ): SolarState {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_SOLAR_MAX: {
       return { ...state, max: { ...state.max, ...action.data } };

@@ -1,4 +1,5 @@
 import { NETATMO_UPDATE } from './actions';
+import { Action } from 'redux';
 
 export interface NetatmoStore {
   co2: number;
@@ -20,10 +21,16 @@ const initialState: NetatmoStore = {
   updatedNice: '',
 };
 
+interface KnownAction {
+  type: string;
+  data: NetatmoStore;
+}
+
 export default function Netatmo(
   state: NetatmoStore = initialState,
-  action: { type: string; data: NetatmoStore },
+  incomingAction: Action,
 ): NetatmoStore {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case NETATMO_UPDATE: {
       return { ...state, ...action.data };

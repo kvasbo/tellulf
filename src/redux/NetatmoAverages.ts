@@ -1,5 +1,5 @@
 import { NETATMO_UPDATE_AVERAGES } from './actions';
-
+import { Action } from 'redux';
 export interface NetatmoAverageData {
   humidity: number;
   pressure: number;
@@ -14,10 +14,16 @@ const initState: NetatmoAverageData = {
   time: 0,
 };
 
+interface KnownAction {
+  type: string;
+  data: NetatmoAverageData;
+}
+
 export default function NetatmoAverages(
   state = initState,
-  action: { type: string; data: NetatmoAverageData },
+  incomingAction: Action,
 ): NetatmoAverageData {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case NETATMO_UPDATE_AVERAGES: {
       try {

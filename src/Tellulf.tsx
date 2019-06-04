@@ -3,19 +3,24 @@ import { connect } from 'react-redux';
 import Moment from 'moment';
 import Solceller from './solceller/Solceller';
 import firebase from './firebase';
-import Yr from './weather/Yr';
+// import Yr from './weather/Yr';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Klokke from './Klokke';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
-import { fetchTrains } from './redux/actions';
+import { fetchTrains, fetchWeather } from './redux/actions';
 import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
 import { NetatmoAverageData } from './redux/NetatmoAverages';
 
 // Todo: Flytte listeners ut i egen tråd!
+
+const steder = {
+  oslo: { lat: 59.9409, long: 10.6991 },
+  sandefjord: { lat: 59.1347624, long: 10.3250789 },
+};
 
 interface Props {
   dispatch: Function;
@@ -36,6 +41,8 @@ class Tellulf extends React.PureComponent<Props, {}> {
     this.attachNetatmoListener();
     setInterval(this.doLoadData, 1000);
     this.doLoadData(true);
+    this.updateWeather();
+    setInterval(this.updateWeather, 60 * 1000 * 15);
   }
 
   private attachNetatmoListener() {
@@ -53,6 +60,12 @@ class Tellulf extends React.PureComponent<Props, {}> {
         this.props.dispatch(updateNetatmoAverages(data));
       }
     });
+  }
+
+  private updateWeather() {
+    // const { lat, long } = steder[this.state.sted];
+    this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
+    this.props.dispatch(fetchWeather(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'));
   }
 
   private startReloadLoop() {

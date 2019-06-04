@@ -41,12 +41,13 @@ export function updateTrains(trains: TrainDataSet) {
   };
 }
 
-export function updateWeather(data: WeatherDataSet, lat: number, lon: number) {
+export function updateWeather(data: WeatherDataSet, lat: number, lon: number, sted: string) {
   return {
     type: UPDATE_WEATHER,
     data,
     lat,
     lon,
+    sted,
   };
 }
 
@@ -119,8 +120,10 @@ export function fetchTrains(station: string, direction: string) {
   };
 }
 
-export function fetchWeather(lat: number, lon: number) {
+export function fetchWeather(lat: number, lon: number, sted: string) {
   return (dispatch: Function) => {
-    return getWeatherFromYr(lat, lon).then(weather => dispatch(updateWeather(weather, lat, lon)));
+    return getWeatherFromYr(lat, lon).then(weather =>
+      dispatch(updateWeather(weather, lat, lon, sted)),
+    );
   };
 }

@@ -1,43 +1,40 @@
 import Moment from 'moment';
+import { Action } from 'redux';
 import { UPDATE_WEATHER } from './actions';
 import { parseLimits } from '../weather/updateWeather';
-import { WeatherData, WeatherTodayMinMax, WeatherDataSet } from '../types/weather';
+import {
+  WeatherData,
+  WeatherTodayMinMax,
+  WeatherDataSet,
+  WeatherStore,
+  WeatherLimits,
+} from '../types/weather';
 
-interface State {
-  weather: {} | undefined;
-  long: {};
-  limits: {} | undefined;
-  lat: number | undefined;
-  lon: number | undefined;
-  todayMinMax: { min: number | null; max: number | null };
+const initialState: WeatherStore = {};
+
+interface KnownAction {
+  type: string;
+  data: { weather: WeatherData[]; long: WeatherData; todayMinMax: WeatherTodayMinMax };
+  lat: number;
+  lon: number;
+  sted: string;
+  limits: WeatherLimits;
 }
 
-const initialState = {
-  weather: {},
-  long: {},
-  limits: undefined,
-  lat: undefined,
-  lon: undefined,
-  todayMinMax: { min: null, max: null },
-};
-
 export default function Weather(
-  state: State = initialState,
-  action: {
-    type: string;
-    data: { weather: WeatherData[]; long: WeatherData; todayMinMax: WeatherTodayMinMax };
-    lat: number;
-    lon: number;
-  },
-) {
+  state: WeatherStore = initialState,
+  incomingAction: Action,
+): WeatherStore {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_WEATHER: {
       const from = Moment().startOf('day');
       const to = Moment()
         .add(3, 'day')
         .startOf('day');
+      const existing = state[action.sted] ? state[action.sted] : {};
       const toFilter = Object.values({
-        ...(state.weather as WeatherData),
+        ...existing,
         ...(action.data.weather as WeatherData[]),
       });
 
@@ -53,8 +50,8 @@ export default function Weather(
         newWeather[w['time']] = w;
         return true;
       });
-      return {
-        ...state,
+      const newState: WeatherStore = { ...state };
+      newState[action.sted] = {
         lat: action.lat,
         lon: action.lon,
         weather: newWeather,
@@ -62,6 +59,7 @@ export default function Weather(
         todayMinMax: action.data.todayMinMax,
         limits: parseLimits(action.data.weather, action.lat, action.lon),
       };
+      return newState;
     }
     default:
       return state;

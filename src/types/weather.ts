@@ -1,10 +1,12 @@
 export interface WeatherStore {
-  weather: WeatherDataSet;
-  long: WeatherDataSet;
-  lat: number;
-  lon: number;
-  limits: WeatherLimits;
-  todayMinMax: WeatherTodayMinMax;
+  [s: string]: {
+    weather: {} | undefined;
+    long: {};
+    limits: WeatherLimits;
+    lat: number | undefined;
+    lon: number | undefined;
+    todayMinMax: { min: number | null; max: number | null };
+  };
 }
 
 export interface WeatherData {
@@ -37,7 +39,7 @@ export interface WeatherLimits {
   maxTempTime: number;
   minTemp: number;
   minTempTime: number;
-  ticks: [];
+  ticks: number[];
   sunrise: number;
   sunset: number;
   diffRise: number;

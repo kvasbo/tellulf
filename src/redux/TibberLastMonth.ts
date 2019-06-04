@@ -1,12 +1,16 @@
 import Moment from 'moment';
+import { Action } from 'redux';
 import { UPDATE_TIBBER_POWER_USAGE } from './actions';
 
 import { TibberUsageAPIData, TibberUsageState } from '../types/tibber';
 
-export default function TibberLastDay(
-  state = {},
-  action: { type: string; data: [TibberUsageAPIData] },
-): TibberUsageState {
+interface KnownAction {
+  type: string;
+  data: [TibberUsageAPIData];
+}
+
+export default function TibberLastDay(state = {}, incomingAction: Action): TibberUsageState {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_TIBBER_POWER_USAGE: {
       const now = Moment();

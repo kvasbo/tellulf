@@ -1,5 +1,6 @@
 import { UPDATE_TIBBER_REALTIME_CONSUMPTION } from './actions';
 import Moment from 'moment';
+import { Action } from 'redux';
 import { TibberRealtimeState, TibberRealtimeData } from '../types/tibber';
 
 const defaultState: TibberRealtimeState = {
@@ -32,10 +33,15 @@ interface PowerMinute {
   samples: number;
 }
 
+interface KnownAction {
+  type: string;
+  data: TibberRealtimeData;
+}
 export default function TibberRealTime(
   state: TibberRealtimeState = defaultState,
-  action: { type: string; data: TibberRealtimeData },
+  incomingAction: Action,
 ) {
+  const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {
       const {

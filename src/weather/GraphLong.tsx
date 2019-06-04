@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import Moment from 'moment';
@@ -18,7 +17,6 @@ import {
 import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
-import { AppStore } from '../redux/reducers';
 import { WeatherLimits, WeatherDataSet, WeatherData } from '../types/weather';
 import { getDayColor, getTicks, formatTick } from './weatherHelpers';
 import './yr.css';
@@ -274,11 +272,4 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: AppStore) => {
-  return {
-    weatherLong: state.Weather.long,
-    limits: state.Weather.limits,
-  };
-};
-
-export default connect(mapStateToProps)(GraphLong);
+export default GraphLong;

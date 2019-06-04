@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { AppStore } from '../redux/reducers';
 import { fetchWeather } from '../redux/actions';
+import { WeatherStore } from '../types/weather';
 import GraphLong from './GraphLong';
 import './yr.css';
 
@@ -11,6 +13,7 @@ const steder = {
 
 interface Props {
   dispatch: Function;
+  weather: WeatherStore;
 }
 
 interface State {
@@ -33,20 +36,24 @@ class Yr extends React.PureComponent<Props, State> {
 
   private updateWeather() {
     const { lat, long } = steder[this.state.sted];
-    this.props.dispatch(fetchWeather(lat, long));
+    this.props.dispatch(fetchWeather(lat, long, this.state.sted));
   }
 
   private stedEndra(e: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ sted: e.currentTarget.value });
     const { lat, long } = steder[e.currentTarget.value];
-    this.props.dispatch(fetchWeather(lat, long));
+    this.props.dispatch(fetchWeather(lat, long, e.currentTarget.value));
   }
 
   // Stays on
   public render() {
+    if (!this.props.weather['oslo']) return null;
     return (
       <div className="yr-container">
-        <GraphLong />
+        <GraphLong
+          weatherLong={this.props.weather['oslo'].long}
+          limits={this.props.weather['oslo'].limits}
+        />
         <div
           style={{
             display: 'flex',
@@ -86,4 +93,11 @@ class Yr extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect()(Yr);
+const mapStateToProps = (state: AppStore) => {
+  return {
+    weather: state.Weather,
+    limits: state.Weather,
+  };
+};
+
+export default connect(mapStateToProps)(Yr);
