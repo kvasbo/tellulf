@@ -42,7 +42,7 @@ class Tellulf extends React.PureComponent<Props, {}> {
     setInterval(this.doLoadData, 1000);
     this.doLoadData(true);
     this.updateWeather();
-    setInterval(this.updateWeather, 60 * 1000 * 15);
+    setInterval(() => this.updateWeather(), 60 * 1000 * 15);
   }
 
   private attachNetatmoListener() {
@@ -64,8 +64,15 @@ class Tellulf extends React.PureComponent<Props, {}> {
 
   private updateWeather() {
     // const { lat, long } = steder[this.state.sted];
-    this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
-    this.props.dispatch(fetchWeather(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'));
+    try {
+      this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
+      this.props.dispatch(
+        fetchWeather(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+    }
   }
 
   private startReloadLoop() {
