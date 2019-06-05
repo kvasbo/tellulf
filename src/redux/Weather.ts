@@ -14,7 +14,7 @@ const initialState: WeatherStore = {};
 
 interface KnownAction {
   type: string;
-  data: { weather: WeatherData[]; long: WeatherData; todayMinMax: WeatherTodayMinMax };
+  data: { long: WeatherData; todayMinMax: WeatherTodayMinMax };
   lat: number;
   lon: number;
   sted: string;
@@ -35,7 +35,6 @@ export default function Weather(
       const existing = state[action.sted] ? state[action.sted] : {};
       const toFilter = Object.values({
         ...existing,
-        ...(action.data.weather as WeatherData[]),
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,10 +53,9 @@ export default function Weather(
       newState[action.sted] = {
         lat: action.lat,
         lon: action.lon,
-        weather: newWeather,
         long: { ...action.data.long },
         todayMinMax: action.data.todayMinMax,
-        limits: parseLimits(action.data.weather, action.lat, action.lon),
+        limits: parseLimits(Object.values(action.data.long), action.lat, action.lon),
       };
       return newState;
     }

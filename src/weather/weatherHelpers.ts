@@ -68,41 +68,6 @@ export function createKeyBasedOnStamps(from: string, to: string) {
   return key;
 }
 
-export function initWeather(): WeatherDataSet {
-  const out: WeatherDataSet = {};
-  const { start, end } = getTimeLimits(3);
-  while (start.isSameOrBefore(end)) {
-    const time = start.valueOf();
-    const from = Moment(start);
-    const to = Moment(from).add(1, 'hours');
-    const key = createKeyBasedOnStamps(from.toISOString(), to.toISOString());
-    const d: WeatherData = {
-      temp: 0,
-      rain: 0,
-      rainMin: 0,
-      rainMax: 0,
-      clouds: 0,
-      wind: 0,
-      symbol: 'blank',
-      sunHeight: 0,
-      time,
-    };
-    out[key] = d;
-    start.add(1, 'hours');
-  }
-
-  // Load localstore if applicable, and write to output item if applicable
-  const fromStore = store.get(`weather_${localStorageKey}`);
-  if (fromStore) {
-    Object.keys(fromStore).forEach(k => {
-      if (out[k]) {
-        out[k] = { ...out[k], ...fromStore[k] };
-      }
-    });
-  }
-  return out;
-}
-
 export function initWeatherLong(): WeatherDataSet {
   const spanToUseInHours = 6;
   const out: WeatherDataSet = {};
@@ -119,14 +84,17 @@ export function initWeatherLong(): WeatherDataSet {
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
     const d: WeatherData = {
-      temp: 0,
-      rain: 0,
-      rainMin: 0,
-      rainMax: 0,
-      clouds: 0,
-      wind: 0,
+      from: 0,
+      to: 0,
+      temp: null,
+      minTemp: null,
+      maxTemp: null,
+      rain: null,
+      rainMin: null,
+      rainMax: null,
       symbol: 'blank',
-      sunHeight: 0,
+      symbolNumber: 0,
+      sunHeight: null,
       time: midTime.valueOf(),
     };
     out[key] = d;

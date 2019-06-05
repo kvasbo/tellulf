@@ -4,7 +4,6 @@ import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import {
   getSunMeta,
-  initWeather,
   initWeatherLong,
   getTimeLimits,
   createKeyBasedOnStamps,
@@ -17,13 +16,11 @@ import {
   WeatherDataSet,
   WeatherAPIData,
   WeatherAPIDataPeriod,
-  WeatherAPIDataSinglePoint,
 } from '../types/weather';
 
 export const localStorageKey = '5';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
-  const weatherOut: WeatherDataSet = initWeather();
   const { start, end } = getTimeLimits(7);
   const now = Moment();
 
@@ -76,7 +73,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     const minTemp = Number(s.location.minTemperature.value);
     const maxTemp = Number(s.location.maxTemperature.value);
     const temp = Math.round((minTemp + maxTemp) / 2);
-    const out = {
+    const out: WeatherData = {
       from,
       to,
       fromNice,
@@ -89,58 +86,14 @@ export default async function getWeatherFromYr(lat: number, long: number) {
       rainMin,
       symbol,
       symbolNumber,
+      sunHeight: null,
     };
     sixesOut[key] = out;
   });
 
-  const singlePoints = parsed.product.time.filter((d: WeatherAPIDataSinglePoint) => {
-    if (d.from !== d.to) return false;
-    const from = Moment(d.from);
-    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-    return false;
-  });
-
-  singlePoints.forEach((p: WeatherAPIDataSinglePoint) => {
-    const time = Moment(p.from);
-    // Fake an hour!
-    const to = Moment(p.from).add(1, 'hours');
-    const key = createKeyBasedOnStamps(time.toISOString(), to.toISOString());
-    if (key in weatherOut) {
-      weatherOut[key].temp = p.location.temperature.value * 1;
-      const clouds = (p.location.cloudiness.percent * 1) / 100;
-      weatherOut[key].clouds = clouds;
-      weatherOut[key].cloudsNeg = 1 - clouds;
-      weatherOut[key].wind = Number(p.location.windSpeed.mps);
-      weatherOut[key].time = time.valueOf();
-    }
-  });
-
-  const hours = parsed.product.time.filter((d: WeatherAPIDataPeriod) => {
-    const from = Moment(d.from);
-    const to = Moment(d.to);
-    if (!(to.diff(from, 'hours') === 1)) return false;
-    if (from.isSameOrAfter(start) && from.isSameOrBefore(end)) return true;
-    return false;
-  });
-
-  hours.forEach((p: WeatherAPIDataPeriod) => {
-    // console.log(p);
-    const time = Moment(p.from);
-    // const key = time.valueOf();
-    const key = createKeyBasedOnStamps(p.from, p.to);
-    if (key in weatherOut) {
-      weatherOut[key].time = time.valueOf();
-      weatherOut[key].rain = Number(p.location.precipitation.value);
-      weatherOut[key].rainMin = Number(p.location.precipitation.minvalue);
-      weatherOut[key].rainMax = Number(p.location.precipitation.maxvalue);
-      weatherOut[key].symbol = p.location.symbol.id;
-      weatherOut[key].symbolNumber = p.location.symbol.number;
-    }
-  });
-
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
-  Object.values(weatherOut).forEach(p => {
+  Object.values(sixesOut).forEach(p => {
     const d = p as WeatherData;
     if (!d) return;
     const time = Moment(d.time);
@@ -150,17 +103,16 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Overwrite cache
-  storeToLocalStore(`weather_${localStorageKey}`, weatherOut, start, end);
   storeToLocalStore(`weatherLong_${localStorageKey}`, sixesOut, start, end);
 
-  return { weather: weatherOut, long: sixesOut, todayMinMax };
+  return { long: sixesOut, todayMinMax };
 }
 
 export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {
-  const dataArray: WeatherData[] = Object.values(data);
+  // const dataArray: WeatherData[] = Object.values(data);
   const sunData = getSunMeta(lat, long);
 
-  if (dataArray.length === 0) {
+  if (data.length === 0) {
     return {
       lowerRange: 0,
       upperRange: 30,
@@ -174,13 +126,13 @@ export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: nu
       ...sunData,
     };
   }
-  const maxRainPoint: WeatherData | undefined = maxBy(dataArray, 'rainMax');
+  const maxRainPoint: WeatherData | undefined = maxBy(data, 'rainMax');
   const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
   const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
-  const maxTempPoint: WeatherData | undefined = maxBy(dataArray, 'temp');
+  const maxTempPoint: WeatherData | undefined = maxBy(data, 'temp');
   const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
   const maxTempTime = maxTempPoint ? maxTempPoint.time : 0;
-  const minTempPoint: WeatherData | undefined = minBy(dataArray, 'temp');
+  const minTempPoint: WeatherData | undefined = minBy(data, 'temp');
   const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
   const minTempTime = minTempPoint ? minTempPoint.time : 0;
 

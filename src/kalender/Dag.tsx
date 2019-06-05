@@ -7,7 +7,7 @@ import HendelseMedTid from './HendelseMedTid';
 import GraphLong from '../weather/GraphLong';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { WeatherForAPlace } from '../types/weather';
+import { WeatherForAPlace, WeatherData } from '../types/weather';
 
 interface Props {
   dinner: EventDataSet;
@@ -118,7 +118,7 @@ class Dag extends React.PureComponent<Props, {}> {
       return Moment(w.time).isBetween(from, to, undefined, '[]');
     });
     const weatherUnique = uniqBy(weatherFiltered, 'time');
-    const weatherSorted = sortBy(weatherUnique, 'time');
+    const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
     if (daysDiff > 5) return null;
     return (
       <GraphLong

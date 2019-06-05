@@ -3,7 +3,6 @@ export interface WeatherStore {
 }
 
 export interface WeatherForAPlace {
-  weather: WeatherDataSet;
   long: WeatherDataSet;
   limits: WeatherLimits;
   lat: number | undefined;
@@ -12,15 +11,19 @@ export interface WeatherForAPlace {
 }
 
 export interface WeatherData {
-  temp: number;
-  rain: number;
-  rainMin: number;
-  rainMax: number;
-  clouds: number;
-  wind: number;
-  symbol: string;
-  sunHeight: number;
+  from: number;
+  fromNice?: string;
+  to: number;
   time: number;
+  temp: number | null;
+  rain: number | null;
+  rainMin: number | null;
+  rainMax: number | null;
+  symbol: string;
+  symbolNumber: number;
+  sunHeight: number | null;
+  minTemp: number | null;
+  maxTemp: number | null;
 }
 
 export interface WeatherTodayMinMax {
@@ -72,20 +75,6 @@ export interface WeatherAPIDataPeriod extends WeatherAPIData {
     symbol: {
       id: string;
       number: number;
-    };
-  };
-}
-
-export interface WeatherAPIDataSinglePoint extends WeatherAPIData {
-  location: {
-    temperature: {
-      value: number;
-    };
-    cloudiness: {
-      percent: number;
-    };
-    windSpeed: {
-      mps: number;
     };
   };
 }
