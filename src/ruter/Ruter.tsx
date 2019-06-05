@@ -1,7 +1,7 @@
 import React from 'react';
 import Moment from 'moment';
 import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
-import './ruter.css';
+import './tog.css';
 
 interface Props {
   trains: TrainDataSet;

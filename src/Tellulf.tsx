@@ -97,7 +97,16 @@ class Tellulf extends React.PureComponent<Props, {}> {
   public render() {
     return (
       <div className="grid">
-        <div style={{ gridColumn: '2 / 3', gridRow: '1 / 2' }} className="block">
+        <div
+          style={{
+            gridColumn: '2 / 3',
+            gridRow: '1 / 2',
+            display: 'flex',
+            justifyItems: 'space-evenly',
+            alignContent: 'center',
+          }}
+          className="block"
+        >
           <Klokke temp={this.props.temperature} />
         </div>
         <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
