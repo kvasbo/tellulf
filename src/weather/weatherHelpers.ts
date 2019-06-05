@@ -84,17 +84,17 @@ export function initWeatherLong(): WeatherDataSet {
     const diff = endTime.diff(startTime, 'hours');
     const midTime = startTime.add(diff / 2, 'hours');
     const d: WeatherData = {
-      from: 0,
-      to: 0,
-      temp: null,
-      minTemp: null,
-      maxTemp: null,
-      rain: null,
-      rainMin: null,
-      rainMax: null,
+      from: startTime.valueOf(),
+      to: endTime.valueOf(),
+      temp: -999,
+      minTemp: -999,
+      maxTemp: -999,
+      rain: 0,
+      rainMin: 0,
+      rainMax: 0,
       symbol: 'blank',
       symbolNumber: 0,
-      sunHeight: null,
+      sunHeight: 0,
       time: midTime.valueOf(),
     };
     out[key] = d;

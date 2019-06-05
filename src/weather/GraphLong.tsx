@@ -67,24 +67,14 @@ class GraphLong extends React.PureComponent<Props, State> {
       return null;
     }
     //const tdata = this.props.weather;
-    const data = this.getData();
+    //onst data = this.getData();
+    const data = this.props.weather;
+    // console.log('data', data);
+    //console.log('tdata', tdata);
+
     const limits = parseLimits(data);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
-    /*
-    const divider1m = Moment(this.props.from)
-      .startOf('day')
-      .add(6, 'hours');
-    const divider2m = Moment(this.props.from)
-      .startOf('day')
-      .add(12, 'hours');
-    const divider3m = Moment(this.props.from)
-      .startOf('day')
-      .add(18, 'hours');
-    const divider1 = divider1m.valueOf();
-    const divider2 = divider2m.valueOf();
-    const divider3 = divider3m.valueOf();
-    */
     return (
       <ResponsiveContainer height={200} width="100%">
         <ComposedChart
@@ -114,8 +104,6 @@ class GraphLong extends React.PureComponent<Props, State> {
             domain={[limits.lowerRange, limits.upperRange]}
             hide
           />
-          <YAxis yAxisId="wind" type="number" ticks={[null]} domain={[0, 50]} hide />
-          <YAxis yAxisId="clouds" type="number" ticks={[null]} domain={[0, 1]} hide />
           <YAxis
             width={25}
             label={{

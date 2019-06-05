@@ -7,7 +7,7 @@ export interface WeatherForAPlace {
   limits: WeatherLimits;
   lat: number | undefined;
   lon: number | undefined;
-  todayMinMax: { min: number | null; max: number | null };
+  todayMinMax: { min: number; max: number };
 }
 
 export interface WeatherData {
@@ -15,15 +15,15 @@ export interface WeatherData {
   fromNice?: string;
   to: number;
   time: number;
-  temp: number | null;
-  rain: number | null;
-  rainMin: number | null;
-  rainMax: number | null;
+  temp: number;
+  rain: number;
+  rainMin: number;
+  rainMax: number;
   symbol: string;
   symbolNumber: number;
-  sunHeight: number | null;
-  minTemp: number | null;
-  maxTemp: number | null;
+  sunHeight: number;
+  minTemp: number;
+  maxTemp: number;
 }
 
 export interface WeatherTodayMinMax {

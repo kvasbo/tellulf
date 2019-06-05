@@ -18,7 +18,7 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
-export const localStorageKey = '5';
+export const localStorageKey = '6';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(7);
@@ -86,7 +86,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
       rainMin,
       symbol,
       symbolNumber,
-      sunHeight: null,
+      sunHeight: 0,
     };
     sixesOut[key] = out;
   });
@@ -109,9 +109,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 }
 
 export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {
-  // const dataArray: WeatherData[] = Object.values(data);
   const sunData = getSunMeta(lat, long);
-
   if (data.length === 0) {
     return {
       lowerRange: 0,
