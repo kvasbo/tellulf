@@ -47,7 +47,6 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount() {
-    console.log(this.props.weather);
     setInterval(() => this.reloadTime(), 60000); // Reload time every minute
   }
 
@@ -67,10 +66,8 @@ class GraphLong extends React.PureComponent<Props, State> {
     if (!this.props.weatherLong || !this.props.limits) {
       return null;
     }
-    const tdata = this.props.weather;
+    //const tdata = this.props.weather;
     const data = this.getData();
-    console.log('propsdata', tdata);
-    console.log('propsdata', this.props.weather);
     const limits = parseLimits(data);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();

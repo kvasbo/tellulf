@@ -132,10 +132,10 @@ class Dag extends React.PureComponent<Props, {}> {
   }
 
   public render() {
-    const now = Moment();
+    // const now = Moment();
     const day = Moment(this.props.date);
-    const today = now.isSame(day, 'day');
-    const dayDiff = now.diff(day, 'days');
+    //const today = now.isSame(day, 'day');
+    //const dayDiff = now.diff(day, 'days');
     return (
       <div className="kalenderDag">
         <div

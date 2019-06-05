@@ -3,11 +3,6 @@ import Moment from 'moment';
 import { Event } from '../types/calendar';
 import './kalender.css';
 
-const style = {
-  margin: 10,
-  marginBottom: 0,
-};
-
 function fullDayFormats() {
   return {
     lastWeek: 'dddd DD.',

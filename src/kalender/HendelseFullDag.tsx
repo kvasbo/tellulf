@@ -3,11 +3,6 @@ import { getTimeString } from './HendelseMedTid';
 import { Event } from '../types/calendar';
 import './kalender.css';
 
-const style = {
-  margin: 5,
-  marginBottom: 0,
-};
-
 interface Props {
   data: Event;
 }
