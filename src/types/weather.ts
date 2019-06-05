@@ -21,9 +21,8 @@ export interface WeatherData {
   rainMax: number | null;
   symbol: string;
   symbolNumber: number;
-  sunHeight: number | null;
-  minTemp: number | null;
-  maxTemp: number | null;
+  // minTemp: number | null;
+  // maxTemp: number | null;
 }
 
 export interface WeatherTodayMinMax {
@@ -58,23 +57,23 @@ export interface WeatherAPIData {
 
 export interface WeatherAPIDataPeriod extends WeatherAPIData {
   location: {
-    precipitation: {
-      value: number;
-      maxvalue: number;
-      minvalue: number;
+    precipitation?: {
+      value: string;
+      maxvalue: string;
+      minvalue: string;
     };
-    temperature: {
-      value: number;
+    temperature?: {
+      value: string;
     };
-    minTemperature: {
-      value: number;
+    minTemperature?: {
+      value: string;
     };
-    maxTemperature: {
-      value: number;
+    maxTemperature?: {
+      value: string;
     };
-    symbol: {
+    symbol?: {
       id: string;
-      number: number;
+      number: string;
     };
   };
 }

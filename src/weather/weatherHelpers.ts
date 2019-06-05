@@ -80,14 +80,11 @@ export function getDefaultWeatherDataSet(
     from: startTime.valueOf(),
     to: endTime.valueOf(),
     temp: null,
-    minTemp: null,
-    maxTemp: null,
     rain: null,
     rainMin: null,
     rainMax: null,
     symbol: 'blank',
     symbolNumber: 0,
-    sunHeight: null,
     time: midTime.valueOf(),
   };
 }

@@ -67,6 +67,7 @@ class GraphLong extends React.PureComponent<Props, State> {
       return null;
     }
     const data = this.props.weather;
+    if (data.length === 0) return null;
     const limits = parseLimits(data);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
