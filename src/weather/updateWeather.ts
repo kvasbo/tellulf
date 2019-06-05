@@ -18,7 +18,7 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
-export const localStorageKey = '6';
+export const localStorageKey = '7';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(7);

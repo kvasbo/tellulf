@@ -68,6 +68,29 @@ export function createKeyBasedOnStamps(from: string, to: string) {
   return key;
 }
 
+// Populate a default weather data set
+export function getDefaultWeatherDataSet(
+  startTime: Moment.Moment,
+  endTime: Moment.Moment,
+): WeatherData {
+  const diff = endTime.diff(startTime, 'hours');
+  const midTime = startTime.add(Math.round(diff / 2), 'hours');
+  return {
+    from: startTime.valueOf(),
+    to: endTime.valueOf(),
+    temp: null,
+    minTemp: null,
+    maxTemp: null,
+    rain: null,
+    rainMin: null,
+    rainMax: null,
+    symbol: 'blank',
+    symbolNumber: 0,
+    sunHeight: null,
+    time: midTime.valueOf(),
+  };
+}
+
 export function initWeatherLong(): WeatherDataSet {
   const spanToUseInHours = 6;
   const out: WeatherDataSet = {};
@@ -81,22 +104,7 @@ export function initWeatherLong(): WeatherDataSet {
     const startTime = Moment(time);
     const endTime = Moment(time).add(spanToUseInHours, 'hours');
     const key = createKeyBasedOnStamps(startTime.toISOString(), endTime.toISOString());
-    const diff = endTime.diff(startTime, 'hours');
-    const midTime = startTime.add(diff / 2, 'hours');
-    const d: WeatherData = {
-      from: startTime.valueOf(),
-      to: endTime.valueOf(),
-      temp: -999,
-      minTemp: -999,
-      maxTemp: -999,
-      rain: 0,
-      rainMin: 0,
-      rainMax: 0,
-      symbol: 'blank',
-      symbolNumber: 0,
-      sunHeight: 0,
-      time: midTime.valueOf(),
-    };
+    const d: WeatherData = getDefaultWeatherDataSet(startTime, endTime);
     out[key] = d;
     time.add(spanToUseInHours, 'hours');
   }

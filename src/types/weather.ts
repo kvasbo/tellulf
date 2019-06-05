@@ -15,15 +15,15 @@ export interface WeatherData {
   fromNice?: string;
   to: number;
   time: number;
-  temp: number;
-  rain: number;
-  rainMin: number;
-  rainMax: number;
+  temp: number | null;
+  rain: number | null;
+  rainMin: number | null;
+  rainMax: number | null;
   symbol: string;
   symbolNumber: number;
-  sunHeight: number;
-  minTemp: number;
-  maxTemp: number;
+  sunHeight: number | null;
+  minTemp: number | null;
+  maxTemp: number | null;
 }
 
 export interface WeatherTodayMinMax {
