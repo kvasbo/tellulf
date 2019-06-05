@@ -47,7 +47,7 @@ class Kalender extends React.PureComponent<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = {
-      kalenderData: { ...primeDays(0) },
+      kalenderData: { ...primeDays(6) },
       dinners: {},
       birthdays: {},
     };
