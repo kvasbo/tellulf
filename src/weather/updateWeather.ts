@@ -2,6 +2,7 @@ import axios from 'axios';
 import Moment from 'moment';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
+import omitBy from 'lodash/omitBy';
 import {
   getSunMeta,
   initWeatherLong,
@@ -18,11 +19,12 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
-export const localStorageKey = '7';
+export const localStorageKey = '10';
 
 export default async function getWeatherFromYr(lat: number, long: number) {
-  const { start, end } = getTimeLimits(7);
+  const { start, end } = getTimeLimits(14);
   const now = Moment();
+  const sixesOut: WeatherDataSet = initWeatherLong();
 
   const data = await axios.get(
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
@@ -43,7 +45,6 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     return false;
   });
 
-  const sixesOut: WeatherDataSet = initWeatherLong();
   sixes.forEach((s: WeatherAPIDataPeriod) => {
     const f = Moment(s.from);
     const t = Moment(s.to);
@@ -102,10 +103,17 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     if (d.temp && d.temp > todayMinMax.max) todayMinMax.max = d.temp;
   });
 
-  // Overwrite cache
-  storeToLocalStore(`weatherLong_${localStorageKey}`, sixesOut, start, end);
+  // Remove incomplete objects
+  const filteredData = omitBy(sixesOut, val => {
+    const vals = Object.values(val);
+    if (vals.indexOf(null) !== -1) return true;
+    return false;
+  });
 
-  return { long: sixesOut, todayMinMax };
+  // Overwrite cache
+  storeToLocalStore(`weatherLong_${localStorageKey}`, filteredData, start, end);
+
+  return { long: filteredData, todayMinMax };
 }
 
 export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {

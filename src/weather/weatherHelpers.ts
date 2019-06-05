@@ -5,6 +5,7 @@ import { getNorwegianDaysOff } from '../external';
 import { WeatherData, WeatherDataSet } from '../types/weather';
 import { localStorageKey } from './updateWeather';
 
+const useLocalStorage = true;
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 const gridColor = '#FFFFFFAA';
@@ -92,7 +93,7 @@ export function getDefaultWeatherDataSet(
 }
 
 export function initWeatherLong(): WeatherDataSet {
-  const spanToUseInHours = 6;
+  const spanToUseInHours = 1;
   const out: WeatherDataSet = {};
   const time = Moment()
     .utc()
@@ -111,7 +112,7 @@ export function initWeatherLong(): WeatherDataSet {
 
   // Load localstore if applicable, and write to output item if applicable
   const fromStore = store.get(`weatherLong_${localStorageKey}`);
-  if (fromStore) {
+  if (useLocalStorage && fromStore) {
     Object.keys(fromStore).forEach(k => {
       if (out[k]) {
         out[k] = { ...out[k], ...fromStore[k] };
