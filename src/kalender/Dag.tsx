@@ -113,9 +113,11 @@ class Dag extends React.PureComponent<Props, {}> {
     const to = Moment(date)
       .add(1, 'day')
       .startOf('day');
+    const filterFrom = Moment(from).subtract(12, 'hours');
+    const filterTo = Moment(to).add(12, 'hours');
     const daysDiff = from.diff(now, 'days');
     const weatherFiltered = Object.values(this.props.weather.long).filter(w => {
-      return Moment(w.time).isBetween(from, to, undefined, '[]');
+      return Moment(w.time).isBetween(filterFrom, filterTo, undefined, '[]');
     });
     const weatherUnique = uniqBy(weatherFiltered, 'time');
     const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
