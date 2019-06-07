@@ -15,10 +15,10 @@ import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
 import { WeatherData } from '../types/weather';
-import { getTicks, formatTick } from './weatherHelpers';
+import { formatTick } from './weatherHelpers';
 import './yr.css';
 
-const gridColor = '#FFFFFFAA';
+const gridColor = '#FFFFFF33';
 
 interface Props {
   weather: WeatherData[];
@@ -72,12 +72,10 @@ class GraphLong extends React.PureComponent<Props, State> {
           <XAxis
             scale="time"
             dataKey="time"
-            tickFormatter={formatTick}
-            ticks={getTicks()}
             type="number"
+            tickFormatter={formatTick}
             domain={[startTime, endTime]}
             allowDataOverflow
-            hide
           />
           <YAxis
             width={25}
@@ -104,7 +102,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             domain={[0, dataMax => Math.max(9, dataMax)]}
             hide
           />
-          {false && <CartesianGrid stroke={gridColor} strokeDasharray="1 2" vertical={false} />}
+          <CartesianGrid stroke={gridColor} vertical={false} />
           {limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
@@ -161,7 +159,8 @@ class GraphLong extends React.PureComponent<Props, State> {
             yAxisId="temp"
             type="natural"
             dataKey="temp"
-            stroke="#ffffffaa"
+            stroke="#ffffff"
+            opacity={0.5}
             strokeWidth={0.5}
             isAnimationActive={false}
           />

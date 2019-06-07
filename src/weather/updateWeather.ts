@@ -88,7 +88,7 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey: number = 0): ParseT
   const diff = t.diff(f, 'hours');
   const fromNice = f.toISOString();
   const time = Moment(f)
-    .add(diff / 2, 'hours')
+    .add(Math.floor(diff / 2), 'hours')
     .valueOf();
   const key = createKeyBasedOnStamps(f.toISOString(), t.toISOString());
   return { f, t, from, to, diff, fromNice, time, key };
@@ -170,6 +170,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     const { key, from, to, fromNice, time } = parseTime(s);
     if (!hoursOut[key]) return;
     const { rain, rainMin, rainMax } = parsePrecipitation(s);
+    const { symbol, symbolNumber } = parseSymbol(s);
     hoursOut[key] = {
       ...hoursOut[key],
       from,
@@ -179,6 +180,8 @@ export default async function getWeatherFromYr(lat: number, long: number) {
       rain,
       rainMax,
       rainMin,
+      symbol,
+      symbolNumber,
     };
   });
 
@@ -186,14 +189,12 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   points.forEach((s: WeatherAPIDataPeriod) => {
     const { key, time } = parseTime(s, 1);
     if (!hoursOut[key]) return;
-    const { symbol, symbolNumber } = parseSymbol(s);
+
     const { temp } = parseTemp(s);
     hoursOut[key] = {
       ...hoursOut[key],
       time,
       temp,
-      symbol,
-      symbolNumber,
     };
   });
 

@@ -39,9 +39,6 @@ class WeatherIcon extends React.PureComponent<Props, {}> {
   }
 
   public render() {
-    if (!this.props.cy) {
-      return null;
-    }
     return (
       <svg>
         <text
@@ -50,7 +47,7 @@ class WeatherIcon extends React.PureComponent<Props, {}> {
           textAnchor="middle"
           fontFamily="sans-serif"
           fontSize="13px"
-          fill="white"
+          fill="#ffffff99"
         >
           {this.getTemp()}
         </text>
@@ -60,7 +57,9 @@ class WeatherIcon extends React.PureComponent<Props, {}> {
           y={this.props.cy - 15}
           height="26px"
           width="26px"
+          opacity={0.6}
         />
+        )
       </svg>
     );
   }

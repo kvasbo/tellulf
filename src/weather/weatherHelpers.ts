@@ -18,18 +18,6 @@ export function getTimeLimits(days: number = 3) {
   return { start, end };
 }
 
-export function getTicks() {
-  const { start, end } = getTimeLimits(7);
-  const out = [];
-  while (start.isSameOrBefore(end)) {
-    if (start.hours() % 6 === 0) {
-      out.push(start.valueOf());
-    }
-    start.add(1, 'hours');
-  }
-  return out;
-}
-
 export function getDayColor(time: Moment.Moment) {
   if (time.day() === 0 || time.day() === 6) return sundayColor;
   const dString = time.format('MMDD');
