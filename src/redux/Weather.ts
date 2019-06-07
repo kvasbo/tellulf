@@ -14,7 +14,7 @@ const initialState: WeatherStore = {};
 
 interface KnownAction {
   type: string;
-  data: { long: WeatherData; todayMinMax: WeatherTodayMinMax };
+  data: { long: WeatherData; todayMinMax: WeatherTodayMinMax; short: WeatherData };
   lat: number;
   lon: number;
   sted: string;
@@ -54,6 +54,7 @@ export default function Weather(
         lat: action.lat,
         lon: action.lon,
         long: { ...action.data.long },
+        short: { ...action.data.short },
         todayMinMax: action.data.todayMinMax,
         limits: parseLimits(Object.values(action.data.long), action.lat, action.lon),
       };

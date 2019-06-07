@@ -4,6 +4,7 @@ export interface WeatherStore {
 
 export interface WeatherForAPlace {
   long: WeatherDataSet;
+  short: WeatherDataSet;
   limits: WeatherLimits;
   lat: number | undefined;
   lon: number | undefined;

@@ -5,7 +5,7 @@ import minBy from 'lodash/minBy';
 import omitBy from 'lodash/omitBy';
 import {
   getSunMeta,
-  initWeatherLong,
+  initWeather,
   getTimeLimits,
   createKeyBasedOnStamps,
   storeToLocalStore,
@@ -38,7 +38,6 @@ function parsePrecipitation(
   let rain = null;
   let rainMax = null;
   let rainMin = null;
-  // console.log('parse rain', s.location.precipitation);
   if (s.location.precipitation) {
     rain = Number(s.location.precipitation.value);
     rainMax = rain;
@@ -79,9 +78,9 @@ function parseTemp(s: WeatherAPIDataPeriod): { temp: number | null } {
   return { temp };
 }
 
-function parseTime(s: WeatherAPIDataPeriod): ParseTimeReturn {
+function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey: number = 0): ParseTimeReturn {
   const f = Moment(s.from);
-  const t = Moment(s.to);
+  const t = Moment(s.to).add(hoursToAddToKey, 'hours');
   const from = f.valueOf();
   const to = t.valueOf();
   const diff = t.diff(f, 'hours');
@@ -96,7 +95,8 @@ function parseTime(s: WeatherAPIDataPeriod): ParseTimeReturn {
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
   const now = Moment();
-  const sixesOut: WeatherDataSet = initWeatherLong();
+  const sixesOut: WeatherDataSet = initWeather(6);
+  const hoursOut: WeatherDataSet = initWeather(1);
 
   const data = await axios.get(
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
@@ -152,7 +152,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
       from,
       to,
       fromNice,
-      time: time.valueOf(),
+      time,
       temp,
       rain,
       rainMax,
@@ -163,45 +163,41 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     sixesOut[key] = out;
   });
 
-  // TODO Merge!
+  // Get rain from hourly forecasts
   hours.forEach((s: WeatherAPIDataPeriod) => {
-    const { key } = parseTime(s);
-    if (!sixesOut[key]) return;
+    const { key, from, to, fromNice, time } = parseTime(s);
+    if (!hoursOut[key]) return;
     const { rain, rainMin, rainMax } = parsePrecipitation(s);
-    const { symbol, symbolNumber } = parseSymbol(s);
-    const { temp } = parseTemp(s);
-    if (rain) sixesOut[key].rain = rain;
-    if (rainMin) sixesOut[key].rainMin = rainMin;
-    if (rainMax) sixesOut[key].rainMax = rainMax;
-    if (symbol) sixesOut[key].symbol = symbol;
-    if (symbolNumber) sixesOut[key].symbolNumber = symbolNumber;
-    if (temp) sixesOut[key].temp = temp;
+    hoursOut[key] = {
+      ...hoursOut[key],
+      from,
+      to,
+      fromNice,
+      time,
+      rain,
+      rainMax,
+      rainMin,
+    };
   });
 
-  // TODO Merge!
+  // ...and the rest from points
   points.forEach((s: WeatherAPIDataPeriod) => {
-    const { key } = parseTime(s);
-    if (!sixesOut[key]) return;
-    const { rain, rainMin, rainMax } = parsePrecipitation(s);
+    const { key, time } = parseTime(s, 1);
+    if (!hoursOut[key]) return;
     const { symbol, symbolNumber } = parseSymbol(s);
     const { temp } = parseTemp(s);
-    if (rain) sixesOut[key].rain = rain;
-    if (rainMin) sixesOut[key].rainMin = rainMin;
-    if (rainMax) sixesOut[key].rainMax = rainMax;
-    if (symbol) sixesOut[key].symbol = symbol;
-    if (symbolNumber) sixesOut[key].symbolNumber = symbolNumber;
-    if (temp) sixesOut[key].temp = temp;
+    hoursOut[key] = {
+      ...hoursOut[key],
+      time,
+      temp,
+      symbol,
+      symbolNumber,
+    };
   });
-
-  /*
-  console.log('p', points);
-  console.log('h', hours);
-  console.log('s0', sixesOut);
-  */
 
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
-  Object.values(sixesOut).forEach(p => {
+  Object.values(hoursOut).forEach(p => {
     const d = p as WeatherData;
     if (!d) return;
     const time = Moment(d.time);
@@ -211,7 +207,16 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Remove incomplete objects
-  const filteredData = omitBy(sixesOut, val => {
+  const filteredLong = omitBy(sixesOut, val => {
+    const vals = Object.values(val);
+    if (vals.indexOf(null) !== -1) {
+      return true;
+    }
+    return false;
+  });
+
+  // Remove incomplete objects
+  const filteredShort = omitBy(hoursOut, val => {
     const vals = Object.values(val);
     if (vals.indexOf(null) !== -1) {
       return true;
@@ -220,9 +225,10 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Overwrite cache
-  storeToLocalStore(`weatherLong_${localStorageKey}`, filteredData, start, end);
+  storeToLocalStore(`weatherLong_${localStorageKey}`, filteredLong, start, end);
+  storeToLocalStore(`weatherShort_${localStorageKey}`, filteredShort, start, end);
 
-  return { long: filteredData, todayMinMax };
+  return { long: filteredLong, short: filteredShort, todayMinMax };
 }
 
 export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {

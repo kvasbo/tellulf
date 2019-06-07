@@ -89,14 +89,13 @@ export function getDefaultWeatherDataSet(
   };
 }
 
-export function initWeatherLong(): WeatherDataSet {
-  const spanToUseInHours = 1;
+export function initWeather(spanToUseInHours: number = 1, daysToInit: number = 7): WeatherDataSet {
   const out: WeatherDataSet = {};
   const time = Moment()
     .utc()
     .startOf('day');
   const spanEnd = Moment(time)
-    .add(8, 'day')
+    .add(daysToInit, 'day')
     .startOf('day');
   while (time.isSameOrBefore(spanEnd)) {
     const startTime = Moment(time);
