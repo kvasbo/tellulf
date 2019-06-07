@@ -1,6 +1,4 @@
 import React from 'react';
-import sortBy from 'lodash/sortBy';
-import uniqBy from 'lodash/uniqBy';
 import Moment from 'moment';
 import {
   ComposedChart,
@@ -48,13 +46,6 @@ class GraphLong extends React.PureComponent<Props, State> {
 
   public componentDidMount() {
     setInterval(() => this.reloadTime(), 60000); // Reload time every minute
-  }
-
-  private getData(): WeatherData[] {
-    const rawData: WeatherData[] = Object.values(this.props.weatherLong);
-    const uniqueData: WeatherData[] = uniqBy(rawData, 'time');
-    const sortedData: WeatherData[] = sortBy(uniqueData, 'time');
-    return sortedData;
   }
 
   private reloadTime() {

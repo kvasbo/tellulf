@@ -1,20 +1,26 @@
 import SunCalc from 'suncalc';
 import Moment from 'moment';
 import { roundToNumberOfDecimals } from '../TellulfInfoCell';
+import { EnergyGraphDataSet } from './EnergyGraph';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
 
+export interface TimeLimits {
+  start: Moment.Moment;
+  end: Moment.Moment;
+}
+
 export function getSunForTime(
   time: Date | string | Moment.Moment | number,
-  latitude = defaultLatitude,
-  longitude = defaultLongitude,
-) {
+  latitude: number = defaultLatitude,
+  longitude: number = defaultLongitude,
+): number {
   const s = SunCalc.getPosition(Moment(time).toDate(), latitude, longitude);
   return Math.max(0, s.altitude);
 }
 
-export function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitude) {
+export function getMaxSunHeight(latitude = defaultLatitude, longitude = defaultLongitude): number {
   try {
     // Get max height of sun in position
     const solstice = Moment('2018-06-21').toDate();
@@ -37,7 +43,7 @@ export function formatEnergyScaleTick(data: number): string {
   return `${roundToNumberOfDecimals(data, 1)}`;
 }
 
-export function getDataPointObject(): {} {
+export function getDataPointObject(): EnergyGraphDataSet {
   const out = {};
   const time = Moment().startOf('day');
   for (let i = 0; i < 144; i += 1) {
@@ -50,7 +56,7 @@ export function getDataPointObject(): {} {
     };
     time.add(10, 'minutes');
   }
-  return out;
+  return out as EnergyGraphDataSet;
 }
 
 export function getXAxis(): [number, number] {
@@ -63,7 +69,7 @@ export function getXAxis(): [number, number] {
   return [from, to];
 }
 
-export function getTimeLimits(): { start: Moment.Moment; end: Moment.Moment } {
+export function getTimeLimits(): TimeLimits {
   const start = Moment().startOf('day');
   const end = Moment()
     .add(1, 'day')
