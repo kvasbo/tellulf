@@ -62,6 +62,7 @@ class Kalender extends React.PureComponent<Props, State> {
   private getDays() {
     const out: JSX.Element[] = [];
     const start = Moment().startOf('day');
+    const now = start.clone();
     const days: Moment.Moment[] = [];
 
     // Prime the data set
@@ -72,11 +73,14 @@ class Kalender extends React.PureComponent<Props, State> {
 
     days.forEach(day => {
       const d = day.format('YYYY-MM-DD');
-      const diff = day.diff(start);
+      const diff = day.diff(now, 'days');
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
       const weather = this.props.weather;
+      const useShortWeather = diff < 3 ? true : false;
+
+      console.log(d, diff);
 
       if (diff < 6 || cald || birthdays || dinners) {
         out.push(
@@ -87,6 +91,7 @@ class Kalender extends React.PureComponent<Props, State> {
             dinner={dinners}
             birthdays={birthdays}
             weather={weather}
+            useShortWeather={useShortWeather}
           />,
         );
       }
