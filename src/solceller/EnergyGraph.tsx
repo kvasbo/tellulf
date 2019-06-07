@@ -44,6 +44,19 @@ interface Props {
   currentNetConsumption: number;
 }
 
+export interface EnergyGraphDataSet {
+  [s: string]: {
+    time: number;
+    price: number | null;
+    sun: number | null;
+    sunInAWeek: number | null;
+    sunInTwoWeeks: number | null;
+    sunInAMonth: number | null;
+    production: number | null;
+    consumption: number | null;
+  };
+}
+
 interface State {
   currentTime: number;
 }
@@ -65,7 +78,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
   }
 
   private getData() {
-    const dataSet = getDataPointObject();
+    const dataSet: EnergyGraphDataSet = getDataPointObject();
     const dstAdd = Moment().isDST() ? 3600000 : 0;
     const timeZoneAdd = 3600000;
     const now = new Date();
