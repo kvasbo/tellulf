@@ -14,18 +14,17 @@ import {
 import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
-import { WeatherLimits, WeatherDataSet, WeatherData } from '../types/weather';
+import { WeatherData } from '../types/weather';
 import { getTicks, formatTick } from './weatherHelpers';
 import './yr.css';
 
 const gridColor = '#FFFFFFAA';
 
 interface Props {
-  weatherLong: WeatherDataSet;
   weather: WeatherData[];
-  limits: WeatherLimits;
   from: Moment.Moment;
   to: Moment.Moment;
+  sted: string;
 }
 
 interface State {
@@ -54,9 +53,6 @@ class GraphLong extends React.PureComponent<Props, State> {
 
   // Stays on
   public render() {
-    if (!this.props.weatherLong || !this.props.limits) {
-      return null;
-    }
     const data = this.props.weather;
     if (data.length === 0) return null;
     const limits = parseLimits(data);
@@ -160,11 +156,7 @@ class GraphLong extends React.PureComponent<Props, State> {
           />
           <Line
             dot={
-              <WeatherIcon
-                symbolMap={symbolMap}
-                sunrise={this.props.limits.sunrise}
-                sunset={this.props.limits.sunset}
-              />
+              <WeatherIcon symbolMap={symbolMap} sunrise={limits.sunrise} sunset={limits.sunset} />
             }
             yAxisId="temp"
             type="natural"

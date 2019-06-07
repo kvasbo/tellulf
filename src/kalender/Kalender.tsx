@@ -65,7 +65,7 @@ class Kalender extends React.PureComponent<Props, State> {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
-      const weather = this.props.weather['oslo'] ? this.props.weather['oslo'] : undefined;
+      const weather = this.props.weather;
 
       if (cald || birthdays || dinners) {
         out.push(

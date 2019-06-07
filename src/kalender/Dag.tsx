@@ -7,7 +7,7 @@ import HendelseMedTid from './HendelseMedTid';
 import GraphLong from '../weather/GraphLong';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { WeatherForAPlace, WeatherData } from '../types/weather';
+import { WeatherData, WeatherStore, WeatherDataSet } from '../types/weather';
 
 interface Props {
   dinner: EventDataSet;
@@ -15,7 +15,9 @@ interface Props {
   events: EventDataSet;
   date: string;
   weatherAsGraph: boolean;
-  weather?: WeatherForAPlace;
+  weather?: WeatherStore;
+  useShortWeather: boolean;
+  sted: string;
 }
 
 function getDayHeader(date: Moment.Moment) {
@@ -25,6 +27,8 @@ function getDayHeader(date: Moment.Moment) {
 class Dag extends React.PureComponent<Props, {}> {
   static defaultProps = {
     weatherAsGraph: false,
+    useShortWeather: false,
+    sted: 'oslo',
   };
 
   private getDinner() {
@@ -107,7 +111,7 @@ class Dag extends React.PureComponent<Props, {}> {
   }
 
   private getWeather(date: Moment.Moment) {
-    if (!this.props.weather) return null;
+    if (!this.props.weather || !this.props.weather[this.props.sted]) return null;
     const now = Moment();
     const from = Moment(date).startOf('day');
     const to = Moment(date)
@@ -116,21 +120,17 @@ class Dag extends React.PureComponent<Props, {}> {
     const filterFrom = Moment(from).subtract(12, 'hours');
     const filterTo = Moment(to).add(12, 'hours');
     const daysDiff = from.diff(now, 'days');
-    const weatherFiltered = Object.values(this.props.weather.long).filter(w => {
+
+    const weather: WeatherDataSet = this.props.useShortWeather
+      ? this.props.weather[this.props.sted].short
+      : this.props.weather[this.props.sted].long;
+    const weatherFiltered = Object.values(weather).filter(w => {
       return Moment(w.time).isBetween(filterFrom, filterTo, undefined, '[]');
     });
     const weatherUnique = uniqBy(weatherFiltered, 'time');
     const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
     if (daysDiff > 5) return null;
-    return (
-      <GraphLong
-        weatherLong={this.props.weather.long}
-        weather={weatherSorted}
-        limits={this.props.weather.limits}
-        from={from}
-        to={to}
-      />
-    );
+    return <GraphLong weather={weatherSorted} from={from} to={to} sted={this.props.sted} />;
   }
 
   public render() {
