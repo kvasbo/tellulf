@@ -161,7 +161,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             dataKey="temp"
             stroke="#ffffff"
             opacity={0.5}
-            strokeWidth={0.5}
+            strokeWidth={1}
             isAnimationActive={false}
           />
           <ReferenceLine
