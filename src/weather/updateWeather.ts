@@ -19,7 +19,9 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
-export const localStorageKey = '11';
+export const localStorageKey = '12';
+const longStorageKey = 'weatherLong';
+const shortStorageKey = 'weatherLong';
 
 interface ParseTimeReturn {
   f: Moment.Moment;
@@ -95,8 +97,8 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey: number = 0): ParseT
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
   const now = Moment();
-  const sixesOut: WeatherDataSet = initWeather(6);
-  const hoursOut: WeatherDataSet = initWeather(1);
+  const sixesOut: WeatherDataSet = initWeather(6, 7, 'weatherLong');
+  const hoursOut: WeatherDataSet = initWeather(1, 3, 'weatherShort');
 
   const data = await axios.get(
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
@@ -225,8 +227,8 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Overwrite cache
-  storeToLocalStore(`weatherLong_${localStorageKey}`, filteredLong, start, end);
-  storeToLocalStore(`weatherShort_${localStorageKey}`, filteredShort, start, end);
+  storeToLocalStore(`${longStorageKey}_'${localStorageKey}`, filteredLong, start, end);
+  storeToLocalStore(`${shortStorageKey}_${localStorageKey}`, filteredShort, start, end);
 
   return { long: filteredLong, short: filteredShort, todayMinMax };
 }

@@ -89,7 +89,11 @@ export function getDefaultWeatherDataSet(
   };
 }
 
-export function initWeather(spanToUseInHours: number = 1, daysToInit: number = 7): WeatherDataSet {
+export function initWeather(
+  spanToUseInHours: number,
+  daysToInit: number,
+  storageKey: string,
+): WeatherDataSet {
   const out: WeatherDataSet = {};
   const time = Moment()
     .utc()
@@ -107,7 +111,7 @@ export function initWeather(spanToUseInHours: number = 1, daysToInit: number = 7
   }
 
   // Load localstore if applicable, and write to output item if applicable
-  const fromStore = store.get(`weatherLong_${localStorageKey}`);
+  const fromStore = store.get(`${storageKey}_${localStorageKey}`);
   if (useLocalStorage && fromStore) {
     Object.keys(fromStore).forEach(k => {
       if (out[k]) {
