@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Moment from 'moment';
 // import Yr from '../weather/Yr';
 import Dag from './Dag';
 
-import { primeDays, getIcal, getDayKeys } from './kalenderHelpers';
+import { getIcal } from './kalenderHelpers';
 import { EventDataSet } from '../types/calendar';
 import { AppStore } from '../redux/reducers';
 import { WeatherStore } from '../types/weather';
@@ -47,7 +48,7 @@ class Kalender extends React.PureComponent<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = {
-      kalenderData: { ...primeDays(6) },
+      kalenderData: {},
       dinners: {},
       birthdays: {},
     };
@@ -60,14 +61,24 @@ class Kalender extends React.PureComponent<Props, State> {
 
   private getDays() {
     const out: JSX.Element[] = [];
-    const dayKeys = getDayKeys(30);
-    dayKeys.forEach(d => {
+    const start = Moment().startOf('day');
+    const days: Moment.Moment[] = [];
+
+    // Prime the data set
+    for (let i = 0; i < 30; i += 1) {
+      days.push(start.clone());
+      start.add(1, 'days');
+    }
+
+    days.forEach(day => {
+      const d = day.format('YYYY-MM-DD');
+      const diff = day.diff(start);
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
       const weather = this.props.weather;
 
-      if (cald || birthdays || dinners) {
+      if (diff < 6 || cald || birthdays || dinners) {
         out.push(
           <Dag
             key={d}
@@ -85,9 +96,9 @@ class Kalender extends React.PureComponent<Props, State> {
 
   private async updateData() {
     try {
-      const kalenderData = await getIcal(calP, true);
-      const dinners = await getIcal(dinP, false);
-      const birthdays = await getIcal(bdP, false);
+      const kalenderData = await getIcal(calP);
+      const dinners = await getIcal(dinP);
+      const birthdays = await getIcal(bdP);
       this.setState({ kalenderData, dinners, birthdays });
     } catch (err) {
       // eslint-disable-next-line no-console

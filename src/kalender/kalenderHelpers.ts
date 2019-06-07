@@ -32,24 +32,14 @@ interface APIEvent {
   uid?: string;
 }
 
-export function initDay(sortString: string) {
+export function initDay(
+  sortString: string,
+): { events: Event[]; sortString: string; sortStamp: number } {
   return {
     events: [],
     sortString,
-    sortStamp: parseInt(Moment(sortString, 'YYYY-MM-DD').format('x'), 10),
+    sortStamp: Number(Moment(sortString, 'YYYY-MM-DD').format('x')),
   };
-}
-
-export function primeDays(number = 7) {
-  // Prime array for events.
-  const out = {};
-  for (let i = 0; i < number; i += 1) {
-    const m = Moment();
-    m.add(i, 'day');
-    const s = m.format('YYYY-MM-DD');
-    out[s] = initDay(s);
-  }
-  return out;
 }
 
 export function parseIcalEvent(e: APIEvent): Event {
@@ -119,7 +109,7 @@ interface SortOccurrence {
   startDate: { toJSDate: Function };
 }
 
-export async function getIcal(url: string, prime = false) {
+export async function getIcal(url: string) {
   let parsedEvents = {};
   try {
     const now = Moment();
@@ -146,11 +136,6 @@ export async function getIcal(url: string, prime = false) {
       const end = b.item.startDate.toJSDate();
       return start - end;
     });
-
-    // Prime array for events.
-    if (prime) {
-      parsedEvents = { ...primeDays(0) };
-    }
 
     sorted.occurrences.forEach((e: APIEvent) => {
       try {
@@ -183,14 +168,4 @@ export async function getIcal(url: string, prime = false) {
   }
 
   return parsedEvents;
-}
-
-export function getDayKeys(max = 100) {
-  const start = Moment().startOf('day');
-  const out = [];
-  for (let i = 0; i < max; i += 1) {
-    out.push(start.format('YYYY-MM-DD'));
-    start.add(1, 'days');
-  }
-  return out;
 }
