@@ -35,16 +35,18 @@ class Ruter extends React.PureComponent<Props, {}> {
     const out = [];
     for (let i = 0; i < tog.length; i += 1) {
       out.push(
-        <div className="togStil" key={tog[i].id}>
-          {tog[i].fromNowM}m ({tog[i].faktiskTid.format('HH:MM')}) {tog[i].skalTil}
-        </div>,
+        <tr className="togStil" key={tog[i].id}>
+          <td>{tog[i].fromNowM}m</td>
+          <td>{tog[i].faktiskTid.format('HH:mm')}</td>
+          <td>{tog[i].skalTil}</td>
+        </tr>,
       );
     }
     return out;
   }
 
   public render() {
-    return <div style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainList()}</div>;
+    return <table style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainList()}</table>;
   }
 }
 

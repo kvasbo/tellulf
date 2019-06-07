@@ -15,7 +15,7 @@ body {
   width: 100vw;
   display: grid;
   grid-template-columns: auto 30vw;
-  grid-template-rows: 20vh auto 10vh;
+  grid-template-rows: 20vh auto 14vh;
 }
 
 .block {
