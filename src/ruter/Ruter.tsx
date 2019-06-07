@@ -46,7 +46,11 @@ class Ruter extends React.PureComponent<Props, {}> {
   }
 
   public render() {
-    return <table style={{ display: 'relative', padding: '0.5vh' }}>{this.getTrainList()}</table>;
+    return (
+      <table style={{ display: 'relative', padding: '0.5vh' }}>
+        <tbody>{this.getTrainList()}</tbody>
+      </table>
+    );
   }
 }
 
