@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
   Area,
+  Label,
   CartesianGrid,
   ReferenceLine,
   ReferenceArea,
@@ -179,6 +180,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             strokeWidth={3}
             strokeDasharray="3 3"
           />
+          {this.props.showPlace && <Label value={this.props.sted} />}
         </ComposedChart>
       </ResponsiveContainer>
     );
