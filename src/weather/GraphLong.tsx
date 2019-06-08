@@ -10,6 +10,7 @@ import {
   ReferenceLine,
   ReferenceArea,
   ResponsiveContainer,
+  RechartsFunction,
 } from 'recharts';
 import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
@@ -25,6 +26,8 @@ interface Props {
   from: Moment.Moment;
   to: Moment.Moment;
   sted: string;
+  showPlace: boolean;
+  onClick: Function;
 }
 
 interface State {
@@ -36,6 +39,10 @@ class GraphLong extends React.PureComponent<Props, State> {
 
   public static defaultProps = {
     limits: undefined,
+    showPlace: false,
+    onClick: () => {
+      return null;
+    },
   };
 
   public constructor(props: Props) {
@@ -68,6 +75,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             bottom: 0,
           }}
           data={data}
+          onClick={this.props.onClick as RechartsFunction}
         >
           <XAxis
             scale="time"

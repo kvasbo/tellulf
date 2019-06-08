@@ -1,5 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
+import store from 'store';
 import uniqBy from 'lodash/uniqBy';
 import sortBy from 'lodash/sortBy';
 import HendelseFullDag from './HendelseFullDag';
@@ -17,6 +18,9 @@ interface Props {
   weatherAsGraph: boolean;
   weather?: WeatherStore;
   useShortWeather: boolean;
+}
+
+interface State {
   sted: string;
 }
 
@@ -24,12 +28,29 @@ function getDayHeader(date: Moment.Moment) {
   return date.format('dddd D. MMM');
 }
 
-class Dag extends React.PureComponent<Props, {}> {
+class Dag extends React.PureComponent<Props, State> {
   static defaultProps = {
     weatherAsGraph: false,
     useShortWeather: false,
     sted: 'oslo',
   };
+
+  public constructor(props: Props) {
+    super(props);
+    this.state = { sted: this.loadSted() };
+  }
+
+  private loadSted(): string {
+    const sted = store.get(`sted_${this.props.date}`, 'oslo');
+    return sted;
+  }
+
+  private togglePlace(): void {
+    const sted = this.loadSted();
+    const nyttSted = sted === 'oslo' ? 'sandefjord' : 'oslo';
+    store.set(`sted_${this.props.date}`, nyttSted);
+    this.setState({ sted: nyttSted });
+  }
 
   private getDinner() {
     try {
@@ -110,8 +131,8 @@ class Dag extends React.PureComponent<Props, {}> {
     return out;
   }
 
-  private getWeather(date: Moment.Moment) {
-    if (!this.props.weather || !this.props.weather[this.props.sted]) return null;
+  private getWeather(date: Moment.Moment, sted: string) {
+    if (!this.props.weather || !this.props.weather[sted]) return null;
     const now = Moment();
     const from = Moment(date).startOf('day');
     const to = Moment(date)
@@ -122,22 +143,29 @@ class Dag extends React.PureComponent<Props, {}> {
     const daysDiff = from.diff(now, 'days');
 
     const weather: WeatherDataSet = this.props.useShortWeather
-      ? this.props.weather[this.props.sted].short
-      : this.props.weather[this.props.sted].long;
+      ? this.props.weather[sted].short
+      : this.props.weather[sted].long;
     const weatherFiltered = Object.values(weather).filter(w => {
       return Moment(w.time).isBetween(filterFrom, filterTo, undefined, '[]');
     });
     const weatherUnique = uniqBy(weatherFiltered, 'time');
     const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
     if (daysDiff > 5) return null;
-    return <GraphLong weather={weatherSorted} from={from} to={to} sted={this.props.sted} />;
+    return (
+      <GraphLong
+        weather={weatherSorted}
+        from={from}
+        to={to}
+        sted={sted}
+        showPlace={sted !== 'oslo'}
+        onClick={() => this.togglePlace()}
+      />
+    );
   }
 
   public render() {
-    // const now = Moment();
     const day = Moment(this.props.date);
-    //const today = now.isSame(day, 'day');
-    //const dayDiff = now.diff(day, 'days');
+    console.log(this.state.sted);
     return (
       <div className="kalenderDag">
         <div
@@ -146,7 +174,9 @@ class Dag extends React.PureComponent<Props, {}> {
         >
           {getDayHeader(day)}
         </div>
-        <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>{this.getWeather(day)}</div>
+        <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>
+          {this.getWeather(day, this.state.sted)}
+        </div>
         <div style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '2 / 4' }}>
           {this.getBirthdays()}
           {this.getDinner()}
