@@ -78,7 +78,7 @@ class Kalender extends React.PureComponent<Props, State> {
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
       const weather = this.props.weather;
-      const useShortWeather = diff < 3 ? true : false;
+      const useShortWeather = diff < 2 ? true : false;
 
       if (diff < 6 || cald || birthdays || dinners) {
         out.push(
