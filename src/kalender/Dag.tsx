@@ -165,7 +165,7 @@ class Dag extends React.PureComponent<Props, State> {
 
   public render() {
     const day = Moment(this.props.date);
-    console.log(this.state.sted);
+    const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
     return (
       <div className="kalenderDag">
         <div
@@ -176,6 +176,19 @@ class Dag extends React.PureComponent<Props, State> {
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>
           {this.getWeather(day, this.state.sted)}
+        </div>
+        <div
+          style={{
+            gridColumn: '1 / 3',
+            gridRow: '2 / 4',
+            display: 'flex',
+            padding: 10,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-start',
+            color: '#ffffffaa',
+          }}
+        >
+          {stedToShow}
         </div>
         <div style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '2 / 4' }}>
           {this.getBirthdays()}
