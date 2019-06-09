@@ -1,14 +1,7 @@
 import Moment from 'moment';
 import { Action } from 'redux';
 import { UPDATE_WEATHER } from './actions';
-import { parseLimits } from '../weather/updateWeather';
-import {
-  WeatherData,
-  WeatherTodayMinMax,
-  WeatherDataSet,
-  WeatherStore,
-  WeatherLimits,
-} from '../types/weather';
+import { WeatherData, WeatherTodayMinMax, WeatherDataSet, WeatherStore } from '../types/weather';
 
 const initialState: WeatherStore = {};
 
@@ -18,7 +11,6 @@ interface KnownAction {
   lat: number;
   lon: number;
   sted: string;
-  limits: WeatherLimits;
 }
 
 export default function Weather(
@@ -56,7 +48,6 @@ export default function Weather(
         long: { ...action.data.long },
         short: { ...action.data.short },
         todayMinMax: action.data.todayMinMax,
-        limits: parseLimits(Object.values(action.data.long), action.lat, action.lon),
       };
       return newState;
     }

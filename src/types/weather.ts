@@ -5,7 +5,7 @@ export interface WeatherStore {
 export interface WeatherForAPlace {
   long: WeatherDataSet;
   short: WeatherDataSet;
-  limits: WeatherLimits;
+  // limits: WeatherLimits;
   lat: number | undefined;
   lon: number | undefined;
   todayMinMax: { min: number; max: number };
@@ -22,8 +22,6 @@ export interface WeatherData {
   rainMax: number | null;
   symbol: string;
   symbolNumber: number;
-  // minTemp: number | null;
-  // maxTemp: number | null;
 }
 
 export interface WeatherTodayMinMax {
