@@ -234,8 +234,25 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   return { long: filteredLong, short: filteredShort, todayMinMax };
 }
 
-export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: number = 10.6991) {
+export function parseLimits(
+  rawData: WeatherData[],
+  lat: number = 59.9409,
+  long: number = 10.6991,
+  from?: Moment.Moment,
+  to?: Moment.Moment,
+) {
   const sunData = getSunMeta(lat, long);
+
+  let data = rawData;
+
+  // Filter by time if needed
+  if (from && to) {
+    data = data.filter(d => {
+      return d.time >= from.valueOf() && d.time <= to.valueOf();
+    });
+  }
+
+  // Init
   if (data.length === 0) {
     return {
       lowerRange: 0,
@@ -250,6 +267,7 @@ export function parseLimits(data: WeatherData[], lat: number = 59.9409, long: nu
       ...sunData,
     };
   }
+
   const maxRainPoint: WeatherData | undefined = maxBy(data, 'rainMax');
   const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
   const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
