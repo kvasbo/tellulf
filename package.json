@@ -14,7 +14,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-redux": "7.0.3",
+    "react-redux": "7.1.0",
     "react-scripts": "3.0.1",
     "recharts": "1.6.2",
     "redux": "^4.0.0",
@@ -43,8 +43,8 @@
     "@types/recharts": "^1.1.16",
     "@types/store": "^2.0.1",
     "@types/suncalc": "^1.8.0",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
+    "@typescript-eslint/eslint-plugin": "1.10.2",
+    "@typescript-eslint/parser": "1.10.2",
     "awesome-typescript-loader": "^5.2.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "10.0.1",
@@ -56,7 +56,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.13.0",
-    "prettier": "1.18.0",
+    "prettier": "1.18.2",
     "typescript": "3.5.1"
   },
   "browserslist": [
