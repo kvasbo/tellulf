@@ -29,6 +29,7 @@ interface Props {
   sted: string;
   showPlace: boolean;
   onClick: Function;
+  divideRainBy: number; // To even out rain per period
 }
 
 interface State {
@@ -41,6 +42,7 @@ class GraphLong extends React.PureComponent<Props, State> {
   public static defaultProps = {
     limits: undefined,
     showPlace: false,
+    divideRainBy: 1,
     onClick: () => {
       return null;
     },
@@ -59,9 +61,18 @@ class GraphLong extends React.PureComponent<Props, State> {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
+  private massageData() {
+    return this.props.weather.map(w => {
+      const rain = w.rain !== null ? w.rain / this.props.divideRainBy : null;
+      const rainMin = w.rainMin !== null ? w.rainMin / this.props.divideRainBy : null;
+      const rainMax = w.rainMax !== null ? w.rainMax / this.props.divideRainBy : null;
+      return { ...w, rainMin, rainMax, rain };
+    });
+  }
+
   // Stays on
   public render() {
-    const data = this.props.weather;
+    const data = this.massageData();
     if (data.length === 0) return null;
     const limits = parseLimits(data);
     const startTime = this.props.from.valueOf();
@@ -108,7 +119,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             allowDataOverflow
             type="number"
             orientation="right"
-            domain={[0, dataMax => Math.max(9, dataMax)]}
+            domain={[0, 1.5]}
             hide
           />
           <CartesianGrid stroke={gridColor} vertical={false} />

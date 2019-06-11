@@ -159,6 +159,7 @@ class Dag extends React.PureComponent<Props, State> {
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={() => this.togglePlace()}
+        divideRainBy={this.props.useShortWeather ? 1 : 6}
       />
     );
   }
