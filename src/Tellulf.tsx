@@ -31,11 +31,6 @@ interface Props {
 }
 
 class Tellulf extends React.PureComponent<Props, {}> {
-  public constructor(props: Props) {
-    super(props);
-    this.doLoadData = this.doLoadData.bind(this);
-  }
-
   public componentDidMount() {
     this.startReloadLoop();
     this.attachNetatmoListener();
@@ -86,13 +81,13 @@ class Tellulf extends React.PureComponent<Props, {}> {
     }, diff);
   }
 
-  private doLoadData(force = false) {
+  doLoadData = (force = false) => {
     const now = Moment();
     const sec = now.seconds();
 
     // Laste tog
     if (force || sec % 10 === 0) this.props.dispatch(fetchTrains('3012315', '1 (Retning sentrum)'));
-  }
+  };
 
   public render() {
     return (
@@ -107,16 +102,16 @@ class Tellulf extends React.PureComponent<Props, {}> {
           }}
           className="block"
         >
-          <Klokke temp={this.props.temperature} />
+          <Klokke key="tellulf-klokke" temp={this.props.temperature} />
         </div>
         <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
-          {this.props.loggedIn && <Solceller />}
+          {this.props.loggedIn && <Solceller key="tellulf-energi" />}
         </div>
         <div style={{ gridColumn: '2 / 3', gridRow: '3 / 4' }} className="block">
-          <Ruter trains={this.props.trains} />
+          <Ruter trains={this.props.trains} key="tellulf-trains" />
         </div>
         <div style={{ gridColumn: '1 / 1', gridRow: '1 / 4', overflow: 'auto' }} className="block">
-          <Kalender />
+          <Kalender key="tellulf-kalender" />
         </div>
       </div>
     );
@@ -132,12 +127,3 @@ function mapStateToProps(state: AppStore) {
 }
 
 export default connect(mapStateToProps)(Tellulf);
-
-/*
-        <div style={{ gridColumn: '1 / 2', gridRow: '2 / 3' }} className="block">
-          <Netatmo />
-        </div>
- <div style={{ gridColumn: '1 / 3', gridRow: '4 / 5' }} className="block">
-          <Yr />
-        </div>
-*/

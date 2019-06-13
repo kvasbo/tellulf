@@ -30,7 +30,7 @@ class Solceller extends React.PureComponent<Props, {}> {
   };
 
   public render() {
-    if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
+    if (!this.props.initState.solar) return null;
 
     // Regne ut felles verdier.
     const currentNetConsumption =

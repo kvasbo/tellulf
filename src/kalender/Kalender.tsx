@@ -83,7 +83,7 @@ class Kalender extends React.PureComponent<Props, State> {
       if (diff < 6 || cald || birthdays || dinners) {
         out.push(
           <Dag
-            key={d}
+            key={`kalenderdag${d}`}
             date={d}
             events={cald}
             dinner={dinners}
