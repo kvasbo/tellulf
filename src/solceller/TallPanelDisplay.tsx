@@ -86,21 +86,21 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             info={this.props.producedPercent}
             unit="%"
             header="produsert %"
-            decimals={2}
+            decimals={1}
           />
           <TellulfInfoCell info={this.props.localProductionMaxDay} header="max dag" smartRoundKw />
         </div>
         <div className="energyTableRow">
           {this.getMinUsage()}
-          <TellulfInfoCell info={this.props.consumptionAverage} header="bruk snitt" smartRoundKw />
-          <TellulfInfoCell info={this.props.consumptionMaximum} header="bruk max" smartRoundKw />
+          <TellulfInfoCell info={this.props.consumptionAverage} header="snittbruk" smartRoundKw />
+          <TellulfInfoCell info={this.props.consumptionMaximum} header="max bruk" smartRoundKw />
         </div>
         <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.accumulatedProduction}
             unit="kWh"
             header="solgt i dag"
-            decimals={2}
+            decimals={1}
           />
           <TellulfInfoCell
             info={this.props.accumulatedCost}
@@ -113,7 +113,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             info={this.props.accumulatedConsumption}
             unit="kWh"
             header="fakturert i dag"
-            decimals={2}
+            decimals={1}
           />
         </div>
         <div className="energyTableRow">
