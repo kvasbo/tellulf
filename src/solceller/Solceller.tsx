@@ -57,14 +57,16 @@ class Solceller extends React.PureComponent<Props, {}> {
             info={this.props.currentSolarProduction.averageMinute}
             header="Produksjon"
             large
+            smartRoundKw
           />
-          <TellulfInfoCell info={currentNetConsumption} header="Forbruk" large />
+          <TellulfInfoCell info={currentNetConsumption} header="Forbruk" large smartRoundKw />
           <TellulfInfoCell
             info={this.props.realtimePower.calculatedConsumption}
             header="Faktureres"
             large
             colorIfNegative="#00FF00"
             absoluteValue
+            smartRoundKw
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>

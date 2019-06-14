@@ -55,10 +55,12 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
   private getMinUsage() {
     if (this.props.maxPowerProduction > 0) {
       return (
-        <TellulfInfoCell info={this.props.maxPowerProduction} header="max prod dag" unit="W" />
+        <TellulfInfoCell info={this.props.maxPowerProduction} header="max prod dag" smartRoundKw />
       );
     } else {
-      return <TellulfInfoCell info={this.props.consumptionMinimum} header="min bruk" unit="W" />;
+      return (
+        <TellulfInfoCell info={this.props.consumptionMinimum} header="min bruk" smartRoundKw />
+      );
     }
   }
 
@@ -86,12 +88,12 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             header="produsert %"
             decimals={2}
           />
-          <TellulfInfoCell info={this.props.localProductionMaxDay} unit="W" header="max dag" />
+          <TellulfInfoCell info={this.props.localProductionMaxDay} header="max dag" smartRoundKw />
         </div>
         <div className="energyTableRow">
           {this.getMinUsage()}
-          <TellulfInfoCell info={this.props.consumptionAverage} unit="W" header="bruk snitt" />
-          <TellulfInfoCell info={this.props.consumptionMaximum} unit="W" header="bruk max" />
+          <TellulfInfoCell info={this.props.consumptionAverage} header="bruk snitt" smartRoundKw />
+          <TellulfInfoCell info={this.props.consumptionMaximum} header="bruk max" smartRoundKw />
         </div>
         <div className="energyTableRow">
           <TellulfInfoCell
@@ -119,19 +121,19 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             info={this.props.localProductionDay}
             unit="kWh"
             header="prod dag"
-            decimals={2}
+            decimals={1}
           />
           <TellulfInfoCell
             info={this.props.localProductionMonth}
             unit="kWh"
             header="prod måned"
-            decimals={1}
+            decimals={0}
           />
           <TellulfInfoCell
             info={this.props.localProductionYear}
             unit="kWh"
             header="prod år"
-            decimals={1}
+            decimals={0}
           />
         </div>
         <div className="energyTableRow">

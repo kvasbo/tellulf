@@ -5,7 +5,7 @@ const largeFontSize = 24;
 const labelFontSize = 10;
 
 interface Props {
-  info: number;
+  info: number | string;
   decimals: number;
   fontSize: number;
   large: boolean;
@@ -18,6 +18,14 @@ interface Props {
   unit: string | undefined;
   invertValue: boolean;
   absoluteValue: boolean;
+  smartRoundKw: boolean;
+}
+
+function smartRoundKw(number: number): string {
+  if (number === 0) return '0';
+  if (number < 100) return '< 100 W';
+  let outn = (Math.round(number / 100) / 10).toLocaleString() + ' kW';
+  return outn;
 }
 
 export function roundToNumberOfDecimals(number: number, decimals: number) {
@@ -40,26 +48,34 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     colorIfNegative: '#FFFFFF',
     invertValue: false,
     absoluteValue: false,
+    smartRoundKw: false,
   };
 
   public render() {
     let text = '-';
+    if (typeof this.props.info === 'number') {
+      // Don't even try
+      if (Number.isNaN(this.props.info)) {
+        return null;
+      }
 
-    // Don't even try
-    if (Number.isNaN(this.props.info)) {
-      return null;
+      // Invert?
+      let valToDisplay = !this.props.invertValue ? this.props.info : this.props.info * -1;
+
+      // absolute?
+      if (this.props.absoluteValue) {
+        valToDisplay = Math.abs(valToDisplay);
+      }
+
+      // Text to show
+      if (this.props.smartRoundKw) {
+        text = smartRoundKw(valToDisplay);
+      } else {
+        text = roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString();
+      }
+    } else if (typeof this.props.info === 'string') {
+      text = this.props.info;
     }
-
-    // Invert?
-    let valToDisplay = !this.props.invertValue ? this.props.info : this.props.info * -1;
-
-    // absolute?
-    if (this.props.absoluteValue) {
-      valToDisplay = Math.abs(valToDisplay);
-    }
-
-    // Text to show
-    text = roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString();
 
     // Figure out the font size!
     let { fontSize } = this.props;
