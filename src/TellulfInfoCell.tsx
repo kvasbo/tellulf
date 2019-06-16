@@ -21,13 +21,6 @@ interface Props {
   smartRoundKw: boolean;
 }
 
-function smartRoundKw(number: number): string {
-  if (number === 0) return '0';
-  if (number < 100) return '< 100 W';
-  let outn = (Math.round(number / 100) / 10).toLocaleString() + ' kW';
-  return outn;
-}
-
 export function roundToNumberOfDecimals(number: number, decimals: number) {
   const factor = 10 ** decimals;
   return Math.round(factor * number) / factor;
@@ -41,7 +34,7 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     large: false,
     fontSize: defaultFontSize,
     decimals: 0,
-    unit: null,
+    unit: '',
     unitSpace: false,
     color: '#FFFFFF',
     labelColor: '#777777',
@@ -50,6 +43,14 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     absoluteValue: false,
     smartRoundKw: false,
   };
+
+  smartRoundWatt(number: number): string {
+    const rounded = Math.round(number);
+    const space = this.props.unitSpace ? ' ' : '';
+    if (rounded === 0) return '-';
+    if (rounded < 1000) return `${rounded.toLocaleString()}`;
+    return `${(Math.round(rounded / 100) / 10).toLocaleString()}${space}k`;
+  }
 
   public render() {
     let text = '-';
@@ -69,7 +70,7 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
 
       // Text to show
       if (this.props.smartRoundKw) {
-        text = smartRoundKw(valToDisplay);
+        text = this.smartRoundWatt(valToDisplay);
       } else {
         text = roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString();
       }

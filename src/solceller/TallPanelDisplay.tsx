@@ -55,11 +55,23 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
   private getMinUsage() {
     if (this.props.maxPowerProduction > 0) {
       return (
-        <TellulfInfoCell info={this.props.maxPowerProduction} header="max prod dag" smartRoundKw />
+        <TellulfInfoCell
+          key="maxProd"
+          info={this.props.maxPowerProduction}
+          header="max prod dag"
+          smartRoundKw
+          unit="W"
+        />
       );
     } else {
       return (
-        <TellulfInfoCell info={this.props.consumptionMinimum} header="min bruk" smartRoundKw />
+        <TellulfInfoCell
+          key="maxProd"
+          info={this.props.consumptionMinimum}
+          header="min bruk"
+          smartRoundKw
+          unit="W"
+        />
       );
     }
   }
@@ -81,31 +93,53 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             header="netto dag"
             decimals={2}
             unitSpace
+            key="netDay"
           />
           <TellulfInfoCell
             info={this.props.producedPercent}
             unit="%"
             header="produsert %"
             decimals={1}
+            key="prodPercent"
           />
-          <TellulfInfoCell info={this.props.localProductionMaxDay} header="max dag" smartRoundKw />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxDay}
+            key="prodMaxDay"
+            header="max dag"
+            smartRoundKw
+            unit="W"
+          />
         </div>
         <div className="energyTableRow">
           {this.getMinUsage()}
-          <TellulfInfoCell info={this.props.consumptionAverage} header="snittbruk" smartRoundKw />
-          <TellulfInfoCell info={this.props.consumptionMaximum} header="max bruk" smartRoundKw />
+          <TellulfInfoCell
+            info={this.props.consumptionAverage}
+            key="snittBruk"
+            header="snittbruk"
+            smartRoundKw
+            unit="W"
+          />
+          <TellulfInfoCell
+            info={this.props.consumptionMaximum}
+            header="max bruk"
+            key="maxBruk"
+            smartRoundKw
+            unit="W"
+          />
         </div>
         <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.accumulatedProduction}
             unit="kWh"
             header="solgt i dag"
+            key="soldDay"
             decimals={1}
           />
           <TellulfInfoCell
             info={this.props.accumulatedCost}
             unit="kr"
             unitSpace
+            key="costDay"
             header="kost i dag"
             decimals={2}
           />
@@ -113,6 +147,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             info={this.props.accumulatedConsumption}
             unit="kWh"
             header="fakturert i dag"
+            key="paidDay"
             decimals={1}
           />
         </div>
@@ -122,24 +157,42 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             unit="kWh"
             header="prod dag"
             decimals={1}
+            key="prodDay"
           />
           <TellulfInfoCell
             info={this.props.localProductionMonth}
             unit="kWh"
             header="prod måned"
             decimals={0}
+            key="prodMonth"
           />
           <TellulfInfoCell
             info={this.props.localProductionYear}
             unit="kWh"
             header="prod år"
             decimals={0}
+            key="prodYear"
           />
         </div>
         <div className="energyTableRow">
-          <TellulfInfoCell info={this.props.localProductionMaxMonth} unit="W" header="max måned" />
-          <TellulfInfoCell info={this.props.localProductionMaxYear} unit="W" header="max år" />
-          <TellulfInfoCell info={this.props.localProductionMaxTotal} unit="W" header="max totalt" />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxMonth}
+            unit="W"
+            header="max måned"
+            key="maxMonth"
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxYear}
+            unit="W"
+            header="max år"
+            key="maxYear"
+          />
+          <TellulfInfoCell
+            info={this.props.localProductionMaxTotal}
+            unit="W"
+            header="max totalt"
+            key="maxEver"
+          />
         </div>
       </div>
     );
