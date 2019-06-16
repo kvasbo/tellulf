@@ -92,6 +92,9 @@ class Tellulf extends React.PureComponent<Props, {}> {
   public render() {
     return (
       <div className="grid">
+        <div style={{ gridColumn: '1 / 1', gridRow: '1 / 4', overflow: 'auto' }} className="block">
+          <Kalender key="tellulf-kalender" />
+        </div>
         <div
           style={{
             gridColumn: '2 / 3',
@@ -107,11 +110,16 @@ class Tellulf extends React.PureComponent<Props, {}> {
         <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
           {this.props.loggedIn && <Solceller key="tellulf-energi" />}
         </div>
-        <div style={{ gridColumn: '2 / 3', gridRow: '3 / 4' }} className="block">
+        <div
+          style={{
+            gridColumn: '2 / 3',
+            gridRow: '3 / 4',
+            justifyItems: 'space-evenly',
+            alignContent: 'center',
+          }}
+          className="block"
+        >
           <Ruter trains={this.props.trains} key="tellulf-trains" />
-        </div>
-        <div style={{ gridColumn: '1 / 1', gridRow: '1 / 4', overflow: 'auto' }} className="block">
-          <Kalender key="tellulf-kalender" />
         </div>
       </div>
     );
