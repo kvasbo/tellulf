@@ -86,7 +86,7 @@ class Tellulf extends React.PureComponent<Props, {}> {
     const sec = now.seconds();
 
     // Laste tog
-    if (force || sec % 10 === 0) this.props.dispatch(fetchTrains('3012315', '1 (Retning sentrum)'));
+    if (force || sec % 10 === 0) this.props.dispatch(fetchTrains());
   };
 
   public render() {

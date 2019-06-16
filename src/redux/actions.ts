@@ -114,9 +114,9 @@ export function updateNetatmoAverages(data: NetatmoAverageData) {
   };
 }
 
-export function fetchTrains(station: string, direction: string) {
+export function fetchTrains() {
   return (dispatch: Function) => {
-    return getTrains(station, direction).then(trains => dispatch(updateTrains(trains)));
+    return getTrains().then(trains => dispatch(updateTrains(trains)));
   };
 }
 

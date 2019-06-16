@@ -21,18 +21,35 @@ export interface TrainDataSet {
   [s: number]: TrainData;
 }
 
-export interface RuterApiData {
-  MonitoredVehicleJourney: {
-    MonitoredCall: {
-      DeparturePlatformName: string;
-      AimedArrivalTime: string;
-      ExpectedArrivalTime: string;
-    };
-    PublishedLineName: string;
-    DestinationName: string;
-    FramedVehicleJourneyRef: {
-      DataFrameRef: string;
-      DatedVehicleJourneyRef: string;
+export interface EnturApiData {
+  ServiceDelivery: {
+    EstimatedTimetableDelivery: {
+      EstimatedJourneyVersionFrame: {
+        EstimatedVehicleJourney: EnturTripData[];
+      };
     };
   };
+}
+
+export interface EnturTripData {
+  DirectionRef: string;
+  LineRef: string;
+  EstimatedCalls: {
+    EstimatedCall: EnturCallData[];
+  };
+  FramedVehicleJourneyRef: {
+    DataFrameRef: string;
+    DatedVehicleJourneyRef: string;
+  };
+}
+
+export interface EnturCallData {
+  DepartureStatus: string;
+  StopPointRef: string;
+  StopPointName: string;
+  AimedDepartureTime: string;
+  AimedArrivalTime: string;
+  DestinationDisplay: string;
+  ExpectedDepartureTime: string;
+  ExpectedArrivalTime: string;
 }

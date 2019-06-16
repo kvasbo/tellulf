@@ -1,40 +1,59 @@
 import axios from 'axios';
 import Moment from 'moment';
-import { TrainData, TrainDataSet, RuterApiData } from '../types/trains';
+import XML from 'pixl-xml';
+import uuidv1 from 'uuid/v1';
+import {
+  TrainData,
+  TrainDataSet,
+  EnturApiData,
+  EnturTripData,
+  EnturCallData,
+} from '../types/trains';
 
-// Fetch train data, parse it, and return a train data set
-async function getRuterData(station: string, direction: string): Promise<TrainDataSet> {
+// Create link with unique requestor ID
+const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT&requestorId=${uuidv1()}`;
+const THE_STOP = 'NSR:Quay:11460';
+
+// Fetch Entur API data
+export default async function getTrains(): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
-
   try {
-    const url = `https://reisapi.ruter.no/StopVisit/GetDepartures/${station}?json=true`;
-    const result = await axios.get(url);
-    const jsonData = result.data;
-
-    if (result.status !== 200) throw Error('Couldnt fetch ruter data');
-
-    jsonData.forEach((t: RuterApiData) => {
-      if (t.MonitoredVehicleJourney.MonitoredCall.DeparturePlatformName === direction) {
-        const d = t.MonitoredVehicleJourney.MonitoredCall;
+    const data = await axios.get(ENTUR_URL);
+    if (data.status !== 200) throw Error('Couldnt fetch entur data');
+    const parsed: EnturApiData = XML.parse(data.data);
+    // Get the interesting data.
+    const actualData =
+      parsed.ServiceDelivery.EstimatedTimetableDelivery.EstimatedJourneyVersionFrame
+        .EstimatedVehicleJourney;
+    // Empty data set!
+    if (!actualData || !actualData.filter) return trains;
+    // Only the correct station and line
+    const filteredData = actualData.filter((t: EnturTripData) => {
+      return t.DirectionRef === '1' && t.LineRef === 'RUT:Line:1';
+    });
+    filteredData.forEach((t: EnturTripData) => {
+      // Kill bad datas
+      if (
+        !t.EstimatedCalls ||
+        !t.EstimatedCalls.EstimatedCall ||
+        !t.EstimatedCalls.EstimatedCall.length // not an array!
+      )
+        return;
+      t.EstimatedCalls.EstimatedCall.forEach((c: EnturCallData) => {
+        if (c.StopPointRef && c.StopPointRef !== THE_STOP) return;
         const out: TrainData = {
-          ruteTid: Moment(d.AimedArrivalTime),
-          faktiskTid: Moment(d.ExpectedArrivalTime),
-          id: `${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DataFrameRef}_${t.MonitoredVehicleJourney.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`,
-          linje: t.MonitoredVehicleJourney.PublishedLineName,
-          skalTil: t.MonitoredVehicleJourney.DestinationName,
+          ruteTid: Moment(c.AimedArrivalTime),
+          faktiskTid: Moment(c.ExpectedArrivalTime),
+          id: `${t.FramedVehicleJourneyRef.DataFrameRef}_${t.FramedVehicleJourneyRef.DatedVehicleJourneyRef}`,
+          linje: t.LineRef,
+          skalTil: c.DestinationDisplay,
         };
         trains[out.id] = out;
-      }
+      });
     });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
   }
   return trains;
-}
-
-// Just wrapping the thing below.
-export default async function getTrains(station: string, direction: string): Promise<TrainDataSet> {
-  const trainData = await getRuterData(station, direction);
-  return trainData;
 }
