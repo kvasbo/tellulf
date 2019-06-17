@@ -48,7 +48,7 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     const rounded = Math.round(number);
     const space = this.props.unitSpace ? ' ' : '';
     if (rounded === 0) return '-';
-    if (rounded < 1000) return `${rounded.toLocaleString()}`;
+    if (rounded < 100) return `${rounded.toLocaleString()}`;
     return `${(Math.round(rounded / 100) / 10).toLocaleString()}${space}k`;
   }
 
