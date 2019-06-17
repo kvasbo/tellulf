@@ -19,4 +19,5 @@ body {
 .block {
   margin: 0;
   padding: 1vw;
+  display: flex;
 }
