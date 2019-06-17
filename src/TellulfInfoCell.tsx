@@ -5,7 +5,7 @@ const largeFontSize = 24;
 const labelFontSize = 10;
 
 interface Props {
-  info: number | string;
+  info: number;
   decimals: number;
   fontSize: number;
   large: boolean;
