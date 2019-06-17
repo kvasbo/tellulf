@@ -110,7 +110,7 @@ class Kalender extends React.PureComponent<Props, State> {
   }
 
   public render() {
-    return <div style={{ flex: 1 }}>{this.getDays()}</div>;
+    return <div style={{ flex: 1, overflow: 'auto' }}>{this.getDays()}</div>;
   }
 }
 
