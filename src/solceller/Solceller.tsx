@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
 import TellulfInfoCell from '../TellulfInfoCell';
 import EnergyGraph from './EnergyGraph';
+import CurrentEnergyGraph from './CurrentEnergyGraph';
 import { AppStore } from '../redux/reducers';
-import './solceller.css';
 
 import { InitState } from '../types/initstate';
 import { PowerPriceState, TibberUsageState, TibberRealtimeState } from '../types/tibber';
@@ -45,6 +45,13 @@ class Solceller extends React.PureComponent<Props, {}> {
           height: '100%',
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <CurrentEnergyGraph
+            currentNetConsumption={currentNetConsumption}
+            power={this.props.realtimePower.power}
+            currentProduction={this.props.currentSolarProduction.now}
+          />
+        </div>
         <div
           style={{
             display: 'flex',
@@ -53,14 +60,6 @@ class Solceller extends React.PureComponent<Props, {}> {
             marginBottom: 20,
           }}
         >
-          <TellulfInfoCell
-            info={this.props.currentSolarProduction.averageMinute}
-            header="Produksjon"
-            key="currentProduction"
-            large
-            smartRoundKw
-            unit="W"
-          />
           <TellulfInfoCell
             info={currentNetConsumption}
             header="Forbruk"
@@ -76,6 +75,14 @@ class Solceller extends React.PureComponent<Props, {}> {
             large
             colorIfNegative="#00FF00"
             absoluteValue
+            smartRoundKw
+            unit="W"
+          />
+          <TellulfInfoCell
+            info={this.props.currentSolarProduction.averageMinute}
+            header="Produksjon"
+            key="currentProduction"
+            large
             smartRoundKw
             unit="W"
           />

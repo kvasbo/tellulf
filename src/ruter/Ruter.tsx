@@ -32,7 +32,7 @@ class Ruter extends React.PureComponent<Props, {}> {
 
     const out = [];
     for (let i = 0; i < tog.length; i += 1) {
-      const fontSize = i == 0 ? 25 : 15;
+      const fontSize = i === 0 ? 25 : 15;
       out.push(
         <div
           style={{
