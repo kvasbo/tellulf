@@ -32,7 +32,7 @@ class Ruter extends React.PureComponent<Props, {}> {
 
     const out = [];
     for (let i = 0; i < tog.length; i += 1) {
-      const fontSize = i === 0 ? 25 : 15;
+      const fontSize = i === 0 ? 18 : 14;
       out.push(
         <div
           style={{
@@ -46,7 +46,7 @@ class Ruter extends React.PureComponent<Props, {}> {
         >
           <div style={{ flex: 1 }}>{tog[i].fromNowM}m</div>
           <div style={{ flex: 1 }}>{tog[i].faktiskTid.format('HH:mm')}</div>
-          <div style={{ flex: 1 }}>{tog[i].skalTil}</div>
+          <div style={{ flex: 2.2 }}>{tog[i].skalTil}</div>
         </div>,
       );
     }
