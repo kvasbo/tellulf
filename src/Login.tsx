@@ -43,8 +43,18 @@ class Login extends React.PureComponent<{}, State> {
       <div className="App" id="container">
         <div id="login">
           <p>Tellulf.</p>
-          <input type="text" value={this.state.user} onChange={this.handleUsernameChange} />
-          <input type="password" value={this.state.pass} onChange={this.handlePasswordChange} />
+          <input
+            type="text"
+            autoCapitalize="off"
+            value={this.state.user}
+            onChange={this.handleUsernameChange}
+          />
+          <input
+            type="password"
+            autoCapitalize="off"
+            value={this.state.pass}
+            onChange={this.handlePasswordChange}
+          />
           <input type="button" value="Logg inn" onClick={this.login} />
         </div>
       </div>
