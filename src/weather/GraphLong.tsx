@@ -140,6 +140,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             type="natural"
             dataKey="rain"
             stroke="#8884d8"
+            fillOpacity="0.3"
             isAnimationActive={false}
           />
           <Line

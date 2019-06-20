@@ -191,7 +191,14 @@ class Dag extends React.PureComponent<Props, State> {
         >
           {stedToShow}
         </div>
-        <div style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '2 / 4' }}>
+        <div
+          style={{
+            padding: 15,
+            paddingLeft: 20,
+            gridColumn: '1 / 2',
+            gridRow: '2 / 4',
+          }}
+        >
           {this.getBirthdays()}
           {this.getDinner()}
           {this.getEvents()}
