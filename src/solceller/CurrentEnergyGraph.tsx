@@ -1,11 +1,25 @@
 import React from 'react';
-import { XAxis, YAxis, Bar, ComposedChart, ResponsiveContainer } from 'recharts';
+import { Style } from '../types/generic';
+
+const calibratedMax = 4500;
 
 interface Props {
   power: number;
   currentProduction: number;
   currentNetConsumption: number;
 }
+
+const barCommonStyle: Style = {
+  height: '100%',
+  alignItems: 'center',
+  display: 'flex',
+  transition: 'width 1s',
+};
+
+const barHolderCommonStyle: Style = {
+  ...barCommonStyle,
+  width: '50%',
+};
 
 class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
   private getData() {
@@ -20,6 +34,21 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
   }
 
   public render() {
+    const consumption = Math.round((this.props.currentNetConsumption / calibratedMax) * 100);
+    const production = Math.round((this.props.currentProduction / calibratedMax) * 100);
+    const power = Math.round((this.props.power / calibratedMax) * 100);
+    const consumptionWidth = `${consumption}%`;
+    const productionWidth = `${production}%`;
+    const netConsumptionWidthPercent = Math.max(0, power) / consumption; // Cause it's percent of the bar, not the whole area!
+    const netProductionWidthPercent = Math.max(0, power * -1) / production; // Cause it's percent of the bar, not the whole area!
+    const netConsumptionWidth = `${netConsumptionWidthPercent * 100}%`;
+    const netProductionWidth = `${netProductionWidthPercent * 100}%`;
+    console.log(
+      netConsumptionWidthPercent,
+      netConsumptionWidth,
+      netProductionWidth,
+      netProductionWidthPercent,
+    );
     return (
       <div
         style={{
@@ -29,38 +58,52 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
           flexDirection: 'row',
         }}
       >
-        <ResponsiveContainer width="50%" height="100%">
-          <ComposedChart
-            layout="vertical"
-            margin={{
-              top: 0,
-              right: 0,
-              left: 10,
-              bottom: 0,
+        <div
+          style={{
+            ...barHolderCommonStyle,
+            justifyContent: 'flex-end',
+          }}
+        >
+          <div
+            style={{
+              ...barCommonStyle,
+              width: consumptionWidth,
+              backgroundColor: '#FF000033',
+              justifyContent: 'flex-end',
             }}
-            data={this.getData()}
           >
-            <XAxis type="number" hide domain={[-5000, 0]} />
-            <YAxis dataKey="name" type="category" hide />
-            <Bar dataKey="currentNetConsumption" fill="#8e0909" />
-          </ComposedChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="50%" height="100%">
-          <ComposedChart
-            layout="vertical"
-            margin={{
-              top: 0,
-              right: 10,
-              left: 0,
-              bottom: 0,
+            <div
+              style={{
+                ...barCommonStyle,
+                width: netConsumptionWidth,
+                backgroundColor: '#FF000077',
+              }}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            ...barHolderCommonStyle,
+            justifyContent: 'flex-start',
+          }}
+        >
+          <div
+            style={{
+              ...barCommonStyle,
+              width: productionWidth,
+              backgroundColor: '#00FF0033',
+              justifyContent: 'flex-start',
             }}
-            data={this.getData()}
           >
-            <XAxis type="number" hide domain={[0, 5000]} />
-            <YAxis dataKey="name" type="category" hide />
-            <Bar dataKey="currentProduction" fill="#088e25" />
-          </ComposedChart>
-        </ResponsiveContainer>
+            <div
+              style={{
+                ...barCommonStyle,
+                width: netProductionWidth,
+                backgroundColor: '#00FF0077',
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
