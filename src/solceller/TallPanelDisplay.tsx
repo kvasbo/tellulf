@@ -106,7 +106,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             info={this.props.localProductionMaxDay}
             key="prodMaxDay"
             header="max dag"
-            smartRoundKw
+            decimals={0}
             unit="W"
           />
         </div>
