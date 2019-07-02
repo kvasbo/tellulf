@@ -4,6 +4,7 @@ import TallPanel from './TallPanel';
 import TellulfInfoCell from '../TellulfInfoCell';
 import EnergyGraph from './EnergyGraph';
 import CurrentEnergyGraph from './CurrentEnergyGraph';
+import MaxEnergyGraph from './MaxEnergyGraph';
 import { AppStore } from '../redux/reducers';
 
 import { InitState } from '../types/initstate';
@@ -106,6 +107,14 @@ class Solceller extends React.PureComponent<Props, {}> {
             max={this.props.max}
             realtimePower={this.props.realtimePower}
             currentNetConsumption={currentNetConsumption}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <MaxEnergyGraph
+            day={this.props.max.maxDay}
+            year={this.props.max.maxYear}
+            month={this.props.max.maxMonth}
+            ever={this.props.max.maxEver}
           />
         </div>
       </div>

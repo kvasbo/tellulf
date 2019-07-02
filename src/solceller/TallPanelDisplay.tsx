@@ -102,13 +102,6 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             decimals={1}
             key="prodPercent"
           />
-          <TellulfInfoCell
-            info={this.props.localProductionMaxDay}
-            key="prodMaxDay"
-            header="max dag"
-            decimals={0}
-            unit="W"
-          />
         </div>
         <div className="energyTableRow">
           {this.getMinUsage()}
@@ -172,26 +165,6 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             header="prod år"
             decimals={0}
             key="prodYear"
-          />
-        </div>
-        <div className="energyTableRow">
-          <TellulfInfoCell
-            info={this.props.localProductionMaxMonth}
-            unit="W"
-            header="max måned"
-            key="maxMonth"
-          />
-          <TellulfInfoCell
-            info={this.props.localProductionMaxYear}
-            unit="W"
-            header="max år"
-            key="maxYear"
-          />
-          <TellulfInfoCell
-            info={this.props.localProductionMaxTotal}
-            unit="W"
-            header="max totalt"
-            key="maxEver"
           />
         </div>
       </div>

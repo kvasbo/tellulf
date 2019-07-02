@@ -62,7 +62,7 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
             style={{
               ...barCommonStyle,
               width: consumptionWidth,
-              backgroundColor: '#FF000033',
+              backgroundColor: '#FF000015',
               justifyContent: 'flex-end',
             }}
           >
@@ -85,7 +85,7 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
             style={{
               ...barCommonStyle,
               width: productionWidth,
-              backgroundColor: '#00FF0033',
+              backgroundColor: '#00FF0015',
               justifyContent: 'flex-start',
             }}
           >
