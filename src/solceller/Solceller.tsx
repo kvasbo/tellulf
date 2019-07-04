@@ -80,7 +80,7 @@ class Solceller extends React.PureComponent<Props, {}> {
             unit="W"
           />
           <TellulfInfoCell
-            info={this.props.currentSolarProduction.averageMinute}
+            info={this.props.currentSolarProduction.now}
             header="Produksjon"
             key="currentProduction"
             large
@@ -115,6 +115,7 @@ class Solceller extends React.PureComponent<Props, {}> {
             year={this.props.max.maxYear}
             month={this.props.max.maxMonth}
             ever={this.props.max.maxEver}
+            currentProduction={this.props.currentSolarProduction.now}
           />
         </div>
       </div>

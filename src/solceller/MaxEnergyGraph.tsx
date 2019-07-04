@@ -7,9 +7,15 @@ interface Props {
   month: number;
   year: number;
   ever: number;
+  currentProduction: number;
 }
 
-const insideTextThreshold = 45;
+const insideTextThreshold = 50;
+
+const energyText: Style = {
+  padding: '8px',
+  fontSize: '12px',
+};
 
 const energyBarHolder: Style = {
   width: '100%',
@@ -23,7 +29,6 @@ const energyBar: Style = {
   display: 'flex',
   transition: 'width 1s',
   justifyContent: 'flex-end',
-  padding: '0.5vw',
 };
 
 const restBar: Style = {
@@ -32,7 +37,6 @@ const restBar: Style = {
   flex: 1,
   transition: 'width 1s',
   justifyContent: 'flex-start',
-  padding: '0.5vw',
   backgroundColor: '#00000033',
 };
 
@@ -48,25 +52,32 @@ class MaxEnergyGraph extends React.PureComponent<Props, {}> {
     const dayName = now.format('dddd:');
     const monthName = now.format('MMM:');
     const yearName = now.format('YYYY:');
-    const dayWidth = (this.props.day / this.props.ever) * 100;
-    const monthWidth = (this.props.month / this.props.ever) * 100;
-    const yearWidth = (this.props.year / this.props.ever) * 100;
+    const ever = this.props.ever ? this.props.ever : 4254;
+    const currentWidth = (this.props.currentProduction / ever) * 100;
+    const dayWidth = (this.props.day / ever) * 100;
+    const monthWidth = (this.props.month / ever) * 100;
+    const yearWidth = (this.props.year / ever) * 100;
+    const currentWidthString = `${currentWidth}%`;
     const dayWidthString = `${dayWidth}%`;
     const monthWidthString = `${monthWidth}%`;
     const yearWidthString = `${yearWidth}%`;
+    const nowString = `nå: ${this.props.currentProduction} W`;
     const dayString = `${dayName} ${this.props.day} W`;
     const monthString = `${monthName} ${this.props.month} W`;
     const yearString = `${yearName} ${this.props.year} W`;
+    const nowMainText = currentWidth > insideTextThreshold ? nowString : '';
+    const nowOutsideText = currentWidth > insideTextThreshold ? '' : nowString;
     const dayMainText = dayWidth > insideTextThreshold ? dayString : '';
     const dayOutsideText = dayWidth > insideTextThreshold ? '' : dayString;
     const monthMainText = monthWidth > insideTextThreshold ? monthString : '';
     const monthOutsideText = monthWidth > insideTextThreshold ? '' : monthString;
     const yearMainText = yearWidth > insideTextThreshold ? yearString : '';
     const yearOutsideText = yearWidth > insideTextThreshold ? '' : yearString;
+
     return (
       <div
         style={{
-          height: '7vh',
+          height: '12vh',
           width: '90%',
           padding: '0 5% 0 5%',
           display: 'flex',
@@ -78,26 +89,40 @@ class MaxEnergyGraph extends React.PureComponent<Props, {}> {
         }}
       >
         <div style={{ ...energyBarHolder }}>
-          <div style={{ ...energyBar, backgroundColor: '#00FF0055', width: dayWidthString }}>
-            {dayMainText}
+          <div style={{ ...energyBar, backgroundColor: '#00FF0055', width: currentWidthString }}>
+            <span style={energyText}>{nowMainText}</span>
           </div>
-          <div style={restBar}>{dayOutsideText}</div>
+          <div style={restBar}>
+            <span style={energyText}>{nowOutsideText}</span>
+          </div>
+        </div>
+        <div style={{ ...energyBarHolder }}>
+          <div style={{ ...energyBar, backgroundColor: '#00FF0055', width: dayWidthString }}>
+            <span style={energyText}>{dayMainText}</span>
+          </div>
+          <div style={restBar}>
+            <span style={energyText}>{dayOutsideText}</span>
+          </div>
         </div>
         <div style={{ ...energyBarHolder }}>
           <div style={{ ...energyBar, backgroundColor: '#00FF0044', width: monthWidthString }}>
-            {monthMainText}
+            <span style={energyText}>{monthMainText}</span>
           </div>
-          <div style={restBar}>{monthOutsideText}</div>
+          <div style={restBar}>
+            <span style={energyText}>{monthOutsideText}</span>
+          </div>
         </div>
         <div style={{ ...energyBarHolder }}>
           <div style={{ ...energyBar, backgroundColor: '#00FF0033', width: yearWidthString }}>
-            {yearMainText}
+            <span style={energyText}>{yearMainText}</span>
           </div>
-          <div style={restBar}>{yearOutsideText}</div>
+          <div style={restBar}>
+            <span style={energyText}>{yearOutsideText}</span>
+          </div>
         </div>
         <div style={{ ...energyBarHolder }}>
           <div style={{ ...energyBar, backgroundColor: '#00FF0022', width: '100%' }}>
-            max: {this.props.ever} W
+            <span style={energyText}>max: {ever} W</span>
           </div>
         </div>
       </div>
