@@ -22,25 +22,16 @@ const barHolderCommonStyle: Style = {
 };
 
 class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
-  private getData() {
-    return [
-      {
-        name: 'now',
-        currentNetConsumption: this.props.currentNetConsumption * -1,
-        currentProduction: this.props.currentProduction,
-        power: this.props.power,
-      },
-    ];
-  }
-
   public render() {
     const consumption = Math.round((this.props.currentNetConsumption / calibratedMax) * 100);
     const production = Math.round((this.props.currentProduction / calibratedMax) * 100);
     const power = Math.round((this.props.power / calibratedMax) * 100);
     const consumptionWidth = `${consumption}%`;
     const productionWidth = `${production}%`;
-    const netConsumptionWidthPercent = Math.max(0, power) / consumption; // Cause it's percent of the bar, not the whole area!
-    const netProductionWidthPercent = Math.max(0, power * -1) / production; // Cause it's percent of the bar, not the whole area!
+    const netConsumptionWidthPercent = consumption ? Math.max(0, power) / consumption : 0; // Cause it's percent of the bar, not the whole area!
+    const netProductionWidthPercent = production
+      ? Math.max(0, this.props.currentNetConsumption * -1) / production
+      : 0; // Cause it's percent of the bar, not the whole area!
     const netConsumptionWidth = `${netConsumptionWidthPercent * 100}%`;
     const netProductionWidth = `${netProductionWidthPercent * 100}%`;
     return (
