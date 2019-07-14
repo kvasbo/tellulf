@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
+import store from 'store';
 import Solceller from './solceller/Solceller';
 import firebase from './firebase';
 // import Yr from './weather/Yr';
@@ -102,6 +103,8 @@ class Tellulf extends React.PureComponent<Props, State> {
   };
 
   public render() {
+    const showEnergy = store.get('showEnergy', true);
+    const showTrains = store.get('showTrains', true);
     return (
       <div className="grid">
         <div style={{ gridColumn: '1 / 1', gridRow: '1 / 4', overflow: 'auto' }} className="block">
@@ -128,12 +131,12 @@ class Tellulf extends React.PureComponent<Props, State> {
             <Settings />
           </div>
         )}
-        {!this.state.setupMode && (
+        {!this.state.setupMode && showEnergy && (
           <div style={{ gridColumn: '2 / 3', gridRow: '2 / 4' }} className="block">
             <Solceller key="tellulf-energi" updaters={this.props.updaters} />
           </div>
         )}
-        {!this.state.setupMode && (
+        {!this.state.setupMode && showTrains && (
           <div
             style={{
               gridColumn: '2 / 3',
