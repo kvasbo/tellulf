@@ -51,8 +51,6 @@ class Solceller extends React.PureComponent<Props, {}> {
     const currentNetConsumption =
       this.props.realtimePower.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
 
-    console.log(this.props.realtimePower);
-
     return (
       <div
         style={{
