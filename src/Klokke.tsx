@@ -6,17 +6,17 @@ Moment.locale('nb');
 
 interface State {
   time: Moment.Moment;
-  debug: boolean;
 }
 
 interface Props {
   temp: number;
+  onClick: Function;
 }
 
 class Clock extends React.PureComponent<Props, State> {
-  public constructor(props: { temp: -999 }) {
+  public constructor(props: Props) {
     super(props);
-    this.state = { time: Moment(), debug: false };
+    this.state = { time: Moment() };
   }
 
   public componentDidMount() {
@@ -33,7 +33,7 @@ class Clock extends React.PureComponent<Props, State> {
           justifyContent: 'space-evenly',
           alignItems: 'center',
         }}
-        onClick={() => this.setState({ debug: !this.state.debug })}
+        onClick={() => this.props.onClick()}
       >
         <span
           style={{
@@ -46,18 +46,8 @@ class Clock extends React.PureComponent<Props, State> {
           {this.state.time.format('HH:mm')}
         </span>
         <span style={{ color: '#ffffff', fontSize: 55, fontWeight: 100 }}>
-          {!this.state.debug && this.props.temp}&deg;
+          {this.props.temp}&deg;
         </span>
-        {this.state.debug && (
-          <span>
-            <button type="button" onClick={() => firebase.auth().signOut()}>
-              Logg ut
-            </button>
-            <button type="button" onClick={() => window.location.reload()}>
-              Last inn på nytt
-            </button>
-          </span>
-        )}
       </div>
     );
   }

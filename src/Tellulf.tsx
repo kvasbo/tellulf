@@ -7,6 +7,7 @@ import firebase from './firebase';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Klokke from './Klokke';
+import Settings from './Settings';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
 import { fetchTrains, fetchWeather } from './redux/actions';
@@ -33,7 +34,16 @@ interface Props {
   updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
-class Tellulf extends React.PureComponent<Props, {}> {
+interface State {
+  setupMode: boolean;
+}
+
+class Tellulf extends React.PureComponent<Props, State> {
+  public constructor(props: Props) {
+    super(props);
+    this.state = { setupMode: false };
+  }
+
   public componentDidMount() {
     this.startReloadLoop();
     this.attachNetatmoListener();
@@ -61,7 +71,6 @@ class Tellulf extends React.PureComponent<Props, {}> {
   }
 
   private updateWeather() {
-    // const { lat, long } = steder[this.state.sted];
     try {
       this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
       this.props.dispatch(
@@ -108,22 +117,35 @@ class Tellulf extends React.PureComponent<Props, {}> {
           }}
           className="block"
         >
-          <Klokke key="tellulf-klokke" temp={this.props.temperature} />
+          <Klokke
+            key="tellulf-klokke"
+            temp={this.props.temperature}
+            onClick={() => this.setState({ setupMode: !this.state.setupMode })}
+          />
         </div>
-        <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
-          {this.props.loggedIn && <Solceller key="tellulf-energi" updaters={this.props.updaters} />}
-        </div>
-        <div
-          style={{
-            gridColumn: '2 / 3',
-            gridRow: '3 / 4',
-            justifyItems: 'space-evenly',
-            alignContent: 'center',
-          }}
-          className="block"
-        >
-          <Ruter trains={this.props.trains} key="tellulf-trains" />
-        </div>
+        {this.state.setupMode && (
+          <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
+            <Settings />
+          </div>
+        )}
+        {!this.state.setupMode && (
+          <div style={{ gridColumn: '2 / 3', gridRow: '2 / 4' }} className="block">
+            <Solceller key="tellulf-energi" updaters={this.props.updaters} />
+          </div>
+        )}
+        {!this.state.setupMode && (
+          <div
+            style={{
+              gridColumn: '2 / 3',
+              gridRow: '3 / 4',
+              justifyItems: 'space-evenly',
+              alignContent: 'center',
+            }}
+            className="block"
+          >
+            <Ruter trains={this.props.trains} key="tellulf-trains" />
+          </div>
+        )}
       </div>
     );
   }
