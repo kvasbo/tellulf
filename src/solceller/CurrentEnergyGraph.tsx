@@ -30,7 +30,7 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
     const productionWidth = `${production}%`;
     const netConsumptionWidthPercent = consumption ? Math.max(0, power) / consumption : 0; // Cause it's percent of the bar, not the whole area!
     const netProductionWidthPercent = production
-      ? Math.max(0, this.props.currentNetConsumption * -1) / production
+      ? Math.max(0, this.props.power * -1) / this.props.currentProduction
       : 0; // Cause it's percent of the bar, not the whole area!
     const netConsumptionWidth = `${netConsumptionWidthPercent * 100}%`;
     const netProductionWidth = `${netProductionWidthPercent * 100}%`;
