@@ -11,7 +11,7 @@ import Klokke from './Klokke';
 import Settings from './Settings';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
-import { fetchTrains, fetchWeather } from './redux/actions';
+import { fetchWeather } from './redux/actions';
 import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
@@ -48,8 +48,6 @@ class Tellulf extends React.PureComponent<Props, State> {
   public componentDidMount() {
     this.startReloadLoop();
     this.attachNetatmoListener();
-    setInterval(this.doLoadData, 1000);
-    this.doLoadData(true);
     this.updateWeather();
     setInterval(() => this.updateWeather(), 60 * 1000 * 15);
   }
@@ -93,14 +91,6 @@ class Tellulf extends React.PureComponent<Props, State> {
       window.location.reload();
     }, diff);
   }
-
-  doLoadData = (force = false) => {
-    const now = Moment();
-    const sec = now.seconds();
-
-    // Laste tog
-    if (force || sec % 10 === 0) this.props.dispatch(fetchTrains());
-  };
 
   public render() {
     const showEnergy = store.get('showEnergy', true);

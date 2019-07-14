@@ -1,9 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
+import { fetchTrains } from '../redux/actions';
 interface Props {
   trains: TrainDataSet;
+  dispatch: Function;
 }
+
 function parseTrain(data: TrainData): ExtendedTrainData {
   const now = Moment();
   const train: ExtendedTrainData = {
@@ -16,6 +20,21 @@ function parseTrain(data: TrainData): ExtendedTrainData {
 }
 
 class Ruter extends React.PureComponent<Props, {}> {
+  private intervalId: number = 0;
+
+  public componentDidMount = () => {
+    this.updateTrains();
+    this.intervalId = window.setInterval(() => this.updateTrains(), 15000);
+  };
+
+  public componentWillUnmount = () => {
+    window.clearInterval(this.intervalId);
+  };
+
+  private updateTrains() {
+    this.props.dispatch(fetchTrains());
+  }
+
   private getTrainList() {
     let tog = [];
     const trains = Object.values(this.props.trains);
@@ -70,4 +89,4 @@ class Ruter extends React.PureComponent<Props, {}> {
   }
 }
 
-export default Ruter;
+export default connect()(Ruter);
