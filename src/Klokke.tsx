@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Moment from 'moment';
-import firebase from './firebase';
 
 Moment.locale('nb');
 
