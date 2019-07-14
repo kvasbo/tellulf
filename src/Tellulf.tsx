@@ -14,6 +14,8 @@ import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
 import { NetatmoAverageData } from './redux/NetatmoAverages';
+import TibberUpdater from './tibberUpdater';
+import SolarUpdater from './solarUpdater';
 
 // Todo: Flytte listeners ut i egen tråd!
 
@@ -28,6 +30,7 @@ interface Props {
   trains: TrainDataSet;
   temperature: number;
   netatmo: NetatmoAverageData;
+  updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
 class Tellulf extends React.PureComponent<Props, {}> {
@@ -108,7 +111,7 @@ class Tellulf extends React.PureComponent<Props, {}> {
           <Klokke key="tellulf-klokke" temp={this.props.temperature} />
         </div>
         <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
-          {this.props.loggedIn && <Solceller key="tellulf-energi" />}
+          {this.props.loggedIn && <Solceller key="tellulf-energi" updaters={this.props.updaters} />}
         </div>
         <div
           style={{

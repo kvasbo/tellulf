@@ -6,7 +6,8 @@ import EnergyGraph from './EnergyGraph';
 import CurrentEnergyGraph from './CurrentEnergyGraph';
 import MaxEnergyGraph from './MaxEnergyGraph';
 import { AppStore } from '../redux/reducers';
-
+import TibberUpdater from '../tibberUpdater';
+import SolarUpdater from '../solarUpdater';
 import { InitState } from '../types/initstate';
 import { PowerPriceState, TibberUsageState, TibberRealtimeState } from '../types/tibber';
 import { SolarCurrent, SolarMax } from '../types/solar';
@@ -22,6 +23,7 @@ interface Props {
   usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
   max: SolarMax;
+  updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
 class Solceller extends React.PureComponent<Props, {}> {
@@ -29,6 +31,18 @@ class Solceller extends React.PureComponent<Props, {}> {
     latitude: defaultLatitude,
     longitude: defaultLongitude,
   };
+
+  public componentDidMount() {
+    const { tibber, solar } = this.props.updaters;
+    tibber.updatePowerPrices();
+    tibber.subscribeToRealTime();
+    tibber.updateConsumption();
+    tibber.updateConsumptionMonthlyAndCalculateBills();
+    tibber.updateConsumptionDaily();
+    setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
+    solar.attachListeners();
+    solar.attachMaxListeners();
+  }
 
   public render() {
     if (!this.props.initState.solar) return null;

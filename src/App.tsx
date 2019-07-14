@@ -16,6 +16,8 @@ Moment.locale('nb');
 const tibber = new tibberUpdater(store);
 const solar = new solarUpdater(store);
 
+const updaters = { tibber, solar };
+
 interface AppState {
   loggedIn: boolean;
   user: number | null;
@@ -42,14 +44,6 @@ class App extends React.PureComponent {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ loggedIn: true, user });
-        tibber.updatePowerPrices();
-        tibber.subscribeToRealTime();
-        tibber.updateConsumption();
-        tibber.updateConsumptionMonthlyAndCalculateBills();
-        tibber.updateConsumptionDaily();
-        setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
-        solar.attachListeners();
-        solar.attachMaxListeners();
       }
     });
   }
@@ -115,7 +109,7 @@ class App extends React.PureComponent {
     return (
       <ErrorBoundary>
         <Provider store={store}>
-          <Tellulf loggedIn={this.state.loggedIn} />
+          <Tellulf loggedIn={this.state.loggedIn} updaters={updaters} />
         </Provider>
       </ErrorBoundary>
     );
