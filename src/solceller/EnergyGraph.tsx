@@ -73,7 +73,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount() {
-    window.setInterval(() => {
+    this.interval = window.setInterval(() => {
       this.reloadTime();
     }, 300000); // Flytt sola hvert femte minutt
   }
