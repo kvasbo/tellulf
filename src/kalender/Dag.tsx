@@ -35,21 +35,22 @@ class Dag extends React.PureComponent<Props, State> {
     sted: 'oslo',
   };
 
+  private togglePlace: () => void;
+
   public constructor(props: Props) {
     super(props);
     this.state = { sted: this.loadSted() };
+    this.togglePlace = (): void => {
+      const sted = this.loadSted();
+      const nyttSted = sted === 'oslo' ? 'sandefjord' : 'oslo';
+      store.set(`sted_${this.props.date}`, nyttSted);
+      this.setState({ sted: nyttSted });
+    };
   }
 
   private loadSted(): string {
     const sted = store.get(`sted_${this.props.date}`, 'oslo');
     return sted;
-  }
-
-  private togglePlace(): void {
-    const sted = this.loadSted();
-    const nyttSted = sted === 'oslo' ? 'sandefjord' : 'oslo';
-    store.set(`sted_${this.props.date}`, nyttSted);
-    this.setState({ sted: nyttSted });
   }
 
   private getDinner() {
@@ -158,7 +159,7 @@ class Dag extends React.PureComponent<Props, State> {
         to={to}
         sted={sted}
         showPlace={sted !== 'oslo'}
-        onClick={() => this.togglePlace()}
+        onClick={this.togglePlace}
         divideRainBy={this.props.useShortWeather ? 1 : 6}
       />
     );

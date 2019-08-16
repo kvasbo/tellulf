@@ -41,9 +41,13 @@ interface State {
 
 class Tellulf extends React.PureComponent<Props, State> {
   private interval = 0;
+  private toggleMode: () => void;
   public constructor(props: Props) {
     super(props);
     this.state = { setupMode: false };
+    this.toggleMode = (): void => {
+      this.setState({ setupMode: !this.state.setupMode });
+    };
   }
 
   public componentDidMount() {
@@ -115,11 +119,7 @@ class Tellulf extends React.PureComponent<Props, State> {
           }}
           className="block"
         >
-          <Klokke
-            key="tellulf-klokke"
-            temp={this.props.temperature}
-            onClick={() => this.setState({ setupMode: !this.state.setupMode })}
-          />
+          <Klokke key="tellulf-klokke" temp={this.props.temperature} onClick={this.toggleMode} />
         </div>
         {this.state.setupMode && (
           <div style={{ gridColumn: '2 / 3', gridRow: '2 / 3' }} className="block">
