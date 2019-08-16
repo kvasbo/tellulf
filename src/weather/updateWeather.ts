@@ -80,7 +80,7 @@ function parseTemp(s: WeatherAPIDataPeriod): { temp: number | null } {
   return { temp };
 }
 
-function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey: number = 0): ParseTimeReturn {
+function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey = 0): ParseTimeReturn {
   const f = Moment(s.from);
   const t = Moment(s.to).add(hoursToAddToKey, 'hours');
   const from = f.valueOf();
@@ -236,8 +236,8 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 
 export function parseLimits(
   rawData: WeatherData[],
-  lat: number = 59.9409,
-  long: number = 10.6991,
+  lat = 59.9409,
+  long = 10.6991,
   from?: Moment.Moment,
   to?: Moment.Moment,
 ) {

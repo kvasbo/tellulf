@@ -56,8 +56,8 @@ class App extends React.PureComponent {
       .signInWithEmailAndPassword(this.state.username, this.state.password)
       .catch(error => {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         alert(`${errorCode} ${errorMessage}`);
         this.setState({ username: null, password: null });
       });

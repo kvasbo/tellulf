@@ -27,7 +27,7 @@ export default function NetatmoAverages(
   switch (action.type) {
     case NETATMO_UPDATE_AVERAGES: {
       try {
-        let newState: NetatmoAverageData = state;
+        const newState: NetatmoAverageData = state;
         newState.humidity = action.data.humidity;
         newState.pressure = action.data.pressure;
         newState.temperature = action.data.temperature;

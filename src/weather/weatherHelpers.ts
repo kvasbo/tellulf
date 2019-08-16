@@ -10,7 +10,7 @@ const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 const gridColor = '#FFFFFFAA';
 
-export function getTimeLimits(days: number = 3) {
+export function getTimeLimits(days = 3) {
   const start = Moment().startOf('day');
   const end = Moment()
     .add(days, 'day')

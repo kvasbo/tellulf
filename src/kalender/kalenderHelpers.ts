@@ -110,7 +110,7 @@ interface SortOccurrence {
 }
 
 export async function getIcal(url: string) {
-  let parsedEvents = {};
+  const parsedEvents = {};
   try {
     const now = Moment();
     const data = await Axios.get(url);

@@ -20,7 +20,7 @@ function parseTrain(data: TrainData): ExtendedTrainData {
 }
 
 class Ruter extends React.PureComponent<Props, {}> {
-  private intervalId: number = 0;
+  private intervalId = 0;
 
   public componentDidMount = () => {
     this.updateTrains();
