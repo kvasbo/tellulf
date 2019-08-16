@@ -63,6 +63,7 @@ interface State {
 
 class EnergyGraph extends React.PureComponent<Props, State> {
   public state: State;
+  private interval = 0;
 
   public constructor(props: Props) {
     super(props);
@@ -72,9 +73,13 @@ class EnergyGraph extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount() {
-    setInterval(() => {
+    window.setInterval(() => {
       this.reloadTime();
     }, 300000); // Flytt sola hvert femte minutt
+  }
+
+  public componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   private getData() {

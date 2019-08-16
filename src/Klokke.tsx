@@ -13,13 +13,19 @@ interface Props {
 }
 
 class Clock extends React.PureComponent<Props, State> {
+  private interval = 0;
+
   public constructor(props: Props) {
     super(props);
     this.state = { time: Moment() };
   }
 
   public componentDidMount() {
-    setInterval(() => this.setState({ time: Moment() }), 1000);
+    this.interval = window.setInterval(() => this.setState({ time: Moment() }), 1000);
+  }
+
+  public componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   public render() {

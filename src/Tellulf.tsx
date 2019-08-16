@@ -40,6 +40,7 @@ interface State {
 }
 
 class Tellulf extends React.PureComponent<Props, State> {
+  private interval = 0;
   public constructor(props: Props) {
     super(props);
     this.state = { setupMode: false };
@@ -49,7 +50,11 @@ class Tellulf extends React.PureComponent<Props, State> {
     this.startReloadLoop();
     this.attachNetatmoListener();
     this.updateWeather();
-    setInterval(() => this.updateWeather(), 60 * 1000 * 15);
+    this.interval = window.setInterval(() => this.updateWeather(), 60 * 1000 * 15);
+  }
+
+  public componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   private attachNetatmoListener() {

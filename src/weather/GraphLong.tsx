@@ -38,7 +38,7 @@ interface State {
 
 class GraphLong extends React.PureComponent<Props, State> {
   public state: State;
-  private interval: number;
+  private interval = 0;
 
   public static defaultProps = {
     limits: undefined,
@@ -55,11 +55,11 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount() {
-    this.interval = setInterval(() => this.reloadTime(), 60000); // Reload time every minute
+    this.interval = window.setInterval(() => this.reloadTime(), 60000); // Reload time every minute
   }
 
   public componentWillUnmount() {
-    clearInterval(this.interval);
+    window.clearInterval(this.interval);
   }
 
   private reloadTime() {
