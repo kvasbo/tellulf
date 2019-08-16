@@ -45,6 +45,7 @@ interface Props {
 }
 
 class Kalender extends React.PureComponent<Props, State> {
+  private interval = 0;
   public constructor(props: Props) {
     super(props);
     this.state = {
@@ -56,7 +57,11 @@ class Kalender extends React.PureComponent<Props, State> {
 
   public componentDidMount() {
     this.updateData();
-    setInterval(() => this.updateData(), 1000 * 60);
+    this.interval = window.setInterval(() => this.updateData(), 1000 * 60);
+  }
+
+  public componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   private getDays() {

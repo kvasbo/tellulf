@@ -13,7 +13,6 @@ class Login extends React.PureComponent<{}, State> {
   public constructor(props: {}) {
     super(props);
     this.state = { user: '', pass: '' };
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.login = this.login.bind(this);
   }

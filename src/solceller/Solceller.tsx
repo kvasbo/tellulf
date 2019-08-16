@@ -27,6 +27,7 @@ interface Props {
 }
 
 class Solceller extends React.PureComponent<Props, {}> {
+  private interval = 0;
   public static defaultProps = {
     latitude: defaultLatitude,
     longitude: defaultLongitude,
@@ -39,9 +40,13 @@ class Solceller extends React.PureComponent<Props, {}> {
     tibber.updateConsumption();
     tibber.updateConsumptionMonthlyAndCalculateBills();
     tibber.updateConsumptionDaily();
-    setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
+    this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
     solar.attachListeners();
     solar.attachMaxListeners();
+  }
+
+  public componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   public render() {

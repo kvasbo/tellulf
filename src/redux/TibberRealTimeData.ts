@@ -82,7 +82,7 @@ export default function TibberRealTime(
       let calculatedConsumption = power;
       let previousMeasuredProduction = state.previousMeasuredProduction;
       // We are producing!
-      if (!calculatedConsumption || calculatedConsumption === 0) {
+      if (!calculatedConsumption) {
         if (powerProduction > 0) {
           previousMeasuredProduction = powerProduction; // Remember this!
         }
