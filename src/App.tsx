@@ -27,7 +27,6 @@ interface AppState {
 
 const bugsnagClient = bugsnag({
   apiKey: '4676dc34576830eae89fbdd54dd96c96',
-  // otherOptions: value
 });
 bugsnagClient.use(bugsnagReact, React);
 const ErrorBoundary = bugsnagClient.getPlugin('react');
