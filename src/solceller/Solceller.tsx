@@ -16,7 +16,8 @@ const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
 interface Props {
   initState: InitState;
-  realtimePower: TibberRealtimeState;
+  realtimePowerHjemme: TibberRealtimeState;
+  realtimePowerHytta: TibberRealtimeState;
   currentSolarProduction: SolarCurrent;
   latitude: number;
   longitude: number;
@@ -36,7 +37,8 @@ class Solceller extends React.PureComponent<Props, {}> {
   public componentDidMount() {
     const { tibber, solar } = this.props.updaters;
     tibber.updatePowerPrices();
-    tibber.subscribeToRealTime();
+    tibber.subscribeToRealTime('2b05f8c5-3241-465d-92b8-9e7ad567f78f', 'hjemme');
+    tibber.subscribeToRealTime('61f93ce4-f15c-49c2-aac1-9d9f0e1d76bb', 'hytta');
     tibber.updateConsumption();
     tibber.updateConsumptionMonthlyAndCalculateBills();
     tibber.updateConsumptionDaily();
@@ -54,7 +56,7 @@ class Solceller extends React.PureComponent<Props, {}> {
 
     // Regne ut felles verdier.
     const currentNetConsumption =
-      this.props.realtimePower.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
+      this.props.realtimePowerHjemme.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
 
     return (
       <div
@@ -68,7 +70,7 @@ class Solceller extends React.PureComponent<Props, {}> {
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
           <CurrentEnergyGraph
             currentNetConsumption={currentNetConsumption}
-            power={this.props.realtimePower.calculatedConsumption}
+            power={this.props.realtimePowerHjemme.calculatedConsumption}
             currentProduction={this.props.currentSolarProduction.now}
           />
         </div>
@@ -89,7 +91,7 @@ class Solceller extends React.PureComponent<Props, {}> {
             unit="W"
           />
           <TellulfInfoCell
-            info={this.props.realtimePower.calculatedConsumption}
+            info={this.props.realtimePowerHjemme.calculatedConsumption}
             header="Faktureres"
             key="currentPaidUsage"
             large
@@ -112,7 +114,7 @@ class Solceller extends React.PureComponent<Props, {}> {
             latitude={this.props.latitude}
             longitude={this.props.longitude}
             usedPower={this.props.usedPower}
-            realtimePower={this.props.realtimePower}
+            realtimePower={this.props.realtimePowerHjemme}
             initState={this.props.initState}
             powerPrices={this.props.powerPrices}
             max={this.props.max}
@@ -124,7 +126,7 @@ class Solceller extends React.PureComponent<Props, {}> {
           <TallPanel
             currentSolarProduction={this.props.currentSolarProduction}
             max={this.props.max}
-            realtimePower={this.props.realtimePower}
+            realtimePower={this.props.realtimePowerHjemme}
             currentNetConsumption={currentNetConsumption}
           />
         </div>
@@ -148,7 +150,8 @@ const mapStateToProps = (state: AppStore) => {
     max: state.Solar.max,
     powerPrices: state.PowerPrices,
     initState: state.Init,
-    realtimePower: state.TibberRealTime,
+    realtimePowerHjemme: state.TibberRealTime.hjemme,
+    realtimePowerHytta: state.TibberRealTime.hytta,
     usedPower: state.TibberLastDay,
   };
 };

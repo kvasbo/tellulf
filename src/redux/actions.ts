@@ -11,6 +11,7 @@ import {
   TibberRealtimeData,
   TibberConsumptionNode,
   TibberProductionNode,
+  houses,
 } from '../types/tibber';
 
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
@@ -65,10 +66,11 @@ export function updateTibberConsumptionMonth(data: TibberConsumptionNode[]) {
   };
 }
 
-export function updateRealtimeConsumption(data: TibberRealtimeData) {
+export function updateRealtimeConsumption(data: TibberRealtimeData, where: houses) {
   return {
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
     data,
+    where,
   };
 }
 

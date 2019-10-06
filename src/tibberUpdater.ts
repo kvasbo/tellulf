@@ -16,6 +16,7 @@ import {
   TibberConsumptionReturn,
   TibberProductionNode,
   TibberProductionReturn,
+  houses,
 } from './types/tibber';
 
 const nettleie = 0.477;
@@ -139,10 +140,10 @@ export default class TibberUpdater {
   }
 
   // Create and start websocket connection
-  public async subscribeToRealTime() {
+  public async subscribeToRealTime(id: string, name: houses) {
     firebase
       .database()
-      .ref('tibber/realtime/2b05f8c5-3241-465d-92b8-9e7ad567f78f')
+      .ref(`tibber/realtime/${id}`)
       .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
         try {
           if (snapshot === null) return;
@@ -164,7 +165,7 @@ export default class TibberUpdater {
             powerProduction: tmp.powerProduction,
             timestamp: tmp.timestamp,
           };
-          this.store.dispatch(updateRealtimeConsumption(data));
+          this.store.dispatch(updateRealtimeConsumption(data, name));
         } catch (err) {
           // eslint-disable-next-line no-console
           console.log(err);

@@ -1,9 +1,14 @@
 import { UPDATE_TIBBER_REALTIME_CONSUMPTION } from './actions';
 import Moment from 'moment';
 import { Action } from 'redux';
-import { TibberRealtimeState, TibberRealtimeData } from '../types/tibber';
+import {
+  TibberRealtimeState,
+  TibberRealtimeData,
+  TibberRealTimeDataState,
+  houses,
+} from '../types/tibber';
 
-const defaultState: TibberRealtimeState = {
+const defaultStateValues: TibberRealtimeState = {
   accumulatedConsumption: 0,
   accumulatedCost: 0,
   accumulatedProduction: 0,
@@ -27,18 +32,18 @@ const defaultState: TibberRealtimeState = {
   avgLastHourStamp: new Date().toISOString(),
 };
 
-interface PowerMinute {
-  startTime: string;
-  usage: number;
-  samples: number;
-}
+const defaultState: TibberRealTimeDataState = {
+  hytta: defaultStateValues,
+  hjemme: defaultStateValues,
+};
 
 interface KnownAction {
   type: string;
+  where: houses;
   data: TibberRealtimeData;
 }
 export default function TibberRealTime(
-  state: TibberRealtimeState = defaultState,
+  state: TibberRealTimeDataState = defaultState,
   incomingAction: Action,
 ) {
   const action = incomingAction as KnownAction;
@@ -67,20 +72,25 @@ export default function TibberRealTime(
 
       const avgLastHourStamp = stamp.format('dddHH');
 
-      let avgLastHourSamples = state.avgLastHourSamples ? state.avgLastHourSamples + 1 : 1;
+      let avgLastHourSamples = state[action.where].avgLastHourSamples
+        ? state[action.where].avgLastHourSamples + 1
+        : 1;
       let avgLastHour = Math.round(
-        state.avgLastHour + (power - state.avgLastHour) / avgLastHourSamples,
+        state[action.where].avgLastHour +
+          (power - state[action.where].avgLastHour) / avgLastHourSamples,
       );
-      if (state.avgLastHourStamp !== avgLastHourStamp) {
+      if (state[action.where].avgLastHourStamp !== avgLastHourStamp) {
         avgLastHour = Math.round(power);
         avgLastHourSamples = 1;
       }
 
-      const lastHourByTenMinutes = state.lastHourByTenMinutes ? state.lastHourByTenMinutes : {};
+      const lastHourByTenMinutes = state[action.where].lastHourByTenMinutes
+        ? state[action.where].lastHourByTenMinutes
+        : {};
 
       // Calculate realtime production
       let calculatedConsumption = power;
-      let previousMeasuredProduction = state.previousMeasuredProduction;
+      let previousMeasuredProduction = state[action.where].previousMeasuredProduction;
       // We are producing!
       if (!calculatedConsumption) {
         if (powerProduction > 0) {
@@ -90,7 +100,9 @@ export default function TibberRealTime(
       }
 
       try {
-        const lastHourByTenMinutes = state.lastHourByTenMinutes ? state.lastHourByTenMinutes : {};
+        const lastHourByTenMinutes = state[action.where].lastHourByTenMinutes
+          ? state[action.where].lastHourByTenMinutes
+          : {};
         // calculate per minute
         const startOfMinute = Math.floor(stamp.minutes() / 10);
         const startTime = Moment(stamp)
@@ -115,27 +127,30 @@ export default function TibberRealTime(
 
       return {
         ...state,
-        accumulatedConsumption,
-        accumulatedCost,
-        accumulatedProduction,
-        accumulatedReward,
-        averagePower,
-        currency,
-        lastMeterConsumption,
-        lastMeterProduction,
-        maxPower,
-        maxPowerProduction,
-        minPower,
-        minPowerProduction,
-        power,
-        powerProduction,
-        timestamp,
-        avgLastHour,
-        avgLastHourSamples,
-        avgLastHourStamp,
-        lastHourByTenMinutes,
-        calculatedConsumption,
-        previousMeasuredProduction,
+        [action.where]: {
+          ...state[action.where],
+          accumulatedConsumption,
+          accumulatedCost,
+          accumulatedProduction,
+          accumulatedReward,
+          averagePower,
+          currency,
+          lastMeterConsumption,
+          lastMeterProduction,
+          maxPower,
+          maxPowerProduction,
+          minPower,
+          minPowerProduction,
+          power,
+          powerProduction,
+          timestamp,
+          avgLastHour,
+          avgLastHourSamples,
+          avgLastHourStamp,
+          lastHourByTenMinutes,
+          calculatedConsumption,
+          previousMeasuredProduction,
+        },
       };
     }
     default:
