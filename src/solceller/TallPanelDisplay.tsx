@@ -5,17 +5,27 @@ import './solceller.css';
 interface Props {
   currentPower: number;
   netDay: number;
+  netDayHytta: number;
   currentConsumption: number;
+  currentConsumptionHytta: number;
   currentSolarProduction: number;
   producedPercent: number;
   accumulatedConsumption: number;
+  accumulatedConsumptionHytta: number;
   consumptionMinimum: number;
   consumptionAverage: number;
   consumptionMaximum: number;
+  consumptionMinimumHytta: number;
+  consumptionAverageHytta: number;
+  consumptionMaximumHytta: number;
   accumulatedProduction: number;
+  accumulatedProductionHytta: number;
   accumulatedCost: number;
   accumulatedReward: number;
+  accumulatedCostHytta: number;
+  accumulatedRewardHytta: number;
   maxPowerProduction: number;
+  maxPowerProductionHytta: number;
   localProductionDay: number;
   localProductionMonth: number;
   localProductionYear: number;
@@ -86,6 +96,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
           alignItems: 'space-evenly',
         }}
       >
+        <div className="energyTableRow">Hjemme</div>
         <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.netDay}
@@ -165,6 +176,53 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             header="prod år"
             decimals={0}
             key="prodYear"
+          />
+        </div>
+        <div className="energyTableRow">Hytta</div>
+        <div className="energyTableRow">
+          <TellulfInfoCell
+            info={this.props.currentConsumptionHytta}
+            unit="W"
+            header="forbruk nå"
+            decimals={0}
+            key="cabinCurrent"
+          />
+          <TellulfInfoCell
+            info={this.props.accumulatedConsumptionHytta}
+            unit="kWh"
+            header="forbruk i dag"
+            decimals={1}
+            key="cabinUsed"
+          />
+          <TellulfInfoCell
+            info={this.props.accumulatedProductionHytta}
+            unit="kWh"
+            header="prod i dag"
+            decimals={1}
+            key="cabinMade"
+          />
+        </div>
+        <div className="energyTableRow">
+          <TellulfInfoCell
+            info={this.props.consumptionMaximumHytta}
+            unit="W"
+            header="max bruk"
+            decimals={0}
+            key="cabinMaxUse"
+          />
+          <TellulfInfoCell
+            info={this.props.maxPowerProductionHytta}
+            unit="W"
+            header="max prod"
+            decimals={1}
+            key="cabinMaxMade"
+          />
+          <TellulfInfoCell
+            info={this.props.netDayHytta}
+            unit="kr"
+            header="netto dag"
+            decimals={1}
+            key="cabinMoney"
           />
         </div>
       </div>

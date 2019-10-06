@@ -14,7 +14,7 @@ import { TrainDataSet } from '../types/trains';
 import { WeatherStore } from '../types/weather';
 import { SolarState } from '../types/solar';
 import { InitState } from '../types/initstate';
-import { TibberRealtimeState, TibberUsageState, PowerPriceState } from '../types/tibber';
+import { TibberRealTimeDataState, TibberUsageState, PowerPriceState } from '../types/tibber';
 
 export interface AppStore {
   Init: InitState;
@@ -23,7 +23,7 @@ export interface AppStore {
   Solar: SolarState;
   PowerPrices: PowerPriceState;
   Trains: TrainDataSet;
-  TibberRealTime: TibberRealtimeState;
+  TibberRealTime: TibberRealTimeDataState;
   TibberLastDay: TibberUsageState;
   Weather: WeatherStore;
 }

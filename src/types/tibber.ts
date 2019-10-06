@@ -41,6 +41,13 @@ export interface TibberRealtimeState extends TibberRealtimeData {
   previousMeasuredProduction: number;
 }
 
+export type houses = 'hytta' | 'hjemme';
+// The state of the store
+export interface TibberRealTimeDataState {
+  hytta: TibberRealtimeState;
+  hjemme: TibberRealtimeState;
+}
+
 export interface PowerPrice {
   total: number;
 }
