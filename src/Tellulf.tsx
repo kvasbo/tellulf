@@ -94,7 +94,8 @@ class Tellulf extends React.PureComponent<Props, State> {
     const now = Moment();
     const reload = Moment(now)
       .startOf('hour')
-      .add(1, 'hour');
+      .add(1, 'hour')
+      .add(5, 'seconds');
     const diff = reload.diff(now, 'milliseconds');
     setTimeout(() => {
       window.location.reload();
