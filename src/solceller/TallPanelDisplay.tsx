@@ -62,26 +62,16 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
   };
 
   // Return either minimum usage or maximum production (one of them is zero!)
-  private getMinUsage() {
-    if (this.props.maxPowerProduction > 0) {
+  private getMinUsage(hytta: boolean) {
+    const prodMax = !hytta ? this.props.maxPowerProduction : this.props.maxPowerProductionHytta;
+    const useMin = !hytta ? this.props.consumptionMinimum : this.props.consumptionMinimumHytta;
+    if (prodMax > 0) {
       return (
-        <TellulfInfoCell
-          key="maxProd"
-          info={this.props.maxPowerProduction}
-          header="max prod dag"
-          smartRoundKw
-          unit="W"
-        />
+        <TellulfInfoCell key="maxProd" info={prodMax} header="max prod" smartRoundKw unit="W" />
       );
     } else {
       return (
-        <TellulfInfoCell
-          key="maxProd"
-          info={this.props.consumptionMinimum}
-          header="min bruk"
-          smartRoundKw
-          unit="W"
-        />
+        <TellulfInfoCell key="maxProd" info={useMin} header="min bruk" smartRoundKw unit="W" />
       );
     }
   }
@@ -107,31 +97,12 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             key="netDay"
           />
           <TellulfInfoCell
-            info={this.props.producedPercent}
-            unit="%"
-            header="produsert %"
+            info={this.props.accumulatedConsumption}
+            unit="kWh"
+            header="forbruk i dag"
+            key="paidDay"
             decimals={1}
-            key="prodPercent"
           />
-        </div>
-        <div className="energyTableRow">
-          {this.getMinUsage()}
-          <TellulfInfoCell
-            info={this.props.consumptionAverage}
-            key="snittBruk"
-            header="snittbruk"
-            smartRoundKw
-            unit="W"
-          />
-          <TellulfInfoCell
-            info={this.props.consumptionMaximum}
-            header="max bruk"
-            key="maxBruk"
-            smartRoundKw
-            unit="W"
-          />
-        </div>
-        <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.accumulatedProduction}
             unit="kWh"
@@ -139,20 +110,22 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             key="soldDay"
             decimals={1}
           />
+        </div>
+        <div className="energyTableRow">
           <TellulfInfoCell
-            info={this.props.accumulatedCost}
-            unit="kr"
-            unitSpace
-            key="costDay"
-            header="kost i dag"
-            decimals={2}
-          />
-          <TellulfInfoCell
-            info={this.props.accumulatedConsumption}
-            unit="kWh"
-            header="fakturert i dag"
-            key="paidDay"
+            info={this.props.producedPercent}
+            unit="%"
+            header="produsert %"
             decimals={1}
+            key="prodPercent"
+          />
+          {this.getMinUsage(false)}
+          <TellulfInfoCell
+            info={this.props.consumptionMaximum}
+            header="max bruk"
+            key="maxBruk"
+            smartRoundKw
+            unit="W"
           />
         </div>
         <div className="energyTableRow">
@@ -171,21 +144,21 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
             key="prodMonth"
           />
           <TellulfInfoCell
-            info={this.props.localProductionYear}
-            unit="kWh"
+            info={this.props.localProductionYear / 1000}
+            unit="MWh"
             header="prod år"
-            decimals={0}
+            decimals={1}
             key="prodYear"
           />
         </div>
         <div className="energyTableRow">Hytta</div>
         <div className="energyTableRow">
           <TellulfInfoCell
-            info={this.props.currentConsumptionHytta}
-            unit="W"
-            header="forbruk nå"
-            decimals={0}
-            key="cabinCurrent"
+            info={this.props.netDayHytta}
+            unit="kr"
+            header="netto dag"
+            decimals={1}
+            key="cabinMoney"
           />
           <TellulfInfoCell
             info={this.props.accumulatedConsumptionHytta}
@@ -197,32 +170,27 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
           <TellulfInfoCell
             info={this.props.accumulatedProductionHytta}
             unit="kWh"
-            header="prod i dag"
+            header="solgt i dag"
             decimals={1}
             key="cabinMade"
           />
         </div>
         <div className="energyTableRow">
           <TellulfInfoCell
+            info={this.props.currentConsumptionHytta}
+            unit="W"
+            header="forbruk nå"
+            decimals={0}
+            key="cabinCurrent"
+          />
+          {this.getMinUsage(true)}
+          <TellulfInfoCell
             info={this.props.consumptionMaximumHytta}
             unit="W"
             header="max bruk"
-            decimals={0}
+            decimals={1}
+            smartRoundKw
             key="cabinMaxUse"
-          />
-          <TellulfInfoCell
-            info={this.props.maxPowerProductionHytta}
-            unit="W"
-            header="max prod"
-            decimals={1}
-            key="cabinMaxMade"
-          />
-          <TellulfInfoCell
-            info={this.props.netDayHytta}
-            unit="kr"
-            header="netto dag"
-            decimals={1}
-            key="cabinMoney"
           />
         </div>
       </div>
