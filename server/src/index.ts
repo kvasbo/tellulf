@@ -78,9 +78,9 @@ function start() {
 }
 
 process.on('uncaughtException', function(err) {
-  // eslint-disable-next-line no-console
   logger.error(err.message);
-  // console.log('Caught exception: ' + err);
+  // eslint-disable-next-line no-console
+  console.log('Caught exception: ' + err);
 });
 
 firebase.auth().onAuthStateChanged((user: firebase.User | null): void => {
