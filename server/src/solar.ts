@@ -1,12 +1,54 @@
 import Moment, { tz } from 'moment-timezone';
+import { Timber } from '@timberio/node';
 // import Steca from 'stecagridscrape';
 import { meanBy } from 'lodash';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Steca = require('stecagridscrape');
 
+interface ProdData {
+  val?: number;
+  time?: string | null;
+  error?: boolean;
+}
+
+interface ProdAverages extends ProdData {
+  full: number;
+  short: number;
+}
+
+// Keep track of average values
+interface Averages {
+  [s: string]: number;
+}
+
+interface Production {
+  effect?: ProdData;
+  today?: ProdData;
+  month?: ProdData;
+  year?: ProdData;
+  total?: ProdData;
+  averages?: ProdAverages;
+  todayByHour?: {
+    time: string | null;
+    error: boolean;
+    val: number[];
+  };
+}
+
+interface Sample {
+  value: number;
+  time: Moment.Moment;
+}
+
 class StecaParser {
-  constructor(ip, firebase, logger) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private mySteca: any;
+  private firebase: firebase.app.App;
+  private samples: Sample[];
+  private logger: Timber;
+
+  constructor(ip: string, firebase: firebase.app.App, logger: Timber) {
     this.firebase = firebase;
     this.mySteca = new Steca(ip);
     this.samples = [];
@@ -16,7 +58,7 @@ class StecaParser {
   async updateData(full = false) {
     const now = tz(undefined, 'Europe/Oslo');
     const dst = now.isDST();
-    const production = {};
+    const production: Production = {};
     production.effect = { val: 0, time: null, error: false };
     production.today = { val: 0, time: null, error: false };
 
@@ -82,9 +124,11 @@ class StecaParser {
       }
 
       try {
-        production.todayByHour.time = new Date().toUTCString();
-        const byHour = await this.mySteca.getProductionTodayByHour();
-        production.todayByHour.val = [...byHour];
+        if (production.todayByHour) {
+          production.todayByHour.time = new Date().toUTCString();
+          const byHour = await this.mySteca.getProductionTodayByHour();
+          production.todayByHour.val = [...byHour];
+        }
       } catch (err) {
         production.total.error = true;
         this.logger.error(err.message);
@@ -108,7 +152,7 @@ class StecaParser {
     }
   }
 
-  async checkMax(value, now) {
+  async checkMax(value: number, now: Moment.Moment) {
     const y = now.format('YYYY');
     const m = now.format('MM');
     const d = now.format('DD');
@@ -134,7 +178,7 @@ class StecaParser {
         .database()
         .ref(refMonthOfYear)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Month of year max set', refMonthOfYear, now.toISOString(), value);
+      this.logger.info(`Month of year max set, ${refMonthOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Statistical - "max ever in any week of this number"
@@ -148,7 +192,7 @@ class StecaParser {
         .database()
         .ref(refWeekOfYear)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Week of year max set', refWeekOfYear, now.toISOString(), value);
+      this.logger.info(`Week of year max set, ${refWeekOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Stastistical - "max ever between 12 and 13"
@@ -162,7 +206,7 @@ class StecaParser {
         .database()
         .ref(refHourOfDay)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Hour of day max set', refHourOfDay, now.toISOString(), value);
+      this.logger.info(`Hour of day max set, ${refHourOfDay}, ${now.toISOString()}, ${value}`);
     }
 
     const hourSnap = await this.firebase
@@ -175,9 +219,9 @@ class StecaParser {
         .database()
         .ref(refHour)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Hourly max set', refHour, now.toLocaleString(), value);
+      this.logger.info(`Hour max set, ${refHour}, ${now.toISOString()}, ${value}`);
     } else {
-      return null; // No point in continuing, we have a larger value this hour.
+      return; // No point in continuing, we have a larger value this hour.
     }
 
     // Max per day
@@ -191,9 +235,9 @@ class StecaParser {
         .database()
         .ref(refDay)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Daily max set', refDay, now.toISOString(), value);
+      this.logger.info(`Daily max set, ${refDay}, ${now.toISOString()}, ${value}`);
     } else {
-      return null; // No point in continuing, we have a larger value this day.
+      return; // No point in continuing, we have a larger value this day.
     }
 
     // Max per month
@@ -207,9 +251,9 @@ class StecaParser {
         .database()
         .ref(refMonth)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Monthly max set', refMonth, now.toISOString(), value);
+      this.logger.info(`Monthly max set, ${refMonth}, ${now.toISOString()}, ${value}`);
     } else {
-      return null; // No point in continuing, we have a larger value this month.
+      return; // No point in continuing, we have a larger value this month.
     }
 
     const yearSnap = await this.firebase
@@ -222,9 +266,9 @@ class StecaParser {
         .database()
         .ref(refYear)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Yearly max set', refDay, now.toISOString(), value);
+      this.logger.info(`Year max set, ${refYear}, ${now.toISOString()}, ${value}`);
     } else {
-      return null; // No point in continuing, we have a larger value this year.
+      return; // No point in continuing, we have a larger value this year.
     }
 
     // Max evah
@@ -238,31 +282,31 @@ class StecaParser {
         .database()
         .ref(refEver)
         .set({ value, time: now.toISOString() });
-      this.logger.info('Ever max set', refEver, now.toISOString(), value);
+      this.logger.info(`Ever max set, ${refEver}, ${now.toISOString()}, ${value}`);
     }
 
     this.logger.info('Max ran all the way through. Expensive!');
   }
 
-  getFilteredSamples(minutes) {
+  getFilteredSamples(minutes: number) {
     const cut = Moment().subtract(minutes, 'minutes');
     const tempSamples = this.samples.filter(s => s.time.isSameOrAfter(cut));
     return tempSamples;
   }
 
-  getAverageForPeriod(minutes) {
+  getAverageForPeriod(minutes: number): number {
     const data = this.getFilteredSamples(minutes);
     const avg = Math.round(meanBy(data, 'value'));
     return avg;
   }
 
-  addPowerSampleAndPrune(value) {
+  addPowerSampleAndPrune(value: number) {
     // Add and prune
     this.samples.push({ value, time: Moment() });
     const cutOff = Moment().subtract(120, 'minutes');
     this.samples = this.samples.filter(s => s.time.isSameOrAfter(cutOff));
 
-    const averages = {};
+    const averages: Averages = {};
     averages['1'] = this.getAverageForPeriod(1);
     averages['5'] = this.getAverageForPeriod(5);
     averages['10'] = this.getAverageForPeriod(10);
@@ -275,7 +319,7 @@ class StecaParser {
     return averages;
   }
 
-  start(interval) {
+  start(interval: number) {
     this.updateData(true);
     setInterval(() => this.updateData(), interval);
   }

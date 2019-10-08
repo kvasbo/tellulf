@@ -1,6 +1,6 @@
 import { Timber } from '@timberio/node';
 import * as firebase from 'firebase/app';
-import Netatmo from './netatmo.js';
+import Netatmo, { NetatmoConfig } from './netatmo.js';
 import StecaParser from './solar.js';
 import Tibber from './tibber.js';
 
@@ -43,7 +43,17 @@ function init() {
 function start() {
   // eslint-disable-next-line no-console
   console.log('Starting.');
-  const netatmoConfig = {
+  if (
+    !process.env.NETATMO_USERNAME ||
+    !process.env.NETATMO_PASSWORD ||
+    !process.env.NETATMO_CLIENT_ID ||
+    !process.env.NETATMO_CLIENT_SECRET
+  ) {
+    // eslint-disable-next-line no-console
+    console.log('Netatmo config incomplete, quitting');
+    return;
+  }
+  const netatmoConfig: NetatmoConfig = {
     username: process.env.NETATMO_USERNAME,
     password: process.env.NETATMO_PASSWORD,
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -51,12 +61,11 @@ function start() {
     // eslint-disable-next-line @typescript-eslint/camelcase
     client_secret: process.env.NETATMO_CLIENT_SECRET,
   };
+  const myNetatmo = new Netatmo(netatmoConfig, fb, logger);
+  myNetatmo.start(5);
 
   const mySteca = new StecaParser('192.168.1.146', fb, logger);
   mySteca.start(10000);
-
-  const myNetatmo = new Netatmo(netatmoConfig, fb, logger);
-  myNetatmo.start(5);
 
   const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
   const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
