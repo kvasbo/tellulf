@@ -86,17 +86,17 @@ class Netatmo {
                     const pressIndex = e.type.indexOf('pressure');
                     const humIndex = e.type.indexOf('humidity');
                     if (tempIndex !== -1) {
-                      const temp = Number(result[tempIndex], 10);
+                      const temp = Number(result[tempIndex]);
                       tmpTotal += temp;
                       tmpSamples += 1;
                     }
                     if (pressIndex !== -1) {
-                      const press = Number(result[pressIndex], 10);
+                      const press = Number(result[pressIndex]);
                       pressTotal += press;
                       pressSamples += 1;
                     }
                     if (humIndex !== -1) {
-                      const hum = Number(result[humIndex], 10);
+                      const hum = Number(result[humIndex]);
                       humTotal += hum;
                       humSamples += 1;
                     }
