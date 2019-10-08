@@ -4,3 +4,4 @@ src/solceller/progressbar.js
 src/registerServiceWorker.js
 src/App.js
 src/App.test.js
+server/dist
