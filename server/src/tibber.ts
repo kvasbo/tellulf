@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { Timber } from '@timberio/node';
 const TibberConnector = require('tibber-pulse-connector');
 const ws = require('ws');
 
 class Tibber {
-  constructor(apiKey, homeId, firebase, logger) {
+  apiKey: string;
+  homeId: string[];
+  firebase: firebase.app.App;
+  logger: Timber;
+
+  constructor(apiKey: string, homeId: string[], firebase: firebase.app.App, logger: Timber) {
     this.apiKey = apiKey;
     this.homeId = homeId;
     this.firebase = firebase;
@@ -14,8 +20,9 @@ class Tibber {
     const options = {
       homeId: this.homeId,
       token: this.apiKey,
-      onData: (data, id) => this.handleTibberRealTime(id, data),
-      onError: error => this.logger.error(error.message),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onData: (data: Record<string, any>, id: string) => this.handleTibberRealTime(id, data),
+      onError: (error: Error) => this.logger.error(error.message),
       ws,
     };
     const tibberConnectorHjemme = new TibberConnector(options);
@@ -23,7 +30,8 @@ class Tibber {
     this.logger.info('Tibber initalised and started.');
   }
 
-  async handleTibberRealTime(id, data) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async handleTibberRealTime(id: string, data: Record<string, any>) {
     const timeStamp = new Date().getTime();
     const toStore = { ...data.data.liveMeasurement, timeStamp };
     this.logger.info(`Tibber ${id}: ${toStore.power}W`);

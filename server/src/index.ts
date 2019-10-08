@@ -16,7 +16,7 @@ const firebaseConfig = {
   messagingSenderId: '159155087298',
 };
 
-firebase.initializeApp(firebaseConfig);
+const fb = firebase.initializeApp(firebaseConfig);
 
 const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
 const logger = new Timber(timberApiKey, '23469', { ignoreExceptions: true });
@@ -52,18 +52,17 @@ function start() {
     client_secret: process.env.NETATMO_CLIENT_SECRET,
   };
 
-  const mySteca = new StecaParser('192.168.1.146', firebase, logger);
+  const mySteca = new StecaParser('192.168.1.146', fb, logger);
   mySteca.start(10000);
 
-  const myNetatmo = new Netatmo(netatmoConfig, firebase, logger);
+  const myNetatmo = new Netatmo(netatmoConfig, fb, logger);
   myNetatmo.start(5);
 
-  const tibberConnectorHjemme = new Tibber(
-    process.env.TIBBER_KEY,
-    [process.env.TIBBER_HOME, process.env.TIBBER_CABIN],
-    firebase,
-    logger,
-  );
+  const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
+  const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
+  const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
+
+  const tibberConnectorHjemme = new Tibber(tibberKey, [tibberHome, tibberCabin], fb, logger);
   tibberConnectorHjemme.start();
   // eslint-disable-next-line no-console
   console.log('Started.');
