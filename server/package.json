@@ -1,0 +1,33 @@
+{
+  "name": "tellulf-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "yarn run build && bash runlocal.sh",
+    "build": "rm -rf ./dist && ./node_modules/.bin/tsc"
+  },
+  "author": "Audun Kvasbø",
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/app-types": "0.4.3",
+    "@firebase/util": "0.2.25",
+    "@timberio/node": "^0.35.0",
+    "firebase": "7.1.0",
+    "lodash": "4.17.15",
+    "moment-timezone": "0.5.26",
+    "netatmo": "2.3.0",
+    "stecagridscrape": "1.2.4",
+    "tibber-pulse-connector": "2.1.0",
+    "ws": "7.1.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint": "^6.0.0",
+    "typescript": "^3.6.3"
+  }
+}
