@@ -3,7 +3,7 @@
 read -p "Enter tag: "  tag
 echo "Building $tag!"
 
-./node_modules/.bin/babel src --out-dir dist
+yarn run build
 docker build -t kvasbo/tellulf .
 docker push kvasbo/tellulf
 

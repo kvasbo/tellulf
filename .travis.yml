@@ -14,12 +14,24 @@ install:
 
 before_script:
 - yarn run lint
+- docker login --username $DOCKERHUB_USER --password $DOCKERHUB_PWD
 
 script:
+# Build client
 - CI=false yarn run build || travis_terminate 1;
+# build server 
+- cd ./server/
+- CI=false yarn run build
+- docker build -t kvasbo/tellulf .
+- cd ..
 
 after_script:
+# Deploy client
 - firebase deploy -m "Travis, Build $TRAVIS_BUILD_NUMBER, commit $TRAVIS_COMMIT" --non-interactive --token $FIREBASE_TOKEN
+# Push server (not deployed)
+- docker tag kvasbo/tellulf:latest kvasbo/tellulf:ci_$TRAVIS_BUILD_NUMBER
+- docker push kvasbo/tellulf
+- docker push kvasbo/tellulf:ci_$TRAVIS_BUILD_NUMBER
 
 env:
   global:
