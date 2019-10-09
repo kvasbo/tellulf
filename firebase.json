@@ -1,7 +1,7 @@
 {
   "rules": "firebase_rules.json",
   "hosting": {
-    "public": "build"
+    "public": "client/build"
   },
   "database": {
     "rules": "firebase_rules.json"
