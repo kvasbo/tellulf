@@ -16,14 +16,15 @@ install:
 - yarn --cwd "functions" install --non-interactive --pure-lockfile
 
 before_script:
-- cd "client" && yarn run lint & cd ..
+- yarn --cwd "client" run lint
 
 script:
 # Build client
 - CI=false yarn --cwd "client" run build || travis_terminate 1
 # build server 
-- CI=false yarn --cwd "sercer" run build || travis_terminate 1
-- cd server && docker build -t kvasbo/tellulf .
+- CI=false yarn --cwd "server" run build || travis_terminate 1
+- yarn --cwd "server" run buildDocker || travis_terminate 1
+# - cd "server" && docker build -t kvasbo/tellulf .
 
 after_script:
 # Deploy client

@@ -8,6 +8,7 @@
     "startLocal": "yarn run build && bash runlocal.sh",
     "start": "yarn run build && node ./dist/index.js",
     "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
+    "buildDocker": "docker build -t kvasbo/tellulf .",
     "startInProduction": "node index.js"
   },
   "author": "Audun Kvasbø",
