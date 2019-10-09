@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const NetatmoApi = require('netatmo');
 import { Timber } from '@timberio/node';
-import Moment from 'Moment';
+import Moment from 'moment';
 
 export interface NetatmoConfig {
   username: string;
