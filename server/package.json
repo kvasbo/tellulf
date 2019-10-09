@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "startLocal": "yarn run build && bash runlocal.sh",
     "start": "yarn run build && node ./dist/index.js",
-    "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
+    "build": "rm -rf ./dist && rm -rf ./build && ./node_modules/.bin/tsc && ./node_modules/.bin/webpack --config webpack.config.js",
     "buildDocker": "docker build -t kvasbo/tellulf .",
     "startInProduction": "node index.js"
   },
@@ -27,12 +27,12 @@
     "ws": "7.1.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.5.5",
-    "@babel/core": "7.5.5",
-    "@babel/preset-env": "7.5.5",
+    "@types/lodash": "^4.14.142",
     "@types/moment-timezone": "^0.5.12",
     "@typescript-eslint/parser": "^2.3.3",
     "eslint": "^6.0.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   }
 }
