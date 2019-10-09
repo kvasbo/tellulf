@@ -4,8 +4,8 @@ FROM node:lts-alpine
 WORKDIR /usr/src/app
 
 COPY package.json ./
-#COPY yarn.lock ./
-#RUN yarn install --network-timeout 1000000
+COPY yarn.lock ./
+RUN yarn install --network-timeout 1000000
 
 COPY ./dist .
 
