@@ -10,9 +10,9 @@ cache:
 install:
 - docker login --username $DOCKERHUB_USER --password $DOCKERHUB_PWD
 - npm install -g firebase-tools
-- cd "client" && yarn install --non-interactive --pure-lockfile && cd ..
-- cd "functions" && yarn install --non-interactive --pure-lockfile && cd ..
-- cd "server" && yarn install --non-interactive --pure-lockfile && cd ..
+- ./client/yarn install --non-interactive --pure-lockfile
+- ./functions/yarn install --non-interactive --pure-lockfile
+- ./server/yarn install --non-interactive --pure-lockfile
 
 before_script:
 - cd "client" && yarn run lint & cd ..
@@ -20,9 +20,9 @@ before_script:
 script:
 - pwd
 # Build client
-- cd "client" && CI=false yarn run build || travis_terminate 1 && cd ..
+- CI=false ./client/yarn run build || travis_terminate 1 && cd ..
 # build server 
-- cd "server" && CI=false yarn run build && docker build -t kvasbo/tellulf . && cd ..
+- CI=false ./server/yarn run build && ./server/docker build -t kvasbo/tellulf .
 
 after_script:
 # Deploy client
