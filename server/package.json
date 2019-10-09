@@ -9,7 +9,9 @@
     "start": "yarn run build && node ./dist/index.js",
     "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
     "buildDocker": "docker build -t kvasbo/tellulf .",
-    "startInProduction": "node index.js"
+    "startInProduction": "node index.js",
+    "lint": "./node_modules/.bin/eslint src --ext .ts,.tsx",
+    "lint-fixup": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix"
   },
   "author": "Audun Kvasbø",
   "license": "ISC",
@@ -29,8 +31,12 @@
   "devDependencies": {
     "@types/lodash": "^4.14.142",
     "@types/moment-timezone": "^0.5.12",
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "eslint": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-config-prettier": "^6.0.0",
+    "prettier": "^1.18.2",
     "typescript": "^3.6.3"
   }
 }

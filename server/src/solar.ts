@@ -1,6 +1,5 @@
 import Moment, { tz } from 'moment-timezone';
 import { Timber } from '@timberio/node';
-// import Steca from 'stecagridscrape';
 import { meanBy } from 'lodash';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

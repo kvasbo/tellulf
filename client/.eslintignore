@@ -5,3 +5,4 @@ src/registerServiceWorker.js
 src/App.js
 src/App.test.js
 server/dist
+server/build
