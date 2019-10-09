@@ -11,6 +11,7 @@ install:
 - npm install -g firebase-tools
 - yarn install --non-interactive --pure-lockfile
 - cd "functions" && yarn install --non-interactive --pure-lockfile && cd ..
+- cd "server" && yarn install --non-interactive --pure-lockfile && cd ..
 
 before_script:
 - yarn run lint
@@ -29,9 +30,9 @@ after_script:
 # Deploy client
 - firebase deploy -m "Travis, Build $TRAVIS_BUILD_NUMBER, commit $TRAVIS_COMMIT" --non-interactive --token $FIREBASE_TOKEN
 # Push server (not deployed)
-- docker tag kvasbo/tellulf:latest kvasbo/tellulf:ci_$TRAVIS_BUILD_NUMBER
+- docker tag kvasbo/tellulf:latest kvasbo/tellulf:ci_$TRAVIS_COMMIT
 - docker push kvasbo/tellulf
-- docker push kvasbo/tellulf:ci_$TRAVIS_BUILD_NUMBER
+- docker push kvasbo/tellulf:ci_$TRAVIS_COMMIT
 
 env:
   global:
