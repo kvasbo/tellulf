@@ -30,9 +30,9 @@ after_script:
 # Deploy client
 - firebase deploy -m "Travis, Build $TRAVIS_BUILD_NUMBER, commit $TRAVIS_COMMIT" --non-interactive --token $FIREBASE_TOKEN
 # Push server (not deployed)
-- docker tag kvasbo/tellulf:latest kvasbo/tellulf:ci_$TRAVIS_COMMIT
-- docker push kvasbo/tellulf
-- docker push kvasbo/tellulf:ci_$TRAVIS_COMMIT
+- docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_COMMIT
+- docker push $DOCKERHUB_USER/tellulf
+- docker push $DOCKERHUB_USER/tellulf:ci_$TRAVIS_COMMIT
 
 env:
   global:
