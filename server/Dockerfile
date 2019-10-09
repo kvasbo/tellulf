@@ -9,4 +9,4 @@ RUN yarn install --network-timeout 1000000
 
 COPY ./dist .
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "startInProduction" ]

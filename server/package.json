@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "startLocal": "yarn run build && bash runlocal.sh",
     "start": "yarn run build && node ./dist/index.js",
-    "build": "rm -rf ./dist && ./node_modules/.bin/tsc"
+    "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
+    "startInProduction": "node index.js"
   },
   "author": "Audun Kvasbø",
   "license": "ISC",
