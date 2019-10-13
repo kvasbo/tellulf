@@ -38,6 +38,7 @@ export interface TibberRealtimeState extends TibberRealtimeData {
   avgLastHourSamples: number;
   avgLastHourStamp: string;
   calculatedConsumption: number;
+  calculatedHomeAndCabinTotal: number;
   previousMeasuredProduction: number;
 }
 
@@ -46,6 +47,7 @@ export type houses = 'hytta' | 'hjemme';
 export interface TibberRealTimeDataState {
   hytta: TibberRealtimeState;
   hjemme: TibberRealtimeState;
+  totalNetUsage: number;
 }
 
 export interface PowerPrice {

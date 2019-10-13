@@ -25,6 +25,7 @@ const defaultStateValues: TibberRealtimeState = {
   powerProduction: 0,
   timestamp: new Date().toISOString(),
   calculatedConsumption: 0,
+  calculatedHomeAndCabinTotal: 0,
   previousMeasuredProduction: 0,
   lastHourByTenMinutes: {},
   avgLastHour: 0,
@@ -35,6 +36,7 @@ const defaultStateValues: TibberRealtimeState = {
 const defaultState: TibberRealTimeDataState = {
   hytta: defaultStateValues,
   hjemme: defaultStateValues,
+  totalNetUsage: 0,
 };
 
 interface KnownAction {
@@ -99,6 +101,8 @@ export default function TibberRealTime(
         calculatedConsumption = -1 * previousMeasuredProduction;
       }
 
+      
+
       try {
         const lastHourByTenMinutes = state[action.where].lastHourByTenMinutes
           ? state[action.where].lastHourByTenMinutes
@@ -123,9 +127,7 @@ export default function TibberRealTime(
         console.log(err);
       }
 
-      // TODO: Clean data by time. Store by minute.
-
-      return {
+      const newState = {
         ...state,
         [action.where]: {
           ...state[action.where],
@@ -151,7 +153,10 @@ export default function TibberRealTime(
           calculatedConsumption,
           previousMeasuredProduction,
         },
-      };
+      }
+      newState.totalNetUsage = state.hjemme.calculatedConsumption + state.hytta.calculatedConsumption;
+
+      return newState;
     }
     default:
       return state;
