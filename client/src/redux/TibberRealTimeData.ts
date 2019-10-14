@@ -101,8 +101,6 @@ export default function TibberRealTime(
         calculatedConsumption = -1 * previousMeasuredProduction;
       }
 
-      
-
       try {
         const lastHourByTenMinutes = state[action.where].lastHourByTenMinutes
           ? state[action.where].lastHourByTenMinutes
@@ -153,8 +151,9 @@ export default function TibberRealTime(
           calculatedConsumption,
           previousMeasuredProduction,
         },
-      }
-      newState.totalNetUsage = state.hjemme.calculatedConsumption + state.hytta.calculatedConsumption;
+      };
+      newState.totalNetUsage =
+        state.hjemme.calculatedConsumption + state.hytta.calculatedConsumption;
 
       return newState;
     }
