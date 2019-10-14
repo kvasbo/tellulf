@@ -22,3 +22,4 @@ yarn-debug.log*
 yarn-error.log*
 server/runLocal.sh
 server/dist
+tellulf-app/tellulf-app.xcworkspace/xcuserdata
