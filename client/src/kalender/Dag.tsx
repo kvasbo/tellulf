@@ -1,6 +1,9 @@
 import React from 'react';
 import Moment from 'moment';
 import store from 'store';
+import maxBy from 'lodash/maxBy';
+import minBy from 'lodash/minBy';
+import sumBy from 'lodash/sumBy';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import GraphLong from '../weather/GraphLong';
@@ -130,7 +133,21 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getWeatherSummary(date: Moment.Moment, sted: string): string {
+  private getWeatherSummary(): string {
+
+    const maxTemp = maxBy(this.props.weatherData, (w): number => {
+      return w.temp ? w.temp : -999;
+    })    
+    
+    const minTemp = minBy(this.props.weatherData, (w): number => {
+      return w.temp ? w.temp : 999;
+    })
+
+    const rain = sumBy(this.props.weatherData, (w): number => {
+      if (!w.rain) return 0;
+      return w.rain;
+    })
+    console.log(maxTemp, minTemp, rain)
     return "";
   }
 
@@ -170,7 +187,7 @@ class Dag extends React.PureComponent<Props, State> {
           className="kalenderDato weatherSummary"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '2 / 3', gridRow: '1 / 2' }}
         >
-          {this.getWeatherSummary(day, this.state.sted)}
+          {this.getWeatherSummary()}
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>
           {this.getWeather(day, this.state.sted)}
