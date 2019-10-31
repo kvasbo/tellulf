@@ -289,6 +289,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               fill="#FFFF00"
               stroke="none"
               r={4}
+              label={""}
             />
             {false && this.props.currentNetConsumption && this.props.currentNetConsumption > 0 && (
               <ReferenceDot
@@ -298,6 +299,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
                 r={3}
                 fill="#ffffff44"
                 stroke="#ffffff"
+                label={""}
               >
                 <Label
                   value={`${Number(this.props.currentNetConsumption).toLocaleString()}`}
@@ -311,6 +313,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
             {false && this.props.currentSolarProduction.now > 0 && (
               <ReferenceDot
                 yAxisId="kwh"
+                label={""}
                 y={this.props.currentSolarProduction.now / 1000}
                 x={this.props.currentSolarProduction.currentTime.valueOf()}
                 r={3}
