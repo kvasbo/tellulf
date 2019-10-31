@@ -18,3 +18,8 @@
   display: block;
   margin: 0 0 5px 0;
 }
+
+.weatherSummary {
+  text-align: right;
+  color: rgb(150,150,150);
+}

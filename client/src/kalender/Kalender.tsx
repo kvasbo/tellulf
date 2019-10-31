@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
-// import Yr from '../weather/Yr';
+import uniqBy from 'lodash/uniqBy';
+import sortBy from 'lodash/sortBy';
 import Dag from './Dag';
 
 import { getIcal } from './kalenderHelpers';
 import { EventDataSet } from '../types/calendar';
 import { AppStore } from '../redux/reducers';
-import { WeatherStore } from '../types/weather';
+import { WeatherStore, WeatherData, WeatherDataSet } from '../types/weather';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -82,8 +83,8 @@ class Kalender extends React.PureComponent<Props, State> {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
-      const weather = this.props.weather;
       const useShortWeather = diff < 2 ? true : false;
+      const filteredWeather = this.filterWeatherData(day, 'oslo', useShortWeather)
 
       if (diff < 6 || cald || birthdays || dinners) {
         out.push(
@@ -93,13 +94,36 @@ class Kalender extends React.PureComponent<Props, State> {
             events={cald}
             dinner={dinners}
             birthdays={birthdays}
-            weather={weather}
             useShortWeather={useShortWeather}
+            weatherData={filteredWeather}
           />,
         );
       }
     });
     return out;
+  }
+
+  private filterWeatherData(date: Moment.Moment, sted: string, useShortWeather: boolean): WeatherData[] {
+    if (!this.props.weather || !this.props.weather[sted]) return [];
+
+    const from = Moment(date).startOf('day');
+    const to = Moment(date)
+      .add(1, 'day')
+      .startOf('day');
+    
+    const filterModifier = useShortWeather ? 0 : 12;
+    const filterFrom = Moment(from).subtract(filterModifier, 'hours');
+    const filtertTo = Moment(to).add(filterModifier, 'hours');
+
+    const weather: WeatherDataSet = useShortWeather
+      ? this.props.weather[sted].short
+      : this.props.weather[sted].long;
+    const weatherFiltered = Object.values(weather).filter(w => {
+      return Moment(w.time).isBetween(filterFrom, filtertTo, undefined, '[]');
+    });
+    const weatherUnique = uniqBy(weatherFiltered, 'time');
+    const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
+    return weatherSorted;
   }
 
   private async updateData() {

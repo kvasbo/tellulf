@@ -1,14 +1,12 @@
 import React from 'react';
 import Moment from 'moment';
 import store from 'store';
-import uniqBy from 'lodash/uniqBy';
-import sortBy from 'lodash/sortBy';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import GraphLong from '../weather/GraphLong';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { WeatherData, WeatherStore, WeatherDataSet } from '../types/weather';
+import { WeatherData } from '../types/weather';
 
 interface Props {
   dinner: EventDataSet;
@@ -16,8 +14,8 @@ interface Props {
   events: EventDataSet;
   date: string;
   weatherAsGraph: boolean;
-  weather?: WeatherStore;
   useShortWeather: boolean;
+  weatherData: WeatherData[];
 }
 
 interface State {
@@ -132,29 +130,21 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
+  private getWeatherSummary(date: Moment.Moment, sted: string): string {
+    return "";
+  }
+
   private getWeather(date: Moment.Moment, sted: string) {
-    if (!this.props.weather || !this.props.weather[sted]) return null;
-    const now = Moment();
+    if (this.props.weatherData.length === 0) return null;
+  
     const from = Moment(date).startOf('day');
     const to = Moment(date)
       .add(1, 'day')
       .startOf('day');
-    const filterFrom = Moment(from).subtract(12, 'hours');
-    const filterTo = Moment(to).add(12, 'hours');
-    const daysDiff = from.diff(now, 'days');
 
-    const weather: WeatherDataSet = this.props.useShortWeather
-      ? this.props.weather[sted].short
-      : this.props.weather[sted].long;
-    const weatherFiltered = Object.values(weather).filter(w => {
-      return Moment(w.time).isBetween(filterFrom, filterTo, undefined, '[]');
-    });
-    const weatherUnique = uniqBy(weatherFiltered, 'time');
-    const weatherSorted: WeatherData[] = sortBy(weatherUnique, 'time');
-    if (daysDiff > 5) return null;
     return (
       <GraphLong
-        weather={weatherSorted}
+        weather={this.props.weatherData}
         from={from}
         to={to}
         sted={sted}
@@ -174,7 +164,13 @@ class Dag extends React.PureComponent<Props, State> {
           className="kalenderDato"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
         >
-          {getDayHeader(day)}
+            {getDayHeader(day)}
+        </div>
+        <div
+          className="kalenderDato weatherSummary"
+          style={{ padding: 15, paddingLeft: 20, gridColumn: '2 / 3', gridRow: '1 / 2' }}
+        >
+          {this.getWeatherSummary(day, this.state.sted)}
         </div>
         <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>
           {this.getWeather(day, this.state.sted)}
