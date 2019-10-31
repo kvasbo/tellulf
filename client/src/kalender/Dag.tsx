@@ -134,26 +134,25 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeatherSummary(): string {
-
     const maxTemp = maxBy(this.props.weatherData, (w): number => {
       return w.temp ? w.temp : -999;
-    })    
-    
+    });
+
     const minTemp = minBy(this.props.weatherData, (w): number => {
       return w.temp ? w.temp : 999;
-    })
+    });
 
     const rain = sumBy(this.props.weatherData, (w): number => {
       if (!w.rain) return 0;
       return w.rain;
-    })
-    console.log(maxTemp, minTemp, rain)
-    return "";
+    });
+    // console.log(maxTemp, minTemp, rain);
+    return '';
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
     if (this.props.weatherData.length === 0) return null;
-  
+
     const from = Moment(date).startOf('day');
     const to = Moment(date)
       .add(1, 'day')
@@ -181,7 +180,7 @@ class Dag extends React.PureComponent<Props, State> {
           className="kalenderDato"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
         >
-            {getDayHeader(day)}
+          {getDayHeader(day)}
         </div>
         <div
           className="kalenderDato weatherSummary"

@@ -84,7 +84,7 @@ class Kalender extends React.PureComponent<Props, State> {
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
       const useShortWeather = diff < 2 ? true : false;
-      const filteredWeather = this.filterWeatherData(day, 'oslo', useShortWeather)
+      const filteredWeather = this.filterWeatherData(day, 'oslo', useShortWeather);
 
       if (diff < 6 || cald || birthdays || dinners) {
         out.push(
@@ -103,14 +103,18 @@ class Kalender extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private filterWeatherData(date: Moment.Moment, sted: string, useShortWeather: boolean): WeatherData[] {
+  private filterWeatherData(
+    date: Moment.Moment,
+    sted: string,
+    useShortWeather: boolean,
+  ): WeatherData[] {
     if (!this.props.weather || !this.props.weather[sted]) return [];
 
     const from = Moment(date).startOf('day');
     const to = Moment(date)
       .add(1, 'day')
       .startOf('day');
-    
+
     const filterModifier = useShortWeather ? 0 : 12;
     const filterFrom = Moment(from).subtract(filterModifier, 'hours');
     const filtertTo = Moment(to).add(filterModifier, 'hours');
