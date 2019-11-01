@@ -146,10 +146,10 @@ class Dag extends React.PureComponent<Props, State> {
       if (!w.rain) return 0;
       return w.rain;
     });
-    const maxT = (maxTemp && maxTemp.temp) ? Math.round(maxTemp.temp) : -999;
-    const minT = (minTemp && minTemp.temp) ? Math.round(minTemp.temp) : -999;
+    const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : -999;
+    const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : -999;
     const r = Math.round(rain);
-    console.log(maxTemp, minTemp, rain);
+
     return `${minT}/${maxT} ${r}mm`;
   }
 
