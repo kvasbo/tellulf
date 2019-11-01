@@ -146,7 +146,12 @@ class Tellulf extends React.PureComponent<Props, State> {
             <Ruter trains={this.props.trains} key="tellulf-trains" />
           </div>
         )}
-        <div id="debuginfo" style={{ position: 'absolute', top: 5, right: 5, fontSize: '6pt', color: '#999999' }}>{BUILD_DATE} {BUILD_COMMIT_MESSAGE}, commit: {BUILD_COMMIT}, job: {BUILD_JOB}</div>
+        <div
+          id="debuginfo"
+          style={{ position: 'absolute', top: 5, right: 5, fontSize: '6pt', color: '#999999' }}
+        >
+          {BUILD_DATE} {BUILD_COMMIT_MESSAGE}, commit: {BUILD_COMMIT}, job: {BUILD_JOB}
+        </div>
       </div>
     );
   }
