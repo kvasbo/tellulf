@@ -8,21 +8,19 @@ cache:
   - npm
 
 install:
-- pwd
-- docker login --username $DOCKERHUB_USER --password $DOCKERHUB_PWD
 - npm install -g firebase-tools
 - yarn --cwd "client" install --non-interactive --pure-lockfile
 - yarn --cwd "server" install --non-interactive --pure-lockfile
 - yarn --cwd "functions" install --non-interactive --pure-lockfile
+# Mark the build
+- dat=`date` 
+- sed -i 's/PLACEHOLDER_BUILD_COMMIT_MESSAGE/$TRAVIS_COMMIT_MESSAGE/g' client/src/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_JOB/$TRAVIS_BUILD_NUMBER/g' client/src/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_COMMIT/$TRAVIS_COMMIT/g' client/src/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_DATE/${dat}/g' client/src/buildData.js
 
 before_script:
 - yarn --cwd "client" run lint
-# Mark the build
-- dat=`date` 
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT_MESSAGE/$TRAVIS_COMMIT_MESSAGE/g' client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_JOB/$TRAVIS_BUILD_NUMBER/g' client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT/$TRAVIS_COMMIT/g' client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_DATE/${dat}/g' client/buildData.js
 
 script:
 # Build client
@@ -36,6 +34,7 @@ after_script:
 # Deploy client
 - firebase deploy -m "Travis, Build $TRAVIS_BUILD_NUMBER, commit $TRAVIS_COMMIT" --non-interactive --token $FIREBASE_TOKEN
 # Push server (not deployed)
+- docker login --username $DOCKERHUB_USER --password $DOCKERHUB_PWD
 - docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
 - docker push $DOCKERHUB_USER/tellulf
 - docker push $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
