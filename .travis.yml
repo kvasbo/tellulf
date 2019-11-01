@@ -19,10 +19,10 @@ before_script:
 - yarn --cwd "client" run lint
 # Mark the build
 - dat=`date` 
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT_MESSAGE/$TRAVIS_COMMIT_MESSAGE/g' ./client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_JOB/$TRAVIS_BUILD_NUMBER/g' ./client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT/$TRAVIS_COMMIT/g' ./client/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_DATE/${dat}/g' ./client/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_COMMIT_MESSAGE/$TRAVIS_COMMIT_MESSAGE/g' client/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_JOB/$TRAVIS_BUILD_NUMBER/g' client/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_COMMIT/$TRAVIS_COMMIT/g' client/buildData.js
+- sed -i 's/PLACEHOLDER_BUILD_DATE/${dat}/g' client/buildData.js
 
 script:
 # Build client
