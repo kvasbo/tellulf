@@ -12,12 +12,6 @@ install:
 - yarn --cwd "client" install --non-interactive --pure-lockfile
 - yarn --cwd "server" install --non-interactive --pure-lockfile
 - yarn --cwd "functions" install --non-interactive --pure-lockfile
-# Mark the build
-- dat=`date` 
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT_MESSAGE/$TRAVIS_COMMIT_MESSAGE/g' client/src/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_JOB/$TRAVIS_BUILD_NUMBER/g' client/src/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_COMMIT/$TRAVIS_COMMIT/g' client/src/buildData.js
-- sed -i 's/PLACEHOLDER_BUILD_DATE/${dat}/g' client/src/buildData.js
 
 before_script:
 - yarn --cwd "client" run lint

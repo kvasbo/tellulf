@@ -134,6 +134,8 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeatherSummary(): string {
+    if (this.props.weatherData.length === 0) return '';
+
     const maxTemp = maxBy(this.props.weatherData, (w): number => {
       return w.temp ? w.temp : -999;
     });
