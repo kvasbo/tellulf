@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "client"
+		},
+		{
+			"path": "tellulf-wrapper"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "functions"
+		}
+	],
+  "settings": {}
+}
