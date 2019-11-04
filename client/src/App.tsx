@@ -1,8 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
 import { Provider } from 'react-redux';
-import bugsnag from '@bugsnag/js';
-import bugsnagReact from '@bugsnag/plugin-react';
 import 'moment/locale/nb';
 import Tellulf from './Tellulf';
 import firebase from './firebase';
@@ -24,12 +22,6 @@ interface AppState {
   username: string;
   password: string;
 }
-
-const bugsnagClient = bugsnag({
-  apiKey: '4676dc34576830eae89fbdd54dd96c96',
-});
-bugsnagClient.use(bugsnagReact, React);
-const ErrorBoundary = bugsnagClient.getPlugin('react');
 
 class App extends React.PureComponent {
   public state: AppState;
@@ -106,11 +98,9 @@ class App extends React.PureComponent {
   public render() {
     if (!this.state.loggedIn) return this.getLogin();
     return (
-      <ErrorBoundary>
-        <Provider store={store}>
-          <Tellulf loggedIn={this.state.loggedIn} updaters={updaters} />
-        </Provider>
-      </ErrorBoundary>
+      <Provider store={store}>
+        <Tellulf loggedIn={this.state.loggedIn} updaters={updaters} />
+      </Provider>
     );
   }
 }
