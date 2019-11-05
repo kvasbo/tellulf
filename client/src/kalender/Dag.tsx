@@ -193,7 +193,9 @@ class Dag extends React.PureComponent<Props, State> {
         >
           {this.getWeatherSummary()}
         </div>
-        <div style={{ gridColumn: '1 / 3', gridRow: '2 / 4' }}>
+        <div
+          style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
+        >
           {this.getWeather(day, this.state.sted)}
         </div>
         <div
