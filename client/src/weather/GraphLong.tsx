@@ -20,7 +20,12 @@ import { WeatherData } from '../types/weather';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
 
-const gridColor = '#FFFFFF33';
+const colors = {
+  grid: '#FFFFFF33',
+  cold: '#0000FF44',
+  rain: '#8884d8',
+  temperature: '#FF000088',
+};
 
 interface Props {
   weather: WeatherData[];
@@ -127,15 +132,14 @@ class GraphLong extends React.PureComponent<Props, State> {
             domain={[0, 1.5]}
             hide
           />
-          <CartesianGrid stroke={gridColor} vertical={false} />
+          <CartesianGrid stroke={colors.grid} vertical={false} />
           {limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
               y2={limits.lowerRange}
               yAxisId="temp"
               stroke="#00000000"
-              fill="#0000FF"
-              fillOpacity="0.35"
+              fill={colors.cold}
             />
           )}
           <Area
@@ -144,7 +148,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             connectNulls={false}
             type="natural"
             dataKey="rain"
-            stroke="#8884d8"
+            stroke={colors.rain}
             fillOpacity="0.3"
             isAnimationActive={false}
           />
@@ -154,7 +158,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             connectNulls={false}
             type="natural"
             dataKey="rainMin"
-            stroke="#8884d8"
+            stroke={colors.rain}
             strokeDasharray="2 2"
             isAnimationActive={false}
           />
@@ -164,18 +168,8 @@ class GraphLong extends React.PureComponent<Props, State> {
             connectNulls={false}
             type="natural"
             dataKey="rainMax"
-            stroke="#8884d8AA"
+            stroke={colors.rain}
             strokeDasharray="2 2"
-            isAnimationActive={false}
-          />
-          <Line
-            dot={false}
-            yAxisId="wind"
-            connectNulls={false}
-            type="natural"
-            dataKey="wind"
-            stroke="#ffffff77"
-            strokeDasharray="3 5"
             isAnimationActive={false}
           />
           <Line
@@ -193,7 +187,7 @@ class GraphLong extends React.PureComponent<Props, State> {
           <ReferenceLine
             yAxisId="temp"
             x={this.state.currentTime}
-            stroke="#FF000088"
+            stroke={colors.temperature}
             strokeWidth={3}
             strokeDasharray="3 3"
           />
