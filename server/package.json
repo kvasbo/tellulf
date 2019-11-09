@@ -4,8 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "startLocal": "yarn run build && bash runlocal.sh",
+    "test": "yarn run build && bash runlocal.sh",
     "start": "yarn run build && node ./dist/index.js",
     "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
     "buildDocker": "docker build -t kvasbo/tellulf .",
@@ -16,17 +15,17 @@
   "author": "Audun Kvasbø",
   "license": "ISC",
   "dependencies": {
-    "@firebase/app-types": "0.4.3",
-    "@firebase/util": "0.2.25",
+    "@firebase/app-types": "^0.4.3",
+    "@firebase/util": "^0.2.25",
     "@timberio/node": "^0.35.0",
-    "firebase": "7.1.0",
+    "firebase": "^7.1.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "moment-timezone": "0.5.26",
-    "netatmo": "2.3.0",
-    "stecagridscrape": "1.2.4",
-    "tibber-pulse-connector": "2.1.0",
-    "ws": "7.1.2"
+    "moment-timezone": "^0.5.26",
+    "netatmo": "^2.3.0",
+    "stecagridscrape": "^1.2.4",
+    "tibber-pulse-connector": "^3.0.1",
+    "ws": "^7.1.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.142",
@@ -34,8 +33,8 @@
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "eslint": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.1",
     "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.18.2",
     "typescript": "^3.6.3"
   }
