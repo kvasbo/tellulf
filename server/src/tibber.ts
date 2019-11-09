@@ -3,6 +3,8 @@ import { Timber } from '@timberio/node';
 const TibberConnector = require('tibber-pulse-connector');
 const ws = require('ws');
 
+let dataPointsReceived = 0;
+
 class Tibber {
   apiKey: string;
   homeId: string[];
@@ -36,6 +38,11 @@ class Tibber {
     const toStore = { ...data.data.liveMeasurement, timeStamp };
     this.logger.info(`Tibber ${id}: ${toStore.power}W`);
     const ref = this.firebase.database().ref(`tibber/realtime/${id}`);
+    if (dataPointsReceived % 100 === 0) {
+      // eslint-disable-next-line no-console
+      console.log(`Tibber data received (${dataPointsReceived}): ${toStore.power}W`);
+    }
+    dataPointsReceived += 1;
     await ref.set(toStore);
   }
 }
