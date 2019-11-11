@@ -1,94 +1,36 @@
 import React from 'react';
-import { Style } from '../types/generic';
+import EnergyGauge from '../gauges/EnergyGauge';
 
-const calibratedMax = 4500;
+const calibratedMax = 5000;
 
 interface Props {
-  power: number;
-  currentProduction: number;
   currentNetConsumption: number;
+  currentNetConsumptionHytta: number;
 }
-
-const barCommonStyle: Style = {
-  height: '100%',
-  alignItems: 'center',
-  display: 'flex',
-  transition: 'width 1s',
-};
-
-const barHolderCommonStyle: Style = {
-  ...barCommonStyle,
-  width: '50%',
-};
 
 class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
   public render() {
-    const consumption = Math.round((this.props.currentNetConsumption / calibratedMax) * 100);
-    const production = Math.round((this.props.currentProduction / calibratedMax) * 100);
-    const power = Math.round((this.props.power / calibratedMax) * 100);
-    const consumptionWidth = `${consumption}%`;
-    const productionWidth = `${production}%`;
-    const netConsumptionWidthPercent = consumption ? Math.max(0, power) / consumption : 0; // Cause it's percent of the bar, not the whole area!
-    const netProductionWidthPercent = production
-      ? Math.max(0, this.props.power * -1) / this.props.currentProduction
-      : 0; // Cause it's percent of the bar, not the whole area!
-    const netConsumptionWidth = `${netConsumptionWidthPercent * 100}%`;
-    const netProductionWidth = `${netProductionWidthPercent * 100}%`;
     return (
       <div
         style={{
-          height: '3vh',
+          height: '80px',
           width: '100%',
           display: 'flex',
           flexDirection: 'row',
         }}
       >
-        <div
-          style={{
-            ...barHolderCommonStyle,
-            justifyContent: 'flex-end',
-          }}
-        >
-          <div
-            style={{
-              ...barCommonStyle,
-              width: consumptionWidth,
-              backgroundColor: '#FF000015',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <div
-              style={{
-                ...barCommonStyle,
-                width: netConsumptionWidth,
-                backgroundColor: '#FF000077',
-              }}
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            ...barHolderCommonStyle,
-            justifyContent: 'flex-start',
-          }}
-        >
-          <div
-            style={{
-              ...barCommonStyle,
-              width: productionWidth,
-              backgroundColor: '#00FF0015',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <div
-              style={{
-                ...barCommonStyle,
-                width: netProductionWidth,
-                backgroundColor: '#00FF0077',
-              }}
-            />
-          </div>
-        </div>
+        <EnergyGauge
+          key="Hjemmenå"
+          value={this.props.currentNetConsumption}
+          max={calibratedMax}
+          title="Hjemme"
+        />
+        <EnergyGauge
+          key="HyttaNå"
+          value={this.props.currentNetConsumptionHytta}
+          max={calibratedMax}
+          title="Hytta"
+        />
       </div>
     );
   }

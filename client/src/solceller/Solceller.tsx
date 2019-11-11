@@ -58,6 +58,9 @@ class Solceller extends React.PureComponent<Props, {}> {
     const currentNetConsumption =
       this.props.realtimePowerHjemme.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
 
+    // Regne ut felles verdier.
+    const currentNetConsumptionHytta = this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
+
     return (
       <div
         style={{
@@ -70,8 +73,7 @@ class Solceller extends React.PureComponent<Props, {}> {
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
           <CurrentEnergyGraph
             currentNetConsumption={currentNetConsumption}
-            power={this.props.realtimePowerHjemme.calculatedConsumption}
-            currentProduction={this.props.currentSolarProduction.now}
+            currentNetConsumptionHytta={currentNetConsumptionHytta}
           />
         </div>
         <div
