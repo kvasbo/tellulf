@@ -74,6 +74,8 @@ class Solceller extends React.PureComponent<Props, {}> {
           <CurrentEnergyGraph
             currentNetConsumption={currentNetConsumption}
             currentNetConsumptionHytta={currentNetConsumptionHytta}
+            averageConsumptionHjemme={Math.round(this.props.realtimePowerHjemme.averagePower)}
+            averageConsumptionHytta={Math.round(this.props.realtimePowerHytta.averagePower)}
           />
         </div>
         <div

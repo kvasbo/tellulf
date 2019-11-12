@@ -6,6 +6,8 @@ const calibratedMax = 5000;
 interface Props {
   currentNetConsumption: number;
   currentNetConsumptionHytta: number;
+  averageConsumptionHjemme: number;
+  averageConsumptionHytta: number;
 }
 
 class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
@@ -22,12 +24,14 @@ class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
         <EnergyGauge
           key="Hjemmenå"
           value={this.props.currentNetConsumption}
+          average={this.props.averageConsumptionHjemme}
           max={calibratedMax}
           title="Hjemme"
         />
         <EnergyGauge
           key="HyttaNå"
           value={this.props.currentNetConsumptionHytta}
+          average={this.props.averageConsumptionHytta}
           max={calibratedMax}
           title="Hytta"
         />

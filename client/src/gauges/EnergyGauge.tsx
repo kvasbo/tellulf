@@ -5,6 +5,7 @@ interface Props {
   value: number;
   max: number;
   title?: string;
+  average: number;
 }
 
 const arc = d3.arc();
@@ -16,10 +17,12 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
 
   public render() {
     const percentFilled = Math.abs(this.props.value) / this.props.max;
+    const percentAverage = Math.abs(this.props.average) / this.props.max;
 
     const startAngle = 1.5 * Math.PI;
     // If it's full it's full.
     const endAngle = Math.min(startAngle + Math.PI * percentFilled, startAngle + Math.PI);
+    const averageAngle = Math.min(startAngle + Math.PI * percentAverage, startAngle + Math.PI);
 
     const bg = arc({
       innerRadius: 40,
@@ -35,7 +38,15 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
       endAngle,
     });
 
-    if (!p || !bg) return null;
+    const avg = arc({
+      innerRadius: 40,
+      outerRadius: 48,
+      startAngle,
+      endAngle: averageAngle,
+    });
+
+    // Yeah yeah yeah
+    if (!p || !bg || !avg) return null;
 
     const fillColor = this.props.value > 0 ? 'red' : 'green';
 
@@ -62,6 +73,7 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
           preserveAspectRatio="xMidYMid meet"
           style={{ transition: 'all 500ms' }}
         >
+          {/* Background */}
           <path
             d={bg}
             transform={`translate(50, 50)`}
@@ -70,11 +82,21 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
             strokeWidth="1"
             strokeLinecap="butt"
           />
+          {/* Current */}
           <path
             d={p}
             transform={`translate(50, 50)`}
             stroke="white"
             fill={fillColor}
+            strokeWidth="1"
+            strokeLinecap="butt"
+          />
+          {/* Average */}
+          <path
+            d={avg}
+            transform={`translate(50, 50)`}
+            stroke="white"
+            fill="none"
             strokeWidth="1"
             strokeLinecap="butt"
           />
