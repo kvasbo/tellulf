@@ -15,7 +15,7 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
   }
 
   public render() {
-    const percentFilled = this.props.value / this.props.max;
+    const percentFilled = Math.abs(this.props.value) / this.props.max;
 
     const startAngle = 1.5 * Math.PI;
     // If it's full it's full.
