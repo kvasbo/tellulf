@@ -2,6 +2,8 @@
   "name": "tellulf",
   "version": "1.0.58",
   "private": true,
+  "homepage": "https://tellulf.kvasbo.no",
+  "browser": true,
   "dependencies": {
     "axios": "^0.19.0",
     "d3": "^5.12.0",
