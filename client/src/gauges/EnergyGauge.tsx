@@ -1,5 +1,5 @@
 import * as React from 'react';
-import d3 from './d3Importer';
+import * as d3 from 'd3';
 
 interface Props {
   value: number;
@@ -10,25 +10,39 @@ interface Props {
 
 const arc = d3.arc();
 
+interface Angles {
+  startAngle: number;
+  endAngle: number;
+  averageAngle: number;
+  totalAngle: number;
+}
+
 class EnergyGauge extends React.PureComponent<Props, {}> {
   public constructor(props: Props) {
     super(props);
   }
 
-  public render() {
+  private getAngles(): Angles {
     const percentFilled = Math.abs(this.props.value) / this.props.max;
     const percentAverage = Math.abs(this.props.average) / this.props.max;
 
     const startAngle = 1.5 * Math.PI;
+    const totalAngle = startAngle + Math.PI;
     // If it's full it's full.
     const endAngle = Math.min(startAngle + Math.PI * percentFilled, startAngle + Math.PI);
     const averageAngle = Math.min(startAngle + Math.PI * percentAverage, startAngle + Math.PI);
+
+    return { startAngle, endAngle, averageAngle, totalAngle };
+  }
+
+  public render() {
+    const { startAngle, endAngle, averageAngle, totalAngle } = this.getAngles();
 
     const bg = arc({
       innerRadius: 40,
       outerRadius: 48,
       startAngle,
-      endAngle: startAngle + Math.PI,
+      endAngle: totalAngle,
     });
 
     const p = arc({
