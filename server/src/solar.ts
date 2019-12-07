@@ -46,12 +46,16 @@ class StecaParser {
   private firebase: firebase.app.App;
   private samples: Sample[];
   private logger: Timber;
+  private numberOfSamples: number;
 
   constructor(ip: string, firebase: firebase.app.App, logger: Timber) {
     this.firebase = firebase;
     this.mySteca = new Steca(ip);
     this.samples = [];
     this.logger = logger;
+    this.numberOfSamples = 0;
+    // eslint-disable-next-line no-console
+    console.log(`Steca parser initiated`);
   }
 
   async updateData(full = false) {
@@ -75,7 +79,8 @@ class StecaParser {
       };
     } catch (err) {
       production.effect.error = true;
-      this.logger.error(err.message);
+      // eslint-disable-next-line no-console
+      console.log(err.message);
     }
 
     try {
@@ -84,7 +89,8 @@ class StecaParser {
       production.today.val = today;
     } catch (err) {
       production.today.error = true;
-      this.logger.error(err.message);
+      // eslint-disable-next-line no-console
+      console.log(err.message);
     }
 
     const doFull = now.second() < 10 || full;
@@ -101,7 +107,8 @@ class StecaParser {
         production.month.val = month;
       } catch (err) {
         production.month.error = true;
-        this.logger.error(err.message);
+        // eslint-disable-next-line no-console
+        console.log(err.message);
       }
 
       try {
@@ -110,7 +117,8 @@ class StecaParser {
         production.year.val = year;
       } catch (err) {
         production.year.error = true;
-        this.logger.error(err.message);
+        // eslint-disable-next-line no-console
+        console.log(err.message);
       }
 
       try {
@@ -119,7 +127,8 @@ class StecaParser {
         production.total.val = total;
       } catch (err) {
         production.total.error = true;
-        this.logger.error(err.message);
+        // eslint-disable-next-line no-console
+        console.log(err.message);
       }
 
       try {
@@ -130,15 +139,23 @@ class StecaParser {
         }
       } catch (err) {
         production.total.error = true;
-        this.logger.error(err.message);
+        // eslint-disable-next-line no-console
+        console.log(err.message);
       }
     }
 
-    this.logger.info(
-      `Solar Oslo ${new Date().toUTCString()} ${
-        production.effect.val
-      }W. Full: ${doFull}. DST: ${dst}`,
-    );
+    const logString = `Solar Oslo ${new Date().toUTCString()} ${
+      production.effect.val
+    }W. Full: ${doFull}. DST: ${dst}`;
+
+    this.logger.info(logString);
+
+    if (this.numberOfSamples % 100 === 0) {
+      // eslint-disable-next-line no-console
+      console.log(logString);
+    }
+
+    this.numberOfSamples += 1;
 
     try {
       // Update current data
@@ -147,7 +164,8 @@ class StecaParser {
         .ref('steca/currentData')
         .update(production);
     } catch (err) {
-      this.logger.error(err.message);
+      // eslint-disable-next-line no-console
+      console.log(err.message);
     }
   }
 

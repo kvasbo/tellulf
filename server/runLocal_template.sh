@@ -8,5 +8,5 @@ export TIBBER_KEY=x
 export TIBBER_HOME=x
 export TIBBER_CABIN=x
 export TIMBER_API_KEY=x
-# ./node_modules/.bin/babel src --out-dir dist
+yarn run build
 node ./dist/index.js
