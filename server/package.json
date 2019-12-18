@@ -15,26 +15,26 @@
   "author": "Audun Kvasbø",
   "license": "ISC",
   "dependencies": {
-    "@firebase/app-types": "^0.4.3",
-    "@firebase/util": "^0.2.25",
+    "@firebase/app-types": "^0.5.0",
+    "@firebase/util": "^0.2.36",
     "@timberio/node": "^0.35.0",
-    "firebase": "^7.1.0",
+    "firebase": "^7.6.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "netatmo": "^2.3.0",
     "stecagridscrape": "^1.2.4",
     "tibber-pulse-connector": "^3.0.1",
-    "ws": "^7.1.2"
+    "ws": "^7.2.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.142",
     "@types/moment-timezone": "^0.5.12",
-    "@typescript-eslint/eslint-plugin": "^2.3.3",
-    "@typescript-eslint/parser": "^2.3.3",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.18.2",
     "typescript": "^3.6.3"
   }
