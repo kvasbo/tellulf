@@ -4,7 +4,7 @@ on: push
 
 jobs:
   client-build:
-   name: Build and Test Client
+   name: Client: Build and Lint
    runs-on: ubuntu-18.04
    steps:
     - name: Check Out
@@ -26,7 +26,7 @@ jobs:
         path: client/build
         
   client-deploy:
-    name: Deploy Client
+    name: Client: Deploy
     needs: client-build
     runs-on: ubuntu-18.04
     env:
@@ -40,10 +40,12 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: client
-      - name: Move Build Folder
+      - name: Move Build Folder to Correct Place
         run: |
+          mkdir tmpBuild
+          mv client/* tmpBuild
           mkdir client/build
-          mv client/* client/build
+          mv tmpBuild/* client/build
       - name: Install Firebase 
         run: npm install -g firebase-tools
       - name: Add Firebase to Path
@@ -52,7 +54,7 @@ jobs:
         run: firebase deploy --only hosting -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
   
   functions_deploy:
-    name: Deploy Functions
+    name: Functions: Deploy
     runs-on: ubuntu-18.04
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -76,7 +78,7 @@ jobs:
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
   build_server:
-    name: Build and (Maybe) Push Server
+    name: Server: Build and Push
     runs-on: ubuntu-18.04
     env: 
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
