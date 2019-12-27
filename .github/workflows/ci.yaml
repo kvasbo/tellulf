@@ -47,7 +47,7 @@ jobs:
         run: firebase deploy -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
       - name: Tag Docker
         if: github.ref == 'refs/heads/master'
-        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
+        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Push Docker (Latest)
         if: github.ref == 'master'
         run: docker push $DOCKERHUB_USER/tellulf
