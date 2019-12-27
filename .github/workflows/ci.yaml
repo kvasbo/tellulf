@@ -11,7 +11,10 @@ jobs:
       DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       COMMIT_ID: ${{ github.sha }}
+      BRANCH: ${{ github.ref }}
     steps:
+      - name: Echo stuff
+        run: echo $BRANCH
       - name: Check Out
         uses: actions/checkout@v1
       - name: Setup Node
