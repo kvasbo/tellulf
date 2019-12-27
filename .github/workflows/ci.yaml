@@ -59,8 +59,6 @@ jobs:
         run: CI=false yarn --cwd "client" run build
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
-      - name: Build Functions
-        run: CI=false yarn --cwd "functions" run build
       - name: Create Server Container
         if: github.ref == 'refs/heads/master'
         run: yarn --cwd "server" run buildDocker
