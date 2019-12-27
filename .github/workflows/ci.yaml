@@ -21,3 +21,11 @@ jobs:
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Install Function Dependencies
         run: yarn --cwd "functions" install --non-interactive --pure-lockfile
+      - name: Lint client
+        run: yarn --cwd "client" run lint
+      - name: Build client
+        run: CI=false yarn --cwd "client" run build
+      - name: Build server
+        run: CI=false yarn --cwd "server" run build
+      - name: Create server container
+        run: yarn --cwd "server" run buildDocker
