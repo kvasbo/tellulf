@@ -4,7 +4,7 @@ on: push
 
 jobs:
   client-build:
-   name: Client: Build and Lint
+   name: Client, Build and Lint
    runs-on: ubuntu-18.04
    steps:
     - name: Check Out
@@ -26,7 +26,7 @@ jobs:
         path: client/build
         
   client-deploy:
-    name: Client: Deploy
+    name: Client, Deploy
     needs: client-build
     runs-on: ubuntu-18.04
     env:
@@ -54,7 +54,7 @@ jobs:
         run: firebase deploy --only hosting -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
   
   functions_deploy:
-    name: Functions: Deploy
+    name: Functions, Deploy
     runs-on: ubuntu-18.04
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -78,7 +78,7 @@ jobs:
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
   build_server:
-    name: Server: Build and Push
+    name: Server, Build and Push
     runs-on: ubuntu-18.04
     env: 
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
