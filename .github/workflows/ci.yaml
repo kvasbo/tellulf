@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build_client:
-    name: Build client
+    name: Install, build and test
     runs-on: ubuntu-18.04
     steps:
       - name: Check Out
@@ -13,21 +13,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Install Dependencies
-        run: |
-          cd client
-          yarn
-  build_server:
-    name: Build server
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Check Out
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.x
-      - name: Install Dependencies
-        run: |
-          cd server
-          yarn
+      - name: Install Firebase 
+        run: yarn global add firebase-tools
+      - name: Install Client Dependencies
+        run: yarn --cwd "client" install --non-interactive --pure-lockfile
+      - name: Install Server Dependencies
+        run: yarn --cwd "server" install --non-interactive --pure-lockfile
+      - name: Install Function Dependencies
+        run: yarn --cwd "functions" install --non-interactive --pure-lockfile
