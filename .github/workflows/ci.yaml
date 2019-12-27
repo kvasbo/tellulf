@@ -34,6 +34,10 @@ jobs:
       COMMIT_ID: ${{ github.sha }}
     if: github.ref == 'refs/heads/master'
     steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
       - name: Install Firebase 
         run: npm install -g firebase-tools
       - name: Checkout Repo
