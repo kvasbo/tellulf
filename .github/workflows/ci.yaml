@@ -82,7 +82,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Push Docker (Latest)
-        if: github.ref == 'master'
+        if: github.ref == 'refs/heads/master'
         run: docker push $DOCKERHUB_USER/tellulf
       - name: Push Docker (Specific)
         if: github.ref == 'refs/heads/master'
