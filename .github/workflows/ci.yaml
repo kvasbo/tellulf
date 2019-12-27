@@ -15,6 +15,8 @@ jobs:
           node-version: 10.x
       - name: Install Firebase 
         run: yarn global add firebase-tools
+      - name: Log in to Dockerhub
+        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Client Dependencies
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
       - name: Install Server Dependencies
