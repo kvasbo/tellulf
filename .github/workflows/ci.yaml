@@ -4,6 +4,28 @@ on: push
 
 jobs:
   build_client:
+   name: Build and test client
+   runs-on: ubuntu-18.04
+   steps:
+    - name: Check Out
+      uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install Client Dependencies
+      run: yarn --cwd "client" install --non-interactive --pure-lockfile
+    - name: Lint Client
+      run: yarn --cwd "client" run lint
+    - name: Build Client
+      run: CI=false yarn --cwd "client" run build  
+    - name: Archive Production Client
+      uses: actions/upload-artifact@master
+      with:
+        name: client
+        path: client/build
+
+  build_all:
     name: Install, build, test and release
     runs-on: ubuntu-18.04
     env: 
