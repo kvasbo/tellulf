@@ -16,4 +16,4 @@ jobs:
       - name: Install Dependencies
         run: |
           pwd
-          pwd
+          ls
