@@ -4,7 +4,15 @@ on: [push]
 
 jobs:
   my_job:
-    name: check out
+    name: Build
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
+      - name: Check Out
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install Dependencies
+        run:
+          echo "Running"
