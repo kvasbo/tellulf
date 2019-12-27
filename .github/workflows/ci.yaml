@@ -22,7 +22,7 @@ jobs:
     - name: Archive Production Client
       uses: actions/upload-artifact@master
       with:
-        name: client/build
+        name: client
         path: client/build
         
   client-deploy:
@@ -40,6 +40,10 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: client
+      - name: Move Build Folder
+        run: |
+          mkdir client/build
+          mv -r client/* client/build
       - name: Install Firebase 
         run: npm install -g firebase-tools
       - name: Add Firebase to Path
