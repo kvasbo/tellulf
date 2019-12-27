@@ -23,7 +23,7 @@ jobs:
       - name: Add Firebase to Path
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Log in to Dockerhub
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Client Dependencies
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
@@ -38,20 +38,20 @@ jobs:
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
       - name: Create Server Container
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: yarn --cwd "server" run buildDocker
       - name: Deploy Client and Functions
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: firebase deploy -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
       - name: Tag Docker
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
       - name: Push Docker (Latest)
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: docker push $DOCKERHUB_USER/tellulf
       - name: Push Docker (Specific)
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Docker Logout
-        if: github.ref === "master"
+        if: github.ref == "master"
         run: docker logout
