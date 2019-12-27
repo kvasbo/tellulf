@@ -1,6 +1,6 @@
 name: Build, Test and Release
 # This workflow is triggered on pushes to the repository.
-on: [push, pull_request]
+on: push
 
 jobs:
   build_client:
