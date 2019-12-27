@@ -6,6 +6,11 @@ jobs:
   build_client:
     name: Install, build and test
     runs-on: ubuntu-18.04
+    env: 
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      COMMIT_ID: ${{ github.head_ref }}
     steps:
       - name: Check Out
         uses: actions/checkout@v1
@@ -15,6 +20,8 @@ jobs:
           node-version: 10.x
       - name: Install Firebase 
         run: yarn global add firebase-tools
+      - name: Add Firebase to Path
+        run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Log in to Dockerhub
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Client Dependencies
@@ -32,4 +39,12 @@ jobs:
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
       - name: Deploy Client
-        run: firebase deploy -m "Github Action, Commit ${{ github.head_ref }}" --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
+      - name: Tag Docker
+        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
+      - name: Push Docker (Latest)
+        run: docker push $DOCKERHUB_USER/tellulf
+      - name: Push Docker (Specific)
+        run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
+      - name: Docker Logout
+        run: docker logout
