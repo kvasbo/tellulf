@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 10.x
       - name: Install Firebase 
-        run: yarn global add firebase-tools
+        run: npm install -g firebase-tools
       - name: Add Firebase to Path
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Log in to Dockerhub
