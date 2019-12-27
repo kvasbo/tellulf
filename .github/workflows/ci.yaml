@@ -26,7 +26,7 @@ jobs:
       - name: Add Firebase to Path
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Log in to Dockerhub
-        if: github.ref == 'master'
+        if: github.ref == 'refs/heads/master'
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Client Dependencies
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
