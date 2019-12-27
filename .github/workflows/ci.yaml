@@ -4,7 +4,7 @@ on: push
 
 jobs:
   build_client:
-    name: Install, build and test
+    name: Install, build, test and release
     runs-on: ubuntu-18.04
     env: 
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
@@ -37,6 +37,8 @@ jobs:
         run: CI=false yarn --cwd "client" run build
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
+      - name: Build Functions
+        run: CI=false yarn --cwd "functions" run build
       - name: Create Server Container
         if: github.ref == 'refs/heads/master'
         run: yarn --cwd "server" run buildDocker
@@ -55,3 +57,8 @@ jobs:
       - name: Docker Logout
         if: github.ref == 'refs/heads/master'
         run: docker logout
+      - name: Archive Production Client
+        uses: actions/upload-artifact@master
+        with:
+          name: client
+          path: client/build
