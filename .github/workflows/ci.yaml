@@ -22,13 +22,16 @@ jobs:
     - name: Archive Production Client
       uses: actions/upload-artifact@master
       with:
-        name: client
+        name: client/build
         path: client/build
         
   client-deploy:
     name: Deploy Client
     needs: client-build
     runs-on: ubuntu-18.04
+    env:
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      COMMIT_ID: ${{ github.sha }}
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout Repo
@@ -37,13 +40,13 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: client
+      - name: Install Firebase 
+        run: npm install -g firebase-tools
+      - name: Add Firebase to Path
+        run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-
+        run: firebase deploy --only hosting -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
+      
   build_all:
     name: Install, build, test and release
     runs-on: ubuntu-18.04
