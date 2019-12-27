@@ -38,7 +38,7 @@ jobs:
         run: CI=false yarn --cwd "server" run build
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
-      - name: Deploy Client
+      - name: Deploy Client and Functions
         run: firebase deploy -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
       - name: Tag Docker
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$TRAVIS_BUILD_NUMBER
