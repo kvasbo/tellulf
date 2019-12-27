@@ -3,8 +3,8 @@ name: Build, Test and Release
 on: push
 
 jobs:
-  build_client:
-   name: Build and test client
+  client-build:
+   name: Build and Test Client
    runs-on: ubuntu-18.04
    steps:
     - name: Check Out
@@ -24,6 +24,25 @@ jobs:
       with:
         name: client
         path: client/build
+        
+  client-deploy:
+    name: Deploy Client
+    needs: client-build
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: client
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   build_all:
     name: Install, build, test and release
@@ -47,24 +66,18 @@ jobs:
       - name: Log in to Dockerhub
         if: github.ref == 'refs/heads/master'
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
-      - name: Install Client Dependencies
-        run: yarn --cwd "client" install --non-interactive --pure-lockfile
       - name: Install Server Dependencies
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Install Function Dependencies
         run: yarn --cwd "functions" install --non-interactive --pure-lockfile
-      - name: Lint Client
-        run: yarn --cwd "client" run lint
-      - name: Build Client
-        run: CI=false yarn --cwd "client" run build
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
       - name: Create Server Container
         if: github.ref == 'refs/heads/master'
         run: yarn --cwd "server" run buildDocker
-      - name: Deploy Client and Functions
+      - name: Deploy Functions
         if: github.ref == 'refs/heads/master'
-        run: firebase deploy -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
+        run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
       - name: Tag Docker
         if: github.ref == 'refs/heads/master'
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
@@ -77,8 +90,3 @@ jobs:
       - name: Docker Logout
         if: github.ref == 'refs/heads/master'
         run: docker logout
-      - name: Archive Production Client
-        uses: actions/upload-artifact@master
-        with:
-          name: client
-          path: client/build
