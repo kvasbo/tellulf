@@ -1,3 +1,10 @@
 name: Build and test
 # This workflow is triggered on pushes to the repository.
 on: [push]
+
+jobs:
+  my_job:
+    name: check out
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
