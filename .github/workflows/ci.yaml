@@ -3,8 +3,8 @@ name: Build and test
 on: [push]
 
 jobs:
-  my_job:
-    name: Build
+  build_client:
+    name: Build client
     runs-on: ubuntu-18.04
     steps:
       - name: Check Out
@@ -15,5 +15,19 @@ jobs:
           node-version: 10.x
       - name: Install Dependencies
         run: |
-          pwd
-          ls
+          cd client
+          yarn
+  build_server:
+    name: Build server
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install Dependencies
+        run: |
+          cd server
+          yarn
