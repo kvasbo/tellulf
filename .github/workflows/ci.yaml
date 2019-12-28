@@ -59,6 +59,7 @@ jobs:
   functions_deploy:
     name: Functions, Deploy
     runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       COMMIT_ID: ${{ github.sha }}
@@ -125,7 +126,7 @@ jobs:
     name: WIP Server, Push to Dockerhub
     runs-on: ubuntu-18.04
     needs: server-build
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     env: 
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
@@ -133,10 +134,21 @@ jobs:
     steps:
       - name: Check Out
         uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
+      - name: Download Artifact
+        uses: actions/download-artifact@master
         with:
-          node-version: 10.x
+          name: server
+      - name: Move Build Folder to Correct Place
+        run: |
+          mkdir tmpBuild
+          mv server/* tmpBuild
+          mkdir server/build
+          mv tmpBuild/* server/build
+      - name: Create Server Container
+        run: yarn --cwd "server" run buildDocker
+      - name: Tag Docker
+        if: github.ref == 'refs/heads/master'
+        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Log in to Dockerhub
         if: github.ref == 'refs/heads/master'
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
