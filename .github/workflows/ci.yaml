@@ -76,12 +76,8 @@ jobs:
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
   server-build:
-    name: WIP Server, Build
+    name: Server, Build
     runs-on: ubuntu-18.04
-    env: 
-      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
-      COMMIT_ID: ${{ github.sha }}
     steps:
       - name: Check Out
         uses: actions/checkout@v1
@@ -100,7 +96,7 @@ jobs:
           path: server/dist
   
   server_deploy:
-    name: WIP Server, Push to Dockerhub
+    name: Server, Push to Dockerhub
     runs-on: ubuntu-18.04
     needs: server-build
     if: github.ref == 'refs/heads/master'
