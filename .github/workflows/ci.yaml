@@ -135,7 +135,7 @@ jobs:
       - name: Check Out
         uses: actions/checkout@v1
       - name: Download Artifact
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v1
         with:
           name: server
       - name: Move Build Folder to Correct Place
@@ -144,6 +144,12 @@ jobs:
           mv server/* tmpBuild
           mkdir server/build
           mv tmpBuild/* server/build
+      - name: List
+        run: ls -l
+      - name: list server
+        run: |
+          cd server
+          ls -l
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
       - name: Tag Docker
