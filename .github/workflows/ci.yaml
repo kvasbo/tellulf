@@ -89,28 +89,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Log in to Dockerhub
-        if: github.ref == 'refs/heads/master'
-        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Server Dependencies
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
-      - name: Create Server Container
-        if: github.ref == 'refs/heads/master'
-        run: yarn --cwd "server" run buildDocker
-      - name: Tag Docker
-        if: github.ref == 'refs/heads/master'
-        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
-      - name: Push Docker (Latest)
-        if: github.ref == 'refs/heads/master'
-        run: docker push $DOCKERHUB_USER/tellulf
-      - name: Push Docker (Specific)
-        if: github.ref == 'refs/heads/master'
-        run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
-      - name: Docker Logout
-        if: github.ref == 'refs/heads/master'
-        run: docker logout
       - name: Archive Production Server
         uses: actions/upload-artifact@master
         with:
@@ -136,7 +118,11 @@ jobs:
           path: server/dist
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
-      - name: Tag Docker
-        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Log in to Dockerhub
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
+      - name: Tag Docker
+        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
+      - name: Push Docker (Latest)
+        run: docker push $DOCKERHUB_USER/tellulf
+      - name: Push Docker (Specific)
+        run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
