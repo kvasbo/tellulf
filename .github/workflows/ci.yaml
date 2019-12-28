@@ -76,7 +76,7 @@ jobs:
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
   server-build:
-    name: Server, Build and Push
+    name: WIP Server, Build
     runs-on: ubuntu-18.04
     env: 
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
