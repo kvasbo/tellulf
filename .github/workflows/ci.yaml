@@ -62,7 +62,6 @@ jobs:
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       COMMIT_ID: ${{ github.sha }}
-    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
