@@ -1,5 +1,4 @@
-name: Build, Test and Release
-# This workflow is triggered on pushes to the repository.
+name: CI
 on: push
 
 jobs:
@@ -46,12 +45,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: client
-      - name: Move Build Folder to Correct Place
-        run: |
-          mkdir tmpBuild
-          mv client/* tmpBuild
-          mkdir client/build
-          mv tmpBuild/* client/build
+          path: client/build
       - name: Add Firebase to Path
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Deploy to Firebase
@@ -60,10 +54,10 @@ jobs:
   functions_deploy:
     name: Functions, Deploy
     runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       COMMIT_ID: ${{ github.sha }}
-    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
@@ -81,13 +75,9 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
-  build_server:
-    name: Server, Build and Push
+  server-build:
+    name: Server, Build
     runs-on: ubuntu-18.04
-    env: 
-      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
-      COMMIT_ID: ${{ github.sha }}
     steps:
       - name: Check Out
         uses: actions/checkout@v1
@@ -95,25 +85,40 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Log in to Dockerhub
-        if: github.ref == 'refs/heads/master'
-        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Install Server Dependencies
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
+      - name: Archive Production Server
+        uses: actions/upload-artifact@master
+        with:
+          name: server
+          path: server/dist
+  
+  server_deploy:
+    name: Server, Push to Dockerhub
+    runs-on: ubuntu-18.04
+    needs: server-build
+    if: github.ref == 'refs/heads/master'
+    env: 
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
+      COMMIT_ID: ${{ github.sha }}
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v1
+      - name: Download Artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: server
+          path: server/dist
       - name: Create Server Container
-        if: github.ref == 'refs/heads/master'
         run: yarn --cwd "server" run buildDocker
+      - name: Log in to Dockerhub
+        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
       - name: Tag Docker
-        if: github.ref == 'refs/heads/master'
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Push Docker (Latest)
-        if: github.ref == 'refs/heads/master'
         run: docker push $DOCKERHUB_USER/tellulf
       - name: Push Docker (Specific)
-        if: github.ref == 'refs/heads/master'
         run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
-      - name: Docker Logout
-        if: github.ref == 'refs/heads/master'
-        run: docker logout
