@@ -45,12 +45,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: client
-      - name: Move Build Folder to Correct Place
-        run: |
-          mkdir tmpBuild
-          mv client/* tmpBuild
-          mkdir client/build
-          mv tmpBuild/* client/build
+          path: client/build
       - name: Add Firebase to Path
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Deploy to Firebase
@@ -138,18 +133,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: server
-      - name: Move Build Folder to Correct Place
-        run: |
-          mkdir tmpBuild
-          mv server/* tmpBuild
-          mkdir server/build
-          mv tmpBuild/* server/build
-      - name: List
-        run: ls -l
-      - name: list server
-        run: |
-          cd server
-          ls -l
+          path: server/dist
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
       - name: Tag Docker
