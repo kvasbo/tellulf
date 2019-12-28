@@ -147,8 +147,6 @@ jobs:
       - name: Create Server Container
         run: yarn --cwd "server" run buildDocker
       - name: Tag Docker
-        if: github.ref == 'refs/heads/master'
         run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
       - name: Log in to Dockerhub
-        if: github.ref == 'refs/heads/master'
         run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
