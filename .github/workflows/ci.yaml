@@ -1,5 +1,4 @@
-name: Build, Test and Release
-# This workflow is triggered on pushes to the repository.
+name: CI
 on: push
 
 jobs:
@@ -81,7 +80,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
         
-  build_server:
+  server_build:
     name: Server, Build and Push
     runs-on: ubuntu-18.04
     env: 
@@ -117,3 +116,27 @@ jobs:
       - name: Docker Logout
         if: github.ref == 'refs/heads/master'
         run: docker logout
+      - name: Archive Production Server
+        uses: actions/upload-artifact@master
+        with:
+          name: server
+          path: server/dist
+  
+  server_deploy:
+    name: WIP Server, Push to Dockerhub
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    env: 
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
+      COMMIT_ID: ${{ github.sha }}
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Log in to Dockerhub
+        if: github.ref == 'refs/heads/master'
+        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}:  
