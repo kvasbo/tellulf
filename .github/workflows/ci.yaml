@@ -52,7 +52,7 @@ jobs:
         run: firebase deploy --only hosting -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
   
   functions_deploy:
-    name: Functions, Deploy
+    name: Functions, Lint and Deploy
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
     env:
@@ -71,6 +71,8 @@ jobs:
         run: alias firebase="`npm config get prefix`/bin/firebase"
       - name: Install Function Dependencies
         run: yarn --cwd "functions" install --non-interactive --pure-lockfile
+      - name: Lint Functions
+        run: CI=false yarn --cwd "functions" run lint
       - name: Deploy Functions
         if: github.ref == 'refs/heads/master'
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
