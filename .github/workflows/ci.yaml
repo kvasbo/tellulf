@@ -3,7 +3,7 @@ on: push
 
 jobs:
   client-build:
-   name: Client, Build and Lint
+   name: Client, Lint and Build
    runs-on: ubuntu-18.04
    steps:
     - name: Check Out
@@ -74,9 +74,9 @@ jobs:
       - name: Deploy Functions
         if: github.ref == 'refs/heads/master'
         run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
-        
+    
   server-build:
-    name: Server, Build
+    name: Server, Lint and Build
     runs-on: ubuntu-18.04
     steps:
       - name: Check Out
@@ -87,6 +87,8 @@ jobs:
           node-version: 10.x
       - name: Install Server Dependencies
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
+      - name: Lint Server
+        run: CI=false yarn --cwd "server" run lint
       - name: Build Server
         run: CI=false yarn --cwd "server" run build
       - name: Archive Production Server

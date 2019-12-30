@@ -20,8 +20,6 @@ module.exports = {
     "no-console": 1,
   },
   settings: {
-      react: {
-          version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
-      },
+      
   },
 };
