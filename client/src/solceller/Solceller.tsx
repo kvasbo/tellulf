@@ -61,6 +61,8 @@ class Solceller extends React.PureComponent<Props, {}> {
     // Regne ut felles verdier.
     const currentNetConsumptionHytta = this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
 
+    const currentNetConsumptionTotal = currentNetConsumption + currentNetConsumptionHytta;
+
     return (
       <div
         style={{
@@ -70,14 +72,6 @@ class Solceller extends React.PureComponent<Props, {}> {
           height: '100%',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <CurrentEnergyGraph
-            currentNetConsumption={currentNetConsumption}
-            currentNetConsumptionHytta={currentNetConsumptionHytta}
-            averageConsumptionHjemme={Math.round(this.props.realtimePowerHjemme.averagePower)}
-            averageConsumptionHytta={Math.round(this.props.realtimePowerHytta.averagePower)}
-          />
-        </div>
         <div
           style={{
             display: 'flex',
@@ -87,30 +81,20 @@ class Solceller extends React.PureComponent<Props, {}> {
           }}
         >
           <TellulfInfoCell
-            info={currentNetConsumption}
-            header="Forbruk"
+            info={currentNetConsumptionTotal}
+            header="Totalt nå"
             large
             smartRoundKw
             key="currentConsumption"
             unit="W"
           />
-          <TellulfInfoCell
-            info={this.props.realtimePowerHjemme.calculatedConsumption}
-            header="Faktureres"
-            key="currentPaidUsage"
-            large
-            colorIfNegative="#00FF00"
-            absoluteValue
-            smartRoundKw
-            unit="W"
-          />
-          <TellulfInfoCell
-            info={this.props.currentSolarProduction.now}
-            header="Produksjon"
-            key="currentProduction"
-            large
-            smartRoundKw
-            unit="W"
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <CurrentEnergyGraph
+            currentNetConsumption={currentNetConsumption}
+            currentNetConsumptionHytta={currentNetConsumptionHytta}
+            averageConsumptionHjemme={Math.round(this.props.realtimePowerHjemme.averagePower)}
+            averageConsumptionHytta={Math.round(this.props.realtimePowerHytta.averagePower)}
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
