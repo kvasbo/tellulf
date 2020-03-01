@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Moment from 'moment';
 import XML from 'pixl-xml';
-// import uuidv1 from 'uuid/v1';
 import {
   TrainData,
   TrainDataSet,
@@ -11,7 +10,7 @@ import {
 } from '../types/trains';
 
 // Create link with unique requestor ID
-const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT`; //&requestorId=${uuidv1()}`;
+const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT`;
 const THE_STOP = 'NSR:Quay:11460';
 
 // Fetch Entur API data
