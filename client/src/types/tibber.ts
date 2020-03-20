@@ -40,6 +40,7 @@ export interface TibberRealtimeState extends TibberRealtimeData {
   calculatedConsumption: number;
   calculatedHomeAndCabinTotal: number;
   previousMeasuredProduction: number;
+  actualCost: number;
 }
 
 export type houses = 'hytta' | 'hjemme';

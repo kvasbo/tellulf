@@ -8,12 +8,17 @@ import {
   houses,
 } from '../types/tibber';
 
+const nettTariff = {};
+nettTariff['hjemme'] = 48.33;
+nettTariff['hytta'] = 42.29;
+
 const defaultStateValues: TibberRealtimeState = {
   accumulatedConsumption: 0,
   accumulatedCost: 0,
   accumulatedProduction: 0,
   accumulatedReward: 0,
   averagePower: 0,
+  actualCost: 0,
   currency: 'NOK',
   lastMeterConsumption: 0,
   lastMeterProduction: 0,
@@ -44,6 +49,21 @@ interface KnownAction {
   where: houses;
   data: TibberRealtimeData;
 }
+
+function calculateActualCost(
+  accumulatedConsumption: number,
+  accumulatedCost: number,
+  accumulatedProduction: number,
+  accumulatedReward: number,
+  sted: string,
+): number {
+  let cost = accumulatedCost - accumulatedReward; // Init with cost - reward.
+
+  cost += accumulatedConsumption * nettTariff[sted]; // Add nettleie
+
+  return cost;
+}
+
 export default function TibberRealTime(
   state: TibberRealTimeDataState = defaultState,
   incomingAction: Action,
@@ -71,6 +91,14 @@ export default function TibberRealTime(
 
       // Calculate weighted average for hour
       const stamp = Moment(timestamp);
+
+      const actualCost = calculateActualCost(
+        accumulatedConsumption,
+        accumulatedCost,
+        accumulatedProduction,
+        accumulatedReward,
+        action.where,
+      );
 
       const avgLastHourStamp = stamp.format('dddHH');
 
@@ -111,9 +139,6 @@ export default function TibberRealTime(
           .minutes(startOfMinute * 10)
           .startOf('minute')
           .toISOString();
-        // console.log(startTime);
-
-        // const toStore: PowerMinute = { startTime, usage: 0, samples: 0 };
 
         if (lastHourByTenMinutes[startTime]) {
           // TODO make average!
@@ -150,6 +175,7 @@ export default function TibberRealTime(
           lastHourByTenMinutes,
           calculatedConsumption,
           previousMeasuredProduction,
+          actualCost,
         },
       };
       newState.totalNetUsage =
