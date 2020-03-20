@@ -8,9 +8,12 @@ import {
   houses,
 } from '../types/tibber';
 
-const nettTariff = {};
-nettTariff['hjemme'] = 48.33;
-nettTariff['hytta'] = 42.29;
+const nettTariff = {}; // Positiv tariff
+const nettTariffNeg = {}; // Negativ tariff
+nettTariff['hjemme'] = 0.4833;
+nettTariff['hytta'] = 0.4229;
+nettTariffNeg['hjemme'] = 0.05;
+nettTariffNeg['hytta'] = 0.05;
 
 const defaultStateValues: TibberRealtimeState = {
   accumulatedConsumption: 0,
@@ -60,6 +63,7 @@ function calculateActualCost(
   let cost = accumulatedCost - accumulatedReward; // Init with cost - reward.
 
   cost += accumulatedConsumption * nettTariff[sted]; // Add nettleie
+  cost -= accumulatedProduction * nettTariffNeg[sted]; // subtract negativ nettleie
 
   return cost;
 }

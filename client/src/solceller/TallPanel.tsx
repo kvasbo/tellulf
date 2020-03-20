@@ -60,13 +60,8 @@ class TallPanel extends React.PureComponent<Props, {}> {
         maxPowerProductionHytta={this.props.realtimePowerHytta.maxPowerProduction}
         accumulatedCost={this.props.realtimePower.accumulatedCost}
         accumulatedCostHytta={this.props.realtimePowerHytta.accumulatedCost}
-        netDay={
-          this.props.realtimePower.accumulatedCost - this.props.realtimePower.accumulatedReward
-        }
-        netDayHytta={
-          this.props.realtimePowerHytta.accumulatedCost -
-          this.props.realtimePowerHytta.accumulatedReward
-        }
+        netDay={this.props.realtimePower.actualCost}
+        netDayHytta={this.props.realtimePowerHytta.actualCost}
       />
     );
   }
