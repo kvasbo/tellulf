@@ -15,7 +15,7 @@
   "author": "Audun Kvasbø",
   "license": "ISC",
   "dependencies": {
-    "@firebase/app-types": "^0.5.0",
+    "@firebase/app-types": "^0.6.0",
     "@firebase/util": "^0.2.36",
     "@timberio/node": "^0.35.0",
     "firebase": "^7.6.0",
