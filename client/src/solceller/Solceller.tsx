@@ -55,8 +55,7 @@ class Solceller extends React.PureComponent<Props, {}> {
     if (!this.props.initState.solar) return null;
 
     // Regne ut felles verdier.
-    const currentNetConsumption =
-      this.props.realtimePowerHjemme.calculatedConsumption + this.props.currentSolarProduction.now; // Find actual current usage
+    const currentNetConsumption = this.props.realtimePowerHjemme.calculatedConsumption; // Find actual current usage
 
     // Regne ut felles verdier.
     const currentNetConsumptionHytta = this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
