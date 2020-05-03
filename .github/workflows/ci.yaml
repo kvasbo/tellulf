@@ -98,31 +98,3 @@ jobs:
         with:
           name: server
           path: server/dist
-
-  server_deploy:
-    name: Server, Push to Dockerhub
-    runs-on: ubuntu-latest
-    needs: server-build
-    if: github.ref == 'refs/heads/master'
-    env:
-      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-      DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
-      COMMIT_ID: ${{ github.sha }}
-    steps:
-      - name: Check Out
-        uses: actions/checkout@v1
-      - name: Download Artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: server
-          path: server/dist
-      - name: Create Server Container
-        run: yarn --cwd "server" run buildDocker
-      - name: Log in to Dockerhub
-        run: docker login --username ${{ secrets.DOCKERHUB_USER }} --password ${{ secrets.DOCKERHUB_PWD }}
-      - name: Tag Docker
-        run: docker tag $DOCKERHUB_USER/tellulf:latest $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID
-      - name: Push Docker (Latest)
-        run: docker push $DOCKERHUB_USER/tellulf
-      - name: Push Docker (Specific)
-        run: docker push $DOCKERHUB_USER/tellulf:ci_$COMMIT_ID

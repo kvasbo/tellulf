@@ -8,7 +8,6 @@ node_modules
 
 # production
 build
-dist
 
 # misc
 .DS_Store
@@ -25,3 +24,4 @@ server/dist
 tellulf-app/tellulf-app.xcworkspace/xcuserdata
 *.xcuserstate
 xcuserdata
+tellulf_keys.*
