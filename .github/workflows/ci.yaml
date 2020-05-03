@@ -86,7 +86,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 10.x
+          node-version: 12.x
       - name: Install Server Dependencies
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Lint Server
