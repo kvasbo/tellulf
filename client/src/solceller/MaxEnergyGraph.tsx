@@ -13,8 +13,9 @@ interface Props {
 const insideTextThreshold = 50;
 
 const energyText: Style = {
-  padding: '8px',
+  padding: '8px 0px 8px 0px',
   fontSize: '12px',
+  alignSelf: 'center',
 };
 
 const energyBarHolder: Style = {
@@ -27,8 +28,8 @@ const energyBar: Style = {
   alignItems: 'center',
   flexDirection: 'row',
   display: 'flex',
-  transition: 'width 1s',
-  justifyContent: 'flex-end',
+  transition: 'width 3s',
+  justifyContent: 'center',
 };
 
 const restBar: Style = {
@@ -57,10 +58,12 @@ class MaxEnergyGraph extends React.PureComponent<Props, {}> {
     const dayWidth = (this.props.day / ever) * 100;
     const monthWidth = (this.props.month / ever) * 100;
     const yearWidth = (this.props.year / ever) * 100;
+    const everWidth = 1 * 100;
     const currentWidthString = `${currentWidth}%`;
     const dayWidthString = `${dayWidth}%`;
     const monthWidthString = `${monthWidth}%`;
     const yearWidthString = `${yearWidth}%`;
+    const everWidthString = `${everWidth}%`;
     const nowString = `nå: ${this.props.currentProduction} W`;
     const dayString = `${dayName} ${this.props.day} W`;
     const monthString = `${monthName} ${this.props.month} W`;
@@ -121,8 +124,11 @@ class MaxEnergyGraph extends React.PureComponent<Props, {}> {
           </div>
         </div>
         <div style={{ ...energyBarHolder }}>
-          <div style={{ ...energyBar, backgroundColor: '#00FF0022', width: '100%' }}>
+          <div style={{ ...energyBar, backgroundColor: '#00FF0022', width: everWidthString }}>
             <span style={energyText}>max: {ever} W</span>
+          </div>
+          <div style={restBar}>
+            <span style={energyText}>{yearOutsideText}</span>
           </div>
         </div>
       </div>
