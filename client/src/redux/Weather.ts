@@ -21,9 +21,7 @@ export default function Weather(
   switch (action.type) {
     case UPDATE_WEATHER: {
       const from = Moment().startOf('day');
-      const to = Moment()
-        .add(3, 'day')
-        .startOf('day');
+      const to = Moment().add(3, 'day').startOf('day');
       const existing = state[action.sted] ? state[action.sted] : {};
       const toFilter = Object.values({
         ...existing,

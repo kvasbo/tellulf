@@ -99,15 +99,9 @@ class EnergyGraph extends React.PureComponent<Props, State> {
       if (h.time in dataSet) {
         const hour = new Date(h.time);
 
-        const inAWeek = Moment(h.time)
-          .add(1, 'week')
-          .toDate();
-        const inTwoWeeks = Moment(h.time)
-          .add(2, 'week')
-          .toDate();
-        const inAMonth = Moment(h.time)
-          .add(1, 'month')
-          .toDate();
+        const inAWeek = Moment(h.time).add(1, 'week').toDate();
+        const inTwoWeeks = Moment(h.time).add(2, 'week').toDate();
+        const inAMonth = Moment(h.time).add(1, 'month').toDate();
         const hr = hour.getHours();
 
         // Price

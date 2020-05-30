@@ -72,7 +72,7 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 
   private massageData() {
-    return this.props.weather.map(w => {
+    return this.props.weather.map((w) => {
       const rain = w.rain !== null ? w.rain / this.props.divideRainBy : null;
       const rainMin = w.rainMin !== null ? w.rainMin / this.props.divideRainBy : null;
       const rainMax = w.rainMax !== null ? w.rainMax / this.props.divideRainBy : null;

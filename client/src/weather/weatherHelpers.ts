@@ -4,6 +4,7 @@ import store from 'store';
 import { getNorwegianDaysOff } from '../external';
 import { WeatherData, WeatherDataSet } from '../types/weather';
 import { localStorageKey } from './updateWeather';
+import { string } from 'prop-types';
 
 const useLocalStorage = true;
 const sundayColor = '#FF0000CC';
@@ -12,9 +13,7 @@ const gridColor = '#FFFFFFAA';
 
 export function getTimeLimits(days = 3) {
   const start = Moment().startOf('day');
-  const end = Moment()
-    .add(days, 'day')
-    .startOf('day');
+  const end = Moment().add(days, 'day').startOf('day');
   return { start, end };
 }
 
@@ -83,12 +82,8 @@ export function initWeather(
   storageKey: string,
 ): WeatherDataSet {
   const out: WeatherDataSet = {};
-  const time = Moment()
-    .utc()
-    .startOf('day');
-  const spanEnd = Moment(time)
-    .add(daysToInit, 'day')
-    .startOf('day');
+  const time = Moment().utc().startOf('day');
+  const spanEnd = Moment(time).add(daysToInit, 'day').startOf('day');
   while (time.isSameOrBefore(spanEnd)) {
     const startTime = Moment(time);
     const endTime = Moment(time).add(spanToUseInHours, 'hours');
@@ -101,7 +96,7 @@ export function initWeather(
   // Load localstore if applicable, and write to output item if applicable
   const fromStore = store.get(`${storageKey}_${localStorageKey}`);
   if (useLocalStorage && fromStore) {
-    Object.keys(fromStore).forEach(k => {
+    Object.keys(fromStore).forEach((k) => {
       if (out[k]) {
         out[k] = { ...out[k], ...fromStore[k] };
       }
@@ -113,7 +108,7 @@ export function initWeather(
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
 export function storeToLocalStore(key: string, data: object, from: object, to: object) {
   const toStore = {};
-  Object.keys(data).forEach(k => {
+  Object.keys(data).forEach((k) => {
     const d = data[k];
     if (!d.time) return;
     if (Moment(d.time).isBetween(from, to, undefined, '[]')) {

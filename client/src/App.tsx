@@ -32,7 +32,7 @@ class App extends React.PureComponent {
   }
 
   public componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true, user });
       }
@@ -45,7 +45,7 @@ class App extends React.PureComponent {
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
-      .catch(error => {
+      .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -72,7 +72,7 @@ class App extends React.PureComponent {
             type="text"
             value={this.state.username}
             placeholder="Brukernavn"
-            onChange={event => this.setState({ username: event.target.value })}
+            onChange={(event) => this.setState({ username: event.target.value })}
           />
         </div>
         <div>
@@ -80,7 +80,7 @@ class App extends React.PureComponent {
             type="text"
             value={this.state.password}
             placeholder="Passord"
-            onChange={event => this.setState({ password: event.target.value })}
+            onChange={(event) => this.setState({ password: event.target.value })}
           />
         </div>
         <div>

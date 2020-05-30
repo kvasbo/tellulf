@@ -28,7 +28,7 @@ class Login extends React.PureComponent<{}, State> {
     firebase
       .auth()
       .signInWithEmailAndPassword(this.state.user, this.state.pass)
-      .catch(error => {
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         // eslint-disable-next-line no-console

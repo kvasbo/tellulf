@@ -233,12 +233,12 @@ export default class TibberUpdater {
             consumption: TibberConsumptionReturn;
             production: TibberProductionReturn;
           }) => {
-            u.consumption.nodes.forEach(n => {
+            u.consumption.nodes.forEach((n) => {
               const from = Moment(n.from);
               if (!from.isSame(now, 'month')) return;
               outConsumption.push(n);
             });
-            u.production.nodes.forEach(n => {
+            u.production.nodes.forEach((n) => {
               const from = Moment(n.from);
               if (!from.isSame(now, 'month')) return;
               outProduction.push(n);
@@ -322,7 +322,7 @@ export default class TibberUpdater {
 
   // Get tibber settings from firebase
   public async getTibberSettings() {
-    const settings: TibberSettings = await new Promise(resolve => {
+    const settings: TibberSettings = await new Promise((resolve) => {
       const settingsRef = firebase.database().ref('settings');
       settingsRef.once('value', (snapshot: { val: Function }) => {
         const settings = snapshot.val();

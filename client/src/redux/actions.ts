@@ -118,13 +118,13 @@ export function updateNetatmoAverages(data: NetatmoAverageData) {
 
 export function fetchTrains() {
   return (dispatch: Function) => {
-    return getTrains().then(trains => dispatch(updateTrains(trains)));
+    return getTrains().then((trains) => dispatch(updateTrains(trains)));
   };
 }
 
 export function fetchWeather(lat: number, lon: number, sted: string) {
   return (dispatch: Function) => {
-    return getWeatherFromYr(lat, lon).then(weather =>
+    return getWeatherFromYr(lat, lon).then((weather) =>
       dispatch(updateWeather(weather, lat, lon, sted)),
     );
   };

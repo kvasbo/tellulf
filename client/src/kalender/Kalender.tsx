@@ -77,7 +77,7 @@ class Kalender extends React.PureComponent<Props, State> {
       start.add(1, 'days');
     }
 
-    days.forEach(day => {
+    days.forEach((day) => {
       const d = day.format('YYYY-MM-DD');
       const diff = day.diff(now, 'days');
       const cald = this.state.kalenderData[d];
@@ -111,9 +111,7 @@ class Kalender extends React.PureComponent<Props, State> {
     if (!this.props.weather || !this.props.weather[sted]) return [];
 
     const from = Moment(date).startOf('day');
-    const to = Moment(date)
-      .add(1, 'day')
-      .startOf('day');
+    const to = Moment(date).add(1, 'day').startOf('day');
 
     const filterModifier = useShortWeather ? 0 : 12;
     const filterFrom = Moment(from).subtract(filterModifier, 'hours');
@@ -122,7 +120,7 @@ class Kalender extends React.PureComponent<Props, State> {
     const weather: WeatherDataSet = useShortWeather
       ? this.props.weather[sted].short
       : this.props.weather[sted].long;
-    const weatherFiltered = Object.values(weather).filter(w => {
+    const weatherFiltered = Object.values(weather).filter((w) => {
       return Moment(w.time).isBetween(filterFrom, filtertTo, undefined, '[]');
     });
     const weatherUnique = uniqBy(weatherFiltered, 'time');

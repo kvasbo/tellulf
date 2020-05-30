@@ -60,12 +60,7 @@ export function parseIcalEvent(e: APIEvent): Event {
 
     let oneDay = true;
     if (fullDay) {
-      if (
-        Moment(end)
-          .subtract(1, 'day')
-          .startOf('day')
-          .isAfter(Moment(start).startOf('day'))
-      )
+      if (Moment(end).subtract(1, 'day').startOf('day').isAfter(Moment(start).startOf('day')))
         oneDay = false;
     }
 

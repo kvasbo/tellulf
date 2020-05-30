@@ -109,9 +109,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 
   // Six hour forecasts
   const sixes = parsed.product.time.filter((d: WeatherAPIData) => {
-    const fromUtc = Moment(d.from)
-      .utc()
-      .hours();
+    const fromUtc = Moment(d.from).utc().hours();
     if (fromUtc % 6 !== 0) return false;
     const from = Moment(d.from);
     const to = Moment(d.to);
@@ -200,7 +198,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 
   // Get today minmax
   const todayMinMax = { min: 999, max: -999 };
-  Object.values(hoursOut).forEach(p => {
+  Object.values(hoursOut).forEach((p) => {
     const d = p as WeatherData;
     if (!d) return;
     const time = Moment(d.time);
@@ -210,7 +208,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Remove incomplete objects
-  const filteredLong = omitBy(sixesOut, val => {
+  const filteredLong = omitBy(sixesOut, (val) => {
     const vals = Object.values(val);
     if (vals.indexOf(null) !== -1) {
       return true;
@@ -219,7 +217,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // Remove incomplete objects
-  const filteredShort = omitBy(hoursOut, val => {
+  const filteredShort = omitBy(hoursOut, (val) => {
     const vals = Object.values(val);
     if (vals.indexOf(null) !== -1) {
       return true;
@@ -247,7 +245,7 @@ export function parseLimits(
 
   // Filter by time if needed
   if (from && to) {
-    data = data.filter(d => {
+    data = data.filter((d) => {
       return d.time >= from.valueOf() && d.time <= to.valueOf();
     });
   }

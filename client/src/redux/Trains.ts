@@ -14,7 +14,7 @@ export default function Trains(state: TrainDataSet = {}, incomingAction: Action)
   switch (action.type) {
     case UPDATE_TRAINS: {
       // Remove old trains
-      const notPassed = omitBy(state, call => {
+      const notPassed = omitBy(state, (call) => {
         return Moment().isAfter(call.faktiskTid);
       });
       return { ...notPassed, ...action.trains };

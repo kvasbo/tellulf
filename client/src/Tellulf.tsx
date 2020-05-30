@@ -61,14 +61,14 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   private attachNetatmoListener() {
     const dbRef = firebase.database().ref('netatmo/currentData');
-    dbRef.on('value', snapshot => {
+    dbRef.on('value', (snapshot) => {
       if (snapshot) {
         const data: NetatmoStore = snapshot.val() as NetatmoStore;
         this.props.dispatch(updateNetatmo(data));
       }
     });
     const dbRefAvg = firebase.database().ref('netatmo/areaData');
-    dbRefAvg.on('value', snapshot => {
+    dbRefAvg.on('value', (snapshot) => {
       if (snapshot) {
         const data = snapshot.val();
         this.props.dispatch(updateNetatmoAverages(data));
@@ -90,10 +90,7 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   private startReloadLoop() {
     const now = Moment();
-    const reload = Moment(now)
-      .startOf('hour')
-      .add(1, 'hour')
-      .add(5, 'seconds');
+    const reload = Moment(now).startOf('hour').add(1, 'hour').add(5, 'seconds');
     const diff = reload.diff(now, 'milliseconds');
     setTimeout(() => {
       window.location.reload();

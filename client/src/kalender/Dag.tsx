@@ -159,9 +159,7 @@ class Dag extends React.PureComponent<Props, State> {
     if (this.props.weatherData.length === 0) return null;
 
     const from = Moment(date).startOf('day');
-    const to = Moment(date)
-      .add(1, 'day')
-      .startOf('day');
+    const to = Moment(date).add(1, 'day').startOf('day');
 
     return (
       <GraphLong

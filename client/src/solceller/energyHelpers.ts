@@ -60,20 +60,14 @@ export function getDataPointObject(): EnergyGraphDataSet {
 }
 
 export function getXAxis(): [number, number] {
-  const from = Moment()
-    .startOf('day')
-    .valueOf();
-  const to = Moment()
-    .endOf('day')
-    .valueOf();
+  const from = Moment().startOf('day').valueOf();
+  const to = Moment().endOf('day').valueOf();
   return [from, to];
 }
 
 export function getTimeLimits(): TimeLimits {
   const start = Moment().startOf('day');
-  const end = Moment()
-    .add(1, 'day')
-    .startOf('day');
+  const end = Moment().add(1, 'day').startOf('day');
   return { start, end };
 }
 
