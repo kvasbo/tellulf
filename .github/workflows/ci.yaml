@@ -91,10 +91,10 @@ jobs:
         run: yarn --cwd "server" install --non-interactive --pure-lockfile
       - name: Lint Server
         run: CI=false yarn --cwd "server" run lint
-      - name: Build Server
-        run: CI=false yarn --cwd "server" run build
-      - name: Archive Production Server
-        uses: actions/upload-artifact@master
-        with:
-          name: server
-          path: server/dist
+      # - name: Build Server
+      #  run: CI=false yarn --cwd "server" run build
+      # - name: Archive Production Server
+      #  uses: actions/upload-artifact@master
+      #  with:
+      #    name: server
+      #    path: server/dist
