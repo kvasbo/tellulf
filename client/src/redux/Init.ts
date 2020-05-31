@@ -11,7 +11,7 @@ interface KnownAction {
 export default function Init(
   state: InitState = { powerPrices: false, solar: false },
   incomingAction: Action,
-) {
+): InitState {
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_INIT_STATUS: {

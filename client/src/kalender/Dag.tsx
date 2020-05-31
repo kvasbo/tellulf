@@ -174,7 +174,7 @@ class Dag extends React.PureComponent<Props, State> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const day = Moment(this.props.date);
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
     return (

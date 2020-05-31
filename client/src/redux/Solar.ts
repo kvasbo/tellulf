@@ -26,7 +26,7 @@ const initialState: SolarState = {
 
 interface KnownAction {
   type: string;
-  data: object;
+  data: Record<string, unknown>;
 }
 
 export default function Solar(

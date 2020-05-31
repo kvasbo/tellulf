@@ -71,7 +71,7 @@ function calculateActualCost(
 export default function TibberRealTime(
   state: TibberRealTimeDataState = defaultState,
   incomingAction: Action,
-) {
+): TibberRealTimeDataState {
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_TIBBER_REALTIME_CONSUMPTION: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 
@@ -5,6 +6,7 @@ import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
+import { SolarCurrent } from '../types/solar';
 
 import {
   PowerPriceState,
@@ -74,7 +76,7 @@ export function updateRealtimeConsumption(data: TibberRealtimeData, where: house
   };
 }
 
-export function updatePowerUsage(data: {}) {
+export function updatePowerUsage(data: TibberProductionNode[]) {
   return {
     type: UPDATE_TIBBER_POWER_USAGE,
     data,
@@ -88,14 +90,14 @@ export function updatePowerPrices(data: PowerPriceState) {
   };
 }
 
-export function updateSolarMax(data: {}) {
+export function updateSolarMax(data: Record<string, unknown>) {
   return {
     type: UPDATE_SOLAR_MAX,
     data,
   };
 }
 
-export function updateSolarCurrent(data: {}) {
+export function updateSolarCurrent(data: SolarCurrent) {
   return {
     type: UPDATE_SOLAR_CURRENT,
     data,
@@ -117,12 +119,14 @@ export function updateNetatmoAverages(data: NetatmoAverageData) {
 }
 
 export function fetchTrains() {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
   return (dispatch: Function) => {
     return getTrains().then((trains) => dispatch(updateTrains(trains)));
   };
 }
 
 export function fetchWeather(lat: number, lon: number, sted: string) {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
   return (dispatch: Function) => {
     return getWeatherFromYr(lat, lon).then((weather) =>
       dispatch(updateWeather(weather, lat, lon, sted)),

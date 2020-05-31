@@ -11,7 +11,17 @@ export interface Event {
 }
 
 export interface EventDataSet {
-  events: [Event];
+  events: Event[];
   sortStamp: number;
   sortString: string;
+}
+
+export interface IcalParseResult {
+  [s: string]: CalendarDay;
+}
+
+export interface CalendarDay {
+  events: Event[];
+  sortString: string;
+  sortStamp: number;
 }

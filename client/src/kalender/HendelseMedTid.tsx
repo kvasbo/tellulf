@@ -31,7 +31,7 @@ function normalDayToFormats() {
   };
 }
 
-export function getTimeString(event: Event) {
+export function getTimeString(event: Event): string {
   let timeString = '';
   if (event.fullDay) {
     // Full day events
@@ -58,8 +58,8 @@ interface Props {
   data: Event;
 }
 
-class HendelseMedTid extends React.PureComponent<Props, {}> {
-  public render() {
+class HendelseMedTid extends React.PureComponent<Props, Record<string, unknown>> {
+  public render(): React.ReactNode {
     return (
       <div className="kalenderSubInfo">
         <div>{this.props.data.name}</div>

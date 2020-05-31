@@ -6,7 +6,7 @@ import sortBy from 'lodash/sortBy';
 import Dag from './Dag';
 
 import { getIcal } from './kalenderHelpers';
-import { EventDataSet } from '../types/calendar';
+import { IcalParseResult } from '../types/calendar';
 import { AppStore } from '../redux/reducers';
 import { WeatherStore, WeatherData, WeatherDataSet } from '../types/weather';
 
@@ -30,15 +30,9 @@ const dinP = `${proxy}/?url=${dinner}`;
 const bdP = `${proxy}/?url=${birthday}`;
 
 interface State {
-  kalenderData: {
-    [s: string]: EventDataSet;
-  };
-  birthdays: {
-    [s: string]: EventDataSet;
-  };
-  dinners: {
-    [s: string]: EventDataSet;
-  };
+  kalenderData: IcalParseResult;
+  birthdays: IcalParseResult;
+  dinners: IcalParseResult;
 }
 
 interface Props {

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import Moment from 'moment';
 import Axios from 'axios';
 import IcalExpander from 'ical-expander';
-import { Event } from '../types/calendar';
+import { Event, IcalParseResult, CalendarDay } from '../types/calendar';
 
 interface APIEvent {
   startDate: {
@@ -32,9 +33,7 @@ interface APIEvent {
   uid?: string;
 }
 
-export function initDay(
-  sortString: string,
-): { events: Event[]; sortString: string; sortStamp: number } {
+export function initDay(sortString: string): CalendarDay {
   return {
     events: [],
     sortString,
@@ -104,8 +103,9 @@ interface SortOccurrence {
   startDate: { toJSDate: Function };
 }
 
-export async function getIcal(url: string) {
-  const parsedEvents = {};
+export async function getIcal(url: string): Promise<IcalParseResult> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const parsedEvents: { [s: string]: CalendarDay } = {};
   try {
     const now = Moment();
     const data = await Axios.get(url);
