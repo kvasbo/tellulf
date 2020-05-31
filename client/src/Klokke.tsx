@@ -9,6 +9,7 @@ interface State {
 
 interface Props {
   temp: number;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
 }
 
@@ -20,15 +21,15 @@ class Clock extends React.PureComponent<Props, State> {
     this.state = { time: Moment() };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.interval = window.setInterval(() => this.setState({ time: Moment() }), 1000);
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.clearInterval(this.interval);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <div
         style={{

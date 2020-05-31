@@ -14,13 +14,15 @@ function parseByHour(data: []) {
 }
 
 export default class SolarUpdater {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private store: { dispatch: Function };
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
 
-  public async attachListeners() {
+  public async attachListeners(): Promise<void> {
     firebase
       .database()
       .ref('steca/currentData')
@@ -64,7 +66,7 @@ export default class SolarUpdater {
   /*
   Attach listeners to new max values
   */
-  public async attachMaxListeners() {
+  public async attachMaxListeners(): Promise<void> {
     const now = Moment();
     const y = now.format('YYYY');
     const m = now.format('MM');

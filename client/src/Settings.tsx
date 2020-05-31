@@ -2,13 +2,13 @@ import * as React from 'react';
 import firebase from './firebase';
 import store from 'store';
 
-class Settings extends React.PureComponent<{}, {}> {
-  setBool = (key: string, value: boolean) => {
+class Settings extends React.PureComponent<Record<string, unknown>, Record<string, unknown>> {
+  setBool = (key: string, value: boolean): void => {
     store.set(key, value);
     window.location.reload();
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const showEnergy = store.get('showEnergy', true);
     const showTrains = store.get('showTrains', true);
     return (
