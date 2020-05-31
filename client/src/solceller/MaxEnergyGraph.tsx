@@ -41,14 +41,14 @@ const restBar: Style = {
   backgroundColor: '#00000033',
 };
 
-class MaxEnergyGraph extends React.PureComponent<Props, {}> {
+class MaxEnergyGraph extends React.PureComponent<Props, Record<string, unknown>> {
   public static defaultProps = {
     day: 0,
     month: 0,
     year: 0,
     ever: 4500,
   };
-  public render() {
+  public render(): React.ReactNode {
     const now = Moment();
     const dayName = now.format('dddd:');
     const monthName = now.format('MMM:');

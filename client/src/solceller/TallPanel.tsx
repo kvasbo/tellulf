@@ -11,8 +11,8 @@ interface Props {
   max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 
-class TallPanel extends React.PureComponent<Props, {}> {
-  public render() {
+class TallPanel extends React.PureComponent<Props, Record<string, unknown>> {
+  public render(): React.ReactNode {
     // Calculate percentage of usage
     let producedPercent = 0;
     try {

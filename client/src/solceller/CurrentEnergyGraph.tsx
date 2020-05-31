@@ -10,8 +10,8 @@ interface Props {
   averageConsumptionHytta: number;
 }
 
-class CurrentEnergyGraph extends React.PureComponent<Props, {}> {
-  public render() {
+class CurrentEnergyGraph extends React.PureComponent<Props, Record<string, unknown>> {
+  public render(): React.ReactNode {
     return (
       <div
         style={{

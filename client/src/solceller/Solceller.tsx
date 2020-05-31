@@ -27,7 +27,7 @@ interface Props {
   updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
-class Solceller extends React.PureComponent<Props, {}> {
+class Solceller extends React.PureComponent<Props, Record<string, unknown>> {
   private interval = 0;
   public static defaultProps = {
     latitude: defaultLatitude,

@@ -72,13 +72,13 @@ class EnergyGraph extends React.PureComponent<Props, State> {
     };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.interval = window.setInterval(() => {
       this.reloadTime();
     }, 300000); // Flytt sola hvert femte minutt
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.clearInterval(this.interval);
   }
 
@@ -148,7 +148,7 @@ class EnergyGraph extends React.PureComponent<Props, State> {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
-  public render() {
+  public render(): React.ReactNode {
     if (!this.props.initState.powerPrices || !this.props.initState.solar) return null;
 
     // const dataAge = this.props.current.dataTime.diff(Moment(), 'seconds');

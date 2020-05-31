@@ -36,7 +36,7 @@ interface Props {
   localProductionMaxTotal: number;
 }
 
-class TallPanelDisplay extends React.PureComponent<Props, {}> {
+class TallPanelDisplay extends React.PureComponent<Props, Record<string, unknown>> {
   public static defaultProps = {
     currentPower: 0,
     netDay: 0,
@@ -76,7 +76,7 @@ class TallPanelDisplay extends React.PureComponent<Props, {}> {
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <div
         style={{
