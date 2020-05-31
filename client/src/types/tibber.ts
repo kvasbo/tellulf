@@ -33,7 +33,7 @@ export interface TibberRealtimeData {
 }
 
 export interface TibberRealtimeState extends TibberRealtimeData {
-  lastHourByTenMinutes: {};
+  lastHourByTenMinutes: Record<string, unknown>;
   avgLastHour: number;
   avgLastHourSamples: number;
   avgLastHourStamp: string;

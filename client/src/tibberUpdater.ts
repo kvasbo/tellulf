@@ -41,12 +41,14 @@ interface TibberSettings {
 }
 
 export default class TibberUpdater {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private store: { dispatch: Function };
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public constructor(store: { dispatch: Function }) {
     this.store = store;
   }
 
-  public async updatePowerPrices() {
+  public async updatePowerPrices(): Promise<void> {
     const settings: TibberSettings = await this.getTibberSettings();
     const queryPrices = `
     {
@@ -95,7 +97,7 @@ export default class TibberUpdater {
     }
   }
 
-  public async updateConsumption() {
+  public async updateConsumption(): Promise<void> {
     const settings: TibberSettings = await this.getTibberSettings();
     const queryUsage = `
     {
@@ -140,7 +142,7 @@ export default class TibberUpdater {
   }
 
   // Create and start websocket connection
-  public async subscribeToRealTime(id: string, name: houses) {
+  public async subscribeToRealTime(id: string, name: houses): Promise<void> {
     firebase
       .database()
       .ref(`tibber/realtime/${id}`)
@@ -173,7 +175,7 @@ export default class TibberUpdater {
       });
   }
 
-  public async updateConsumptionDaily() {
+  public async updateConsumptionDaily(): Promise<void> {
     const settings = await this.getTibberSettings();
     const daysToAskFor = new Date().getDate();
     const queryUsage = `
@@ -254,7 +256,7 @@ export default class TibberUpdater {
     }
   }
 
-  public async updateConsumptionMonthlyAndCalculateBills() {
+  public async updateConsumptionMonthlyAndCalculateBills(): Promise<void> {
     const settings = await this.getTibberSettings();
     const queryUsage = `
     {
@@ -321,9 +323,10 @@ export default class TibberUpdater {
   }
 
   // Get tibber settings from firebase
-  public async getTibberSettings() {
+  public async getTibberSettings(): Promise<TibberSettings> {
     const settings: TibberSettings = await new Promise((resolve) => {
       const settingsRef = firebase.database().ref('settings');
+      // eslint-disable-next-line @typescript-eslint/ban-types
       settingsRef.once('value', (snapshot: { val: Function }) => {
         const settings = snapshot.val();
         if (settings) resolve(settings);

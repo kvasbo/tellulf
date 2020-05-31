@@ -33,6 +33,7 @@ interface Props {
   to: Moment.Moment;
   sted: string;
   showPlace: boolean;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
   divideRainBy: number; // To even out rain per period
 }
