@@ -5,6 +5,7 @@ import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
 import { fetchTrains } from '../redux/actions';
 interface Props {
   trains: TrainDataSet;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   dispatch: Function;
 }
 
@@ -19,7 +20,7 @@ function parseTrain(data: TrainData): ExtendedTrainData {
   return train;
 }
 
-class Ruter extends React.PureComponent<Props, {}> {
+class Ruter extends React.PureComponent<Props, Record<string, unknown>> {
   private intervalId = 0;
 
   public componentDidMount = () => {
