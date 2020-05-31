@@ -2,6 +2,7 @@ import React from 'react';
 import Moment from 'moment';
 import { Event } from '../types/calendar';
 import './kalender.css';
+import { GenericProps } from '../types/generic';
 
 function fullDayFormats() {
   return {
@@ -58,7 +59,7 @@ interface Props {
   data: Event;
 }
 
-class HendelseMedTid extends React.PureComponent<Props, Record<string, unknown>> {
+class HendelseMedTid extends React.PureComponent<Props, GenericProps> {
   public render(): React.ReactNode {
     return (
       <div className="kalenderSubInfo">

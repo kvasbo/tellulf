@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
+import { GenericProps } from '../types/generic';
+
 import { fetchTrains } from '../redux/actions';
 interface Props {
   trains: TrainDataSet;
@@ -20,7 +22,7 @@ function parseTrain(data: TrainData): ExtendedTrainData {
   return train;
 }
 
-class Ruter extends React.PureComponent<Props, Record<string, unknown>> {
+class Ruter extends React.PureComponent<Props, GenericProps> {
   private intervalId = 0;
 
   public componentDidMount = () => {

@@ -3,6 +3,7 @@ import Moment from 'moment';
 import { Provider } from 'react-redux';
 import 'moment/locale/nb';
 import Tellulf from './Tellulf';
+import { GenericProps } from './types/generic';
 import firebase from './firebase';
 import { store } from './redux/store';
 import tibberUpdater from './tibberUpdater';
@@ -26,12 +27,12 @@ interface AppState {
 class App extends React.PureComponent {
   public state: AppState;
 
-  public constructor(props: {}) {
+  public constructor(props: GenericProps) {
     super(props);
     this.state = { loggedIn: false, user: null, username: '', password: '' };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true, user });
@@ -95,7 +96,7 @@ class App extends React.PureComponent {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     if (!this.state.loggedIn) return this.getLogin();
     return (
       <Provider store={store}>

@@ -1,6 +1,7 @@
 import { Action } from 'redux';
 import { UPDATE_SOLAR_CURRENT, UPDATE_SOLAR_MAX } from './actions';
 import { SolarState } from '../types/solar';
+import { GenericProps } from '../types/generic';
 import Moment from 'moment';
 
 const initialState: SolarState = {
@@ -26,7 +27,7 @@ const initialState: SolarState = {
 
 interface KnownAction {
   type: string;
-  data: Record<string, unknown>;
+  data: GenericProps;
 }
 
 export default function Solar(

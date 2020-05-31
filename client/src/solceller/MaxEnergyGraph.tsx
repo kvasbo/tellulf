@@ -1,5 +1,5 @@
 import React from 'react';
-import { Style } from '../types/generic';
+import { Style, GenericProps } from '../types/generic';
 import Moment from 'moment';
 
 interface Props {
@@ -41,7 +41,7 @@ const restBar: Style = {
   backgroundColor: '#00000033',
 };
 
-class MaxEnergyGraph extends React.PureComponent<Props, Record<string, unknown>> {
+class MaxEnergyGraph extends React.PureComponent<Props, GenericProps> {
   public static defaultProps = {
     day: 0,
     month: 0,

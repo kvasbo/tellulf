@@ -1,4 +1,5 @@
 import React from 'react';
+import { GenericProps } from './types/generic';
 
 const defaultFontSize = 16;
 const largeFontSize = 24;
@@ -21,12 +22,12 @@ interface Props {
   smartRoundKw: boolean;
 }
 
-export function roundToNumberOfDecimals(number: number, decimals: number) {
+export function roundToNumberOfDecimals(number: number, decimals: number): number {
   const factor = 10 ** decimals;
   return Math.round(factor * number) / factor;
 }
 
-class TellulfInfoCell extends React.PureComponent<Props, {}> {
+class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
   public static defaultProps = {
     header: undefined,
     headerIfNegative: undefined,
@@ -52,7 +53,7 @@ class TellulfInfoCell extends React.PureComponent<Props, {}> {
     return `${(Math.round(rounded / 100) / 10).toLocaleString()}${space}k`;
   }
 
-  public render() {
+  public render(): React.ReactNode {
     let text = '-';
     if (typeof this.props.info === 'number') {
       // Don't even try

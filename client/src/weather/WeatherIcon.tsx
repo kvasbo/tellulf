@@ -1,5 +1,7 @@
 import React from 'react';
 import { Symbols } from './symbolMap'; // Type
+import { GenericProps } from '../types/generic';
+
 const baseUrl = './WeatherIcons/';
 
 interface Props {
@@ -11,7 +13,7 @@ interface Props {
   cy: number;
 }
 
-class WeatherIcon extends React.PureComponent<Props, Record<string, unknown>> {
+class WeatherIcon extends React.PureComponent<Props, GenericProps> {
   public static defaultProps = {
     cx: undefined,
     cy: undefined,

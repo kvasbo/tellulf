@@ -2,6 +2,7 @@ import React from 'react';
 import TallPanelDisplay from './TallPanelDisplay';
 import { SolarCurrent } from '../types/solar';
 import { TibberRealtimeState } from '../types/tibber';
+import { GenericProps } from '../types/generic';
 
 interface Props {
   realtimePower: TibberRealtimeState;
@@ -11,7 +12,7 @@ interface Props {
   max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 
-class TallPanel extends React.PureComponent<Props, Record<string, unknown>> {
+class TallPanel extends React.PureComponent<Props, GenericProps> {
   public render(): React.ReactNode {
     // Calculate percentage of usage
     let producedPercent = 0;

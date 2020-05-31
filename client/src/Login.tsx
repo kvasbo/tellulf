@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from './firebase';
+import { GenericProps } from './types/generic';
 import './login.css';
 
 interface State {
@@ -7,20 +8,20 @@ interface State {
   pass: string;
 }
 
-class Login extends React.PureComponent<{}, State> {
+class Login extends React.PureComponent<GenericProps, State> {
   public state: State;
 
-  public constructor(props: {}) {
+  public constructor(props: GenericProps) {
     super(props);
     this.state = { user: '', pass: '' };
     this.login = this.login.bind(this);
   }
 
-  private handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ user: e.target.value });
   };
 
-  private handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ pass: e.target.value });
   };
 
@@ -36,7 +37,7 @@ class Login extends React.PureComponent<{}, State> {
       });
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <div className="App" id="container">
         <div id="login">

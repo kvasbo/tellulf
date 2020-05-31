@@ -1,5 +1,6 @@
 import React from 'react';
 import EnergyGauge from '../gauges/EnergyGauge';
+import { GenericProps } from '../types/generic';
 
 const calibratedMax = 5000;
 
@@ -10,7 +11,7 @@ interface Props {
   averageConsumptionHytta: number;
 }
 
-class CurrentEnergyGraph extends React.PureComponent<Props, Record<string, unknown>> {
+class CurrentEnergyGraph extends React.PureComponent<Props, GenericProps> {
   public render(): React.ReactNode {
     return (
       <div

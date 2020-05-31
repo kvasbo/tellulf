@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as d3 from 'd3';
+import { GenericProps } from '../types/generic';
 
 interface Props {
   value: number;
@@ -17,7 +18,7 @@ interface Angles {
   totalAngle: number;
 }
 
-class EnergyGauge extends React.PureComponent<Props, {}> {
+class EnergyGauge extends React.PureComponent<Props, GenericProps> {
   public constructor(props: Props) {
     super(props);
   }
@@ -35,7 +36,7 @@ class EnergyGauge extends React.PureComponent<Props, {}> {
     return { startAngle, endAngle, averageAngle, totalAngle };
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { startAngle, endAngle, averageAngle, totalAngle } = this.getAngles();
 
     const bg = arc({

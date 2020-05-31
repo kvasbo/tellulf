@@ -7,6 +7,7 @@ import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
 import { SolarCurrent } from '../types/solar';
+import { GenericProps } from '../types/generic';
 
 import {
   PowerPriceState,
@@ -90,7 +91,7 @@ export function updatePowerPrices(data: PowerPriceState) {
   };
 }
 
-export function updateSolarMax(data: Record<string, unknown>) {
+export function updateSolarMax(data: GenericProps) {
   return {
     type: UPDATE_SOLAR_MAX,
     data,

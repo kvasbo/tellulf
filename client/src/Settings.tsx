@@ -1,8 +1,9 @@
 import * as React from 'react';
 import firebase from './firebase';
 import store from 'store';
+import { GenericProps } from './types/generic';
 
-class Settings extends React.PureComponent<Record<string, unknown>, Record<string, unknown>> {
+class Settings extends React.PureComponent<GenericProps, GenericProps> {
   setBool = (key: string, value: boolean): void => {
     store.set(key, value);
     window.location.reload();

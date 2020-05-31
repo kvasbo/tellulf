@@ -9,6 +9,8 @@ import { AppStore } from '../redux/reducers';
 import TibberUpdater from '../tibberUpdater';
 import SolarUpdater from '../solarUpdater';
 import { InitState } from '../types/initstate';
+import { GenericProps } from '../types/generic';
+
 import { PowerPriceState, TibberUsageState, TibberRealtimeState } from '../types/tibber';
 import { SolarCurrent, SolarMax } from '../types/solar';
 
@@ -27,7 +29,7 @@ interface Props {
   updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
-class Solceller extends React.PureComponent<Props, Record<string, unknown>> {
+class Solceller extends React.PureComponent<Props, GenericProps> {
   private interval = 0;
   public static defaultProps = {
     latitude: defaultLatitude,

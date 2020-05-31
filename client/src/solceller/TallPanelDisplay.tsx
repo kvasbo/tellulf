@@ -1,6 +1,7 @@
 import React from 'react';
 import TellulfInfoCell from '../TellulfInfoCell';
 import './solceller.css';
+import { GenericProps } from '../types/generic';
 
 interface Props {
   currentPower: number;
@@ -36,7 +37,7 @@ interface Props {
   localProductionMaxTotal: number;
 }
 
-class TallPanelDisplay extends React.PureComponent<Props, Record<string, unknown>> {
+class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
   public static defaultProps = {
     currentPower: 0,
     netDay: 0,
