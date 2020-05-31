@@ -4,32 +4,38 @@ import store from 'store';
 import { getNorwegianDaysOff } from '../external';
 import { WeatherData, WeatherDataSet } from '../types/weather';
 import { localStorageKey } from './updateWeather';
-import { string } from 'prop-types';
 
 const useLocalStorage = true;
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 const gridColor = '#FFFFFFAA';
 
-export function getTimeLimits(days = 3) {
+export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Moment } {
   const start = Moment().startOf('day');
   const end = Moment().add(days, 'day').startOf('day');
   return { start, end };
 }
 
-export function getDayColor(time: Moment.Moment) {
+export function getDayColor(time: Moment.Moment): string {
   if (time.day() === 0 || time.day() === 6) return sundayColor;
   const dString = time.format('MMDD');
   if (redDays.includes(dString)) return sundayColor;
   return gridColor;
 }
 
-export function formatTick(data: number) {
+export function formatTick(data: number): string {
   const time = Moment(data, 'x');
   return time.format('HH');
 }
 
-export function getSunMeta(lat: number, long: number, now: Moment.Moment = Moment()) {
+interface SunInfo {
+  sunrise: number;
+  sunset: number;
+  diffRise: number;
+  diffSet: number;
+}
+
+export function getSunMeta(lat: number, long: number, now: Moment.Moment = Moment()): SunInfo {
   const yesterday = Moment(now).subtract(1, 'days');
   const sunTimes = SunCalc.getTimes(new Date(), lat, long);
   const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
@@ -49,7 +55,7 @@ export function getSunMeta(lat: number, long: number, now: Moment.Moment = Momen
   };
 }
 
-export function createKeyBasedOnStamps(from: string, to: string) {
+export function createKeyBasedOnStamps(from: string, to: string): string {
   const f = Moment(from);
   const t = Moment(to);
   const key = `${f.toISOString()}->${t.toISOString()}`;
@@ -106,7 +112,14 @@ export function initWeather(
 }
 
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
-export function storeToLocalStore(key: string, data: object, from: object, to: object) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function storeToLocalStore(
+  key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any,
+  from: Moment.Moment | string,
+  to: Moment.Moment | string,
+): void {
   const toStore = {};
   Object.keys(data).forEach((k) => {
     const d = data[k];

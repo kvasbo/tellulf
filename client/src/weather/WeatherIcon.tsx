@@ -11,7 +11,7 @@ interface Props {
   cy: number;
 }
 
-class WeatherIcon extends React.PureComponent<Props, {}> {
+class WeatherIcon extends React.PureComponent<Props, Record<string, unknown>> {
   public static defaultProps = {
     cx: undefined,
     cy: undefined,
@@ -38,7 +38,7 @@ class WeatherIcon extends React.PureComponent<Props, {}> {
     return temp;
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <svg>
         <text

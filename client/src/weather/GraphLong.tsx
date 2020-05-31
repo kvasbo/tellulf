@@ -59,11 +59,11 @@ class GraphLong extends React.PureComponent<Props, State> {
     this.state = { currentTime: Moment().valueOf() };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.interval = window.setInterval(() => this.reloadTime(), 60000); // Reload time every minute
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.clearInterval(this.interval);
   }
 
@@ -81,7 +81,7 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 
   // Stays on
-  public render() {
+  public render(): React.ReactNode {
     const data = this.massageData();
     if (data.length === 0) return null;
     const limits = parseLimits(data);

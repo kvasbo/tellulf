@@ -43,15 +43,15 @@
         "@types/recharts": "^1.1.16",
         "@types/store": "^2.0.1",
         "@types/suncalc": "^1.8.0",
-        "@typescript-eslint/eslint-plugin": "^3.0.1",
-        "@typescript-eslint/parser": "^3.0.1",
+        "@typescript-eslint/eslint-plugin": "3.0.0",
+        "@typescript-eslint/parser": "3.0.0",
         "awesome-typescript-loader": "^5.2.1",
         "eslint-config-airbnb": "^18.0.1",
         "eslint-config-prettier": "^6.0.0",
         "eslint-plugin-prettier": "^3.0.1",
         "eslint-plugin-react": "^7.20.0",
         "prettier": "2.0.5",
-        "typescript": "^3.8.3",
+        "typescript": "3.8.0",
         "yarn-deduplicate": "^2.0.0"
     },
     "browserslist": [

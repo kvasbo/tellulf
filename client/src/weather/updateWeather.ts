@@ -94,6 +94,7 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey = 0): ParseTimeRetur
   return { f, t, from, to, diff, fromNice, time, key };
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
   const now = Moment();
@@ -238,7 +239,7 @@ export function parseLimits(
   long = 10.6991,
   from?: Moment.Moment,
   to?: Moment.Moment,
-) {
+): WeatherLimits {
   const sunData = getSunMeta(lat, long);
 
   let data = rawData;
@@ -252,7 +253,7 @@ export function parseLimits(
 
   // Init
   if (data.length === 0) {
-    return {
+    const data: WeatherLimits = {
       lowerRange: 0,
       upperRange: 30,
       maxRain: 0,
@@ -264,6 +265,8 @@ export function parseLimits(
       ticks: [],
       ...sunData,
     };
+
+    return data;
   }
 
   const maxRainPoint: WeatherData | undefined = maxBy(data, 'rainMax');
@@ -286,7 +289,7 @@ export function parseLimits(
     ticks.push(i);
   }
 
-  const out = {
+  const out: WeatherLimits = {
     lowerRange,
     upperRange,
     maxRain,
@@ -300,4 +303,18 @@ export function parseLimits(
   };
 
   return out;
+}
+
+interface WeatherLimits {
+  lowerRange: number;
+  upperRange: number;
+  maxRain: number;
+  maxRainTime: number;
+  maxTemp: number;
+  maxTempTime: number;
+  minTemp: number;
+  minTempTime: number;
+  ticks: number[];
+  sunrise: number;
+  sunset: number;
 }
