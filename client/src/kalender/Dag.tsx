@@ -19,6 +19,7 @@ interface Props {
   weatherAsGraph: boolean;
   useShortWeather: boolean;
   weatherData: WeatherData[];
+  weatherDataHytta: WeatherData[];
 }
 
 interface State {
@@ -134,17 +135,20 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeatherSummary(): string {
-    if (this.props.weatherData.length === 0) return '';
+    const weather: WeatherData[] =
+      this.state.sted === 'sandefjord' ? this.props.weatherDataHytta : this.props.weatherData;
 
-    const maxTemp = maxBy(this.props.weatherData, (w): number => {
+    if (weather.length === 0) return '';
+
+    const maxTemp = maxBy(weather, (w): number => {
       return w.temp ? w.temp : -999;
     });
 
-    const minTemp = minBy(this.props.weatherData, (w): number => {
+    const minTemp = minBy(weather, (w): number => {
       return w.temp ? w.temp : 999;
     });
 
-    const rain = sumBy(this.props.weatherData, (w): number => {
+    const rain = sumBy(weather, (w): number => {
       if (!w.rain) return 0;
       return w.rain;
     });
@@ -156,14 +160,17 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    if (this.props.weatherData.length === 0) return null;
+    const weather: WeatherData[] =
+      this.state.sted === 'sandefjord' ? this.props.weatherDataHytta : this.props.weatherData;
+
+    if (weather.length === 0) return null;
 
     const from = Moment(date).startOf('day');
     const to = Moment(date).add(1, 'day').startOf('day');
 
     return (
       <GraphLong
-        weather={this.props.weatherData}
+        weather={weather}
         from={from}
         to={to}
         sted={sted}
