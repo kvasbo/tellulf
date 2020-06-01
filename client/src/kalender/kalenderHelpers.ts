@@ -104,7 +104,6 @@ interface SortOccurrence {
 }
 
 export async function getIcal(url: string): Promise<IcalParseResult> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const parsedEvents: { [s: string]: CalendarDay } = {};
   try {
     const now = Moment();

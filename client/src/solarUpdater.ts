@@ -1,6 +1,7 @@
 import Moment from 'moment';
 import firebase from './firebase';
 import { updateSolarMax, updateSolarCurrent, updateInitStatus } from './redux/actions';
+import { AppDispatch } from './redux/store';
 import { SolarCurrent } from './types/solar';
 
 function parseByHour(data: []) {
@@ -14,11 +15,9 @@ function parseByHour(data: []) {
 }
 
 export default class SolarUpdater {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  private store: { dispatch: Function };
+  private store: { dispatch: AppDispatch };
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  public constructor(store: { dispatch: Function }) {
+  public constructor(store: { dispatch: AppDispatch }) {
     this.store = store;
   }
 

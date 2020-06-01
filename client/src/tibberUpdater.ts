@@ -10,6 +10,7 @@ import {
   updateTibberConsumptionMonth,
   updateTibberProductionMonth,
 } from './redux/actions';
+import { AppDispatch } from './redux/store';
 import {
   TibberRealtimeData,
   TibberConsumptionNode,
@@ -41,10 +42,8 @@ interface TibberSettings {
 }
 
 export default class TibberUpdater {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  private store: { dispatch: Function };
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  public constructor(store: { dispatch: Function }) {
+  private store: { dispatch: AppDispatch };
+  public constructor(store: { dispatch: AppDispatch }) {
     this.store = store;
   }
 

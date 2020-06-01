@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import getWeatherFromYr from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
-
+import { AppDispatch } from './store';
 import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
@@ -30,7 +29,10 @@ export const UPDATE_TIBBER_POWER_USAGE = 'UPDATE_TIBBER_POWER_USAGE';
 export const UPDATE_TIBBER_USAGE_MONTH = 'UPDATE_TIBBER_USAGE_MONTH';
 export const UPDATE_TIBBER_PRODUCTION_MONTH = 'UPDATE_TIBBER_PRODUCTION_MONTH';
 
-export function updateInitStatus(key: string, value = true) {
+export function updateInitStatus(
+  key: string,
+  value = true,
+): { type: 'UPDATE_INIT_STATUS'; key: string; value: boolean } {
   return {
     type: UPDATE_INIT_STATUS,
     key,
@@ -38,14 +40,21 @@ export function updateInitStatus(key: string, value = true) {
   };
 }
 
-export function updateTrains(trains: TrainDataSet) {
+export function updateTrains(
+  trains: TrainDataSet,
+): { type: 'UPDATE_TRAINS'; trains: TrainDataSet } {
   return {
     type: UPDATE_TRAINS,
     trains,
   };
 }
 
-export function updateWeather(data: WeatherDataSet, lat: number, lon: number, sted: string) {
+export function updateWeather(
+  data: WeatherDataSet,
+  lat: number,
+  lon: number,
+  sted: string,
+): { type: 'UPDATE_WEATHER'; data: WeatherDataSet; lat: number; lon: number; sted: string } {
   return {
     type: UPDATE_WEATHER,
     data,
@@ -120,15 +129,14 @@ export function updateNetatmoAverages(data: NetatmoAverageData) {
 }
 
 export function fetchTrains() {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
-  return (dispatch: Function) => {
+  return (dispatch: AppDispatch) => {
     return getTrains().then((trains) => dispatch(updateTrains(trains)));
   };
 }
 
 export function fetchWeather(lat: number, lon: number, sted: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
-  return (dispatch: Function) => {
+  return (dispatch: AppDispatch) => {
     return getWeatherFromYr(lat, lon).then((weather) =>
       dispatch(updateWeather(weather, lat, lon, sted)),
     );

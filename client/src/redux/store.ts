@@ -11,3 +11,5 @@ const store = createStore(
 );
 
 export { store };
+
+export type AppDispatch = typeof store.dispatch;

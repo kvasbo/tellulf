@@ -9,8 +9,7 @@ interface State {
 
 interface Props {
   temp: number;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick: Function;
+  onClick(): void;
 }
 
 class Clock extends React.PureComponent<Props, State> {
