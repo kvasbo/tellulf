@@ -5,8 +5,7 @@ import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
 import { WeatherDataSet } from '../types/weather';
 import { TrainDataSet } from '../types/trains';
-import { SolarCurrent } from '../types/solar';
-import { GenericProps } from '../types/generic';
+import { SolarCurrent, SolarMaxData } from '../types/solar';
 
 import {
   PowerPriceState,
@@ -64,21 +63,28 @@ export function updateWeather(
   };
 }
 
-export function updateTibberProductionMonth(data: TibberProductionNode[]) {
+export function updateTibberProductionMonth(
+  data: TibberProductionNode[],
+): { type: 'UPDATE_TIBBER_PRODUCTION_MONTH'; data: TibberProductionNode[] } {
   return {
     type: UPDATE_TIBBER_PRODUCTION_MONTH,
     data,
   };
 }
 
-export function updateTibberConsumptionMonth(data: TibberConsumptionNode[]) {
+export function updateTibberConsumptionMonth(
+  data: TibberConsumptionNode[],
+): { type: 'UPDATE_TIBBER_USAGE_MONTH'; data: TibberConsumptionNode[] } {
   return {
     type: UPDATE_TIBBER_USAGE_MONTH,
     data,
   };
 }
 
-export function updateRealtimeConsumption(data: TibberRealtimeData, where: houses) {
+export function updateRealtimeConsumption(
+  data: TibberRealtimeData,
+  where: houses,
+): { type: 'UPDATE_TIBBER_REALTIME_CONSUMPTION'; data: TibberRealtimeData; where: houses } {
   return {
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
     data,
@@ -86,50 +92,61 @@ export function updateRealtimeConsumption(data: TibberRealtimeData, where: house
   };
 }
 
-export function updatePowerUsage(data: TibberProductionNode[]) {
+export function updatePowerUsage(
+  data: TibberProductionNode[],
+): { type: 'UPDATE_TIBBER_POWER_USAGE'; data: TibberProductionNode[] } {
   return {
     type: UPDATE_TIBBER_POWER_USAGE,
     data,
   };
 }
 
-export function updatePowerPrices(data: PowerPriceState) {
+export function updatePowerPrices(
+  data: PowerPriceState,
+): { type: 'UPDATE_POWER_PRICES'; data: PowerPriceState } {
   return {
     type: UPDATE_POWER_PRICES,
     data,
   };
 }
 
-export function updateSolarMax(data: GenericProps) {
+export function updateSolarMax(
+  data: SolarMaxData,
+): { type: 'UPDATE_SOLAR_MAX'; data: SolarMaxData } {
   return {
     type: UPDATE_SOLAR_MAX,
     data,
   };
 }
 
-export function updateSolarCurrent(data: SolarCurrent) {
+export function updateSolarCurrent(
+  data: SolarCurrent,
+): { type: 'UPDATE_SOLAR_CURRENT'; data: SolarCurrent } {
   return {
     type: UPDATE_SOLAR_CURRENT,
     data,
   };
 }
 
-export function updateNetatmo(data: NetatmoStore) {
+export function updateNetatmo(data: NetatmoStore): { type: 'NETATMO_UPDATE'; data: NetatmoStore } {
   return {
     type: NETATMO_UPDATE,
     data,
   };
 }
 
-export function updateNetatmoAverages(data: NetatmoAverageData) {
+export function updateNetatmoAverages(
+  data: NetatmoAverageData,
+): { type: 'NETATMO_UPDATE_AVERAGES'; data: NetatmoAverageData } {
   return {
     type: NETATMO_UPDATE_AVERAGES,
     data,
   };
 }
 
-export function fetchTrains() {
-  return (dispatch: AppDispatch) => {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function fetchTrains(): { (dispatch: AppDispatch): unknown } {
+  return (dispatch: AppDispatch): unknown => {
     return getTrains().then((trains) => dispatch(updateTrains(trains)));
   };
 }

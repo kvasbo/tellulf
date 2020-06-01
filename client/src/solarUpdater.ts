@@ -2,7 +2,7 @@ import Moment from 'moment';
 import firebase from './firebase';
 import { updateSolarMax, updateSolarCurrent, updateInitStatus } from './redux/actions';
 import { AppDispatch } from './redux/store';
-import { SolarCurrent } from './types/solar';
+import { SolarCurrent, SolarMaxData } from './types/solar';
 
 function parseByHour(data: []) {
   const startOfDay = Moment().startOf('day');
@@ -82,7 +82,7 @@ export default class SolarUpdater {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
-          const state = { maxDay: val.value };
+          const state: SolarMaxData = { maxDay: val.value };
           this.store.dispatch(updateSolarMax(state));
         }
       });
@@ -94,7 +94,7 @@ export default class SolarUpdater {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
-          const state = { maxMonth: val.value };
+          const state: SolarMaxData = { maxMonth: val.value };
           this.store.dispatch(updateSolarMax(state));
         }
       });
@@ -106,7 +106,7 @@ export default class SolarUpdater {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
-          const state = { maxYear: val.value };
+          const state: SolarMaxData = { maxYear: val.value };
           this.store.dispatch(updateSolarMax(state));
         }
       });
@@ -118,7 +118,7 @@ export default class SolarUpdater {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
-          const state = { maxEver: val.value };
+          const state: SolarMaxData = { maxEver: val.value };
           this.store.dispatch(updateSolarMax(state));
         }
       });

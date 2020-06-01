@@ -17,6 +17,13 @@ export interface SolarMax {
   maxEver: number;
 }
 
+export interface SolarMaxData {
+  maxDay?: number;
+  maxMonth?: number;
+  maxYear?: number;
+  maxEver?: number;
+}
+
 export interface SolarCurrent {
   averageFull: number;
   averageMinute: number;
