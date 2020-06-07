@@ -81,7 +81,7 @@ class Kalender extends React.PureComponent<Props, State> {
       const filteredWeather = this.filterWeatherData(day, 'oslo', useShortWeather);
       const filteredWeatherHytta = this.filterWeatherData(day, 'sandefjord', useShortWeather);
 
-      if (diff < 6 || cald || birthdays || dinners) {
+      if (diff < 14 || cald || birthdays || dinners) {
         out.push(
           <Dag
             key={`kalenderdag${d}`}
