@@ -21,7 +21,7 @@ import SolarUpdater from './solarUpdater';
 
 const steder = {
   oslo: { lat: 59.9409, long: 10.6991 },
-  sandefjord: { lat: 59.1347624, long: 10.3250789 },
+  sandefjord: { lat: 59.1347, long: 10.325 },
 };
 
 interface Props {
