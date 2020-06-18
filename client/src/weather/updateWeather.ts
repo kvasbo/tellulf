@@ -106,7 +106,10 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   );
   const parsed = XML.parse(data.data);
 
-  if (data.status !== 200) throw Error('Could not fetch Yr data');
+  if (data.status !== 200 && data.status !== 203) {
+    console.log(data);
+    throw Error('Could not fetch Yr data');
+  }
 
   // Six hour forecasts
   const sixes = parsed.product.time.filter((d: WeatherAPIData) => {
