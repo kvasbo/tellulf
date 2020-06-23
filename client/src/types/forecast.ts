@@ -9,5 +9,4 @@ export interface HourForecast {
   rainMin?: number;
   rainMax?: number;
   symbol?: string;
-  symbolNumber?: number;
 }

@@ -102,7 +102,7 @@ function createTimeKey(d: Date): number {
   return Number(Moment(d).add(30, 'minutes').startOf('hour').format('x'));
 }
 
-// New: Parse an hour of data.
+// New: Parse a data set
 function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   const out: HourForecast = { time: createTimeKey(d.time) };
   out.temp = d.data.instant.details.air_temperature;
@@ -112,11 +112,13 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
     out.rain = d.data.next_1_hours.details.precipitation_amount;
     out.rainMin = d.data.next_1_hours.details.precipitation_amount_min;
     out.rainMax = d.data.next_1_hours.details.precipitation_amount_max;
-    console.log(d.data.next_1_hours.summary.symbol_code);
+    out.symbol = d.data.next_1_hours.summary.symbol_code;
   } else if (d.data.next_6_hours) {
+    //... or six hours
     out.rain = d.data.next_6_hours.details.precipitation_amount;
     out.rainMin = d.data.next_6_hours.details.precipitation_amount_min;
     out.rainMax = d.data.next_6_hours.details.precipitation_amount_max;
+    out.symbol = d.data.next_6_hours.summary.symbol_code;
   }
 
   return out;
