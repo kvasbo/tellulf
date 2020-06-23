@@ -19,7 +19,7 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
-import { YrResponse } from '../types/yr';
+import { YrResponse, YrWeatherDataset } from '../types/yr';
 
 export const localStorageKey = '12';
 const longStorageKey = 'weatherLong';
@@ -34,6 +34,10 @@ interface ParseTimeReturn {
   fromNice: string;
   time: number;
   key: string;
+}
+
+function parseWeatherHour(data: YrWeatherDataset) {
+  console.log(data);
 }
 
 function parsePrecipitation(
@@ -112,10 +116,16 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     throw Error('Could not fetch Yr data');
   }
 
+  // The new API data set
   const nData: YrResponse = nResponse.data;
 
-  console.log(nData.geometry.coordinates);
+  const nOut: WeatherDataSet = [];
+  nData.properties.timeseries.forEach((d) => {
+    // const key =
+    parseWeatherHour(d);
+  });
 
+  // The old data set!
   const data = await axios.get(
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
   );

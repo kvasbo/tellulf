@@ -91,21 +91,21 @@ export interface Next6Hours {
   details: SixHourForecast;
 }
 
-export interface Data {
+export interface WeatherApiTimesetData {
   instant: Instant;
-  next_12_hours: Next12Hours;
-  next_1_hours: Next1Hours;
-  next_6_hours: Next6Hours;
+  next_12_hours?: Next12Hours;
+  next_1_hours?: Next1Hours;
+  next_6_hours?: Next6Hours;
 }
 
-export interface WeatherDataset {
+export interface YrWeatherDataset {
   time: Date;
-  data: Data;
+  data: WeatherApiTimesetData;
 }
 
 export interface Properties {
   meta: Meta;
-  timeseries: WeatherDataset[];
+  timeseries: YrWeatherDataset[];
 }
 
 export interface YrResponse {
