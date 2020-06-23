@@ -154,6 +154,23 @@ function initWeatherSeries(): WeatherDataSeries {
   return nOut;
 }
 
+export async function getForecastFromYr(lat: number, long: number): Promise<WeatherDataSeries> {
+  // Use the new shiny API!
+  const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${long.toString()}`;
+  const nResponse = await axios.get(url);
+  if (nResponse.statusText !== 'OK') {
+    throw Error('Could not fetch Yr data');
+  }
+  // The new API data set
+  const nData: YrResponse = nResponse.data;
+  const nOut: WeatherDataSeries = initWeatherSeries();
+  nData.properties.timeseries.forEach((d) => {
+    const key = createTimeKey(d.time);
+    nOut[key] = parseWeatherHour(d);
+  });
+  return nOut;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
@@ -317,7 +334,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   // Keep!
   storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, nOut, start, end);
 
-  return { long: filteredLong, short: filteredShort, todayMinMax, weather: nOut };
+  return { long: filteredLong, short: filteredShort, todayMinMax, forecast: nOut };
 }
 
 export function parseLimits(

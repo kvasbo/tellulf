@@ -2,12 +2,18 @@ import Moment from 'moment';
 import { Action } from 'redux';
 import { UPDATE_WEATHER } from './actions';
 import { WeatherData, WeatherTodayMinMax, WeatherDataSet, WeatherStore } from '../types/weather';
+import { YrWeatherDataset } from '../types/yr';
 
 const initialState: WeatherStore = {};
 
 interface KnownAction {
   type: string;
-  data: { long: WeatherData; todayMinMax: WeatherTodayMinMax; short: WeatherData };
+  data: {
+    long: WeatherData;
+    todayMinMax: WeatherTodayMinMax;
+    short: WeatherData;
+    forecast: YrWeatherDataset;
+  };
   lat: number;
   lon: number;
   sted: string;
