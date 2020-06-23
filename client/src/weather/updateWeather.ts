@@ -19,6 +19,8 @@ import {
   WeatherAPIDataPeriod,
 } from '../types/weather';
 
+import { YrResponse } from '../types/yr';
+
 export const localStorageKey = '12';
 const longStorageKey = 'weatherLong';
 const shortStorageKey = 'weatherShort';
@@ -101,11 +103,18 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   const sixesOut: WeatherDataSet = initWeather(6, 7, longStorageKey);
   const hoursOut: WeatherDataSet = initWeather(1, 3, shortStorageKey);
 
-  // const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${long.toString()}`;
+  // Use the new shiny API!
+  const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${long.toString()}`;
 
-  // const nData = await axios.get(url);
+  const nResponse = await axios.get(url);
 
-  // console.log(nData);
+  if (nResponse.statusText !== 'OK') {
+    throw Error('Could not fetch Yr data');
+  }
+
+  const nData: YrResponse = nResponse.data;
+
+  console.log(nData.geometry.coordinates);
 
   const data = await axios.get(
     `https://api.met.no/weatherapi/locationforecast/1.9/?lat=${lat.toString()}&lon=${long.toString()}`,
