@@ -20,6 +20,7 @@ import {
 } from '../types/weather';
 
 import { YrResponse, YrWeatherDataset } from '../types/yr';
+import { WeatherDataSeries, HourForecast } from '../types/forecast';
 
 export const localStorageKey = '12';
 const longStorageKey = 'weatherLong';
@@ -34,10 +35,6 @@ interface ParseTimeReturn {
   fromNice: string;
   time: number;
   key: string;
-}
-
-function parseWeatherHour(data: YrWeatherDataset) {
-  console.log(data);
 }
 
 function parsePrecipitation(
@@ -100,6 +97,27 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey = 0): ParseTimeRetur
   return { f, t, from, to, diff, fromNice, time, key };
 }
 
+function createTimeKey(d: Date): number {
+  return Number(Moment(d).add(30, 'minutes').startOf('hour').format('x'));
+}
+
+function parseWeatherHour(d: YrWeatherDataset): HourForecast {
+  const out: HourForecast = { time: createTimeKey(d.time) };
+  out.temp = d.data.instant.details.air_temperature;
+
+  if (d.data.next_1_hours) {
+    out.rain = d.data.next_1_hours.details.precipitation_amount;
+    out.rainMin = d.data.next_1_hours.details.precipitation_amount_min;
+    out.rainMax = d.data.next_1_hours.details.precipitation_amount_max;
+  } else if (d.data.next_6_hours) {
+    out.rain = d.data.next_6_hours.details.precipitation_amount;
+    out.rainMin = d.data.next_6_hours.details.precipitation_amount_min;
+    out.rainMax = d.data.next_6_hours.details.precipitation_amount_max;
+  }
+
+  return out;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
@@ -119,11 +137,13 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   // The new API data set
   const nData: YrResponse = nResponse.data;
 
-  const nOut: WeatherDataSet = [];
+  const nOut: WeatherDataSeries = {};
   nData.properties.timeseries.forEach((d) => {
-    // const key =
-    parseWeatherHour(d);
+    const key = createTimeKey(d.time);
+    nOut[key] = parseWeatherHour(d);
   });
+
+  console.log(nOut);
 
   // The old data set!
   const data = await axios.get(
