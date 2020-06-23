@@ -146,6 +146,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
     nOut[key] = parseWeatherHour(d);
   });
 
+  // eslint-disable-next-line no-console
   console.log(nOut);
 
   // The old data set!
