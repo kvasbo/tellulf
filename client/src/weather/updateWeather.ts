@@ -101,7 +101,7 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey = 0): ParseTimeRetur
 
 // New: Create a time stamp
 function createTimeKey(d: Date): number {
-  return Number(Moment(d).add(30, 'minutes').startOf('hour').format('x'));
+  return Moment(d).add(30, 'minutes').startOf('hour').valueOf();
 }
 
 // New: Parse a data set
