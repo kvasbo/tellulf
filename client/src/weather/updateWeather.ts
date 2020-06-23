@@ -97,14 +97,17 @@ function parseTime(s: WeatherAPIDataPeriod, hoursToAddToKey = 0): ParseTimeRetur
   return { f, t, from, to, diff, fromNice, time, key };
 }
 
+// New: Create a time stamp
 function createTimeKey(d: Date): number {
   return Number(Moment(d).add(30, 'minutes').startOf('hour').format('x'));
 }
 
+// New: Parse an hour of data.
 function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   const out: HourForecast = { time: createTimeKey(d.time) };
   out.temp = d.data.instant.details.air_temperature;
 
+  // Use hourly data
   if (d.data.next_1_hours) {
     out.rain = d.data.next_1_hours.details.precipitation_amount;
     out.rainMin = d.data.next_1_hours.details.precipitation_amount_min;
