@@ -3,6 +3,7 @@ import Moment from 'moment';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import omitBy from 'lodash/omitBy';
+import store from 'store';
 import {
   getSunMeta,
   initWeather,
@@ -25,6 +26,7 @@ import { WeatherDataSeries, HourForecast } from '../types/forecast';
 export const localStorageKey = '12';
 const longStorageKey = 'weatherLong';
 const shortStorageKey = 'weatherShort';
+const weatherSeriesKey = 'weatherSeries';
 
 interface ParseTimeReturn {
   f: Moment.Moment;
@@ -124,6 +126,14 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   return out;
 }
 
+function initWeatherSeries(): WeatherDataSeries {
+  const nOut: WeatherDataSeries = {};
+
+  const fromStore = store.get(`${weatherSeriesKey}_${localStorageKey}`);
+
+  return nOut;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getWeatherFromYr(lat: number, long: number) {
   const { start, end } = getTimeLimits(14);
@@ -143,7 +153,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   // The new API data set
   const nData: YrResponse = nResponse.data;
 
-  const nOut: WeatherDataSeries = {};
+  const nOut: WeatherDataSeries = initWeatherSeries();
   nData.properties.timeseries.forEach((d) => {
     const key = createTimeKey(d.time);
     nOut[key] = parseWeatherHour(d);
@@ -284,7 +294,10 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   storeToLocalStore(`${longStorageKey}_'${localStorageKey}`, filteredLong, start, end);
   storeToLocalStore(`${shortStorageKey}_${localStorageKey}`, filteredShort, start, end);
 
-  return { long: filteredLong, short: filteredShort, todayMinMax };
+  // Keep!
+  storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, nOut, start, end);
+
+  return { long: filteredLong, short: filteredShort, todayMinMax, weather: nOut };
 }
 
 export function parseLimits(
