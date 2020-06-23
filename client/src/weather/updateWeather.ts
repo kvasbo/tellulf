@@ -126,10 +126,30 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   return out;
 }
 
+// New
 function initWeatherSeries(): WeatherDataSeries {
   const nOut: WeatherDataSeries = {};
 
-  const fromStore = store.get(`${weatherSeriesKey}_${localStorageKey}`);
+  const start = Moment().startOf('day').valueOf();
+  const diff = 1000 * 60 * 60; // an hour
+  const hours = 14 * 24;
+
+  for (let i = 0; i < hours; i++) {
+    const time = start + diff * i;
+    nOut[time] = { time };
+  }
+
+  // Get from storage
+  const fromStore: WeatherDataSeries = store.get(`${weatherSeriesKey}_${localStorageKey}`);
+
+  // Get data from stored set if time is in initialised set.
+  if (fromStore) {
+    Object.values(nOut).forEach((k) => {
+      if (fromStore[k.time]) {
+        nOut[k.time] = fromStore[k.time];
+      }
+    });
+  }
 
   return nOut;
 }
@@ -160,7 +180,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
   });
 
   // eslint-disable-next-line no-console
-  console.log(nOut);
+  // console.log(nOut);
 
   // The old data set!
   const data = await axios.get(
