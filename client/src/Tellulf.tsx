@@ -11,7 +11,7 @@ import Klokke from './Klokke';
 import Settings from './Settings';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
-import { fetchWeather } from './redux/actions';
+import { fetchForecast } from './redux/actions';
 import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
@@ -21,7 +21,7 @@ import SolarUpdater from './solarUpdater';
 
 const steder = {
   oslo: { lat: 59.9409, long: 10.6991 },
-  sandefjord: { lat: 59.1347624, long: 10.3250789 },
+  sandefjord: { lat: 59.1347, long: 10.325 },
 };
 
 interface Props {
@@ -79,9 +79,10 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   private updateWeather() {
     try {
-      this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
+      // New
+      this.props.dispatch(fetchForecast(steder.oslo.lat, steder.oslo.long, 'oslo'));
       this.props.dispatch(
-        fetchWeather(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
+        fetchForecast(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
       );
     } catch (err) {
       // eslint-disable-next-line no-console
