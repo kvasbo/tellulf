@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Moment from 'moment';
 import store from 'store';
-import filter from 'lodash/filter';
 import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 
 import { YrResponse, YrWeatherDataset } from '../types/yr';
