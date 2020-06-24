@@ -4,7 +4,7 @@ import store from 'store';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import { getNorwegianDaysOff } from '../external';
-import { HourForecast } from '../types/forecast';
+import { HourForecast, WeatherLimits } from '../types/forecast';
 
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
@@ -152,18 +152,4 @@ export function parseLimits(
   };
 
   return out;
-}
-
-interface WeatherLimits {
-  lowerRange: number;
-  upperRange: number;
-  maxRain: number;
-  maxRainTime: number;
-  maxTemp: number;
-  maxTempTime: number;
-  minTemp: number;
-  minTempTime: number;
-  ticks: number[];
-  sunrise: number;
-  sunset: number;
 }
