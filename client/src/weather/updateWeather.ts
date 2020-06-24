@@ -117,9 +117,9 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
     out.symbol = d.data.next_1_hours.summary.symbol_code;
   } else if (d.data.next_6_hours) {
     //... or six hours
-    out.rain = d.data.next_6_hours.details.precipitation_amount;
-    out.rainMin = d.data.next_6_hours.details.precipitation_amount_min;
-    out.rainMax = d.data.next_6_hours.details.precipitation_amount_max;
+    out.rain = d.data.next_6_hours.details.precipitation_amount / 6;
+    out.rainMin = d.data.next_6_hours.details.precipitation_amount_min / 6;
+    out.rainMax = d.data.next_6_hours.details.precipitation_amount_max / 6;
     out.symbol = d.data.next_6_hours.summary.symbol_code;
   }
 
