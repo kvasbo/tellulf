@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
-import symbolMap from './symbolMap';
 import { HourForecast } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
@@ -163,9 +162,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             isAnimationActive={false}
           />
           <Line
-            dot={
-              <WeatherIcon symbolMap={symbolMap} sunrise={limits.sunrise} sunset={limits.sunset} />
-            }
+            dot={<WeatherIcon />}
             yAxisId="temp"
             type="natural"
             dataKey="temp"

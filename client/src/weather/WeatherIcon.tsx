@@ -1,14 +1,10 @@
 import React from 'react';
-import { Symbols } from './symbolMap'; // Type
 import { GenericProps } from '../types/generic';
 
-const baseUrl = './WeatherIcons/';
+const baseUrl = '/weather_symbols';
 
 interface Props {
-  symbolMap: Symbols;
   payload: { time: number; symbol: string; temp: number };
-  sunrise: number;
-  sunset: number;
   cx: number;
   cy: number;
 }
@@ -23,16 +19,8 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
   };
 
   private getIconLocation() {
-    let icon = this.props.symbolMap.blank;
-    const nattdag =
-      this.props.payload.time % 86400000 >= this.props.sunrise % 86400000 &&
-      this.props.payload.time % 86400000 <= this.props.sunset % 86400000
-        ? 'day'
-        : 'night';
-    if (this.props.payload.symbol in this.props.symbolMap[nattdag]) {
-      icon = this.props.symbolMap[nattdag][this.props.payload.symbol];
-    }
-    return `${baseUrl}${icon}`;
+    const icon = `${baseUrl}/${this.props.payload.symbol}.png`;
+    return icon;
   }
 
   private getTemp() {
@@ -41,6 +29,9 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
   }
 
   public render(): React.ReactNode {
+    if (isNaN(this.props.payload.temp) || typeof this.props.payload.symbol === 'undefined') {
+      return null;
+    }
     return (
       <svg>
         <text
@@ -54,7 +45,7 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
           {this.getTemp()}
         </text>
         <image
-          xlinkHref={this.getIconLocation()}
+          href={this.getIconLocation()}
           x={this.props.cx - 13}
           y={this.props.cy - 15}
           height="26px"
