@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import sortBy from 'lodash/sortBy';
+import maxBy from 'lodash/maxBy';
 import Dag from './Dag';
 
 import { getIcal } from './kalenderHelpers';
@@ -78,6 +79,7 @@ class Kalender extends React.PureComponent<Props, State> {
       const dinners = this.state.dinners[d];
       const filteredForecast = this.filterForecast(day, 'oslo');
       const filteredForecastHytta = this.filterForecast(day, 'sandefjord');
+      const showWeather = this.showWeatherForDay(day);
 
       if (diff < 14 || cald || birthdays || dinners) {
         out.push(
@@ -87,6 +89,7 @@ class Kalender extends React.PureComponent<Props, State> {
             events={cald}
             dinner={dinners}
             birthdays={birthdays}
+            showWeather={showWeather}
             forecastData={filteredForecast}
             forecastDataHytta={filteredForecastHytta}
           />,
@@ -96,10 +99,20 @@ class Kalender extends React.PureComponent<Props, State> {
     return out;
   }
 
+  // CHeck if we have a full dataset for the day
+  private showWeatherForDay(day: Moment.Moment): boolean {
+    if (!this.props.forecast || !this.props.forecast['oslo']) return false;
+    const endOfDay = Moment(day).endOf('day');
+    const w = Object.values(this.props.forecast['oslo'].forecast);
+    const lastKnown: HourForecast = maxBy(w, 'time');
+    const lastMoment = Moment(lastKnown.time);
+    return lastMoment.isAfter(endOfDay);
+  }
+
   private filterForecast(date: Moment.Moment, sted: string): HourForecast[] {
     if (!this.props.forecast || !this.props.forecast[sted]) return [];
-    const from = Moment(date).startOf('day');
-    const to = Moment(date).endOf('day');
+    const from = Moment(date).startOf('day').subtract(6, 'h');
+    const to = Moment(date).endOf('day').add(6, 'h');
 
     const weather = this.props.forecast[sted].forecast;
 

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Moment from 'moment';
 import store from 'store';
+import filter from 'lodash/filter';
 import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 
 import { YrResponse, YrWeatherDataset } from '../types/yr';
@@ -37,12 +38,12 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
 }
 
 // New
-function initWeatherSeries(): WeatherDataSeries {
+function initWeatherSeries(days = 14): WeatherDataSeries {
   const nOut: WeatherDataSeries = {};
 
   const start = Moment().startOf('day').valueOf();
   const diff = 1000 * 60 * 60; // an hour
-  const hours = 14 * 24;
+  const hours = days * 24;
 
   for (let i = 0; i < hours; i++) {
     const time = start + diff * i;
@@ -75,10 +76,13 @@ export async function getForecastFromYr(lat: number, long: number): Promise<Weat
   // The new API data set
   const nData: YrResponse = nResponse.data;
   const nOut: WeatherDataSeries = initWeatherSeries();
+
   nData.properties.timeseries.forEach((d) => {
     const key = createTimeKey(d.time);
+    // Check if not null
     nOut[key] = parseWeatherHour(d);
   });
+
   storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, nOut, start, end);
   return nOut;
 }

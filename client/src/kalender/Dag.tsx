@@ -19,6 +19,7 @@ interface Props {
   weatherAsGraph: boolean;
   forecastData: HourForecast[];
   forecastDataHytta: HourForecast[];
+  showWeather: boolean;
 }
 
 interface State {
@@ -133,6 +134,8 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getForecastSummary(): string {
+    if (!this.props.showWeather) return '';
+
     const weather: HourForecast[] =
       this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
     if (weather.length === 0) return '';
@@ -162,13 +165,15 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
+    if (!this.props.showWeather) return null;
+
     const weather: HourForecast[] =
       this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
 
     if (weather.length === 0) return null;
 
     const from = Moment(date).startOf('day');
-    const to = Moment(date).add(1, 'day').startOf('day');
+    const to = Moment(date).add(1, 'day');
 
     return (
       <WeatherGraph
