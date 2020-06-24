@@ -338,7 +338,7 @@ export default async function getWeatherFromYr(lat: number, long: number) {
 }
 
 export function parseLimits(
-  rawData: WeatherData[],
+  rawData: HourForecast[],
   lat = 59.9409,
   long = 10.6991,
   from?: Moment.Moment,
@@ -373,13 +373,13 @@ export function parseLimits(
     return data;
   }
 
-  const maxRainPoint: WeatherData | undefined = maxBy(data, 'rainMax');
+  const maxRainPoint: HourForecast | undefined = maxBy(data, 'rainMax');
   const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
   const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
-  const maxTempPoint: WeatherData | undefined = maxBy(data, 'temp');
+  const maxTempPoint: HourForecast | undefined = maxBy(data, 'temp');
   const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
   const maxTempTime = maxTempPoint ? maxTempPoint.time : 0;
-  const minTempPoint: WeatherData | undefined = minBy(data, 'temp');
+  const minTempPoint: HourForecast | undefined = minBy(data, 'temp');
   const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
   const minTempTime = minTempPoint ? minTempPoint.time : 0;
 

@@ -9,6 +9,7 @@ import { getIcal } from './kalenderHelpers';
 import { IcalParseResult } from '../types/calendar';
 import { AppStore } from '../redux/reducers';
 import { WeatherStore, WeatherData, WeatherDataSet } from '../types/weather';
+import { ForecastStore, HourForecast } from '../types/forecast';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -37,6 +38,7 @@ interface State {
 
 interface Props {
   weather: WeatherStore;
+  forecast: ForecastStore;
 }
 
 class Kalender extends React.PureComponent<Props, State> {
@@ -80,6 +82,8 @@ class Kalender extends React.PureComponent<Props, State> {
       const useShortWeather = diff < 2 ? true : false;
       const filteredWeather = this.filterWeatherData(day, 'oslo', useShortWeather);
       const filteredWeatherHytta = this.filterWeatherData(day, 'sandefjord', useShortWeather);
+      const filteredForecast = this.filterForecast(day, 'oslo');
+      const filteredForecastHytta = this.filterForecast(day, 'sandefjord');
 
       if (diff < 14 || cald || birthdays || dinners) {
         out.push(
@@ -92,11 +96,29 @@ class Kalender extends React.PureComponent<Props, State> {
             useShortWeather={useShortWeather}
             weatherData={filteredWeather}
             weatherDataHytta={filteredWeatherHytta}
+            forecastData={filteredForecast}
+            forecastDataHytta={filteredForecastHytta}
           />,
         );
       }
     });
     return out;
+  }
+
+  private filterForecast(date: Moment.Moment, sted: string): HourForecast[] {
+    if (!this.props.forecast || !this.props.forecast[sted]) return [];
+    const from = Moment(date).startOf('day');
+    const to = Moment(date).endOf('day');
+
+    const weather = this.props.forecast[sted].forecast;
+
+    const weatherFiltered: HourForecast[] = Object.values(weather).filter((w: HourForecast) => {
+      return Moment(w.time).isBetween(from, to, undefined, '[]');
+    });
+
+    const weatherSorted: HourForecast[] = sortBy(weatherFiltered, 'time');
+
+    return weatherSorted;
   }
 
   private filterWeatherData(
@@ -144,6 +166,7 @@ class Kalender extends React.PureComponent<Props, State> {
 function mapStateToProps(state: AppStore) {
   return {
     weather: state.Weather,
+    forecast: state.Forecast,
   };
 }
 

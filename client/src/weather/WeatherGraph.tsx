@@ -16,7 +16,7 @@ import {
 import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import symbolMap from './symbolMap';
-import { WeatherData } from '../types/weather';
+import { HourForecast } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
 
@@ -28,7 +28,7 @@ const colors = {
 };
 
 interface Props {
-  weather: WeatherData[];
+  weather: HourForecast[];
   from: Moment.Moment;
   to: Moment.Moment;
   sted: string;
@@ -42,7 +42,7 @@ interface State {
   currentTime: number;
 }
 
-class GraphLong extends React.PureComponent<Props, State> {
+class WeatherGraph extends React.PureComponent<Props, State> {
   public state: State;
   private interval = 0;
 
@@ -72,20 +72,9 @@ class GraphLong extends React.PureComponent<Props, State> {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
-  private massageData() {
-    return this.props.weather.map((w) => {
-      const rain = w.rain !== null ? w.rain / this.props.divideRainBy : null;
-      const rainMin = w.rainMin !== null ? w.rainMin / this.props.divideRainBy : null;
-      const rainMax = w.rainMax !== null ? w.rainMax / this.props.divideRainBy : null;
-      return { ...w, rainMin, rainMax, rain };
-    });
-  }
-
   // Stays on
   public render(): React.ReactNode {
-    const data = this.massageData();
-    if (data.length === 0) return null;
-    const limits = parseLimits(data);
+    const limits = parseLimits(this.props.weather);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
     return (
@@ -97,7 +86,7 @@ class GraphLong extends React.PureComponent<Props, State> {
             left: 0,
             bottom: 0,
           }}
-          data={data}
+          data={this.props.weather}
           onClick={this.props.onClick as RechartsFunction}
         >
           <XAxis
@@ -199,4 +188,4 @@ class GraphLong extends React.PureComponent<Props, State> {
   }
 }
 
-export default GraphLong;
+export default WeatherGraph;

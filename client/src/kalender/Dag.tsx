@@ -6,10 +6,11 @@ import minBy from 'lodash/minBy';
 import sumBy from 'lodash/sumBy';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
-import GraphLong from '../weather/GraphLong';
+import WeatherGraph from '../weather/WeatherGraph';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
 import { WeatherData } from '../types/weather';
+import { HourForecast } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
@@ -20,6 +21,8 @@ interface Props {
   useShortWeather: boolean;
   weatherData: WeatherData[];
   weatherDataHytta: WeatherData[];
+  forecastData: HourForecast[];
+  forecastDataHytta: HourForecast[];
 }
 
 interface State {
@@ -134,10 +137,9 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getWeatherSummary(): string {
-    const weather: WeatherData[] =
-      this.state.sted === 'sandefjord' ? this.props.weatherDataHytta : this.props.weatherData;
-
+  private getForecastSummary(): string {
+    const weather: HourForecast[] =
+      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
     if (weather.length === 0) return '';
 
     const maxTemp = maxBy(weather, (w): number => {
@@ -152,6 +154,7 @@ class Dag extends React.PureComponent<Props, State> {
       if (!w.rain) return 0;
       return w.rain;
     });
+
     const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : -999;
     const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : -999;
     const r = Math.round(rain);
@@ -160,8 +163,8 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    const weather: WeatherData[] =
-      this.state.sted === 'sandefjord' ? this.props.weatherDataHytta : this.props.weatherData;
+    const weather: HourForecast[] =
+      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
 
     if (weather.length === 0) return null;
 
@@ -169,14 +172,13 @@ class Dag extends React.PureComponent<Props, State> {
     const to = Moment(date).add(1, 'day').startOf('day');
 
     return (
-      <GraphLong
+      <WeatherGraph
         weather={weather}
         from={from}
         to={to}
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
-        divideRainBy={this.props.useShortWeather ? 1 : 6}
       />
     );
   }
@@ -196,7 +198,7 @@ class Dag extends React.PureComponent<Props, State> {
           className="kalenderDato weatherSummary"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '2 / 3', gridRow: '1 / 2' }}
         >
-          {this.getWeatherSummary()}
+          {this.getForecastSummary()}
         </div>
         <div
           style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
