@@ -14,8 +14,6 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
     cx: undefined,
     cy: undefined,
     payload: undefined,
-    sunrise: 0,
-    sunset: 3484811880000,
   };
 
   private getIconLocation() {
