@@ -13,10 +13,9 @@ import {
   ResponsiveContainer,
   RechartsFunction,
 } from 'recharts';
-import { parseLimits } from './updateWeather';
 import WeatherIcon from './WeatherIcon';
 import { HourForecast } from '../types/forecast';
-import { formatTick } from './weatherHelpers';
+import { formatTick, parseLimits } from './weatherHelpers';
 import './yr.css';
 
 const colors = {
@@ -170,6 +169,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             opacity={0.5}
             strokeWidth={1}
             isAnimationActive={false}
+            connectNulls={true}
           />
           <ReferenceLine
             yAxisId="temp"

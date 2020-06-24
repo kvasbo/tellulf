@@ -9,7 +9,6 @@ import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { WeatherData } from '../types/weather';
 import { HourForecast } from '../types/forecast';
 
 interface Props {
@@ -18,9 +17,6 @@ interface Props {
   events: EventDataSet;
   date: string;
   weatherAsGraph: boolean;
-  useShortWeather: boolean;
-  weatherData: WeatherData[];
-  weatherDataHytta: WeatherData[];
   forecastData: HourForecast[];
   forecastDataHytta: HourForecast[];
 }
@@ -36,7 +32,6 @@ function getDayHeader(date: Moment.Moment) {
 class Dag extends React.PureComponent<Props, State> {
   static defaultProps = {
     weatherAsGraph: false,
-    useShortWeather: false,
     sted: 'oslo',
   };
 
@@ -155,9 +150,13 @@ class Dag extends React.PureComponent<Props, State> {
       return w.rain;
     });
 
-    const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : -999;
-    const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : -999;
+    const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : undefined;
+    const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : undefined;
     const r = Math.round(rain);
+
+    if (!maxT || !minT) {
+      return '';
+    }
 
     return `${minT}/${maxT} ${r}mm`;
   }

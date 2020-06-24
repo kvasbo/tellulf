@@ -1,11 +1,11 @@
 import Moment from 'moment';
 import SunCalc from 'suncalc';
 import store from 'store';
+import maxBy from 'lodash/maxBy';
+import minBy from 'lodash/minBy';
 import { getNorwegianDaysOff } from '../external';
-import { WeatherData, WeatherDataSet } from '../types/weather';
-import { localStorageKey } from './updateWeather';
+import { HourForecast } from '../types/forecast';
 
-const useLocalStorage = true;
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
 const gridColor = '#FFFFFFAA';
@@ -62,55 +62,6 @@ export function createKeyBasedOnStamps(from: string, to: string): string {
   return key;
 }
 
-// Populate a default weather data set
-export function getDefaultWeatherDataSet(
-  startTime: Moment.Moment,
-  endTime: Moment.Moment,
-): WeatherData {
-  const diff = endTime.diff(startTime, 'hours');
-  const midTime = startTime.add(Math.round(diff / 2), 'hours');
-  return {
-    from: startTime.valueOf(),
-    to: endTime.valueOf(),
-    temp: null,
-    rain: null,
-    rainMin: null,
-    rainMax: null,
-    symbol: 'blank',
-    symbolNumber: 0,
-    time: midTime.valueOf(),
-  };
-}
-
-export function initWeather(
-  spanToUseInHours: number,
-  daysToInit: number,
-  storageKey: string,
-): WeatherDataSet {
-  const out: WeatherDataSet = {};
-  const time = Moment().utc().startOf('day');
-  const spanEnd = Moment(time).add(daysToInit, 'day').startOf('day');
-  while (time.isSameOrBefore(spanEnd)) {
-    const startTime = Moment(time);
-    const endTime = Moment(time).add(spanToUseInHours, 'hours');
-    const key = createKeyBasedOnStamps(startTime.toISOString(), endTime.toISOString());
-    const d: WeatherData = getDefaultWeatherDataSet(startTime, endTime);
-    out[key] = d;
-    time.add(spanToUseInHours, 'hours');
-  }
-
-  // Load localstore if applicable, and write to output item if applicable
-  const fromStore = store.get(`${storageKey}_${localStorageKey}`);
-  if (useLocalStorage && fromStore) {
-    Object.keys(fromStore).forEach((k) => {
-      if (out[k]) {
-        out[k] = { ...out[k], ...fromStore[k] };
-      }
-    });
-  }
-  return out;
-}
-
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function storeToLocalStore(
@@ -129,4 +80,90 @@ export function storeToLocalStore(
     }
   });
   store.set(key, toStore);
+}
+
+export function parseLimits(
+  rawData: HourForecast[],
+  lat = 59.9409,
+  long = 10.6991,
+  from?: Moment.Moment,
+  to?: Moment.Moment,
+): WeatherLimits {
+  const sunData = getSunMeta(lat, long);
+
+  let data = rawData;
+
+  // Filter by time if needed
+  if (from && to) {
+    data = data.filter((d) => {
+      return d.time >= from.valueOf() && d.time <= to.valueOf();
+    });
+  }
+
+  // Init
+  if (data.length === 0) {
+    const data: WeatherLimits = {
+      lowerRange: 0,
+      upperRange: 30,
+      maxRain: 0,
+      maxRainTime: 0,
+      maxTemp: 10,
+      maxTempTime: 0,
+      minTemp: 0,
+      minTempTime: 0,
+      ticks: [],
+      ...sunData,
+    };
+
+    return data;
+  }
+
+  const maxRainPoint: HourForecast | undefined = maxBy(data, 'rainMax');
+  const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
+  const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
+  const maxTempPoint: HourForecast | undefined = maxBy(data, 'temp');
+  const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
+  const maxTempTime = maxTempPoint ? maxTempPoint.time : 0;
+  const minTempPoint: HourForecast | undefined = minBy(data, 'temp');
+  const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
+  const minTempTime = minTempPoint ? minTempPoint.time : 0;
+
+  const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
+  const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
+  const lowerRange = minTemp > 0 ? 0 : Math.min(0, roundedMin);
+  const upperRange = Math.max(lowerRange + 30, roundedMax);
+
+  const ticks: number[] = [];
+  for (let i = lowerRange; i <= upperRange; i += 10) {
+    ticks.push(i);
+  }
+
+  const out: WeatherLimits = {
+    lowerRange,
+    upperRange,
+    maxRain,
+    maxRainTime,
+    maxTemp,
+    maxTempTime,
+    minTemp,
+    minTempTime,
+    ticks,
+    ...sunData,
+  };
+
+  return out;
+}
+
+interface WeatherLimits {
+  lowerRange: number;
+  upperRange: number;
+  maxRain: number;
+  maxRainTime: number;
+  maxTemp: number;
+  maxTempTime: number;
+  minTemp: number;
+  minTempTime: number;
+  ticks: number[];
+  sunrise: number;
+  sunset: number;
 }

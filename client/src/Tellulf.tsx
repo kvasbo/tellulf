@@ -11,7 +11,7 @@ import Klokke from './Klokke';
 import Settings from './Settings';
 import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
-import { fetchWeather, fetchForecast } from './redux/actions';
+import { fetchForecast } from './redux/actions';
 import { TrainDataSet } from './types/trains';
 import { AppStore } from './redux/reducers';
 import './tellulf.css';
@@ -79,11 +79,6 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   private updateWeather() {
     try {
-      // Old
-      this.props.dispatch(fetchWeather(steder.oslo.lat, steder.oslo.long, 'oslo'));
-      this.props.dispatch(
-        fetchWeather(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
-      );
       // New
       this.props.dispatch(fetchForecast(steder.oslo.lat, steder.oslo.long, 'oslo'));
       this.props.dispatch(

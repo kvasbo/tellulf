@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import Weather from './Weather';
 import Forecast from './Forecast';
 import Netatmo, { NetatmoStore } from './Netatmo';
 import NetatmoAverages, { NetatmoAverageData } from './NetatmoAverages';
@@ -12,7 +11,6 @@ import TibberRealTime from './TibberRealTimeData';
 import TibberLastDay from './TibberLastDay';
 
 import { TrainDataSet } from '../types/trains';
-import { WeatherStore } from '../types/weather';
 import { SolarState } from '../types/solar';
 import { InitState } from '../types/initstate';
 import { ForecastStore } from '../types/forecast';
@@ -27,7 +25,6 @@ export interface AppStore {
   Trains: TrainDataSet;
   TibberRealTime: TibberRealTimeDataState;
   TibberLastDay: TibberUsageState;
-  Weather: WeatherStore;
   Forecast: ForecastStore;
 }
 
@@ -40,7 +37,6 @@ const tellulfReducer = combineReducers({
   Trains,
   TibberRealTime,
   TibberLastDay,
-  Weather,
   Forecast,
 });
 

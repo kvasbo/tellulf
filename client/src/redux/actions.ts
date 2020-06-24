@@ -1,9 +1,8 @@
-import getWeatherFromYr, { getForecastFromYr } from '../weather/updateWeather';
+import { getForecastFromYr } from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
 import { AppDispatch } from './store';
 import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
-import { WeatherDataSet } from '../types/weather';
 import { WeatherDataSeries } from '../types/forecast';
 import { TrainDataSet } from '../types/trains';
 import { SolarCurrent, SolarMaxData } from '../types/solar';
@@ -16,7 +15,6 @@ import {
   houses,
 } from '../types/tibber';
 
-export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const NETATMO_UPDATE_AVERAGES = 'NETATMO_UPDATE_AVERAGES';
@@ -47,21 +45,6 @@ export function updateTrains(
   return {
     type: UPDATE_TRAINS,
     trains,
-  };
-}
-
-export function updateWeather(
-  data: WeatherDataSet,
-  lat: number,
-  lon: number,
-  sted: string,
-): { type: 'UPDATE_WEATHER'; data: WeatherDataSet; lat: number; lon: number; sted: string } {
-  return {
-    type: UPDATE_WEATHER,
-    data,
-    lat,
-    lon,
-    sted,
   };
 }
 
@@ -165,15 +148,6 @@ export function updateNetatmoAverages(
 export function fetchTrains(): { (dispatch: AppDispatch): unknown } {
   return (dispatch: AppDispatch): unknown => {
     return getTrains().then((trains) => dispatch(updateTrains(trains)));
-  };
-}
-
-export function fetchWeather(lat: number, lon: number, sted: string) {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
-  return (dispatch: AppDispatch) => {
-    return getWeatherFromYr(lat, lon).then((weather) =>
-      dispatch(updateWeather(weather, lat, lon, sted)),
-    );
   };
 }
 
