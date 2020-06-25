@@ -1,9 +1,6 @@
 import Moment from 'moment';
 import store from 'store';
-import maxBy from 'lodash/maxBy';
-import minBy from 'lodash/minBy';
 import { getNorwegianDaysOff } from '../external';
-import { HourForecast, WeatherLimits } from '../types/forecast';
 
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
@@ -59,61 +56,4 @@ export function storeToLocalStore(
     }
   });
   store.set(key, toStore);
-}
-
-export function parseLimits(
-  rawData: HourForecast[],
-  from?: Moment.Moment,
-  to?: Moment.Moment,
-): WeatherLimits {
-  let data = rawData;
-
-  // Filter by time if needed
-  if (from && to) {
-    data = data.filter((d) => {
-      return d.time >= from.valueOf() && d.time <= to.valueOf();
-    });
-  }
-
-  // Init
-  if (data.length === 0) {
-    const data: WeatherLimits = {
-      lowerRange: 0,
-      upperRange: 30,
-      maxRain: 0,
-      maxTemp: 10,
-      minTemp: 0,
-      ticks: [],
-    };
-
-    return data;
-  }
-
-  const maxRainPoint: HourForecast | undefined = maxBy(data, 'rainMax');
-  const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
-  const maxTempPoint: HourForecast | undefined = maxBy(data, 'temp');
-  const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
-  const minTempPoint: HourForecast | undefined = minBy(data, 'temp');
-  const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
-
-  const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
-  const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
-  const lowerRange = minTemp > 0 ? 0 : Math.min(0, roundedMin);
-  const upperRange = Math.max(lowerRange + 30, roundedMax);
-
-  const ticks: number[] = [];
-  for (let i = lowerRange; i <= upperRange; i += 10) {
-    ticks.push(i);
-  }
-
-  const out: WeatherLimits = {
-    lowerRange,
-    upperRange,
-    maxRain,
-    maxTemp,
-    minTemp,
-    ticks,
-  };
-
-  return out;
 }

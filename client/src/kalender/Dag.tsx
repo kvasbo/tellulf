@@ -9,7 +9,7 @@ import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { HourForecast } from '../types/forecast';
+import { HourForecast, WeatherLimits } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
@@ -20,6 +20,7 @@ interface Props {
   forecastData: HourForecast[];
   forecastDataHytta: HourForecast[];
   showWeather: boolean;
+  forecastLimits: WeatherLimits;
 }
 
 interface State {
@@ -183,6 +184,7 @@ class Dag extends React.PureComponent<Props, State> {
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
+        limits={this.props.forecastLimits}
       />
     );
   }

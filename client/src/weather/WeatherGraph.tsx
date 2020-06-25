@@ -14,8 +14,8 @@ import {
   RechartsFunction,
 } from 'recharts';
 import WeatherIcon from './WeatherIcon';
-import { HourForecast } from '../types/forecast';
-import { formatTick, parseLimits } from './weatherHelpers';
+import { HourForecast, WeatherLimits } from '../types/forecast';
+import { formatTick } from './weatherHelpers';
 import './yr.css';
 
 const colors = {
@@ -33,7 +33,7 @@ interface Props {
   showPlace: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
-  divideRainBy: number; // To even out rain per period
+  limits: WeatherLimits;
 }
 
 interface State {
@@ -47,7 +47,6 @@ class WeatherGraph extends React.PureComponent<Props, State> {
   public static defaultProps = {
     limits: undefined,
     showPlace: false,
-    divideRainBy: 1,
     onClick: () => {
       return null;
     },
@@ -72,7 +71,6 @@ class WeatherGraph extends React.PureComponent<Props, State> {
 
   // Stays on
   public render(): React.ReactNode {
-    const limits = parseLimits(this.props.weather);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
     return (
@@ -99,8 +97,8 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             width={25}
             yAxisId="temp"
             type="number"
-            ticks={limits.ticks}
-            domain={[limits.lowerRange, limits.upperRange]}
+            ticks={this.props.limits.ticks}
+            domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
             hide
           />
           <YAxis
@@ -121,10 +119,10 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             hide
           />
           <CartesianGrid stroke={colors.grid} vertical={false} />
-          {limits.lowerRange < 0 && (
+          {this.props.limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
-              y2={limits.lowerRange}
+              y2={this.props.limits.lowerRange}
               yAxisId="temp"
               stroke="#00000000"
               fill={colors.cold}

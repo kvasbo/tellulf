@@ -1,16 +1,18 @@
-export interface WeatherDataSeries {
-  [s: number]: HourForecast;
+export interface ForecastStore {
+  data: ForecastDataSet;
+  limits: WeatherLimits;
 }
 
-export interface ForecastStore {
-  data: {
-    [s: string]: {
-      forecast: WeatherDataSeries;
-      lat: number;
-      lon: number;
-    };
+export interface ForecastDataSet {
+  [s: string]: {
+    forecast: WeatherDataSeries;
+    lat: number;
+    lon: number;
   };
-  limits: WeatherLimits;
+}
+
+export interface WeatherDataSeries {
+  [s: number]: HourForecast;
 }
 
 export interface HourForecast {
