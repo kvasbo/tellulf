@@ -32,7 +32,6 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
     out.rainMax = d.data.next_6_hours.details.precipitation_amount_max / 6;
     out.symbol = d.data.next_6_hours.summary.symbol_code;
   }
-
   return out;
 }
 

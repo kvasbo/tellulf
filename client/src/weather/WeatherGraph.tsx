@@ -133,7 +133,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
           <Area
             dot={false}
             yAxisId="rain"
-            connectNulls={false}
+            connectNulls={true}
             type="natural"
             dataKey="rain"
             stroke={colors.rain}
@@ -143,7 +143,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
           <Line
             dot={false}
             yAxisId="rain"
-            connectNulls={false}
+            connectNulls={true}
             type="natural"
             dataKey="rainMin"
             stroke={colors.rain}
@@ -153,7 +153,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
           <Line
             dot={false}
             yAxisId="rain"
-            connectNulls={false}
+            connectNulls={true}
             type="natural"
             dataKey="rainMax"
             stroke={colors.rain}

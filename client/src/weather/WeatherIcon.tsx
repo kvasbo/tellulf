@@ -48,7 +48,7 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
           y={this.props.cy - 15}
           height="26px"
           width="26px"
-          opacity={0.6}
+          opacity={1}
         />
         )
       </svg>
