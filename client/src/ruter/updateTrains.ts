@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Moment from 'moment';
 import XML from 'pixl-xml';
+import { v4 as uuidv4 } from 'uuid';
 import {
   TrainData,
   TrainDataSet,
@@ -10,13 +11,15 @@ import {
 } from '../types/trains';
 
 // Create link with unique requestor ID
-const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT`;
+const fetchId = uuidv4();
+const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT&requestorId=${fetchId}`;
 const THE_STOP = 'NSR:Quay:11460';
 
 // Fetch Entur API data
 export default async function getTrains(): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
   try {
+    console.log('Getting ruter data');
     const config = { headers: { 'ET-Client-Name': 'kvasbo - infoskjerm' } };
     const data = await axios.get(ENTUR_URL, config);
     if (data.status !== 200) throw Error('Couldnt fetch entur data');
@@ -48,6 +51,7 @@ export default async function getTrains(): Promise<TrainDataSet> {
           linje: t.LineRef,
           skalTil: c.DestinationDisplay,
         };
+        console.log('Train data found:', out);
         trains[out.id] = out;
       });
     });

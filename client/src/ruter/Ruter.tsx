@@ -26,8 +26,8 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
   private intervalId = 0;
 
   public componentDidMount = () => {
-    this.updateTrains();
-    this.intervalId = window.setInterval(() => this.updateTrains(), 15000);
+    window.setTimeout(() => this.updateTrains(), 5000);
+    this.intervalId = window.setInterval(() => this.updateTrains(), 60000);
   };
 
   public componentWillUnmount = () => {
