@@ -2,7 +2,17 @@ import { Action } from 'redux';
 import { UPDATE_FORECAST } from './actions';
 import { WeatherDataSeries, ForecastStore } from '../types/forecast';
 
-const initialState: ForecastStore = {};
+const initialState: ForecastStore = {
+  data: {},
+  limits: {
+    maxRain: 0,
+    maxTemp: 0,
+    upperRange: 0,
+    lowerRange: 0,
+    minTemp: 0,
+    ticks: [],
+  },
+};
 
 interface KnownAction {
   type: string;
@@ -23,7 +33,7 @@ export default function Weather(
     case UPDATE_FORECAST: {
       const newState: ForecastStore = { ...state };
 
-      newState[action.sted] = {
+      newState.data[action.sted] = {
         lat: action.lat,
         lon: action.lon,
         forecast: action.data,

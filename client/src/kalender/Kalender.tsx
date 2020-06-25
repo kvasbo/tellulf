@@ -101,20 +101,20 @@ class Kalender extends React.PureComponent<Props, State> {
 
   // CHeck if we have a full dataset for the day
   private showWeatherForDay(day: Moment.Moment): boolean {
-    if (!this.props.forecast || !this.props.forecast['oslo']) return false;
+    if (!this.props.forecast.data || !this.props.forecast.data['oslo']) return false;
     const endOfDay = Moment(day).endOf('day');
-    const w = Object.values(this.props.forecast['oslo'].forecast);
+    const w = Object.values(this.props.forecast.data['oslo'].forecast);
     const lastKnown: HourForecast = maxBy(w, 'time');
     const lastMoment = Moment(lastKnown.time);
     return lastMoment.isAfter(endOfDay);
   }
 
   private filterForecast(date: Moment.Moment, sted: string): HourForecast[] {
-    if (!this.props.forecast || !this.props.forecast[sted]) return [];
+    if (!this.props.forecast.data || !this.props.forecast.data[sted]) return [];
     const from = Moment(date).startOf('day').subtract(6, 'h');
     const to = Moment(date).endOf('day').add(6, 'h');
 
-    const weather = this.props.forecast[sted].forecast;
+    const weather = this.props.forecast.data[sted].forecast;
 
     const weatherFiltered: HourForecast[] = Object.values(weather).filter((w: HourForecast) => {
       return Moment(w.time).isBetween(from, to, undefined, '[]');

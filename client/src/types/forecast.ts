@@ -3,11 +3,14 @@ export interface WeatherDataSeries {
 }
 
 export interface ForecastStore {
-  [s: string]: {
-    forecast: WeatherDataSeries;
-    lat: number;
-    lon: number;
+  data: {
+    [s: string]: {
+      forecast: WeatherDataSeries;
+      lat: number;
+      lon: number;
+    };
   };
+  limits: WeatherLimits;
 }
 
 export interface HourForecast {
