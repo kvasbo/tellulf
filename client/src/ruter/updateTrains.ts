@@ -19,7 +19,6 @@ const THE_STOP = 'NSR:Quay:11460';
 export default async function getTrains(): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
   try {
-    console.log('Getting ruter data');
     const config = { headers: { 'ET-Client-Name': 'kvasbo - infoskjerm' } };
     const data = await axios.get(ENTUR_URL, config);
     if (data.status !== 200) throw Error('Couldnt fetch entur data');
@@ -51,7 +50,6 @@ export default async function getTrains(): Promise<TrainDataSet> {
           linje: t.LineRef,
           skalTil: c.DestinationDisplay,
         };
-        console.log('Train data found:', out);
         trains[out.id] = out;
       });
     });

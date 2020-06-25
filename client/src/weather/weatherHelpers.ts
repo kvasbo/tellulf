@@ -1,5 +1,4 @@
 import Moment from 'moment';
-import SunCalc from 'suncalc';
 import store from 'store';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
@@ -35,26 +34,6 @@ interface SunInfo {
   diffSet: number;
 }
 
-export function getSunMeta(lat: number, long: number, now: Moment.Moment = Moment()): SunInfo {
-  const yesterday = Moment(now).subtract(1, 'days');
-  const sunTimes = SunCalc.getTimes(new Date(), lat, long);
-  const sunTimesYesterday = SunCalc.getTimes(yesterday.toDate(), lat, long);
-  const sunriseM = Moment(sunTimes.sunrise);
-  const sunsetM = Moment(sunTimes.sunset);
-  const sunriseYesterday = Moment(sunTimesYesterday.sunrise);
-  const sunsetYesterday = Moment(sunTimesYesterday.sunset);
-  const diffRise = sunriseM.diff(sunriseYesterday, 'minutes') - 1440;
-  const diffSet = sunsetM.diff(sunsetYesterday, 'minutes') - 1440;
-  const sunrise = sunriseM.valueOf();
-  const sunset = sunsetM.valueOf();
-  return {
-    sunrise,
-    sunset,
-    diffRise,
-    diffSet,
-  };
-}
-
 export function createKeyBasedOnStamps(from: string, to: string): string {
   const f = Moment(from);
   const t = Moment(to);
@@ -84,13 +63,9 @@ export function storeToLocalStore(
 
 export function parseLimits(
   rawData: HourForecast[],
-  lat = 59.9409,
-  long = 10.6991,
   from?: Moment.Moment,
   to?: Moment.Moment,
 ): WeatherLimits {
-  const sunData = getSunMeta(lat, long);
-
   let data = rawData;
 
   // Filter by time if needed
@@ -106,13 +81,9 @@ export function parseLimits(
       lowerRange: 0,
       upperRange: 30,
       maxRain: 0,
-      maxRainTime: 0,
       maxTemp: 10,
-      maxTempTime: 0,
       minTemp: 0,
-      minTempTime: 0,
       ticks: [],
-      ...sunData,
     };
 
     return data;
@@ -120,13 +91,10 @@ export function parseLimits(
 
   const maxRainPoint: HourForecast | undefined = maxBy(data, 'rainMax');
   const maxRain = maxRainPoint && maxRainPoint.rainMax ? maxRainPoint.rainMax : 0;
-  const maxRainTime = maxRainPoint ? maxRainPoint.time : 0;
   const maxTempPoint: HourForecast | undefined = maxBy(data, 'temp');
   const maxTemp = maxTempPoint && maxTempPoint.temp ? maxTempPoint.temp : -999;
-  const maxTempTime = maxTempPoint ? maxTempPoint.time : 0;
   const minTempPoint: HourForecast | undefined = minBy(data, 'temp');
   const minTemp = minTempPoint && minTempPoint.temp ? minTempPoint.temp : 999;
-  const minTempTime = minTempPoint ? minTempPoint.time : 0;
 
   const roundedMin = Math.floor((minTemp - 2) / 10) * 10;
   const roundedMax = Math.ceil((maxTemp + 2) / 10) * 10;
@@ -142,13 +110,9 @@ export function parseLimits(
     lowerRange,
     upperRange,
     maxRain,
-    maxRainTime,
     maxTemp,
-    maxTempTime,
     minTemp,
-    minTempTime,
     ticks,
-    ...sunData,
   };
 
   return out;

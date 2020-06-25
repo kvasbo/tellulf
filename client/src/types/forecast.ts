@@ -23,12 +23,7 @@ export interface WeatherLimits {
   lowerRange: number;
   upperRange: number;
   maxRain: number;
-  maxRainTime: number;
   maxTemp: number;
-  maxTempTime: number;
   minTemp: number;
-  minTempTime: number;
   ticks: number[];
-  sunrise: number;
-  sunset: number;
 }
