@@ -39,6 +39,7 @@ interface State {
 
 class Tellulf extends React.PureComponent<Props, State> {
   private interval = 0;
+  private width = 0;
 
   private toggleMode: () => void;
   public constructor(props: Props) {
@@ -53,6 +54,7 @@ class Tellulf extends React.PureComponent<Props, State> {
     this.startReloadLoop();
     this.attachNetatmoListener();
     this.updateWeather();
+    this.width = window.innerWidth;
     this.interval = window.setInterval(() => this.updateWeather(), 60 * 1000 * 15);
   }
 
@@ -100,8 +102,11 @@ class Tellulf extends React.PureComponent<Props, State> {
   }
 
   public render() {
-    const showEnergy = store.get('showEnergy', true);
-    const showTrains = store.get('showTrains', true);
+    const showEnergySetting = store.get('showEnergy', true);
+    const showTrainsSetting = store.get('showTrains', true);
+
+    const showEnergy = this.width > 600 && showEnergySetting;
+    const showTrains = this.width > 600 && showTrainsSetting;
 
     return (
       <div className="grid">
@@ -109,21 +114,22 @@ class Tellulf extends React.PureComponent<Props, State> {
           <Kalender key="tellulf-kalender" />
         </div>
         <div className="block gridClock">
-          <Klokke key="tellulf-klokke" temp={this.props.temperature} onClick={this.toggleMode} />
+          <Klokke onClick={this.toggleMode} />
+          <div className="gridNetatmoTemp">{this.props.temperature}&deg;</div>
         </div>
-        {this.state.setupMode && (
-          <div className="block gridSettings">
-            <Settings />
-          </div>
-        )}
-        {!this.state.setupMode && showEnergy && (
+        {showEnergy && (
           <div className="block gridEnergy">
             <Solceller key="tellulf-energi" updaters={this.props.updaters} />
           </div>
         )}
-        {!this.state.setupMode && showTrains && (
+        {showTrains && (
           <div className="block gridTrains">
             <Ruter trains={this.props.trains} key="tellulf-trains" />
+          </div>
+        )}
+        {this.state.setupMode && (
+          <div className="block gridSettings">
+            <Settings />
           </div>
         )}
       </div>

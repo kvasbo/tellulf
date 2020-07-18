@@ -8,7 +8,6 @@ interface State {
 }
 
 interface Props {
-  temp: number;
   onClick(): void;
 }
 
@@ -30,29 +29,8 @@ class Clock extends React.PureComponent<Props, State> {
 
   public render(): React.ReactNode {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}
-        onClick={() => this.props.onClick()}
-      >
-        <span
-          style={{
-            alignItems: 'center',
-            color: '#ffffff',
-            fontSize: '4em',
-            fontWeight: 200,
-          }}
-        >
-          {this.state.time.format('HH:mm')}
-        </span>
-        <span style={{ color: '#ffffff', fontSize: '2em', fontWeight: 100 }}>
-          {this.props.temp}&deg;
-        </span>
+      <div className="clockTime" onClick={() => this.props.onClick()}>
+        {this.state.time.format('HH:mm')}
       </div>
     );
   }
