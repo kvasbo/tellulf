@@ -9,6 +9,11 @@ class Settings extends React.PureComponent<GenericProps, GenericProps> {
     window.location.reload();
   };
 
+  private async signOut() {
+    await firebase.auth().signOut();
+    window.location.reload();
+  }
+
   public render(): React.ReactNode {
     const showEnergy = store.get('showEnergy', true);
     const showTrains = store.get('showTrains', true);
@@ -40,7 +45,7 @@ class Settings extends React.PureComponent<GenericProps, GenericProps> {
             onChange={() => this.setBool('showTrains', !showTrains)}
           ></input>
         </div>
-        <button type="button" onClick={() => firebase.auth().signOut()}>
+        <button type="button" onClick={() => this.signOut()}>
           Logg ut
         </button>
         <button type="button" onClick={() => window.location.reload()}>
