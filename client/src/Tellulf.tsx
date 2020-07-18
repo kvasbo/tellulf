@@ -4,7 +4,6 @@ import Moment from 'moment';
 import store from 'store';
 import Solceller from './solceller/Solceller';
 import firebase from './firebase';
-// import Yr from './weather/Yr';
 import Kalender from './kalender/Kalender';
 import Ruter from './ruter/Ruter';
 import Klokke from './Klokke';
