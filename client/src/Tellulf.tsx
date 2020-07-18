@@ -40,6 +40,7 @@ interface State {
 
 class Tellulf extends React.PureComponent<Props, State> {
   private interval = 0;
+
   private toggleMode: () => void;
   public constructor(props: Props) {
     super(props);
@@ -102,9 +103,10 @@ class Tellulf extends React.PureComponent<Props, State> {
   public render() {
     const showEnergy = store.get('showEnergy', true);
     const showTrains = store.get('showTrains', true);
+
     return (
       <div className="grid">
-        <div style={{ gridColumn: '1 / 1', gridRow: '1 / 4', overflow: 'auto' }} className="block">
+        <div style={{ gridColumn: `1 / 1`, gridRow: '1 / 4', overflow: 'auto' }} className="block">
           <Kalender key="tellulf-kalender" />
         </div>
         <div

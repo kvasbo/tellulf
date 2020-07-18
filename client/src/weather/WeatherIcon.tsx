@@ -10,11 +10,17 @@ interface Props {
 }
 
 class WeatherIcon extends React.PureComponent<Props, GenericProps> {
+  private width = 0;
   public static defaultProps = {
     cx: undefined,
     cy: undefined,
     payload: undefined,
   };
+
+  public constructor(props: Props) {
+    super(props);
+    this.width = window.innerWidth;
+  }
 
   private getIconLocation() {
     const icon = `${baseUrl}/${this.props.payload.symbol}.png`;
@@ -29,6 +35,10 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
   public render(): React.ReactNode {
     if (isNaN(this.props.payload.temp) || typeof this.props.payload.symbol === 'undefined') {
       return null;
+    }
+    if (this.width <= 600) {
+      const d = new Date(this.props.payload.time);
+      if (d.getHours() % 2 !== 0) return null;
     }
     return (
       <svg>

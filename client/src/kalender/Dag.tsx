@@ -28,7 +28,7 @@ interface State {
 }
 
 function getDayHeader(date: Moment.Moment) {
-  return date.format('dddd D. MMM');
+  return date.format('dddd D.');
 }
 
 class Dag extends React.PureComponent<Props, State> {

@@ -42,7 +42,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
     tibber.subscribeToRealTime('2b05f8c5-3241-465d-92b8-9e7ad567f78f', 'hjemme');
     tibber.subscribeToRealTime('61f93ce4-f15c-49c2-aac1-9d9f0e1d76bb', 'hytta');
     tibber.updateConsumption();
-    tibber.updateConsumptionMonthlyAndCalculateBills();
+    // tibber.updateConsumptionMonthlyAndCalculateBills();
     tibber.updateConsumptionDaily();
     this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
     solar.attachListeners();

@@ -1,23 +1,23 @@
 body {
-  font-family: -apple-system, arial, sans-serif;
-  font-weight: 200;
-  font-size: 11pt;
-  background-color: rgb(50,50,50);
-  color: rgb(255, 255, 255);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-weight: 200;
+    font-size: 11pt;
+    background-color: rgb(50, 50, 50);
+    color: rgb(255, 255, 255);
 }
 
 .grid {
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  position: relative;
-  overflow: hidden;
-  grid-template-columns: auto 30vw;
-  grid-template-rows: 20vh auto 14vh;
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    position: relative;
+    overflow: hidden;
+    grid-template-columns: auto 30vw;
+    grid-template-rows: 20vh auto 14vh;
 }
 
 .block {
-  margin: 0;
-  padding: 1vw;
-  display: flex;
+    margin: 0;
+    padding: 1vw;
+    display: flex;
 }

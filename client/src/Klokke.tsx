@@ -44,13 +44,13 @@ class Clock extends React.PureComponent<Props, State> {
           style={{
             alignItems: 'center',
             color: '#ffffff',
-            fontSize: 75,
+            fontSize: '4em',
             fontWeight: 200,
           }}
         >
           {this.state.time.format('HH:mm')}
         </span>
-        <span style={{ color: '#ffffff', fontSize: 55, fontWeight: 100 }}>
+        <span style={{ color: '#ffffff', fontSize: '2em', fontWeight: 100 }}>
           {this.props.temp}&deg;
         </span>
       </div>
