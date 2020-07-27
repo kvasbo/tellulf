@@ -92,6 +92,7 @@ class Kalender extends React.PureComponent<Props, State> {
             showWeather={showWeather}
             forecastData={filteredForecast}
             forecastDataHytta={filteredForecastHytta}
+            forecastLimits={this.props.forecast.limits}
           />,
         );
       }
