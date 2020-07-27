@@ -167,11 +167,17 @@ class Dag extends React.PureComponent<Props, State> {
   private getWeather(date: Moment.Moment, sted: string) {
     if (!this.props.showWeather) return null;
 
+    const weather: HourForecast[] =
+      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
+
+    if (weather.length === 0) return null;
+
     const from = Moment(date).startOf('day');
     const to = Moment(date).add(1, 'day');
 
     return (
       <WeatherGraph
+        weather={weather}
         date={date}
         from={from}
         to={to}
