@@ -14,6 +14,8 @@ import {
   ResponsiveContainer,
   RechartsFunction,
 } from 'recharts';
+import sortBy from 'lodash/sortBy';
+import maxBy from 'lodash/maxBy';
 import WeatherIcon from './WeatherIcon';
 import { HourForecast, ForecastStore } from '../types/forecast';
 import { AppStore } from '../redux/reducers';
@@ -29,6 +31,7 @@ const colors = {
 
 interface Props {
   weather: HourForecast[];
+  date: Moment.Moment;
   from: Moment.Moment;
   to: Moment.Moment;
   sted: string;
@@ -71,8 +74,25 @@ class WeatherGraph extends React.PureComponent<Props, State> {
     this.setState({ currentTime: Moment().valueOf() });
   }
 
+  private filterForecast(date: Moment.Moment, sted: string): HourForecast[] {
+    if (!this.props.forecast.data || !this.props.forecast.data[this.props.sted]) return [];
+    const from = Moment(date).startOf('day').subtract(6, 'h');
+    const to = Moment(date).endOf('day').add(6, 'h');
+
+    const weather = this.props.forecast.data[sted].forecast;
+
+    const weatherFiltered: HourForecast[] = Object.values(weather).filter((w: HourForecast) => {
+      return Moment(w.time).isBetween(from, to, undefined, '[]');
+    });
+
+    const weatherSorted: HourForecast[] = sortBy(weatherFiltered, 'time');
+
+    return weatherSorted;
+  }
+
   // Stays on
   public render(): React.ReactNode {
+    const weather = this.filterForecast(this.props.date, this.props.sted);
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
     return (
