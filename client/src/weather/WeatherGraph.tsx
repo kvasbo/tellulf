@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import {
   ComposedChart,
@@ -15,7 +16,8 @@ import {
 } from 'recharts';
 import sortBy from 'lodash/sortBy';
 import WeatherIcon from './WeatherIcon';
-import { HourForecast, WeatherLimits } from '../types/forecast';
+import { HourForecast, ForecastStore } from '../types/forecast';
+import { AppStore } from '../redux/reducers';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
 
@@ -34,7 +36,7 @@ interface Props {
   showPlace: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
-  limits: WeatherLimits;
+  forecast: ForecastStore;
 }
 
 interface State {
@@ -115,8 +117,8 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             width={25}
             yAxisId="temp"
             type="number"
-            ticks={this.props.limits.ticks}
-            domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
+            ticks={this.props.forecast.limits.ticks}
+            domain={[this.props.forecast.limits.lowerRange, this.props.forecast.limits.upperRange]}
             hide
           />
           <YAxis
@@ -137,10 +139,10 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             hide
           />
           <CartesianGrid stroke={colors.grid} vertical={false} />
-          {this.props.limits.lowerRange < 0 && (
+          {this.props.forecast.limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
-              y2={this.props.limits.lowerRange}
+              y2={this.props.forecast.limits.lowerRange}
               yAxisId="temp"
               stroke="#00000000"
               fill={colors.cold}
@@ -201,4 +203,10 @@ class WeatherGraph extends React.PureComponent<Props, State> {
   }
 }
 
-export default WeatherGraph;
+function mapStateToProps(state: AppStore) {
+  return {
+    forecast: state.Forecast,
+  };
+}
+
+export default connect(mapStateToProps)(WeatherGraph);
