@@ -13,7 +13,6 @@ export interface ForecastDataSet {
 
 export interface WeatherDataSeries {
   [s: number]: HourForecast;
-  updated?: Date;
 }
 
 export interface HourForecast {

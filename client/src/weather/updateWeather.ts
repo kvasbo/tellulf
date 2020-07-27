@@ -37,9 +37,7 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
 
 // New
 function initWeatherSeries(days = 14): WeatherDataSeries {
-  const nOut: WeatherDataSeries = {
-    updated: new Date(0),
-  };
+  const nOut: WeatherDataSeries = {};
 
   const start = Moment().startOf('day').valueOf();
   const diff = 1000 * 60 * 60; // an hour
@@ -75,9 +73,7 @@ export async function getForecastFromYr(lat: number, long: number): Promise<Weat
   }
   // The new API data set
   const nData: YrResponse = nResponse.data;
-
   const nOut: WeatherDataSeries = initWeatherSeries();
-  nOut.updated = Moment(nData.properties.meta.updated_at).toDate();
 
   nData.properties.timeseries.forEach((d) => {
     const key = createTimeKey(d.time);
