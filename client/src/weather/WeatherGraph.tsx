@@ -15,7 +15,6 @@ import {
   RechartsFunction,
 } from 'recharts';
 import sortBy from 'lodash/sortBy';
-import maxBy from 'lodash/maxBy';
 import WeatherIcon from './WeatherIcon';
 import { HourForecast, ForecastStore } from '../types/forecast';
 import { AppStore } from '../redux/reducers';
@@ -30,7 +29,6 @@ const colors = {
 };
 
 interface Props {
-  weather: HourForecast[];
   date: Moment.Moment;
   from: Moment.Moment;
   to: Moment.Moment;
@@ -104,7 +102,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             left: 0,
             bottom: 0,
           }}
-          data={this.props.weather}
+          data={weather}
           onClick={this.props.onClick as RechartsFunction}
         >
           <XAxis
