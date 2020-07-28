@@ -2,7 +2,6 @@ import axios from 'axios';
 import Moment from 'moment';
 import store from 'store';
 import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
-
 import { YrResponse, YrWeatherDataset } from '../types/yr';
 import { WeatherDataSeries, HourForecast, Forecast } from '../types/forecast';
 
@@ -83,7 +82,6 @@ export async function getForecastFromYr(lat: number, lon: number): Promise<Forec
 
   nData.properties.timeseries.forEach((d) => {
     const key = createTimeKey(d.time);
-    // Check if not null
     forecast.forecast[key] = parseWeatherHour(d);
   });
 

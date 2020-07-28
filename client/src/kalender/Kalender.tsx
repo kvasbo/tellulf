@@ -85,7 +85,7 @@ class Kalender extends React.PureComponent<Props, State> {
         out.push(
           <Dag
             key={`kalenderdag${d}`}
-            date={d}
+            date={day}
             events={cald}
             dinner={dinners}
             birthdays={birthdays}

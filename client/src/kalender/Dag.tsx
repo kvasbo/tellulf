@@ -1,25 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import store from 'store';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import sumBy from 'lodash/sumBy';
+import { AppStore } from '../redux/reducers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { HourForecast, WeatherLimits } from '../types/forecast';
+import { HourForecast, WeatherLimits, ForecastStore } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
-  date: string;
+  date: Moment.Moment;
   forecastData: HourForecast[];
   forecastDataHytta: HourForecast[];
   showWeather: boolean;
   forecastLimits: WeatherLimits;
+  forecast: ForecastStore;
 }
 
 interface State {
@@ -31,10 +34,6 @@ function getDayHeader(date: Moment.Moment) {
 }
 
 class Dag extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    sted: 'oslo',
-  };
-
   private togglePlace: () => void;
 
   public constructor(props: Props) {
@@ -188,7 +187,6 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   public render(): React.ReactNode {
-    const day = Moment(this.props.date);
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
     return (
       <div className="kalenderDag">
@@ -196,7 +194,7 @@ class Dag extends React.PureComponent<Props, State> {
           className="kalenderDato"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
         >
-          {getDayHeader(day)}
+          {getDayHeader(this.props.date)}
         </div>
         <div
           className="kalenderDato weatherSummary"
@@ -207,7 +205,7 @@ class Dag extends React.PureComponent<Props, State> {
         <div
           style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
         >
-          {this.getWeather(day, this.state.sted)}
+          {this.getWeather(this.props.date, this.state.sted)}
         </div>
         <div
           style={{
@@ -239,4 +237,11 @@ class Dag extends React.PureComponent<Props, State> {
   }
 }
 
-export default Dag;
+function mapStateToProps(state: AppStore) {
+  return {
+    forecast: state.Forecast,
+  };
+}
+
+// export default Dag;
+export default connect(mapStateToProps)(Dag);

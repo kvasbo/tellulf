@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import {
   ComposedChart,
@@ -13,8 +14,9 @@ import {
   ResponsiveContainer,
   RechartsFunction,
 } from 'recharts';
+import { AppStore } from '../redux/reducers';
 import WeatherIcon from './WeatherIcon';
-import { HourForecast, WeatherLimits } from '../types/forecast';
+import { HourForecast, WeatherLimits, ForecastStore } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
 
@@ -34,6 +36,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
   limits: WeatherLimits;
+  forecast: ForecastStore;
 }
 
 interface State {
@@ -183,4 +186,10 @@ class WeatherGraph extends React.PureComponent<Props, State> {
   }
 }
 
-export default WeatherGraph;
+function mapStateToProps(state: AppStore) {
+  return {
+    forecast: state.Forecast,
+  };
+}
+
+export default connect(mapStateToProps)(WeatherGraph);
