@@ -78,7 +78,7 @@ export async function getForecastFromYr(lat: number, lon: number): Promise<Forec
     forecast: initWeatherSeries(),
     lat,
     lon,
-    updated: Moment(0),
+    updated: Moment(nData.properties.meta.updated_at),
   };
 
   nData.properties.timeseries.forEach((d) => {
