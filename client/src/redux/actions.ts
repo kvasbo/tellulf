@@ -3,7 +3,7 @@ import getTrains from '../ruter/updateTrains';
 import { AppDispatch } from './store';
 import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
-import { WeatherDataSeries } from '../types/forecast';
+import { Forecast } from '../types/forecast';
 import { TrainDataSet } from '../types/trains';
 import { SolarCurrent, SolarMaxData } from '../types/solar';
 
@@ -49,16 +49,12 @@ export function updateTrains(
 }
 
 export function updateForecast(
-  data: WeatherDataSeries,
-  lat: number,
-  lon: number,
+  data: Forecast,
   sted: string,
-): { type: 'UPDATE_FORECAST'; data: WeatherDataSeries; lat: number; lon: number; sted: string } {
+): { type: 'UPDATE_FORECAST'; data: Forecast; sted: string } {
   return {
     type: UPDATE_FORECAST,
     data,
-    lat,
-    lon,
     sted,
   };
 }
@@ -154,8 +150,6 @@ export function fetchTrains(): { (dispatch: AppDispatch): unknown } {
 export function fetchForecast(lat: number, lon: number, sted: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
   return (dispatch: AppDispatch) => {
-    return getForecastFromYr(lat, lon).then((weather) =>
-      dispatch(updateForecast(weather, lat, lon, sted)),
-    );
+    return getForecastFromYr(lat, lon).then((forecast) => dispatch(updateForecast(forecast, sted)));
   };
 }

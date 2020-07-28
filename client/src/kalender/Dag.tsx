@@ -16,7 +16,6 @@ interface Props {
   birthdays: EventDataSet;
   events: EventDataSet;
   date: string;
-  weatherAsGraph: boolean;
   forecastData: HourForecast[];
   forecastDataHytta: HourForecast[];
   showWeather: boolean;
@@ -33,7 +32,6 @@ function getDayHeader(date: Moment.Moment) {
 
 class Dag extends React.PureComponent<Props, State> {
   static defaultProps = {
-    weatherAsGraph: false,
     sted: 'oslo',
   };
 

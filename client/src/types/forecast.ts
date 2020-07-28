@@ -1,14 +1,19 @@
+import Moment from 'moment';
+
 export interface ForecastStore {
   data: ForecastDataSet;
   limits: WeatherLimits;
 }
 
 export interface ForecastDataSet {
-  [s: string]: {
-    forecast: WeatherDataSeries;
-    lat: number;
-    lon: number;
-  };
+  [s: string]: Forecast;
+}
+
+export interface Forecast {
+  forecast: WeatherDataSeries;
+  lat: number;
+  lon: number;
+  updated: Moment.Moment;
 }
 
 export interface WeatherDataSeries {
