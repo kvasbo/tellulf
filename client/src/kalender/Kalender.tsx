@@ -31,12 +31,9 @@ interface State {
   dinners: IcalParseResult;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
-
-class Kalender extends React.PureComponent<Props, State> {
+class Kalender extends React.PureComponent<unknown, State> {
   private interval = 0;
-  public constructor(props: Props) {
+  public constructor(props = {}) {
     super(props);
     this.state = {
       kalenderData: {},
