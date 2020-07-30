@@ -1,6 +1,10 @@
 import Moment from 'moment';
 import store from 'store';
+import maxBy from 'lodash/maxBy';
+import minBy from 'lodash/minBy';
+import sumBy from 'lodash/sumBy';
 import { getNorwegianDaysOff } from '../external';
+import { WeatherDataSeries, HourForecast } from '../types/forecast';
 
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
@@ -22,13 +26,6 @@ export function getDayColor(time: Moment.Moment): string {
 export function formatTick(data: number): string {
   const time = Moment(data, 'x');
   return time.format('HH');
-}
-
-interface SunInfo {
-  sunrise: number;
-  sunset: number;
-  diffRise: number;
-  diffSet: number;
 }
 
 export function createKeyBasedOnStamps(from: string, to: string): string {
@@ -56,4 +53,30 @@ export function storeToLocalStore(
     }
   });
   store.set(key, toStore);
+}
+
+export function createForecastSummary(data: WeatherDataSeries): string {
+  const weather = Object.values(data);
+  if (weather.length === 0) return '';
+  const maxTemp = maxBy(weather, (w: HourForecast): number => {
+    return w.temp ? w.temp : -999;
+  });
+  const minTemp = minBy(weather, (w: HourForecast): number => {
+    return w.temp ? w.temp : 999;
+  });
+
+  const rain = sumBy(weather, (w: HourForecast): number => {
+    if (!w.rain) return 0;
+    return w.rain;
+  });
+
+  const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : undefined;
+  const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : undefined;
+  const r = Math.round(rain);
+
+  if (!maxT || !minT) {
+    return '';
+  }
+
+  return `${minT}/${maxT} ${r}mm`;
 }

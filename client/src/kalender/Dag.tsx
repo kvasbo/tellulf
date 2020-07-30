@@ -2,26 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import store from 'store';
+import pickBy from 'lodash/pickBy';
 import maxBy from 'lodash/maxBy';
-import minBy from 'lodash/minBy';
-import sumBy from 'lodash/sumBy';
 import { AppStore } from '../redux/reducers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
+import { createForecastSummary } from '../weather/weatherHelpers';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { HourForecast, WeatherLimits, ForecastStore } from '../types/forecast';
+import { ForecastStore, WeatherDataSeries, HourForecast } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
   date: Moment.Moment;
-  forecastData: HourForecast[];
-  forecastDataHytta: HourForecast[];
-  showWeather: boolean;
-  forecastLimits: WeatherLimits;
   forecast: ForecastStore;
 }
 
@@ -131,57 +127,44 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getForecastSummary(): string {
-    if (!this.props.showWeather) return '';
-
-    const weather: HourForecast[] =
-      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
-    if (weather.length === 0) return '';
-
-    const maxTemp = maxBy(weather, (w): number => {
-      return w.temp ? w.temp : -999;
-    });
-
-    const minTemp = minBy(weather, (w): number => {
-      return w.temp ? w.temp : 999;
-    });
-
-    const rain = sumBy(weather, (w): number => {
-      if (!w.rain) return 0;
-      return w.rain;
-    });
-
-    const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : undefined;
-    const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : undefined;
-    const r = Math.round(rain);
-
-    if (!maxT || !minT) {
-      return '';
+  private filterForecast(): WeatherDataSeries {
+    if (!this.props.forecast.data || !this.props.forecast.data[this.state.sted]) {
+      return {};
     }
 
-    return `${minT}/${maxT} ${r}mm`;
+    const from = Moment(this.props.date).startOf('day').subtract(6, 'h');
+    const to = Moment(this.props.date).endOf('day').add(6, 'h');
+
+    const weather = this.props.forecast.data[this.state.sted].forecast;
+
+    const filtered: WeatherDataSeries = pickBy(weather, (a) => {
+      return Moment(a.time).isBetween(from, to);
+    });
+
+    return filtered;
+  }
+
+  private getForecastSummary(): string {
+    return createForecastSummary(this.filterForecast());
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    if (!this.props.showWeather) return null;
+    const forecast = this.filterForecast();
 
-    const weather: HourForecast[] =
-      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
-
-    if (weather.length === 0) return null;
+    if (!showWeatherGraphForDay(this.props.date, forecast)) return null;
 
     const from = Moment(date).startOf('day');
     const to = Moment(date).add(1, 'day');
 
     return (
       <WeatherGraph
-        weather={weather}
+        weather={forecast}
         from={from}
         to={to}
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
-        limits={this.props.forecastLimits}
+        limits={this.props.forecast.limits}
       />
     );
   }
@@ -235,6 +218,16 @@ class Dag extends React.PureComponent<Props, State> {
       </div>
     );
   }
+}
+
+// CHeck if we have a full dataset for the day
+function showWeatherGraphForDay(day: Moment.Moment, data: WeatherDataSeries): boolean {
+  const weather = Object.values(data);
+  if (weather.length === 0) return false;
+  const endOfDay = Moment(day).endOf('day');
+  const lastKnown: HourForecast = maxBy(weather, 'time');
+  const lastMoment = Moment(lastKnown.time);
+  return lastMoment.isAfter(endOfDay);
 }
 
 function mapStateToProps(state: AppStore) {
