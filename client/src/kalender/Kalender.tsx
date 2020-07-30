@@ -1,14 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Moment from 'moment';
-import sortBy from 'lodash/sortBy';
-import maxBy from 'lodash/maxBy';
+
 import Dag from './Dag';
 
 import { getIcal } from './kalenderHelpers';
 import { IcalParseResult } from '../types/calendar';
-import { AppStore } from '../redux/reducers';
-import { ForecastStore, HourForecast } from '../types/forecast';
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
@@ -35,13 +31,9 @@ interface State {
   dinners: IcalParseResult;
 }
 
-interface Props {
-  forecast: ForecastStore;
-}
-
-class Kalender extends React.PureComponent<Props, State> {
+class Kalender extends React.PureComponent<unknown, State> {
   private interval = 0;
-  public constructor(props: Props) {
+  public constructor(props = {}) {
     super(props);
     this.state = {
       kalenderData: {},
@@ -50,12 +42,12 @@ class Kalender extends React.PureComponent<Props, State> {
     };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.updateData();
     this.interval = window.setInterval(() => this.updateData(), 1000 * 60);
   }
 
-  public componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.clearInterval(this.interval);
   }
 
@@ -77,53 +69,20 @@ class Kalender extends React.PureComponent<Props, State> {
       const cald = this.state.kalenderData[d];
       const birthdays = this.state.birthdays[d];
       const dinners = this.state.dinners[d];
-      const filteredForecast = this.filterForecast(day, 'oslo');
-      const filteredForecastHytta = this.filterForecast(day, 'sandefjord');
-      const showWeather = this.showWeatherForDay(day);
 
       if (diff < 14 || cald || birthdays || dinners) {
         out.push(
           <Dag
             key={`kalenderdag${d}`}
-            date={d}
+            date={day}
             events={cald}
             dinner={dinners}
             birthdays={birthdays}
-            showWeather={showWeather}
-            forecastData={filteredForecast}
-            forecastDataHytta={filteredForecastHytta}
-            forecastLimits={this.props.forecast.limits}
           />,
         );
       }
     });
     return out;
-  }
-
-  // CHeck if we have a full dataset for the day
-  private showWeatherForDay(day: Moment.Moment): boolean {
-    if (!this.props.forecast.data || !this.props.forecast.data['oslo']) return false;
-    const endOfDay = Moment(day).endOf('day');
-    const w = Object.values(this.props.forecast.data['oslo'].forecast);
-    const lastKnown: HourForecast = maxBy(w, 'time');
-    const lastMoment = Moment(lastKnown.time);
-    return lastMoment.isAfter(endOfDay);
-  }
-
-  private filterForecast(date: Moment.Moment, sted: string): HourForecast[] {
-    if (!this.props.forecast.data || !this.props.forecast.data[sted]) return [];
-    const from = Moment(date).startOf('day').subtract(6, 'h');
-    const to = Moment(date).endOf('day').add(6, 'h');
-
-    const weather = this.props.forecast.data[sted].forecast;
-
-    const weatherFiltered: HourForecast[] = Object.values(weather).filter((w: HourForecast) => {
-      return Moment(w.time).isBetween(from, to, undefined, '[]');
-    });
-
-    const weatherSorted: HourForecast[] = sortBy(weatherFiltered, 'time');
-
-    return weatherSorted;
   }
 
   private async updateData() {
@@ -138,15 +97,9 @@ class Kalender extends React.PureComponent<Props, State> {
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return <div style={{ flex: 1, overflow: 'auto' }}>{this.getDays()}</div>;
   }
 }
 
-function mapStateToProps(state: AppStore) {
-  return {
-    forecast: state.Forecast,
-  };
-}
-
-export default connect(mapStateToProps)(Kalender);
+export default Kalender;

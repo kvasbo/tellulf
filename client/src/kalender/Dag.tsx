@@ -1,26 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Moment from 'moment';
 import store from 'store';
 import maxBy from 'lodash/maxBy';
-import minBy from 'lodash/minBy';
-import sumBy from 'lodash/sumBy';
+import { AppStore } from '../redux/reducers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
+import { createForecastSummary, filterForecastData } from '../weather/weatherHelpers';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
-import { HourForecast, WeatherLimits } from '../types/forecast';
+import { ForecastStore, WeatherDataSeries, HourForecast } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
-  date: string;
-  weatherAsGraph: boolean;
-  forecastData: HourForecast[];
-  forecastDataHytta: HourForecast[];
-  showWeather: boolean;
-  forecastLimits: WeatherLimits;
+  date: Moment.Moment;
+  forecast: ForecastStore;
 }
 
 interface State {
@@ -32,11 +29,6 @@ function getDayHeader(date: Moment.Moment) {
 }
 
 class Dag extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    weatherAsGraph: false,
-    sted: 'oslo',
-  };
-
   private togglePlace: () => void;
 
   public constructor(props: Props) {
@@ -134,71 +126,59 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getForecastSummary(): string {
-    if (!this.props.showWeather) return '';
-
-    const weather: HourForecast[] =
-      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
-    if (weather.length === 0) return '';
-
-    const maxTemp = maxBy(weather, (w): number => {
-      return w.temp ? w.temp : -999;
-    });
-
-    const minTemp = minBy(weather, (w): number => {
-      return w.temp ? w.temp : 999;
-    });
-
-    const rain = sumBy(weather, (w): number => {
-      if (!w.rain) return 0;
-      return w.rain;
-    });
-
-    const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : undefined;
-    const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : undefined;
-    const r = Math.round(rain);
-
-    if (!maxT || !minT) {
-      return '';
+  private filterForecast(): WeatherDataSeries {
+    if (!this.props.forecast.data || !this.props.forecast.data[this.state.sted]) {
+      return {};
     }
 
-    return `${minT}/${maxT} ${r}mm`;
+    return filterForecastData(
+      this.props.date,
+      this.props.forecast.data[this.state.sted].forecast,
+      6,
+      6,
+    );
+  }
+
+  private getForecastSummary(): string {
+    return createForecastSummary(this.filterForecast());
+  }
+
+  private getWeatherUpdateTime(): Moment.Moment {
+    return this.props.forecast.data[this.state.sted].updated;
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    if (!this.props.showWeather) return null;
+    const forecast = this.filterForecast();
 
-    const weather: HourForecast[] =
-      this.state.sted === 'sandefjord' ? this.props.forecastDataHytta : this.props.forecastData;
-
-    if (weather.length === 0) return null;
+    if (!showWeatherGraphForDay(this.props.date, forecast)) return null;
 
     const from = Moment(date).startOf('day');
     const to = Moment(date).add(1, 'day');
 
     return (
       <WeatherGraph
-        weather={weather}
+        weather={forecast}
         from={from}
         to={to}
+        weatherUpdated={this.getWeatherUpdateTime()}
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
-        limits={this.props.forecastLimits}
+        limits={this.props.forecast.limits}
       />
     );
   }
 
   public render(): React.ReactNode {
-    const day = Moment(this.props.date);
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
+
     return (
       <div className="kalenderDag">
         <div
           className="kalenderDato"
           style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
         >
-          {getDayHeader(day)}
+          {getDayHeader(this.props.date)}
         </div>
         <div
           className="kalenderDato weatherSummary"
@@ -209,7 +189,7 @@ class Dag extends React.PureComponent<Props, State> {
         <div
           style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
         >
-          {this.getWeather(day, this.state.sted)}
+          {this.getWeather(this.props.date, this.state.sted)}
         </div>
         <div
           style={{
@@ -241,4 +221,21 @@ class Dag extends React.PureComponent<Props, State> {
   }
 }
 
-export default Dag;
+// CHeck if we have a full dataset for the day
+function showWeatherGraphForDay(day: Moment.Moment, data: WeatherDataSeries): boolean {
+  const weather = Object.values(data);
+  if (weather.length === 0) return false;
+  const endOfDay = Moment(day).endOf('day');
+  const lastKnown: HourForecast = maxBy(weather, 'time');
+  const lastMoment = Moment(lastKnown.time);
+  return lastMoment.isAfter(endOfDay);
+}
+
+function mapStateToProps(state: AppStore) {
+  return {
+    forecast: state.Forecast,
+  };
+}
+
+// export default Dag;
+export default connect(mapStateToProps)(Dag);

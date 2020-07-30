@@ -3,11 +3,11 @@ import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import { UPDATE_FORECAST } from './actions';
 import {
-  WeatherDataSeries,
   ForecastStore,
   ForecastDataSet,
   WeatherLimits,
   HourForecast,
+  Forecast,
 } from '../types/forecast';
 
 const initalLimits: WeatherLimits = {
@@ -26,11 +26,7 @@ const initialState: ForecastStore = {
 
 interface KnownAction {
   type: string;
-  data: {
-    forecast: WeatherDataSeries;
-  };
-  lat: number;
-  lon: number;
+  data: Forecast;
   sted: string;
 }
 
@@ -43,11 +39,7 @@ export default function Weather(
     case UPDATE_FORECAST: {
       const newState: ForecastStore = { ...state };
 
-      newState.data[action.sted] = {
-        lat: action.lat,
-        lon: action.lon,
-        forecast: action.data,
-      };
+      newState.data[action.sted] = action.data;
 
       // Calculate all the limits
       newState.limits = parseLimits(newState.data);

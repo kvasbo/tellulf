@@ -14,7 +14,7 @@ import {
   RechartsFunction,
 } from 'recharts';
 import WeatherIcon from './WeatherIcon';
-import { HourForecast, WeatherLimits } from '../types/forecast';
+import { WeatherLimits, WeatherDataSeries } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import './yr.css';
 
@@ -23,10 +23,11 @@ const colors = {
   cold: '#0000FF44',
   rain: '#8884d8',
   temperature: '#FF000088',
+  updated: '#FFFF0022',
 };
 
 interface Props {
-  weather: HourForecast[];
+  weather: WeatherDataSeries;
   from: Moment.Moment;
   to: Moment.Moment;
   sted: string;
@@ -34,6 +35,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
   limits: WeatherLimits;
+  weatherUpdated: Moment.Moment;
 }
 
 interface State {
@@ -82,7 +84,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             left: 0,
             bottom: 0,
           }}
-          data={this.props.weather}
+          data={Object.values(this.props.weather)}
           onClick={this.props.onClick as RechartsFunction}
         >
           <XAxis
@@ -173,6 +175,13 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             yAxisId="temp"
             x={this.state.currentTime}
             stroke={colors.temperature}
+            strokeWidth={3}
+            strokeDasharray="3 3"
+          />
+          <ReferenceLine
+            yAxisId="temp"
+            x={this.props.weatherUpdated.valueOf()}
+            stroke={colors.updated}
             strokeWidth={3}
             strokeDasharray="3 3"
           />

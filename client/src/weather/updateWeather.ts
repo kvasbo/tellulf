@@ -2,9 +2,8 @@ import axios from 'axios';
 import Moment from 'moment';
 import store from 'store';
 import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
-
 import { YrResponse, YrWeatherDataset } from '../types/yr';
-import { WeatherDataSeries, HourForecast } from '../types/forecast';
+import { WeatherDataSeries, HourForecast, Forecast } from '../types/forecast';
 
 export const localStorageKey = '12';
 const weatherSeriesKey = 'weatherSeries';
@@ -63,24 +62,29 @@ function initWeatherSeries(days = 14): WeatherDataSeries {
   return nOut;
 }
 
-export async function getForecastFromYr(lat: number, long: number): Promise<WeatherDataSeries> {
+export async function getForecastFromYr(lat: number, lon: number): Promise<Forecast> {
   // Use the new shiny API!
   const { start, end } = getTimeLimits(14);
-  const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${long.toString()}`;
+  const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${lon.toString()}`;
   const nResponse = await axios.get(url);
   if (nResponse.statusText !== 'OK') {
     throw Error('Could not fetch Yr data');
   }
   // The new API data set
   const nData: YrResponse = nResponse.data;
-  const nOut: WeatherDataSeries = initWeatherSeries();
+
+  const forecast: Forecast = {
+    forecast: initWeatherSeries(),
+    lat,
+    lon,
+    updated: Moment(nData.properties.meta.updated_at),
+  };
 
   nData.properties.timeseries.forEach((d) => {
     const key = createTimeKey(d.time);
-    // Check if not null
-    nOut[key] = parseWeatherHour(d);
+    forecast.forecast[key] = parseWeatherHour(d);
   });
 
-  storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, nOut, start, end);
-  return nOut;
+  storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, forecast.forecast, start, end);
+  return forecast;
 }

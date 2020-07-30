@@ -101,7 +101,7 @@ class Tellulf extends React.PureComponent<Props, State> {
     }, diff);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const showEnergySetting = store.get('showEnergy', true);
     const showTrainsSetting = store.get('showTrains', true);
 
