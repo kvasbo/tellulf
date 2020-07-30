@@ -23,6 +23,7 @@ const colors = {
   cold: '#0000FF44',
   rain: '#8884d8',
   temperature: '#FF000088',
+  updated: '#FFFF0022',
 };
 
 interface Props {
@@ -34,6 +35,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/ban-types
   onClick: Function;
   limits: WeatherLimits;
+  weatherUpdated: Moment.Moment;
 }
 
 interface State {
@@ -173,6 +175,13 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             yAxisId="temp"
             x={this.state.currentTime}
             stroke={colors.temperature}
+            strokeWidth={3}
+            strokeDasharray="3 3"
+          />
+          <ReferenceLine
+            yAxisId="temp"
+            x={this.props.weatherUpdated.valueOf()}
+            stroke={colors.updated}
             strokeWidth={3}
             strokeDasharray="3 3"
           />

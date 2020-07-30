@@ -143,6 +143,10 @@ class Dag extends React.PureComponent<Props, State> {
     return createForecastSummary(this.filterForecast());
   }
 
+  private getWeatherUpdateTime(): Moment.Moment {
+    return this.props.forecast.data[this.state.sted].updated;
+  }
+
   private getWeather(date: Moment.Moment, sted: string) {
     const forecast = this.filterForecast();
 
@@ -156,6 +160,7 @@ class Dag extends React.PureComponent<Props, State> {
         weather={forecast}
         from={from}
         to={to}
+        weatherUpdated={this.getWeatherUpdateTime()}
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
@@ -166,6 +171,7 @@ class Dag extends React.PureComponent<Props, State> {
 
   public render(): React.ReactNode {
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
+
     return (
       <div className="kalenderDag">
         <div
