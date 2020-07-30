@@ -92,6 +92,7 @@ export function filterForecastData(
   const to = Moment(date).endOf('day').add(hoursAfter, 'h');
 
   const filtered: WeatherDataSeries = pickBy(weather, (a) => {
+    if (!a.symbol && !a.temp) return false;
     return Moment(a.time).isBetween(from, to);
   });
 
