@@ -2,13 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
 import store from 'store';
-import pickBy from 'lodash/pickBy';
 import maxBy from 'lodash/maxBy';
 import { AppStore } from '../redux/reducers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherGraph from '../weather/WeatherGraph';
-import { createForecastSummary } from '../weather/weatherHelpers';
+import { createForecastSummary, filterForecastData } from '../weather/weatherHelpers';
 import { Event, EventDataSet } from '../types/calendar';
 import './kalender.css';
 import { ForecastStore, WeatherDataSeries, HourForecast } from '../types/forecast';
@@ -132,16 +131,12 @@ class Dag extends React.PureComponent<Props, State> {
       return {};
     }
 
-    const from = Moment(this.props.date).startOf('day').subtract(6, 'h');
-    const to = Moment(this.props.date).endOf('day').add(6, 'h');
-
-    const weather = this.props.forecast.data[this.state.sted].forecast;
-
-    const filtered: WeatherDataSeries = pickBy(weather, (a) => {
-      return Moment(a.time).isBetween(from, to);
-    });
-
-    return filtered;
+    return filterForecastData(
+      this.props.date,
+      this.props.forecast.data[this.state.sted].forecast,
+      6,
+      6,
+    );
   }
 
   private getForecastSummary(): string {

@@ -3,6 +3,7 @@ import store from 'store';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import sumBy from 'lodash/sumBy';
+import pickBy from 'lodash/pickBy';
 import { getNorwegianDaysOff } from '../external';
 import { WeatherDataSeries, HourForecast } from '../types/forecast';
 
@@ -79,4 +80,20 @@ export function createForecastSummary(data: WeatherDataSeries): string {
   }
 
   return `${minT}/${maxT} ${r}mm`;
+}
+
+export function filterForecastData(
+  date: Moment.Moment,
+  weather: WeatherDataSeries,
+  hoursBefore = 0,
+  hoursAfter = 0,
+): WeatherDataSeries {
+  const from = Moment(date).startOf('day').subtract(hoursBefore, 'h');
+  const to = Moment(date).endOf('day').add(hoursAfter, 'h');
+
+  const filtered: WeatherDataSeries = pickBy(weather, (a) => {
+    return Moment(a.time).isBetween(from, to);
+  });
+
+  return filtered;
 }
