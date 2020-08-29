@@ -24,6 +24,16 @@ interface State {
   sted: string;
 }
 
+// CHeck if we have a full dataset for the day
+function showWeatherGraphForDay(day: Moment.Moment, data: WeatherDataSeries): boolean {
+  const weather = Object.values(data);
+  if (weather.length === 0) return false;
+  const endOfDay = Moment(day).endOf('day');
+  const lastKnown: HourForecast = maxBy(weather, 'time');
+  const lastMoment = Moment(lastKnown.time);
+  return lastMoment.isAfter(endOfDay);
+}
+
 function getDayHeader(date: Moment.Moment) {
   return date.format('dddd D.');
 }
@@ -219,16 +229,6 @@ class Dag extends React.PureComponent<Props, State> {
       </div>
     );
   }
-}
-
-// CHeck if we have a full dataset for the day
-function showWeatherGraphForDay(day: Moment.Moment, data: WeatherDataSeries): boolean {
-  const weather = Object.values(data);
-  if (weather.length === 0) return false;
-  const endOfDay = Moment(day).endOf('day');
-  const lastKnown: HourForecast = maxBy(weather, 'time');
-  const lastMoment = Moment(lastKnown.time);
-  return lastMoment.isAfter(endOfDay);
 }
 
 function mapStateToProps(state: AppStore) {
