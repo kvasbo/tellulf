@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
+import Preggo from 'pregnancy';
 import store from 'store';
 import maxBy from 'lodash/maxBy';
 import { AppStore } from '../redux/reducers';
@@ -157,6 +158,12 @@ class Dag extends React.PureComponent<Props, State> {
     return this.props.forecast.data[this.state.sted].updated;
   }
 
+  private getPreggo(): string {
+    const p = new Preggo(new Date('2020-07-08'));
+    const d = p.getData(this.props.date.toDate());
+    return d.percent.toFixed(1) + '%';
+  }
+
   private getWeather(date: Moment.Moment, sted: string) {
     const forecast = this.filterForecast();
 
@@ -222,6 +229,7 @@ class Dag extends React.PureComponent<Props, State> {
             gridRow: '2 / 4',
           }}
         >
+          <div className="preggo">{this.getPreggo()}</div>
           {this.getBirthdays()}
           {this.getDinner()}
           {this.getEvents()}

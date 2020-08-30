@@ -1,25 +1,29 @@
 .kalenderDag {
-  padding: 0 0 0 0;
-  margin: 0.5vh 0.5vw 1vh 0.5vw;
-  background-color: rgb(20,20,20);
-  display: grid;
-  grid-template-columns: auto 225px;
-  grid-template-rows: 5vh auto 5vh;
-  border-top-left-radius: 0.5vw;
-  border-top-right-radius: 0.5vw;
-  box-shadow: 0 0 20px 5px rgba(0,0,0,0.2);
+    padding: 0 0 0 0;
+    margin: 0.5vh 0.5vw 1vh 0.5vw;
+    background-color: rgb(20, 20, 20);
+    display: grid;
+    grid-template-columns: auto 225px;
+    grid-template-rows: 5vh auto 5vh;
+    border-top-left-radius: 0.5vw;
+    border-top-right-radius: 0.5vw;
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
 }
 
 .kalenderDato {
-  font-size: 22pt;
+    font-size: 22pt;
 }
 
-.kalenderSubInfo { 
-  display: block;
-  margin: 0 0 5px 0;
+.kalenderSubInfo {
+    display: block;
+    margin: 0 0 5px 0;
 }
 
 .weatherSummary {
-  text-align: right;
-  color: rgb(150,150,150);
+    text-align: right;
+    color: rgb(150, 150, 150);
+}
+
+.preggo {
+    margin-bottom: 1em;
 }

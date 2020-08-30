@@ -1,6 +1,5 @@
 import React from 'react';
 import Moment from 'moment';
-
 import Dag from './Dag';
 
 import { getIcal } from './kalenderHelpers';
@@ -90,6 +89,7 @@ class Kalender extends React.PureComponent<unknown, State> {
       const kalenderData = await getIcal(calP);
       const dinners = await getIcal(dinP);
       const birthdays = await getIcal(bdP);
+
       this.setState({ kalenderData, dinners, birthdays });
     } catch (err) {
       // eslint-disable-next-line no-console
