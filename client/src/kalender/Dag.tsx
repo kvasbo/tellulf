@@ -159,9 +159,9 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getPreggo(): string {
-    const p = new Preggo(new Date('2020-07-08'));
+    const p = new Preggo(new Date('2020-07-22'));
     const d = p.getData(this.props.date.toDate());
-    return d.percent.toFixed(1) + '%';
+    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek}`;
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
@@ -191,44 +191,15 @@ class Dag extends React.PureComponent<Props, State> {
 
     return (
       <div className="kalenderDag">
-        <div
-          className="kalenderDato"
-          style={{ padding: 15, paddingLeft: 20, gridColumn: '1 / 2', gridRow: '1 / 2' }}
-        >
-          {getDayHeader(this.props.date)}
-        </div>
-        <div
-          className="kalenderDato weatherSummary"
-          style={{ padding: 15, paddingLeft: 20, gridColumn: '2 / 3', gridRow: '1 / 2' }}
-        >
-          {this.getForecastSummary()}
-        </div>
+        <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
+        <div className="kalenderDato weatherSummary">{this.getForecastSummary()}</div>
         <div
           style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
         >
           {this.getWeather(this.props.date, this.state.sted)}
         </div>
-        <div
-          style={{
-            gridColumn: '1 / 3',
-            gridRow: '2 / 4',
-            display: 'flex',
-            padding: 10,
-            justifyContent: 'flex-end',
-            alignItems: 'flex-start',
-            color: '#ffffffaa',
-          }}
-        >
-          {stedToShow}
-        </div>
-        <div
-          style={{
-            padding: 15,
-            paddingLeft: 20,
-            gridColumn: '1 / 2',
-            gridRow: '2 / 4',
-          }}
-        >
+        <div className="kalenderSted">{stedToShow}</div>
+        <div className="kalendarDayInfo">
           <div className="preggo">{this.getPreggo()}</div>
           {this.getBirthdays()}
           {this.getDinner()}

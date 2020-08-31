@@ -12,6 +12,34 @@
 
 .kalenderDato {
     font-size: 22pt;
+    padding: 15px;
+    padding-left: 20px;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.kalenderSted {
+    grid-column: 1 / 3;
+    grid-row: 2 / 4;
+    display: flex;
+    padding: 10;
+    justify-content: flex-end;
+    align-items: flex-start;
+    color: #ffffffaa;
+}
+
+.kalenderDato.weatherSummary {
+    padding: 15;
+    padding-left: 20px;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.kalendarDayInfo {
+    padding: 15;
+    padding-left: 20px;
+    grid-column: 1 / 2;
+    grid-row: 2 / 4;
 }
 
 .kalenderSubInfo {
@@ -25,5 +53,5 @@
 }
 
 .preggo {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
