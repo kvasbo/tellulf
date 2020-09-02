@@ -36,7 +36,6 @@
 }
 
 .kalendarDayInfo {
-    padding: 15;
     padding-left: 20px;
     grid-column: 1 / 2;
     grid-row: 2 / 4;
