@@ -26,7 +26,7 @@ class Tibber {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async handleTibberRealTime(id, data) {
         const timeStamp = new Date().getTime();
-        const toStore = { ...data.data.liveMeasurement, timeStamp };
+        const toStore = Object.assign({}, data.data.liveMeasurement, { timeStamp });
         this.logger.info(`Tibber ${id}: ${toStore.power}W`);
         const ref = this.firebase.database().ref(`tibber/realtime/${id}`);
         if (dataPointsReceived % 100 === 0) {
