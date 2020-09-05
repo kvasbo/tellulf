@@ -229,20 +229,12 @@ class Netatmo {
         this.currentData.updatedNice = new Date().toUTCString();
 
         // Update current data
-        this.firebase
-          .database()
-          .ref('netatmo/currentData')
-          .set(this.currentData);
+        this.firebase.database().ref('netatmo/currentData').set(this.currentData);
 
-        const dateStamp = Moment()
-          .startOf('hour')
-          .toDate();
+        const dateStamp = Moment().startOf('hour').toDate();
 
         // Update history
-        this.firebase
-          .database()
-          .ref(`netatmo/history/${dateStamp}`)
-          .set(this.currentData);
+        this.firebase.database().ref(`netatmo/history/${dateStamp}`).set(this.currentData);
 
         this.logger.info(
           `${new Date().toISOString()}: Updated netatmo data. 'Ute' last seen ${lastSeenUte}`,

@@ -159,10 +159,7 @@ class StecaParser {
 
     try {
       // Update current data
-      this.firebase
-        .database()
-        .ref('steca/currentData')
-        .update(production);
+      this.firebase.database().ref('steca/currentData').update(production);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err.message);
@@ -185,120 +182,72 @@ class StecaParser {
     const refHourOfDay = `steca/maxValues/stat/hour/${h}/`;
 
     // Statistical - "max ever in any january"
-    const monthOfYearSnap = await this.firebase
-      .database()
-      .ref(refMonthOfYear)
-      .once('value');
+    const monthOfYearSnap = await this.firebase.database().ref(refMonthOfYear).once('value');
     const monthOfYearData = monthOfYearSnap.val();
     if (!monthOfYearData || value > monthOfYearData.value) {
-      await this.firebase
-        .database()
-        .ref(refMonthOfYear)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refMonthOfYear).set({ value, time: now.toISOString() });
       this.logger.info(`Month of year max set, ${refMonthOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Statistical - "max ever in any week of this number"
-    const weekOfYearSnap = await this.firebase
-      .database()
-      .ref(refWeekOfYear)
-      .once('value');
+    const weekOfYearSnap = await this.firebase.database().ref(refWeekOfYear).once('value');
     const weekOfYearData = weekOfYearSnap.val();
     if (!weekOfYearData || value > weekOfYearData.value) {
-      await this.firebase
-        .database()
-        .ref(refWeekOfYear)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refWeekOfYear).set({ value, time: now.toISOString() });
       this.logger.info(`Week of year max set, ${refWeekOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Stastistical - "max ever between 12 and 13"
-    const hourOfDaySnap = await this.firebase
-      .database()
-      .ref(refHourOfDay)
-      .once('value');
+    const hourOfDaySnap = await this.firebase.database().ref(refHourOfDay).once('value');
     const hourOfDayData = hourOfDaySnap.val();
     if (!hourOfDayData || value > hourOfDayData.value) {
-      await this.firebase
-        .database()
-        .ref(refHourOfDay)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refHourOfDay).set({ value, time: now.toISOString() });
       this.logger.info(`Hour of day max set, ${refHourOfDay}, ${now.toISOString()}, ${value}`);
     }
 
-    const hourSnap = await this.firebase
-      .database()
-      .ref(refHour)
-      .once('value');
+    const hourSnap = await this.firebase.database().ref(refHour).once('value');
     const hourData = hourSnap.val();
     if (!hourData || value > hourData.value) {
-      await this.firebase
-        .database()
-        .ref(refHour)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refHour).set({ value, time: now.toISOString() });
       this.logger.info(`Hour max set, ${refHour}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this hour.
     }
 
     // Max per day
-    const daySnap = await this.firebase
-      .database()
-      .ref(refDay)
-      .once('value');
+    const daySnap = await this.firebase.database().ref(refDay).once('value');
     const dayData = daySnap.val();
     if (!dayData || value > dayData.value) {
-      await this.firebase
-        .database()
-        .ref(refDay)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refDay).set({ value, time: now.toISOString() });
       this.logger.info(`Daily max set, ${refDay}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this day.
     }
 
     // Max per month
-    const monthSnap = await this.firebase
-      .database()
-      .ref(refMonth)
-      .once('value');
+    const monthSnap = await this.firebase.database().ref(refMonth).once('value');
     const monthData = monthSnap.val();
     if (!monthData || value > monthData.value) {
-      await this.firebase
-        .database()
-        .ref(refMonth)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refMonth).set({ value, time: now.toISOString() });
       this.logger.info(`Monthly max set, ${refMonth}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this month.
     }
 
-    const yearSnap = await this.firebase
-      .database()
-      .ref(refYear)
-      .once('value');
+    const yearSnap = await this.firebase.database().ref(refYear).once('value');
     const yearData = yearSnap.val();
     if (!yearData || value > yearData.value) {
-      await this.firebase
-        .database()
-        .ref(refYear)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refYear).set({ value, time: now.toISOString() });
       this.logger.info(`Year max set, ${refYear}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this year.
     }
 
     // Max evah
-    const everSnap = await this.firebase
-      .database()
-      .ref(refEver)
-      .once('value');
+    const everSnap = await this.firebase.database().ref(refEver).once('value');
     const everData = everSnap.val();
     if (!everData || value > everData.value) {
-      await this.firebase
-        .database()
-        .ref(refEver)
-        .set({ value, time: now.toISOString() });
+      await this.firebase.database().ref(refEver).set({ value, time: now.toISOString() });
       this.logger.info(`Ever max set, ${refEver}, ${now.toISOString()}, ${value}`);
     }
 
@@ -307,7 +256,7 @@ class StecaParser {
 
   getFilteredSamples(minutes: number) {
     const cut = Moment().subtract(minutes, 'minutes');
-    const tempSamples = this.samples.filter(s => s.time.isSameOrAfter(cut));
+    const tempSamples = this.samples.filter((s) => s.time.isSameOrAfter(cut));
     return tempSamples;
   }
 
@@ -321,7 +270,7 @@ class StecaParser {
     // Add and prune
     this.samples.push({ value, time: Moment() });
     const cutOff = Moment().subtract(120, 'minutes');
-    this.samples = this.samples.filter(s => s.time.isSameOrAfter(cutOff));
+    this.samples = this.samples.filter((s) => s.time.isSameOrAfter(cutOff));
 
     const averages: Averages = {};
     averages['1'] = this.getAverageForPeriod(1);

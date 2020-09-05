@@ -36,7 +36,7 @@ function init() {
   firebase
     .auth()
     .signInWithEmailAndPassword(keys.FIREBASE_USER, keys.FIREBASE_PASSWORD)
-    .catch(function(error) {
+    .catch(function (error) {
       // eslint-disable-next-line no-console
       console.log(error.message);
     });
@@ -79,7 +79,7 @@ function start() {
   console.log('Started.');
 }
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
   logger.error(err.message);
   // eslint-disable-next-line no-console
   console.log('Caught exception: ' + err);

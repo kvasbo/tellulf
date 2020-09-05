@@ -1,41 +1,41 @@
 {
-  "name": "tellulf-server",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "test": "yarn run build && bash runlocal.sh",
-    "start": "yarn run build && node ./dist/index.js",
-    "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
-    "buildDocker": "docker build -t kvasbo/tellulf .",
-    "startInProduction": "node index.js",
-    "lint": "./node_modules/.bin/eslint src --ext .ts,.tsx",
-    "lint-fixup": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix"
-  },
-  "author": "Audun Kvasbø",
-  "license": "ISC",
-  "dependencies": {
-    "@firebase/app-types": "^0.6.0",
-    "@firebase/util": "^0.2.36",
-    "@timberio/node": "^0.35.0",
-    "firebase": "^7.6.0",
-    "lodash": "^4.17.19",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.26",
-    "netatmo": "^2.3.0",
-    "stecagridscrape": "^1.2.4",
-    "tibber-pulse-connector": "^3.0.1",
-    "ws": "^7.2.1"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.142",
-    "@types/moment-timezone": "^0.5.12",
-    "@typescript-eslint/eslint-plugin": "^2.12.0",
-    "@typescript-eslint/parser": "^2.12.0",
-    "eslint": "^6.0.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.18.2",
-    "typescript": "^3.6.3"
-  }
+    "name": "tellulf-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "yarn run build && bash runlocal.sh",
+        "start": "yarn run build && node ./dist/index.js",
+        "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
+        "buildDocker": "docker build -t kvasbo/tellulf .",
+        "startInProduction": "node index.js",
+        "lint": "./node_modules/.bin/eslint src --ext .ts,.tsx",
+        "lint-fixup": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix"
+    },
+    "author": "Audun Kvasbø",
+    "license": "ISC",
+    "dependencies": {
+        "@firebase/app-types": "^0.6.0",
+        "@firebase/util": "^0.3.1",
+        "@timberio/node": "^0.35.0",
+        "firebase": "^7.6.0",
+        "lodash": "^4.17.19",
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.26",
+        "netatmo": "^2.3.0",
+        "stecagridscrape": "^1.2.4",
+        "tibber-pulse-connector": "^3.0.1",
+        "ws": "^7.2.1"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.142",
+        "@types/moment-timezone": "^0.5.12",
+        "@typescript-eslint/eslint-plugin": "^4.0.1",
+        "@typescript-eslint/parser": "^4.0.1",
+        "eslint": "^7.8.1",
+        "eslint-config-prettier": "^6.0.0",
+        "eslint-plugin-prettier": "^3.1.2",
+        "prettier": "^2.1.1",
+        "typescript": "^4.0.2"
+    }
 }
