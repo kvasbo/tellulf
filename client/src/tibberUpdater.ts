@@ -323,14 +323,9 @@ export default class TibberUpdater {
 
   // Get tibber settings from firebase
   public async getTibberSettings(): Promise<TibberSettings> {
-    const settings: TibberSettings = await new Promise((resolve) => {
-      const settingsRef = firebase.database().ref('settings');
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      settingsRef.once('value', (snapshot: { val: Function }) => {
-        const settings = snapshot.val();
-        if (settings) resolve(settings);
-      });
-    });
-    return settings;
+    const settingsRef = firebase.database().ref('settings');
+    const snapshot = await settingsRef.once('value');
+    const data = snapshot.val() as TibberSettings;
+    return data;
   }
 }

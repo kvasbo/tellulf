@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2016",
     "lib": ["es2017", "dom"],
     "allowJs": true,
     "skipLibCheck": false,
@@ -17,13 +17,9 @@
     "noEmit": true,
     "jsx": "preserve",
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [ "./externalLibraryTypeDefinitions", "./node_modules/@types"],
+    "typeRoots": ["./externalLibraryTypeDefinitions", "./node_modules/@types"],
     "rootDir": "src"
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules", "externalLibraryTypeDefinitions"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "externalLibraryTypeDefinitions"]
 }
