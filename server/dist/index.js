@@ -1,21 +1,9 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
     return result;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -59,27 +47,22 @@ function init() {
         .auth()
         .signInWithEmailAndPassword(tellulf_keys_js_1.default.FIREBASE_USER, tellulf_keys_js_1.default.FIREBASE_PASSWORD)
         .catch(function (error) {
-        // eslint-disable-next-line no-console
         console.log(error.message);
     });
 }
 function start() {
-    // eslint-disable-next-line no-console
     console.log('Starting.');
     if (!tellulf_keys_js_1.default.NETATMO_USERNAME ||
         !tellulf_keys_js_1.default.NETATMO_PASSWORD ||
         !tellulf_keys_js_1.default.NETATMO_CLIENT_ID ||
         !tellulf_keys_js_1.default.NETATMO_CLIENT_SECRET) {
-        // eslint-disable-next-line no-console
         console.log('Netatmo config incomplete, quitting');
         return;
     }
     const netatmoConfig = {
         username: tellulf_keys_js_1.default.NETATMO_USERNAME,
         password: tellulf_keys_js_1.default.NETATMO_PASSWORD,
-        // eslint-disable-next-line @typescript-eslint/camelcase
         client_id: tellulf_keys_js_1.default.NETATMO_CLIENT_ID,
-        // eslint-disable-next-line @typescript-eslint/camelcase
         client_secret: tellulf_keys_js_1.default.NETATMO_CLIENT_SECRET,
     };
     const myNetatmo = new netatmo_js_1.default(netatmoConfig, fb, logger);
@@ -91,12 +74,10 @@ function start() {
     const tibberCabin = tellulf_keys_js_1.default.TIBBER_CABIN ? tellulf_keys_js_1.default.TIBBER_CABIN : 'nokey';
     const tibberConnectorHjemme = new tibber_js_1.default(tibberKey, [tibberHome, tibberCabin], fb, logger);
     tibberConnectorHjemme.start();
-    // eslint-disable-next-line no-console
     console.log('Started.');
 }
 process.on('uncaughtException', function (err) {
     logger.error(err.message);
-    // eslint-disable-next-line no-console
     console.log('Caught exception: ' + err);
 });
 firebase.auth().onAuthStateChanged((user) => {
@@ -109,6 +90,5 @@ try {
 }
 catch (err) {
     logger.error(err.message);
-    // eslint-disable-next-line no-console
     console.log(err.message);
 }

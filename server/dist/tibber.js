@@ -14,7 +14,6 @@ class Tibber {
         const options = {
             homeId: this.homeId,
             token: this.apiKey,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onData: (data, id) => this.handleTibberRealTime(id, data),
             onError: (error) => this.logger.error(error.message),
             ws,
@@ -23,14 +22,12 @@ class Tibber {
         tibberConnectorHjemme.start();
         this.logger.info('Tibber initalised and started.');
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async handleTibberRealTime(id, data) {
         const timeStamp = new Date().getTime();
-        const toStore = { ...data.data.liveMeasurement, timeStamp };
+        const toStore = Object.assign({}, data.data.liveMeasurement, { timeStamp });
         this.logger.info(`Tibber ${id}: ${toStore.power}W`);
         const ref = this.firebase.database().ref(`tibber/realtime/${id}`);
         if (dataPointsReceived % 100 === 0) {
-            // eslint-disable-next-line no-console
             console.log(`Tibber data received (${dataPointsReceived}): ${toStore.power}W`);
         }
         dataPointsReceived += 1;

@@ -112,12 +112,12 @@ class Netatmo {
     this.init();
   }
 
-  start(intervalInMinutes: number) {
+  start(intervalInMinutes: number): void {
     this.updateData();
     setInterval(() => this.updateData(), 60 * 1000 * intervalInMinutes);
   }
 
-  init() {
+  init(): void {
     this.api.on('error', (error: Error) => {
       // When the "error" event is emitted, this is called
       this.logger.error(error.message);
@@ -129,22 +129,17 @@ class Netatmo {
     });
   }
 
-  updateData() {
+  updateData(): void {
     try {
       const now = Math.round(new Date().getTime() / 1000);
 
       this.api.getPublicData(
         {
           filter: true,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           lat_ne: 59.941747,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           lon_sw: 10.686413,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           lat_sw: 59.932211,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           lon_ne: 10.704957,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           required_data: 'temperature',
         },
         (err: Error, devices: ForeignDevice[]) => {

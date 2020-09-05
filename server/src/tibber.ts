@@ -18,12 +18,11 @@ class Tibber {
     this.logger = logger;
   }
 
-  start() {
+  start(): void {
     const options = {
       homeId: this.homeId,
       token: this.apiKey,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onData: (data: Record<string, any>, id: string) => this.handleTibberRealTime(id, data),
+      onData: (data: Record<string, unknown>, id: string) => this.handleTibberRealTime(id, data),
       onError: (error: Error) => this.logger.error(error.message),
       ws,
     };
@@ -33,7 +32,7 @@ class Tibber {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async handleTibberRealTime(id: string, data: Record<string, any>) {
+  async handleTibberRealTime(id: string, data: Record<string, any>): Promise<void> {
     const timeStamp = new Date().getTime();
     const toStore = { ...data.data.liveMeasurement, timeStamp };
     this.logger.info(`Tibber ${id}: ${toStore.power}W`);

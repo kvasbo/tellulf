@@ -58,7 +58,7 @@ class StecaParser {
     console.log(`Steca parser initiated`);
   }
 
-  async updateData(full = false) {
+  async updateData(full = false): Promise<void> {
     const now = tz(undefined, 'Europe/Oslo');
     const dst = now.isDST();
     const production: Production = {};
@@ -166,7 +166,7 @@ class StecaParser {
     }
   }
 
-  async checkMax(value: number, now: Moment.Moment) {
+  async checkMax(value: number, now: Moment.Moment): Promise<void> {
     const y = now.format('YYYY');
     const m = now.format('MM');
     const d = now.format('DD');
@@ -254,7 +254,7 @@ class StecaParser {
     this.logger.info('Max ran all the way through. Expensive!');
   }
 
-  getFilteredSamples(minutes: number) {
+  getFilteredSamples(minutes: number): Sample[] {
     const cut = Moment().subtract(minutes, 'minutes');
     const tempSamples = this.samples.filter((s) => s.time.isSameOrAfter(cut));
     return tempSamples;
@@ -266,7 +266,7 @@ class StecaParser {
     return avg;
   }
 
-  addPowerSampleAndPrune(value: number) {
+  addPowerSampleAndPrune(value: number): Averages {
     // Add and prune
     this.samples.push({ value, time: Moment() });
     const cutOff = Moment().subtract(120, 'minutes');
@@ -285,7 +285,7 @@ class StecaParser {
     return averages;
   }
 
-  start(interval: number) {
+  start(interval: number): void {
     this.updateData(true);
     setInterval(() => this.updateData(), interval);
   }

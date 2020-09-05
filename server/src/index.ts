@@ -58,9 +58,7 @@ function start() {
   const netatmoConfig: NetatmoConfig = {
     username: keys.NETATMO_USERNAME,
     password: keys.NETATMO_PASSWORD,
-    // eslint-disable-next-line @typescript-eslint/camelcase
     client_id: keys.NETATMO_CLIENT_ID,
-    // eslint-disable-next-line @typescript-eslint/camelcase
     client_secret: keys.NETATMO_CLIENT_SECRET,
   };
   const myNetatmo = new Netatmo(netatmoConfig, fb, logger);

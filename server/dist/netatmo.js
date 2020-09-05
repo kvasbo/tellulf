@@ -47,15 +47,10 @@ class Netatmo {
             const now = Math.round(new Date().getTime() / 1000);
             this.api.getPublicData({
                 filter: true,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 lat_ne: 59.941747,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 lon_sw: 10.686413,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 lat_sw: 59.932211,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 lon_ne: 10.704957,
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 required_data: 'temperature',
             }, (err, devices) => {
                 if (err) {
