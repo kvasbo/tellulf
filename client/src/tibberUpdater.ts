@@ -49,6 +49,7 @@ export default class TibberUpdater {
 
   public async updatePowerPrices(): Promise<void> {
     const settings: TibberSettings = await this.getTibberSettings();
+
     const queryPrices = `
     {
       viewer {
@@ -176,6 +177,7 @@ export default class TibberUpdater {
 
   public async updateConsumptionDaily(): Promise<void> {
     const settings = await this.getTibberSettings();
+
     const daysToAskFor = new Date().getDate();
     const queryUsage = `
     {
