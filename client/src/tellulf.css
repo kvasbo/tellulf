@@ -17,7 +17,7 @@ body {
     position: relative;
     overflow: hidden;
     grid-template-columns: auto 30vw;
-    grid-template-rows: 15vh auto 14vh;
+    grid-template-rows: 24vh auto 14vh;
 }
 
 .block {
@@ -67,7 +67,7 @@ body {
 }
 
 .gridNetatmoTemp {
-    font-size: 2.5em;
+    font-size: 6em;
     font-weight: 200;
 }
 
