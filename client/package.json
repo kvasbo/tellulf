@@ -6,7 +6,6 @@
     "browser": true,
     "dependencies": {
         "axios": "^0.20",
-        "d3": "^6.1",
         "firebase": "^7.17.1",
         "ical-expander": "^3.0.0",
         "lodash": "^4.17.19",
@@ -35,7 +34,6 @@
     "devDependencies": {
         "@firebase/app-types": "^0.6.0",
         "@firebase/util": "^0.3.0",
-        "@types/d3": "^5.7.2",
         "@types/js-cookie": "^2.2.2",
         "@types/lodash": "^4.14.123",
         "@types/node": "^14.0.5",

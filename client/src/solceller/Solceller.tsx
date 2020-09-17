@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import TallPanel from './TallPanel';
 import TellulfInfoCell from '../TellulfInfoCell';
 import EnergyGraph from './EnergyGraph';
-import CurrentEnergyGraph from './CurrentEnergyGraph';
 import MaxEnergyGraph from './MaxEnergyGraph';
 import { AppStore } from '../redux/reducers';
 import TibberUpdater from '../tibberUpdater';
@@ -89,13 +88,21 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             key="currentConsumption"
             unit="W"
           />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <CurrentEnergyGraph
-            currentNetConsumption={currentNetConsumption}
-            currentNetConsumptionHytta={currentNetConsumptionHytta}
-            averageConsumptionHjemme={Math.round(this.props.realtimePowerHjemme.averagePower)}
-            averageConsumptionHytta={Math.round(this.props.realtimePowerHytta.averagePower)}
+          <TellulfInfoCell
+            info={currentNetConsumption}
+            header="Hus nå"
+            large
+            smartRoundKw
+            key="currentConsumptionHome"
+            unit="W"
+          />
+          <TellulfInfoCell
+            info={currentNetConsumptionHytta}
+            header="Hytta nå"
+            large
+            smartRoundKw
+            key="currentConsumptionHytta"
+            unit="W"
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
