@@ -4,7 +4,6 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "test": "yarn run build && bash runlocal.sh",
         "start": "yarn run build && node ./dist/index.js",
         "build": "rm -rf ./dist && ./node_modules/.bin/tsc",
         "buildDocker": "docker build -t kvasbo/tellulf .",
@@ -29,7 +28,6 @@
     },
     "devDependencies": {
         "@types/lodash": "^4.14.142",
-        "@types/moment-timezone": "^0.5.12",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",
         "eslint": "^7.8.1",

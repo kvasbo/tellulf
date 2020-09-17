@@ -1,15 +1,26 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_timezone_1 = __importStar(require("moment-timezone"));
 const lodash_1 = require("lodash");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Steca = require('stecagridscrape');
 class StecaParser {
     constructor(ip, firebase, logger) {
@@ -18,7 +29,6 @@ class StecaParser {
         this.samples = [];
         this.logger = logger;
         this.numberOfSamples = 0;
-        // eslint-disable-next-line no-console
         console.log(`Steca parser initiated`);
     }
     async updateData(full = false) {
@@ -33,11 +43,15 @@ class StecaParser {
             production.effect.val = effect;
             this.checkMax(effect, now);
             const averages = this.addPowerSampleAndPrune(effect);
-            production.averages = Object.assign({ time: new Date().toUTCString(), full: averages['60'], short: averages['15'] }, averages);
+            production.averages = {
+                time: new Date().toUTCString(),
+                full: averages['60'],
+                short: averages['15'],
+                ...averages,
+            };
         }
         catch (err) {
             production.effect.error = true;
-            // eslint-disable-next-line no-console
             console.log(err.message);
         }
         try {
@@ -47,7 +61,6 @@ class StecaParser {
         }
         catch (err) {
             production.today.error = true;
-            // eslint-disable-next-line no-console
             console.log(err.message);
         }
         const doFull = now.second() < 10 || full;
@@ -63,7 +76,6 @@ class StecaParser {
             }
             catch (err) {
                 production.month.error = true;
-                // eslint-disable-next-line no-console
                 console.log(err.message);
             }
             try {
@@ -73,7 +85,6 @@ class StecaParser {
             }
             catch (err) {
                 production.year.error = true;
-                // eslint-disable-next-line no-console
                 console.log(err.message);
             }
             try {
@@ -83,7 +94,6 @@ class StecaParser {
             }
             catch (err) {
                 production.total.error = true;
-                // eslint-disable-next-line no-console
                 console.log(err.message);
             }
             try {
@@ -95,23 +105,19 @@ class StecaParser {
             }
             catch (err) {
                 production.total.error = true;
-                // eslint-disable-next-line no-console
                 console.log(err.message);
             }
         }
         const logString = `Solar Oslo ${new Date().toUTCString()} ${production.effect.val}W. Full: ${doFull}. DST: ${dst}`;
         this.logger.info(logString);
         if (this.numberOfSamples % 100 === 0) {
-            // eslint-disable-next-line no-console
             console.log(logString);
         }
         this.numberOfSamples += 1;
         try {
-            // Update current data
             this.firebase.database().ref('steca/currentData').update(production);
         }
         catch (err) {
-            // eslint-disable-next-line no-console
             console.log(err.message);
         }
     }
@@ -129,21 +135,18 @@ class StecaParser {
         const refMonthOfYear = `steca/maxValues/stat/month/${m}/`;
         const refWeekOfYear = `steca/maxValues/stat/week/${w}/`;
         const refHourOfDay = `steca/maxValues/stat/hour/${h}/`;
-        // Statistical - "max ever in any january"
         const monthOfYearSnap = await this.firebase.database().ref(refMonthOfYear).once('value');
         const monthOfYearData = monthOfYearSnap.val();
         if (!monthOfYearData || value > monthOfYearData.value) {
             await this.firebase.database().ref(refMonthOfYear).set({ value, time: now.toISOString() });
             this.logger.info(`Month of year max set, ${refMonthOfYear}, ${now.toISOString()}, ${value}`);
         }
-        // Statistical - "max ever in any week of this number"
         const weekOfYearSnap = await this.firebase.database().ref(refWeekOfYear).once('value');
         const weekOfYearData = weekOfYearSnap.val();
         if (!weekOfYearData || value > weekOfYearData.value) {
             await this.firebase.database().ref(refWeekOfYear).set({ value, time: now.toISOString() });
             this.logger.info(`Week of year max set, ${refWeekOfYear}, ${now.toISOString()}, ${value}`);
         }
-        // Stastistical - "max ever between 12 and 13"
         const hourOfDaySnap = await this.firebase.database().ref(refHourOfDay).once('value');
         const hourOfDayData = hourOfDaySnap.val();
         if (!hourOfDayData || value > hourOfDayData.value) {
@@ -157,9 +160,8 @@ class StecaParser {
             this.logger.info(`Hour max set, ${refHour}, ${now.toISOString()}, ${value}`);
         }
         else {
-            return; // No point in continuing, we have a larger value this hour.
+            return;
         }
-        // Max per day
         const daySnap = await this.firebase.database().ref(refDay).once('value');
         const dayData = daySnap.val();
         if (!dayData || value > dayData.value) {
@@ -167,9 +169,8 @@ class StecaParser {
             this.logger.info(`Daily max set, ${refDay}, ${now.toISOString()}, ${value}`);
         }
         else {
-            return; // No point in continuing, we have a larger value this day.
+            return;
         }
-        // Max per month
         const monthSnap = await this.firebase.database().ref(refMonth).once('value');
         const monthData = monthSnap.val();
         if (!monthData || value > monthData.value) {
@@ -177,7 +178,7 @@ class StecaParser {
             this.logger.info(`Monthly max set, ${refMonth}, ${now.toISOString()}, ${value}`);
         }
         else {
-            return; // No point in continuing, we have a larger value this month.
+            return;
         }
         const yearSnap = await this.firebase.database().ref(refYear).once('value');
         const yearData = yearSnap.val();
@@ -186,9 +187,8 @@ class StecaParser {
             this.logger.info(`Year max set, ${refYear}, ${now.toISOString()}, ${value}`);
         }
         else {
-            return; // No point in continuing, we have a larger value this year.
+            return;
         }
-        // Max evah
         const everSnap = await this.firebase.database().ref(refEver).once('value');
         const everData = everSnap.val();
         if (!everData || value > everData.value) {
@@ -208,7 +208,6 @@ class StecaParser {
         return avg;
     }
     addPowerSampleAndPrune(value) {
-        // Add and prune
         this.samples.push({ value, time: moment_timezone_1.default() });
         const cutOff = moment_timezone_1.default().subtract(120, 'minutes');
         this.samples = this.samples.filter((s) => s.time.isSameOrAfter(cutOff));
