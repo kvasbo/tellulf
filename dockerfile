@@ -17,4 +17,4 @@ WORKDIR /tellulf/server
 RUN yarn
 RUN yarn run build
 
-CMD ["node", "/tellulf/server/dist/index.js"]
+CMD ["node", "/tellulf/server/dist/server.js"]
