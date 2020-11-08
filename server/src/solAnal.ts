@@ -118,7 +118,7 @@ class SolAnal {
         };
         this.currentAverage = baseData.nowAveraged;
         this.currentEffect = baseData.now;
-        console.log('Data received', baseData.nowAveraged);
+        console.log('SolAnal: New solar data received: ', baseData.nowAveraged);
         this.checkIfWeShouldDoAnything(baseData);
       } catch (err) {
         console.log(err);
