@@ -1,6 +1,7 @@
 import { Timber } from '@timberio/node';
 import * as firebase from 'firebase/app';
 import express from 'express';
+import axios from 'axios';
 import Netatmo, { NetatmoConfig } from './netatmo.js';
 import StecaParser from './solar.js';
 import Tibber from './tibber.js';
@@ -17,12 +18,30 @@ const firebaseConfig = {
   messagingSenderId: '159155087298',
 };
 
-// Set up web server
+// Set up static web server and proxy
 const app = express();
-const port = 80;
+const port = process.env.HTTP_PORT;
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Credentials', 'false');
+  next();
+});
 app.use(express.static('../client/build'));
 app.listen(port, () => {
   console.log(`Serving static files at ${port}`);
+});
+app.get('/proxy', async (req: any, res) => {
+  console.log('Get', req.query.url);
+  axios
+    .get(req.query.url)
+    .then((data: any) => {
+      res.send(data.data);
+      return;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 const fb = firebase.initializeApp(firebaseConfig);
@@ -33,10 +52,6 @@ const logger = new Timber(timberApiKey, '23469', { ignoreExceptions: true });
 logger.info('Tellulf server started');
 
 function init() {
-  if (!process.env.NETATMO_USERNAME) throw Error('NETATMO_USERNAME not set');
-  if (!process.env.NETATMO_PASSWORD) throw Error('NETATMO_PASSWORD not set');
-  if (!process.env.NETATMO_CLIENT_SECRET) throw Error('NETATMO_CLIENT_SECRET not set');
-  if (!process.env.NETATMO_CLIENT_ID) throw Error('NETATMO_CLIENT_ID not set');
   if (!process.env.FIREBASE_USER) throw Error('FIREBASE_USER not set');
   if (!process.env.FIREBASE_PASSWORD) throw Error('FIREBASE_PASSWORD not set');
 

@@ -9,6 +9,7 @@ services:
     ports:
       - '80:80'
     environment:
+      HTTP_PORT: ${HTTP_PORT}
       NETATMO_USERNAME: ${NETATMO_USERNAME}
       NETATMO_PASSWORD: ${NETATMO_PASSWORD}
       NETATMO_CLIENT_SECRET: ${NETATMO_CLIENT_SECRET}

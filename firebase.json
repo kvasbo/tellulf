@@ -1,12 +1,9 @@
 {
-  "rules": "firebase_rules.json",
-  "hosting": {
-    "public": "client/build"
-  },
-  "database": {
-    "rules": "firebase_rules.json"
-  },
-  "functions": {
-    
-  }
+    "rules": "firebase_rules.json",
+    "hosting": {
+        "public": "client/build"
+    },
+    "database": {
+        "rules": "firebase_rules.json"
+    }
 }
