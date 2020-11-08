@@ -26,9 +26,10 @@ const node_1 = require("@timberio/node");
 const firebase = __importStar(require("firebase/app"));
 const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
-const netatmo_js_1 = __importDefault(require("./netatmo.js"));
-const solar_js_1 = __importDefault(require("./solar.js"));
-const tibber_js_1 = __importDefault(require("./tibber.js"));
+const netatmo_1 = __importDefault(require("./netatmo"));
+const solar_1 = __importDefault(require("./solar"));
+const tibber_1 = __importDefault(require("./tibber"));
+const solAnal_1 = __importDefault(require("./solAnal"));
 require('firebase/auth');
 require('firebase/database');
 const firebaseConfig = {
@@ -64,6 +65,7 @@ app.get('/proxy', async (req, res) => {
     });
 });
 const fb = firebase.initializeApp(firebaseConfig);
+new solAnal_1.default(fb);
 const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
 const logger = new node_1.Timber(timberApiKey, '23469', { ignoreExceptions: true });
 logger.info('Tellulf server started');
@@ -94,14 +96,14 @@ function start() {
         client_id: process.env.NETATMO_CLIENT_ID,
         client_secret: process.env.NETATMO_CLIENT_SECRET,
     };
-    const myNetatmo = new netatmo_js_1.default(netatmoConfig, fb, logger);
+    const myNetatmo = new netatmo_1.default(netatmoConfig, fb, logger);
     myNetatmo.start(5);
-    const mySteca = new solar_js_1.default('192.168.1.146', fb, logger);
+    const mySteca = new solar_1.default('192.168.1.146', fb, logger);
     mySteca.start(10000);
     const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
     const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
     const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
-    const tibberConnectorHjemme = new tibber_js_1.default(tibberKey, [tibberHome, tibberCabin], fb, logger);
+    const tibberConnectorHjemme = new tibber_1.default(tibberKey, [tibberHome, tibberCabin], fb, logger);
     tibberConnectorHjemme.start();
     console.log('Started.');
 }

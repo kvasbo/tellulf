@@ -23,7 +23,7 @@
         "firebase": "^7.6.0",
         "lodash": "^4.17.19",
         "moment": "^2.24.0",
-        "moment-timezone": "^0.5.26",
+        "moment-timezone": "^0.5.31",
         "netatmo": "^2.3.0",
         "stecagridscrape": "^1.2.4",
         "tibber-pulse-connector": "^3.0.1",

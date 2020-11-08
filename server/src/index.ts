@@ -2,9 +2,10 @@ import { Timber } from '@timberio/node';
 import * as firebase from 'firebase/app';
 import express from 'express';
 import axios from 'axios';
-import Netatmo, { NetatmoConfig } from './netatmo.js';
-import StecaParser from './solar.js';
-import Tibber from './tibber.js';
+import Netatmo, { NetatmoConfig } from './netatmo';
+import StecaParser from './solar';
+import Tibber from './tibber';
+import SolAnal from './solAnal';
 
 require('firebase/auth');
 require('firebase/database');
@@ -45,6 +46,9 @@ app.get('/proxy', async (req: any, res) => {
 });
 
 const fb = firebase.initializeApp(firebaseConfig);
+
+// Smarthouse
+new SolAnal(fb);
 
 const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
 const logger = new Timber(timberApiKey, '23469', { ignoreExceptions: true });
