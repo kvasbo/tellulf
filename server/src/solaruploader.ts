@@ -1,3 +1,7 @@
+/**
+ * Not a part of the server, to be run separately in the same local network as the Steca inverter!
+ */
+
 import * as firebase from 'firebase/app';
 import StecaParser from './solar';
 
