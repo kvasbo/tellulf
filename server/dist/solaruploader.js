@@ -36,7 +36,9 @@ function init() {
     });
 }
 function start() {
-    const mySteca = new solar_1.default('192.168.1.146', fb);
+    if (!process.env.STECA_IP)
+        throw Error('STECA_IP not set');
+    const mySteca = new solar_1.default(process.env.STECA_IP, fb);
     mySteca.start(10000);
 }
 firebase.auth().onAuthStateChanged((user) => {

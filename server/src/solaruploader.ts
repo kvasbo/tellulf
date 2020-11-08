@@ -18,7 +18,6 @@ const fb = firebase.initializeApp(firebaseConfig);
 function init() {
   if (!process.env.FIREBASE_USER) throw Error('FIREBASE_USER not set');
   if (!process.env.FIREBASE_PASSWORD) throw Error('FIREBASE_PASSWORD not set');
-
   firebase
     .auth()
     .signInWithEmailAndPassword(process.env.FIREBASE_USER, process.env.FIREBASE_PASSWORD)
@@ -29,7 +28,8 @@ function init() {
 }
 
 function start() {
-  const mySteca = new StecaParser('192.168.1.146', fb);
+  if (!process.env.STECA_IP) throw Error('STECA_IP not set');
+  const mySteca = new StecaParser(process.env.STECA_IP, fb);
   mySteca.start(10000);
 }
 
