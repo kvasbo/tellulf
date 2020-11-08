@@ -22,7 +22,7 @@ class Tibber {
     }
     async handleTibberRealTime(id, data) {
         const timeStamp = new Date().getTime();
-        const toStore = { ...data.data.liveMeasurement, timeStamp };
+        const toStore = Object.assign({}, data.data.liveMeasurement, { timeStamp });
         const ref = this.firebase.database().ref(`tibber/realtime/${id}`);
         if (dataPointsReceived % 100 === 0) {
             console.log(`Tibber data received (${dataPointsReceived}): ${toStore.power}W`);

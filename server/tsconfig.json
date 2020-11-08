@@ -2,9 +2,9 @@
   "compilerOptions": {
     "outDir": "./dist",
     "allowJs": false,
-    "module": "commonjs",
-    "target": "ES2018",
     "lib": ["es2018"],
+    "module": "commonjs",
+    "target": "es2018",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "removeComments": true,

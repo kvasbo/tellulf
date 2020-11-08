@@ -14,7 +14,6 @@ const firebase = __importStar(require("firebase/app"));
 const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
 const netatmo_1 = __importDefault(require("./netatmo"));
-const solar_1 = __importDefault(require("./solar"));
 const tibber_1 = __importDefault(require("./tibber"));
 const solAnal_1 = __importDefault(require("./solAnal"));
 require('firebase/auth');
@@ -70,8 +69,7 @@ function start() {
     if (!process.env.NETATMO_USERNAME ||
         !process.env.NETATMO_PASSWORD ||
         !process.env.NETATMO_CLIENT_ID ||
-        !process.env.NETATMO_CLIENT_SECRET ||
-        !process.env.STECA_URL) {
+        !process.env.NETATMO_CLIENT_SECRET) {
         console.log('Netatmo config incomplete, quitting');
         return;
     }
@@ -83,8 +81,6 @@ function start() {
     };
     const myNetatmo = new netatmo_1.default(netatmoConfig, fb);
     myNetatmo.start(5);
-    const mySteca = new solar_1.default(process.env.STECA_URL, fb);
-    mySteca.start(10000);
     const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
     const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
     const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';

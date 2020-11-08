@@ -2,7 +2,6 @@ import * as firebase from 'firebase/app';
 import express from 'express';
 import axios from 'axios';
 import Netatmo, { NetatmoConfig } from './netatmo';
-import StecaParser from './solar';
 import Tibber from './tibber';
 import SolAnal from './solAnal';
 
@@ -69,8 +68,7 @@ function start() {
     !process.env.NETATMO_USERNAME ||
     !process.env.NETATMO_PASSWORD ||
     !process.env.NETATMO_CLIENT_ID ||
-    !process.env.NETATMO_CLIENT_SECRET ||
-    !process.env.STECA_URL
+    !process.env.NETATMO_CLIENT_SECRET
   ) {
     // eslint-disable-next-line no-console
     console.log('Netatmo config incomplete, quitting');
@@ -84,9 +82,6 @@ function start() {
   };
   const myNetatmo = new Netatmo(netatmoConfig, fb);
   myNetatmo.start(5);
-
-  const mySteca = new StecaParser(process.env.STECA_URL, fb);
-  mySteca.start(10000);
 
   const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
   const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
