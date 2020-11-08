@@ -1,7 +1,7 @@
 // Init Firebase
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const NetatmoApi = require('netatmo');
-import { Timber } from '@timberio/node';
+
 import Moment from 'moment';
 
 export interface NetatmoConfig {
@@ -87,14 +87,12 @@ interface DeviceMeasure {
 }
 class Netatmo {
   private firebase: firebase.app.App;
-  private logger: Timber;
   private currentData: CurrentData;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private api: any;
-  constructor(config: NetatmoConfig, firebase: firebase.app.App, logger: Timber) {
+  constructor(config: NetatmoConfig, firebase: firebase.app.App) {
     this.firebase = firebase;
     this.api = new NetatmoApi(config);
-    this.logger = logger;
     this.currentData = {
       inneTemp: null,
       uteTemp: null,
@@ -120,12 +118,12 @@ class Netatmo {
   init(): void {
     this.api.on('error', (error: Error) => {
       // When the "error" event is emitted, this is called
-      this.logger.error(error.message);
+      console.log(error.message);
     });
 
     this.api.on('warning', (error: Error) => {
       // When the "warning" event is emitted, this is called
-      this.logger.error(error.message);
+      console.log(error.message);
     });
   }
 
@@ -144,7 +142,7 @@ class Netatmo {
         },
         (err: Error, devices: ForeignDevice[]) => {
           if (err) {
-            this.logger.error(err.message);
+            console.log(err.message);
             return;
           }
           let tmpSamples = 0;
@@ -190,7 +188,7 @@ class Netatmo {
 
           const log = `Netatmo area averages: ${temperature} deg, ${pressure} bar, ${humidity} percent`;
 
-          this.logger.info(log);
+          console.log(log);
 
           // eslint-disable-next-line no-console
           console.log(log);
@@ -205,7 +203,7 @@ class Netatmo {
 
       this.api.getStationsData((err: Error, devices: MyDevice[]) => {
         if (err) {
-          this.logger.error(err.message);
+          console.log(err.message);
           return;
         }
 
@@ -231,12 +229,12 @@ class Netatmo {
         // Update history
         this.firebase.database().ref(`netatmo/history/${dateStamp}`).set(this.currentData);
 
-        this.logger.info(
+        console.log(
           `${new Date().toISOString()}: Updated netatmo data. 'Ute' last seen ${lastSeenUte}`,
         );
       });
     } catch (err) {
-      this.logger.error(err.message);
+      console.log(err.message);
     }
   }
 }

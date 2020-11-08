@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const NetatmoApi = require('netatmo');
 const moment_1 = __importDefault(require("moment"));
 class Netatmo {
-    constructor(config, firebase, logger) {
+    constructor(config, firebase) {
         this.firebase = firebase;
         this.api = new NetatmoApi(config);
-        this.logger = logger;
         this.currentData = {
             inneTemp: null,
             uteTemp: null,
@@ -32,10 +31,10 @@ class Netatmo {
     }
     init() {
         this.api.on('error', (error) => {
-            this.logger.error(error.message);
+            console.log(error.message);
         });
         this.api.on('warning', (error) => {
-            this.logger.error(error.message);
+            console.log(error.message);
         });
     }
     updateData() {
@@ -50,7 +49,7 @@ class Netatmo {
                 required_data: 'temperature',
             }, (err, devices) => {
                 if (err) {
-                    this.logger.error(err.message);
+                    console.log(err.message);
                     return;
                 }
                 let tmpSamples = 0;
@@ -89,7 +88,7 @@ class Netatmo {
                 const humidity = Math.round(humTotal / Math.max(1, humSamples));
                 const pressure = Math.round(pressTotal / Math.max(1, pressSamples));
                 const log = `Netatmo area averages: ${temperature} deg, ${pressure} bar, ${humidity} percent`;
-                this.logger.info(log);
+                console.log(log);
                 console.log(log);
                 this.firebase
                     .database()
@@ -98,7 +97,7 @@ class Netatmo {
             });
             this.api.getStationsData((err, devices) => {
                 if (err) {
-                    this.logger.error(err.message);
+                    console.log(err.message);
                     return;
                 }
                 const d = devices[0];
@@ -115,11 +114,11 @@ class Netatmo {
                 this.firebase.database().ref('netatmo/currentData').set(this.currentData);
                 const dateStamp = moment_1.default().startOf('hour').toDate();
                 this.firebase.database().ref(`netatmo/history/${dateStamp}`).set(this.currentData);
-                this.logger.info(`${new Date().toISOString()}: Updated netatmo data. 'Ute' last seen ${lastSeenUte}`);
+                console.log(`${new Date().toISOString()}: Updated netatmo data. 'Ute' last seen ${lastSeenUte}`);
             });
         }
         catch (err) {
-            this.logger.error(err.message);
+            console.log(err.message);
         }
     }
 }

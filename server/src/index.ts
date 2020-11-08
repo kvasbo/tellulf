@@ -1,4 +1,3 @@
-import { Timber } from '@timberio/node';
 import * as firebase from 'firebase/app';
 import express from 'express';
 import axios from 'axios';
@@ -50,11 +49,6 @@ const fb = firebase.initializeApp(firebaseConfig);
 // Smarthouse
 new SolAnal(fb);
 
-const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
-const logger = new Timber(timberApiKey, '23469', { ignoreExceptions: true });
-
-logger.info('Tellulf server started');
-
 function init() {
   if (!process.env.FIREBASE_USER) throw Error('FIREBASE_USER not set');
   if (!process.env.FIREBASE_PASSWORD) throw Error('FIREBASE_PASSWORD not set');
@@ -87,24 +81,23 @@ function start() {
     client_id: process.env.NETATMO_CLIENT_ID,
     client_secret: process.env.NETATMO_CLIENT_SECRET,
   };
-  const myNetatmo = new Netatmo(netatmoConfig, fb, logger);
+  const myNetatmo = new Netatmo(netatmoConfig, fb);
   myNetatmo.start(5);
 
-  const mySteca = new StecaParser('192.168.1.146', fb, logger);
+  const mySteca = new StecaParser('192.168.1.146', fb);
   mySteca.start(10000);
 
   const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
   const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
   const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
 
-  const tibberConnectorHjemme = new Tibber(tibberKey, [tibberHome, tibberCabin], fb, logger);
+  const tibberConnectorHjemme = new Tibber(tibberKey, [tibberHome, tibberCabin], fb);
   tibberConnectorHjemme.start();
   // eslint-disable-next-line no-console
   console.log('Started.');
 }
 
 process.on('uncaughtException', function (err) {
-  logger.error(err.message);
   // eslint-disable-next-line no-console
   console.log('Caught exception: ' + err);
 });
@@ -118,7 +111,6 @@ firebase.auth().onAuthStateChanged((user: firebase.User | null): void => {
 try {
   init();
 } catch (err) {
-  logger.error(err.message);
   // eslint-disable-next-line no-console
   console.log(err.message);
 }

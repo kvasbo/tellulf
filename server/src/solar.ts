@@ -45,14 +45,14 @@ class StecaParser {
   private mySteca: any;
   private firebase: firebase.app.App;
   private samples: Sample[];
-  private logger: Timber;
+
   private numberOfSamples: number;
 
-  constructor(ip: string, firebase: firebase.app.App, logger: Timber) {
+  constructor(ip: string, firebase: firebase.app.App) {
     this.firebase = firebase;
     this.mySteca = new Steca(ip);
     this.samples = [];
-    this.logger = logger;
+
     this.numberOfSamples = 0;
     // eslint-disable-next-line no-console
     console.log(`Steca parser initiated`);
@@ -148,7 +148,7 @@ class StecaParser {
       production.effect.val
     }W. Full: ${doFull}. DST: ${dst}`;
 
-    this.logger.info(logString);
+    console.log(logString);
 
     if (this.numberOfSamples % 100 === 0) {
       // eslint-disable-next-line no-console
@@ -186,7 +186,7 @@ class StecaParser {
     const monthOfYearData = monthOfYearSnap.val();
     if (!monthOfYearData || value > monthOfYearData.value) {
       await this.firebase.database().ref(refMonthOfYear).set({ value, time: now.toISOString() });
-      this.logger.info(`Month of year max set, ${refMonthOfYear}, ${now.toISOString()}, ${value}`);
+      console.log(`Month of year max set, ${refMonthOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Statistical - "max ever in any week of this number"
@@ -194,7 +194,7 @@ class StecaParser {
     const weekOfYearData = weekOfYearSnap.val();
     if (!weekOfYearData || value > weekOfYearData.value) {
       await this.firebase.database().ref(refWeekOfYear).set({ value, time: now.toISOString() });
-      this.logger.info(`Week of year max set, ${refWeekOfYear}, ${now.toISOString()}, ${value}`);
+      console.log(`Week of year max set, ${refWeekOfYear}, ${now.toISOString()}, ${value}`);
     }
 
     // Stastistical - "max ever between 12 and 13"
@@ -202,14 +202,14 @@ class StecaParser {
     const hourOfDayData = hourOfDaySnap.val();
     if (!hourOfDayData || value > hourOfDayData.value) {
       await this.firebase.database().ref(refHourOfDay).set({ value, time: now.toISOString() });
-      this.logger.info(`Hour of day max set, ${refHourOfDay}, ${now.toISOString()}, ${value}`);
+      console.log(`Hour of day max set, ${refHourOfDay}, ${now.toISOString()}, ${value}`);
     }
 
     const hourSnap = await this.firebase.database().ref(refHour).once('value');
     const hourData = hourSnap.val();
     if (!hourData || value > hourData.value) {
       await this.firebase.database().ref(refHour).set({ value, time: now.toISOString() });
-      this.logger.info(`Hour max set, ${refHour}, ${now.toISOString()}, ${value}`);
+      console.log(`Hour max set, ${refHour}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this hour.
     }
@@ -219,7 +219,7 @@ class StecaParser {
     const dayData = daySnap.val();
     if (!dayData || value > dayData.value) {
       await this.firebase.database().ref(refDay).set({ value, time: now.toISOString() });
-      this.logger.info(`Daily max set, ${refDay}, ${now.toISOString()}, ${value}`);
+      console.log(`Daily max set, ${refDay}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this day.
     }
@@ -229,7 +229,7 @@ class StecaParser {
     const monthData = monthSnap.val();
     if (!monthData || value > monthData.value) {
       await this.firebase.database().ref(refMonth).set({ value, time: now.toISOString() });
-      this.logger.info(`Monthly max set, ${refMonth}, ${now.toISOString()}, ${value}`);
+      console.log(`Monthly max set, ${refMonth}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this month.
     }
@@ -238,7 +238,7 @@ class StecaParser {
     const yearData = yearSnap.val();
     if (!yearData || value > yearData.value) {
       await this.firebase.database().ref(refYear).set({ value, time: now.toISOString() });
-      this.logger.info(`Year max set, ${refYear}, ${now.toISOString()}, ${value}`);
+      console.log(`Year max set, ${refYear}, ${now.toISOString()}, ${value}`);
     } else {
       return; // No point in continuing, we have a larger value this year.
     }
@@ -248,10 +248,10 @@ class StecaParser {
     const everData = everSnap.val();
     if (!everData || value > everData.value) {
       await this.firebase.database().ref(refEver).set({ value, time: now.toISOString() });
-      this.logger.info(`Ever max set, ${refEver}, ${now.toISOString()}, ${value}`);
+      console.log(`Ever max set, ${refEver}, ${now.toISOString()}, ${value}`);
     }
 
-    this.logger.info('Max ran all the way through. Expensive!');
+    console.log('Max ran all the way through. Expensive!');
   }
 
   getFilteredSamples(minutes: number): Sample[] {

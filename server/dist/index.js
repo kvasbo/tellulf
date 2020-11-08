@@ -1,28 +1,15 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
     return result;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_1 = require("@timberio/node");
 const firebase = __importStar(require("firebase/app"));
 const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
@@ -66,9 +53,6 @@ app.get('/proxy', async (req, res) => {
 });
 const fb = firebase.initializeApp(firebaseConfig);
 new solAnal_1.default(fb);
-const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
-const logger = new node_1.Timber(timberApiKey, '23469', { ignoreExceptions: true });
-logger.info('Tellulf server started');
 function init() {
     if (!process.env.FIREBASE_USER)
         throw Error('FIREBASE_USER not set');
@@ -96,19 +80,18 @@ function start() {
         client_id: process.env.NETATMO_CLIENT_ID,
         client_secret: process.env.NETATMO_CLIENT_SECRET,
     };
-    const myNetatmo = new netatmo_1.default(netatmoConfig, fb, logger);
+    const myNetatmo = new netatmo_1.default(netatmoConfig, fb);
     myNetatmo.start(5);
-    const mySteca = new solar_1.default('192.168.1.146', fb, logger);
+    const mySteca = new solar_1.default('192.168.1.146', fb);
     mySteca.start(10000);
     const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
     const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
     const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
-    const tibberConnectorHjemme = new tibber_1.default(tibberKey, [tibberHome, tibberCabin], fb, logger);
+    const tibberConnectorHjemme = new tibber_1.default(tibberKey, [tibberHome, tibberCabin], fb);
     tibberConnectorHjemme.start();
     console.log('Started.');
 }
 process.on('uncaughtException', function (err) {
-    logger.error(err.message);
     console.log('Caught exception: ' + err);
 });
 firebase.auth().onAuthStateChanged((user) => {
@@ -120,6 +103,5 @@ try {
     init();
 }
 catch (err) {
-    logger.error(err.message);
     console.log(err.message);
 }
