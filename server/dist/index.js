@@ -24,10 +24,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_1 = require("@timberio/node");
 const firebase = __importStar(require("firebase/app"));
+const express_1 = __importDefault(require("express"));
 const netatmo_js_1 = __importDefault(require("./netatmo.js"));
 const solar_js_1 = __importDefault(require("./solar.js"));
 const tibber_js_1 = __importDefault(require("./tibber.js"));
-const tellulf_keys_js_1 = __importDefault(require("./tellulf_keys.js"));
 require('firebase/auth');
 require('firebase/database');
 const firebaseConfig = {
@@ -38,52 +38,58 @@ const firebaseConfig = {
     storageBucket: 'tellulf-151318.appspot.com',
     messagingSenderId: '159155087298',
 };
+const app = express_1.default();
+const port = 80;
+app.use(express_1.default.static('../client/build'));
+app.listen(port, () => {
+    console.log(`Serving static files at ${port}`);
+});
 const fb = firebase.initializeApp(firebaseConfig);
-const timberApiKey = tellulf_keys_js_1.default.TIMBER_API_KEY ? tellulf_keys_js_1.default.TIMBER_API_KEY : 'abc';
+const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
 const logger = new node_1.Timber(timberApiKey, '23469', { ignoreExceptions: true });
 logger.info('Tellulf server started');
 function init() {
-    if (!tellulf_keys_js_1.default.NETATMO_USERNAME)
+    if (!process.env.NETATMO_USERNAME)
         throw Error('NETATMO_USERNAME not set');
-    if (!tellulf_keys_js_1.default.NETATMO_PASSWORD)
+    if (!process.env.NETATMO_PASSWORD)
         throw Error('NETATMO_PASSWORD not set');
-    if (!tellulf_keys_js_1.default.NETATMO_CLIENT_SECRET)
+    if (!process.env.NETATMO_CLIENT_SECRET)
         throw Error('NETATMO_CLIENT_SECRET not set');
-    if (!tellulf_keys_js_1.default.NETATMO_CLIENT_ID)
+    if (!process.env.NETATMO_CLIENT_ID)
         throw Error('NETATMO_CLIENT_ID not set');
-    if (!tellulf_keys_js_1.default.FIREBASE_USER)
+    if (!process.env.FIREBASE_USER)
         throw Error('FIREBASE_USER not set');
-    if (!tellulf_keys_js_1.default.FIREBASE_PASSWORD)
+    if (!process.env.FIREBASE_PASSWORD)
         throw Error('FIREBASE_PASSWORD not set');
     firebase
         .auth()
-        .signInWithEmailAndPassword(tellulf_keys_js_1.default.FIREBASE_USER, tellulf_keys_js_1.default.FIREBASE_PASSWORD)
+        .signInWithEmailAndPassword(process.env.FIREBASE_USER, process.env.FIREBASE_PASSWORD)
         .catch(function (error) {
         console.log(error.message);
     });
 }
 function start() {
     console.log('Starting.');
-    if (!tellulf_keys_js_1.default.NETATMO_USERNAME ||
-        !tellulf_keys_js_1.default.NETATMO_PASSWORD ||
-        !tellulf_keys_js_1.default.NETATMO_CLIENT_ID ||
-        !tellulf_keys_js_1.default.NETATMO_CLIENT_SECRET) {
+    if (!process.env.NETATMO_USERNAME ||
+        !process.env.NETATMO_PASSWORD ||
+        !process.env.NETATMO_CLIENT_ID ||
+        !process.env.NETATMO_CLIENT_SECRET) {
         console.log('Netatmo config incomplete, quitting');
         return;
     }
     const netatmoConfig = {
-        username: tellulf_keys_js_1.default.NETATMO_USERNAME,
-        password: tellulf_keys_js_1.default.NETATMO_PASSWORD,
-        client_id: tellulf_keys_js_1.default.NETATMO_CLIENT_ID,
-        client_secret: tellulf_keys_js_1.default.NETATMO_CLIENT_SECRET,
+        username: process.env.NETATMO_USERNAME,
+        password: process.env.NETATMO_PASSWORD,
+        client_id: process.env.NETATMO_CLIENT_ID,
+        client_secret: process.env.NETATMO_CLIENT_SECRET,
     };
     const myNetatmo = new netatmo_js_1.default(netatmoConfig, fb, logger);
     myNetatmo.start(5);
     const mySteca = new solar_js_1.default('192.168.1.146', fb, logger);
     mySteca.start(10000);
-    const tibberKey = tellulf_keys_js_1.default.TIBBER_KEY ? tellulf_keys_js_1.default.TIBBER_KEY : 'nokey';
-    const tibberHome = tellulf_keys_js_1.default.TIBBER_HOME ? tellulf_keys_js_1.default.TIBBER_HOME : 'nokey';
-    const tibberCabin = tellulf_keys_js_1.default.TIBBER_CABIN ? tellulf_keys_js_1.default.TIBBER_CABIN : 'nokey';
+    const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
+    const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
+    const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
     const tibberConnectorHjemme = new tibber_js_1.default(tibberKey, [tibberHome, tibberCabin], fb, logger);
     tibberConnectorHjemme.start();
     console.log('Started.');

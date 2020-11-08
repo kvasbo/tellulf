@@ -5,8 +5,6 @@ import Netatmo, { NetatmoConfig } from './netatmo.js';
 import StecaParser from './solar.js';
 import Tibber from './tibber.js';
 
-import keys from './tellulf_keys.js';
-
 require('firebase/auth');
 require('firebase/database');
 
@@ -22,29 +20,29 @@ const firebaseConfig = {
 // Set up web server
 const app = express();
 const port = 80;
-app.use(express.static('../client/public'));
+app.use(express.static('../client/build'));
 app.listen(port, () => {
   console.log(`Serving static files at ${port}`);
 });
 
 const fb = firebase.initializeApp(firebaseConfig);
 
-const timberApiKey = keys.TIMBER_API_KEY ? keys.TIMBER_API_KEY : 'abc';
+const timberApiKey = process.env.TIMBER_API_KEY ? process.env.TIMBER_API_KEY : 'abc';
 const logger = new Timber(timberApiKey, '23469', { ignoreExceptions: true });
 
 logger.info('Tellulf server started');
 
 function init() {
-  if (!keys.NETATMO_USERNAME) throw Error('NETATMO_USERNAME not set');
-  if (!keys.NETATMO_PASSWORD) throw Error('NETATMO_PASSWORD not set');
-  if (!keys.NETATMO_CLIENT_SECRET) throw Error('NETATMO_CLIENT_SECRET not set');
-  if (!keys.NETATMO_CLIENT_ID) throw Error('NETATMO_CLIENT_ID not set');
-  if (!keys.FIREBASE_USER) throw Error('FIREBASE_USER not set');
-  if (!keys.FIREBASE_PASSWORD) throw Error('FIREBASE_PASSWORD not set');
+  if (!process.env.NETATMO_USERNAME) throw Error('NETATMO_USERNAME not set');
+  if (!process.env.NETATMO_PASSWORD) throw Error('NETATMO_PASSWORD not set');
+  if (!process.env.NETATMO_CLIENT_SECRET) throw Error('NETATMO_CLIENT_SECRET not set');
+  if (!process.env.NETATMO_CLIENT_ID) throw Error('NETATMO_CLIENT_ID not set');
+  if (!process.env.FIREBASE_USER) throw Error('FIREBASE_USER not set');
+  if (!process.env.FIREBASE_PASSWORD) throw Error('FIREBASE_PASSWORD not set');
 
   firebase
     .auth()
-    .signInWithEmailAndPassword(keys.FIREBASE_USER, keys.FIREBASE_PASSWORD)
+    .signInWithEmailAndPassword(process.env.FIREBASE_USER, process.env.FIREBASE_PASSWORD)
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.log(error.message);
@@ -55,20 +53,20 @@ function start() {
   // eslint-disable-next-line no-console
   console.log('Starting.');
   if (
-    !keys.NETATMO_USERNAME ||
-    !keys.NETATMO_PASSWORD ||
-    !keys.NETATMO_CLIENT_ID ||
-    !keys.NETATMO_CLIENT_SECRET
+    !process.env.NETATMO_USERNAME ||
+    !process.env.NETATMO_PASSWORD ||
+    !process.env.NETATMO_CLIENT_ID ||
+    !process.env.NETATMO_CLIENT_SECRET
   ) {
     // eslint-disable-next-line no-console
     console.log('Netatmo config incomplete, quitting');
     return;
   }
   const netatmoConfig: NetatmoConfig = {
-    username: keys.NETATMO_USERNAME,
-    password: keys.NETATMO_PASSWORD,
-    client_id: keys.NETATMO_CLIENT_ID,
-    client_secret: keys.NETATMO_CLIENT_SECRET,
+    username: process.env.NETATMO_USERNAME,
+    password: process.env.NETATMO_PASSWORD,
+    client_id: process.env.NETATMO_CLIENT_ID,
+    client_secret: process.env.NETATMO_CLIENT_SECRET,
   };
   const myNetatmo = new Netatmo(netatmoConfig, fb, logger);
   myNetatmo.start(5);
@@ -76,9 +74,9 @@ function start() {
   const mySteca = new StecaParser('192.168.1.146', fb, logger);
   mySteca.start(10000);
 
-  const tibberKey = keys.TIBBER_KEY ? keys.TIBBER_KEY : 'nokey';
-  const tibberHome = keys.TIBBER_HOME ? keys.TIBBER_HOME : 'nokey';
-  const tibberCabin = keys.TIBBER_CABIN ? keys.TIBBER_CABIN : 'nokey';
+  const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
+  const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
+  const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
 
   const tibberConnectorHjemme = new Tibber(tibberKey, [tibberHome, tibberCabin], fb, logger);
   tibberConnectorHjemme.start();
