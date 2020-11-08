@@ -1,5 +1,6 @@
 import { Timber } from '@timberio/node';
 import * as firebase from 'firebase/app';
+import express from 'express';
 import Netatmo, { NetatmoConfig } from './netatmo.js';
 import StecaParser from './solar.js';
 import Tibber from './tibber.js';
@@ -17,6 +18,14 @@ const firebaseConfig = {
   storageBucket: 'tellulf-151318.appspot.com',
   messagingSenderId: '159155087298',
 };
+
+// Set up web server
+const app = express();
+const port = 80;
+app.use(express.static('../client/public'));
+app.listen(port, () => {
+  console.log(`Serving static files at ${port}`);
+});
 
 const fb = firebase.initializeApp(firebaseConfig);
 
