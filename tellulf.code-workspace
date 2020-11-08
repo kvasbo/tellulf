@@ -1,17 +1,8 @@
 {
   "folders": [
     {
-      "path": "client"
-    },
-    {
-      "path": "server"
-    },
-    {
-      "path": "functions"
-    },
-    {
       "path": ".",
-      "name": "Repository root"
+      "name": "Tellulf"
     }
   ],
   "settings": {
