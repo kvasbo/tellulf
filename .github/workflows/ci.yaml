@@ -51,32 +51,6 @@ jobs:
       - name: Deploy to Firebase
         run: firebase deploy --only hosting -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
 
-  functions_deploy:
-    name: Functions, Lint and Deploy
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    env:
-      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      COMMIT_ID: ${{ github.sha }}
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.x
-      - name: Install Firebase
-        run: npm install -g firebase-tools
-      - name: Add Firebase to Path
-        run: alias firebase="`npm config get prefix`/bin/firebase"
-      - name: Install Function Dependencies
-        run: yarn --cwd "functions" install --non-interactive --pure-lockfile
-      - name: Lint Functions
-        run: CI=false yarn --cwd "functions" run lint
-      - name: Deploy Functions
-        if: github.ref == 'refs/heads/master'
-        run: firebase deploy --only functions -m "Github Action, Commit $COMMIT_ID" --non-interactive --token $FIREBASE_TOKEN
-
   server-build:
     name: Server, Lint and Build
     runs-on: ubuntu-latest
