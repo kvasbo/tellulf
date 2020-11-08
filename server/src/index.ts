@@ -69,7 +69,8 @@ function start() {
     !process.env.NETATMO_USERNAME ||
     !process.env.NETATMO_PASSWORD ||
     !process.env.NETATMO_CLIENT_ID ||
-    !process.env.NETATMO_CLIENT_SECRET
+    !process.env.NETATMO_CLIENT_SECRET ||
+    !process.env.STECA_URL
   ) {
     // eslint-disable-next-line no-console
     console.log('Netatmo config incomplete, quitting');
@@ -84,7 +85,7 @@ function start() {
   const myNetatmo = new Netatmo(netatmoConfig, fb);
   myNetatmo.start(5);
 
-  const mySteca = new StecaParser('192.168.1.146', fb);
+  const mySteca = new StecaParser(process.env.STECA_URL, fb);
   mySteca.start(10000);
 
   const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';

@@ -82,7 +82,8 @@ function start() {
     if (!process.env.NETATMO_USERNAME ||
         !process.env.NETATMO_PASSWORD ||
         !process.env.NETATMO_CLIENT_ID ||
-        !process.env.NETATMO_CLIENT_SECRET) {
+        !process.env.NETATMO_CLIENT_SECRET ||
+        !process.env.STECA_URL) {
         console.log('Netatmo config incomplete, quitting');
         return;
     }
@@ -94,7 +95,7 @@ function start() {
     };
     const myNetatmo = new netatmo_1.default(netatmoConfig, fb);
     myNetatmo.start(5);
-    const mySteca = new solar_1.default('192.168.1.146', fb);
+    const mySteca = new solar_1.default(process.env.STECA_URL, fb);
     mySteca.start(10000);
     const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
     const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
