@@ -9324,10 +9324,10 @@ postcss@^8.1.0:
     nanoid "^3.1.16"
     source-map "^0.6.1"
 
-pregnancy@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/pregnancy/-/pregnancy-1.0.1.tgz#693c24fa09673bcef66c5907e2c024a844538be9"
-  integrity sha512-oaIlQ6dT4gzl67QdgDL0Y7wLdkt2mzAQWuctl3xMfX+j0Y5M9vO2XQ52VWfKLknaG/UvT/K+OHKifFJFPH2iMw==
+pregnancy@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/pregnancy/-/pregnancy-1.0.2.tgz#8d0440b635e61c437932c15477bc35f3ee4253f5"
+  integrity sha512-ZxAMoxnMF1weGtbZt2C0HAMdOYHjrJvGM4XyNMuh8tUAllfQ+PhwX49mlE3eM5FN7Cnmf7G9uMfQ7T58MmMlTw==
   dependencies:
     moment "^2.22.0"
 

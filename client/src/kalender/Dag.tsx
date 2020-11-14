@@ -161,9 +161,9 @@ class Dag extends React.PureComponent<Props, State> {
   private getPreggo(): string {
     const p = new Preggo(new Date('2020-07-22'));
     const d = p.getData(this.props.date.toDate());
-    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight}g - ${
-      d.height
-    } cm`;
+    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight.toPrecision(
+      3,
+    )}g - ${d.height.toPrecision(3)} cm`;
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
