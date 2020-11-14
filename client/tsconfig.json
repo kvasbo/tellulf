@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2016",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "allowJs": true,
     "skipLibCheck": false,
     "esModuleInterop": true,
@@ -15,11 +18,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": ["./externalLibraryTypeDefinitions", "./node_modules/@types"],
-    "rootDir": "src"
+    "typeRoots": [
+      "./externalLibraryTypeDefinitions",
+      "./node_modules/@types"
+    ],
+    "rootDir": "src",
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "externalLibraryTypeDefinitions"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "externalLibraryTypeDefinitions"
+  ]
 }

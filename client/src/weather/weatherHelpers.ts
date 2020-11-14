@@ -40,7 +40,7 @@ export function createKeyBasedOnStamps(from: string, to: string): string {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function storeToLocalStore(
   key: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,  @typescript-eslint/no-explicit-any
   data: any,
   from: Moment.Moment | string,
   to: Moment.Moment | string,

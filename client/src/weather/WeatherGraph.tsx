@@ -49,7 +49,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
   public static defaultProps = {
     limits: undefined,
     showPlace: false,
-    onClick: () => {
+    onClick: (): null => {
       return null;
     },
   };
