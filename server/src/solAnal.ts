@@ -49,9 +49,9 @@ class SolAnal {
     stue: any;
     tak: any;
   };
-  currentEffect: number = 0;
+  currentEffect = 0;
   sunListener: any;
-  currentAverage: number = 0;
+  currentAverage = 0;
   settingsListener: any;
   thresholds: {
     upwards: number;
@@ -181,7 +181,7 @@ class SolAnal {
       }
 
       url = `https://maker.ifttt.com/trigger/${iftttKey}/with/key/${iftttUrlKey}`;
-      let result = await Axios.get(url);
+      const result = await Axios.get(url);
       console.log(`Performed instruction: ${key} ${instruction}, ${result.statusText}`);
     } catch (err) {
       console.log(`Error performing instruction  ${key} ${instruction}`, err);
@@ -201,8 +201,8 @@ class SolAnal {
     if (analysis.nowAveraged < this.thresholds.downwards) {
       openAveraged = true;
     }
-    let close = closeAveraged || closeMoment;
-    let open = openAveraged;
+    const close = closeAveraged || closeMoment;
+    const open = openAveraged;
     let desiredState: any;
     if (close) {
       desiredState = 'closed';
