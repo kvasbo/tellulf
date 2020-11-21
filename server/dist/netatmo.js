@@ -89,7 +89,6 @@ class Netatmo {
                 const pressure = Math.round(pressTotal / Math.max(1, pressSamples));
                 const log = `Netatmo area averages: ${temperature} deg, ${pressure} bar, ${humidity} percent`;
                 console.log(log);
-                console.log(log);
                 this.firebase
                     .database()
                     .ref('netatmo/areaData')

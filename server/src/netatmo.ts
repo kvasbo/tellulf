@@ -188,8 +188,6 @@ class Netatmo {
 
           const log = `Netatmo area averages: ${temperature} deg, ${pressure} bar, ${humidity} percent`;
 
-          console.log(log);
-
           // eslint-disable-next-line no-console
           console.log(log);
 

@@ -1,0 +1,11 @@
+{
+  "apexskier.eslint.config.fixOnSave" : "Enable",
+  "apexskier.typescript.config.isEnabledForJavascript" : "Disable",
+  "apexskier.typescript.config.organizeImportsOnSave" : "true",
+  "index.ignored_file_patterns" : [
+    "node_modules"
+  ],
+  "workspace.name" : "Tellulf",
+  "workspace.preview_type" : "custom",
+  "workspace.preview_url" : "localhost:3000"
+}

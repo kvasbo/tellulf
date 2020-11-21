@@ -122,7 +122,7 @@ class SolAnal {
                 return;
             }
             url = `https://maker.ifttt.com/trigger/${iftttKey}/with/key/${iftttUrlKey}`;
-            let result = await Axios.get(url);
+            const result = await Axios.get(url);
             console.log(`Performed instruction: ${key} ${instruction}, ${result.statusText}`);
         }
         catch (err) {
@@ -142,8 +142,8 @@ class SolAnal {
         if (analysis.nowAveraged < this.thresholds.downwards) {
             openAveraged = true;
         }
-        let close = closeAveraged || closeMoment;
-        let open = openAveraged;
+        const close = closeAveraged || closeMoment;
+        const open = openAveraged;
         let desiredState;
         if (close) {
             desiredState = 'closed';
