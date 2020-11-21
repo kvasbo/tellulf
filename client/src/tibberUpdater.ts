@@ -3,21 +3,21 @@ import axios from 'axios';
 import Moment from 'moment';
 import firebase from './firebase';
 import {
-  updatePowerPrices,
-  updateInitStatus,
-  updateRealtimeConsumption,
-  updatePowerUsage,
-  updateTibberConsumptionMonth,
-  updateTibberProductionMonth,
+    updateInitStatus,
+    updatePowerPrices,
+    updatePowerUsage,
+    updateRealtimeConsumption,
+    updateTibberConsumptionMonth,
+    updateTibberProductionMonth
 } from './redux/actions';
 import { AppDispatch } from './redux/store';
 import {
-  TibberRealtimeData,
-  TibberConsumptionNode,
-  TibberConsumptionReturn,
-  TibberProductionNode,
-  TibberProductionReturn,
-  houses,
+    houses,
+    TibberConsumptionNode,
+    TibberConsumptionReturn,
+    TibberProductionNode,
+    TibberProductionReturn,
+    TibberRealtimeData
 } from './types/tibber';
 
 const nettleie = 0.477;
@@ -80,7 +80,7 @@ export default class TibberUpdater {
           query: queryPrices,
         },
       });
-      if (data.status === 200) {
+      if (data.status === 200 && data.data.data.viewer.home.currentSubscription.priceInfo.today) {
         // Parse power prices
         const prices = data.data.data.viewer.home.currentSubscription.priceInfo.today;
         const powerPrices = {};

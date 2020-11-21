@@ -1,11 +1,11 @@
-import Moment from 'moment';
-import store from 'store';
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
-import sumBy from 'lodash/sumBy';
 import pickBy from 'lodash/pickBy';
+import sumBy from 'lodash/sumBy';
+import Moment from 'moment';
+import store from 'store';
 import { getNorwegianDaysOff } from '../external';
-import { WeatherDataSeries, HourForecast, ForecastDataSet, WeatherLimits } from '../types/forecast';
+import { ForecastDataSet, HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
 
 const sundayColor = '#FF0000CC';
 const redDays = getNorwegianDaysOff();
@@ -60,10 +60,10 @@ export function createForecastSummary(data: WeatherDataSeries): string {
   const weather = Object.values(data);
   if (weather.length === 0) return '';
   const maxTemp = maxBy(weather, (w: HourForecast): number => {
-    return w.temp ? w.temp : -999;
+    return w.temp !== undefined ? w.temp : -999;
   });
   const minTemp = minBy(weather, (w: HourForecast): number => {
-    return w.temp ? w.temp : 999;
+    return w.temp !== undefined ? w.temp : 999;
   });
 
   const rain = sumBy(weather, (w: HourForecast): number => {
@@ -76,7 +76,7 @@ export function createForecastSummary(data: WeatherDataSeries): string {
   const r = Math.round(rain);
 
   if (!maxT || !minT) {
-    return '';
+    // return '';
   }
 
   return `${minT}/${maxT} ${r}mm`;
