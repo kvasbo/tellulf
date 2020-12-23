@@ -1,17 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TallPanel from './TallPanel';
-import TellulfInfoCell from '../TellulfInfoCell';
-import EnergyGraph from './EnergyGraph';
-import MaxEnergyGraph from './MaxEnergyGraph';
 import { AppStore } from '../redux/reducers';
-import TibberUpdater from '../tibberUpdater';
 import SolarUpdater from '../solarUpdater';
-import { InitState } from '../types/initstate';
+import TellulfInfoCell from '../TellulfInfoCell';
+import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
-
-import { PowerPriceState, TibberUsageState, TibberRealtimeState } from '../types/tibber';
+import { InitState } from '../types/initstate';
 import { SolarCurrent, SolarMax } from '../types/solar';
+import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
+import EnergyGraph from './EnergyGraph';
+import TallPanel from './TallPanel';
 
 const defaultLatitude = 59.9409;
 const defaultLongitude = 10.6991;
@@ -41,7 +39,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
     tibber.subscribeToRealTime('2b05f8c5-3241-465d-92b8-9e7ad567f78f', 'hjemme');
     tibber.subscribeToRealTime('61f93ce4-f15c-49c2-aac1-9d9f0e1d76bb', 'hytta');
     tibber.updateConsumption();
-    // tibber.updateConsumptionMonthlyAndCalculateBills();
     tibber.updateConsumptionDaily();
     this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
     solar.attachListeners();
@@ -125,15 +122,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             realtimePower={this.props.realtimePowerHjemme}
             realtimePowerHytta={this.props.realtimePowerHytta}
             currentNetConsumption={currentNetConsumption}
-          />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <MaxEnergyGraph
-            day={this.props.max.maxDay}
-            year={this.props.max.maxYear}
-            month={this.props.max.maxMonth}
-            ever={this.props.max.maxEver}
-            currentProduction={this.props.currentSolarProduction.now}
           />
         </div>
       </div>

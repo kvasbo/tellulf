@@ -1,7 +1,7 @@
 import React from 'react';
 import TellulfInfoCell from '../TellulfInfoCell';
-import './solceller.css';
 import { GenericProps } from '../types/generic';
+import './solceller.css';
 
 interface Props {
   currentPower: number;
@@ -127,29 +127,6 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             key="maxBruk"
             smartRoundKw
             unit="W"
-          />
-        </div>
-        <div className="energyTableRow">
-          <TellulfInfoCell
-            info={this.props.localProductionDay}
-            unit="kWh"
-            header="prod dag"
-            decimals={1}
-            key="prodDay"
-          />
-          <TellulfInfoCell
-            info={this.props.localProductionMonth}
-            unit="kWh"
-            header="prod måned"
-            decimals={0}
-            key="prodMonth"
-          />
-          <TellulfInfoCell
-            info={this.props.localProductionYear / 1000}
-            unit="MWh"
-            header="prod år"
-            decimals={1}
-            key="prodYear"
           />
         </div>
         <div className="energyTableRow">Hytta</div>
