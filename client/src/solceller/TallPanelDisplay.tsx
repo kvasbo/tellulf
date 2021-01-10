@@ -87,7 +87,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
           alignItems: 'space-evenly',
         }}
       >
-        <div className="energyTableRow">Hjemme</div>
+        <div className="energyTableRow energyTableRowHeader">Hjemme</div>
         <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.netDay}
@@ -114,9 +114,9 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
         </div>
         <div className="energyTableRow">
           <TellulfInfoCell
-            info={this.props.producedPercent}
-            unit="%"
-            header="produsert %"
+            info={this.props.currentConsumption}
+            unit="W"
+            header="Forbruk nå"
             decimals={1}
             key="prodPercent"
           />
@@ -129,7 +129,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             unit="W"
           />
         </div>
-        <div className="energyTableRow">Hytta</div>
+        <div className="energyTableRow energyTableRowHeader">Hytta</div>
         <div className="energyTableRow">
           <TellulfInfoCell
             info={this.props.netDayHytta}
