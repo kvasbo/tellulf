@@ -1,13 +1,13 @@
-import React from 'react';
 import Moment from 'moment';
-import { Provider } from 'react-redux';
 import 'moment/locale/nb';
-import Tellulf from './Tellulf';
-import { GenericProps } from './types/generic';
+import React from 'react';
+import { Provider } from 'react-redux';
 import firebase from './firebase';
 import { store } from './redux/store';
-import tibberUpdater from './tibberUpdater';
 import solarUpdater from './solarUpdater';
+import Tellulf from './Tellulf';
+import tibberUpdater from './tibberUpdater';
+import { GenericProps } from './types/generic';
 
 Moment.locale('nb');
 
