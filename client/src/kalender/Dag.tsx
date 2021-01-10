@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import maxBy from 'lodash/maxBy';
 import Moment from 'moment';
 import Preggo from 'pregnancy';
+import React from 'react';
+import { connect } from 'react-redux';
 import store from 'store';
-import maxBy from 'lodash/maxBy';
 import { AppStore } from '../redux/reducers';
-import HendelseFullDag from './HendelseFullDag';
-import HendelseMedTid from './HendelseMedTid';
+import { Event, EventDataSet } from '../types/calendar';
+import { ForecastStore, HourForecast, WeatherDataSeries } from '../types/forecast';
 import WeatherGraph from '../weather/WeatherGraph';
 import { createForecastSummary, filterForecastData } from '../weather/weatherHelpers';
-import { Event, EventDataSet } from '../types/calendar';
+import HendelseFullDag from './HendelseFullDag';
+import HendelseMedTid from './HendelseMedTid';
 import './kalender.css';
-import { ForecastStore, WeatherDataSeries, HourForecast } from '../types/forecast';
 
 interface Props {
   dinner: EventDataSet;
@@ -161,8 +161,8 @@ class Dag extends React.PureComponent<Props, State> {
   private getPreggo(): string {
     const p = new Preggo(new Date('2020-07-17'));
     const d = p.getData(this.props.date.toDate());
-    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight.toPrecision(
-      3,
+    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight.toFixed(
+      0,
     )}g - ${d.height.toPrecision(3)} cm`;
   }
 
