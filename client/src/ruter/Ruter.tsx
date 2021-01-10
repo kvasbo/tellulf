@@ -1,10 +1,10 @@
+import Moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
-import Moment from 'moment';
-import { TrainDataSet, TrainData, ExtendedTrainData } from '../types/trains';
-import { GenericProps } from '../types/generic';
-
 import { fetchTrains } from '../redux/actions';
+import { GenericProps } from '../types/generic';
+import { ExtendedTrainData, TrainData, TrainDataSet } from '../types/trains';
+
 interface Props {
   trains: TrainDataSet;
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -41,10 +41,8 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
   private getTrainList() {
     let tog = [];
     const trains = Object.values(this.props.trains);
-    for (let i = trains.length - 1; i > -1; i -= 1) {
-      const t = parseTrain(trains[i]);
-      tog.push(t);
-    }
+
+    tog = trains.map((t) => parseTrain(t));
 
     tog = tog
       .sort((a, b) => {
@@ -52,9 +50,8 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       })
       .slice(0, 5);
 
-    const out = [];
-    for (let i = 0; i < tog.length; i += 1) {
-      const fontSize = i === 0 ? 18 : 14;
+    const out: any[] = [];
+    tog.forEach((t) => {
       out.push(
         <div
           style={{
@@ -62,16 +59,16 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginBottom: 10,
-            fontSize,
+            fontSize: 16,
           }}
-          key={tog[i].id}
+          key={t.id}
         >
-          <div style={{ flex: 1 }}>{tog[i].fromNowM}m</div>
-          <div style={{ flex: 1 }}>{tog[i].faktiskTid.format('HH:mm')}</div>
-          <div style={{ flex: 2.2 }}>{tog[i].skalTil}</div>
+          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.fromNowM}m</div>
+          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.faktiskTid.format('HH:mm')}</div>
+          <div style={{ flex: 2.2, paddingLeft: '0.5em' }}>{t.skalTil}</div>
         </div>,
       );
-    }
+    });
     return out;
   }
 

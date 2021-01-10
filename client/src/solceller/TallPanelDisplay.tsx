@@ -93,7 +93,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             info={this.props.netDay}
             unit="kr"
             header="netto dag"
-            decimals={2}
+            decimals={0}
             unitSpace
             key="netDay"
           />
@@ -102,7 +102,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             unit="kWh"
             header="forbruk i dag"
             key="paidDay"
-            decimals={1}
+            decimals={0}
           />
           <TellulfInfoCell
             info={this.props.accumulatedProduction}
@@ -127,6 +127,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             key="maxBruk"
             smartRoundKw
             unit="W"
+            decimals={2}
           />
         </div>
         <div className="energyTableRow energyTableRowHeader">Hytta</div>
@@ -135,14 +136,14 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             info={this.props.netDayHytta}
             unit="kr"
             header="netto dag"
-            decimals={1}
+            decimals={0}
             key="cabinMoney"
           />
           <TellulfInfoCell
             info={this.props.accumulatedConsumptionHytta}
             unit="kWh"
             header="forbruk i dag"
-            decimals={1}
+            decimals={0}
             key="cabinUsed"
           />
           <TellulfInfoCell
@@ -166,7 +167,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             info={this.props.consumptionMaximumHytta}
             unit="W"
             header="max bruk"
-            decimals={1}
+            decimals={2}
             smartRoundKw
             key="cabinMaxUse"
           />
