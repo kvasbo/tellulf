@@ -50,6 +50,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       })
       .slice(0, 5);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const out: any[] = [];
     tog.forEach((t) => {
       out.push(
