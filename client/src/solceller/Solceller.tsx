@@ -122,6 +122,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             realtimePower={this.props.realtimePowerHjemme}
             realtimePowerHytta={this.props.realtimePowerHytta}
             currentNetConsumption={currentNetConsumption}
+            powerPrices={this.props.powerPrices}
           />
         </div>
       </div>

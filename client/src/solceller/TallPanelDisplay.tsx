@@ -35,6 +35,7 @@ interface Props {
   localProductionMaxMonth: number;
   localProductionMaxYear: number;
   localProductionMaxTotal: number;
+  costPerKwh: number;
 }
 
 class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
@@ -60,6 +61,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
     localProductionMaxMonth: 0,
     localProductionMaxYear: 0,
     localProductionMaxTotal: 0,
+    costPerKwh: 0,
   };
 
   // Return either minimum usage or maximum production (one of them is zero!)
@@ -105,11 +107,12 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             decimals={0}
           />
           <TellulfInfoCell
-            info={this.props.accumulatedProduction}
-            unit="kWh"
-            header="solgt i dag"
-            key="soldDay"
-            decimals={1}
+            info={this.props.costPerKwh}
+            unit="kr"
+            header="Strømpris nå"
+            key="priceNow"
+            decimals={2}
+            unitSpace
           />
         </div>
         <div className="energyTableRow">

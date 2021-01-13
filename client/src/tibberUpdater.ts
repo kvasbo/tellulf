@@ -88,6 +88,7 @@ export default class TibberUpdater {
           const h = Moment(p.startsAt).hours();
           powerPrices[h] = { total: p.total + nettleie };
         });
+
         this.store.dispatch(updatePowerPrices(powerPrices));
         this.store.dispatch(updateInitStatus('powerPrices'));
       }

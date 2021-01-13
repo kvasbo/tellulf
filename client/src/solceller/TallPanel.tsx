@@ -1,14 +1,15 @@
 import React from 'react';
-import TallPanelDisplay from './TallPanelDisplay';
-import { SolarCurrent } from '../types/solar';
-import { TibberRealtimeState } from '../types/tibber';
 import { GenericProps } from '../types/generic';
+import { SolarCurrent } from '../types/solar';
+import { PowerPriceState, TibberRealtimeState } from '../types/tibber';
+import TallPanelDisplay from './TallPanelDisplay';
 
 interface Props {
   realtimePower: TibberRealtimeState;
   realtimePowerHytta: TibberRealtimeState;
   currentSolarProduction: SolarCurrent;
   currentNetConsumption: number;
+  powerPrices: PowerPriceState;
   max: { maxDay: number; maxYear: number; maxMonth: number; maxEver: number };
 }
 
@@ -29,6 +30,10 @@ class TallPanel extends React.PureComponent<Props, GenericProps> {
       // eslint-disable-next-line no-console
       console.log(err);
     }
+
+    // Get current power price
+    const hour = new Date().getHours();
+    const powerPrice = this.props.powerPrices[hour] ? this.props.powerPrices[hour].total : 0;
 
     return (
       <TallPanelDisplay
@@ -63,6 +68,7 @@ class TallPanel extends React.PureComponent<Props, GenericProps> {
         accumulatedCostHytta={this.props.realtimePowerHytta.accumulatedCost}
         netDay={this.props.realtimePower.actualCost}
         netDayHytta={this.props.realtimePowerHytta.actualCost}
+        costPerKwh={powerPrice}
       />
     );
   }
