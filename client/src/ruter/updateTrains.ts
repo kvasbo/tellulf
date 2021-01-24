@@ -1,12 +1,6 @@
 import createEnturService from '@entur/sdk';
 import Moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 import { TrainData, TrainDataSet } from '../types/trains';
-
-// Create link with unique requestor ID
-const fetchId = uuidv4();
-const ENTUR_URL = `https://api.entur.io/realtime/v1/rest/et?datasetId=RUT&requestorId=${fetchId}`;
-const THE_STOP = 'NSR:Quay:11460';
 
 // const VINDEREN = 'NSR:StopPlace:58270';
 const VINDEREN_T = 'NSR:StopPlace:6245';
@@ -57,11 +51,8 @@ export default async function getTrains(): Promise<TrainDataSet> {
       });
     });
 
-    const filteredData = [];
-
     return trains;
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.log(err);
   }
   return trains;
