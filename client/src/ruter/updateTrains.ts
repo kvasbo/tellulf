@@ -4,7 +4,7 @@ import { TrainData, TrainDataSet } from '../types/trains';
 
 const VINDEREN_BANE = 'NSR:StopPlace:6245';
 const VINDEREN_BUSS = 'NSR:StopPlace:6248'; // Slemdal
-const BANE_SPOR = '2';
+const BANE_SPOR = '1';
 const BUSS_DESTINASJON = 'Majorstuen';
 
 // const SLEMDAL_BUSS = 'NSR:StopPlace:6273';
