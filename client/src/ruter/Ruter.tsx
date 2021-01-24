@@ -61,24 +61,16 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       }
 
       out.push(
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-            fontSize: 16,
-          }}
-          key={t.id}
-        >
-          <div style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
+        <tr key={t.id}>
+          <td style={{}}>{t.fromNowM} m</td>
+          <td style={{ textAlign: 'left' }}>
             <img src={pic} style={{ color: '#fff', height: '1em', width: '1em' }} />
-          </div>
-          <div style={{ flex: 0.5, textAlign: 'center' }}>{t.linje}</div>
-          <div style={{ flex: 0.6 }}>{t.fromNowM}m</div>
-          <div style={{ flex: 1 }}>{t.faktiskTid.format('HH:mm')}</div>
-          <div style={{ flex: 2 }}>{t.skalTil}</div>
-        </div>,
+            &nbsp;{t.linje}
+          </td>
+
+          <td style={{}}>{t.faktiskTid.format('HH:mm')}</td>
+          <td style={{}}>{t.skalTil}</td>
+        </tr>,
       );
     });
     return out;
@@ -91,11 +83,12 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           display: 'flex',
           padding: '0.5vh',
           flexDirection: 'column',
+          height: '100%',
           flex: 1,
           justifyContent: 'flex-end',
         }}
       >
-        {this.getTrainList()}
+        <table style={{ height: '100%' }}>{this.getTrainList()}</table>
       </div>
     );
   }

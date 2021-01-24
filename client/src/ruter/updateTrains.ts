@@ -14,9 +14,7 @@ const BUSS_DESTINASJON = 'Majorstuen';
 export default async function getTrains(): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
   try {
-    // New
     const entur = createEnturService({ clientName: 'kvasbo-infoskjerm' });
-
     const trips = await entur.getDeparturesFromStopPlaces([VINDEREN_BANE, VINDEREN_BUSS]);
 
     trips?.forEach((t) => {
@@ -37,6 +35,7 @@ export default async function getTrains(): Promise<TrainDataSet> {
           };
           trains[out.id] = out;
         } else if (d.forBoarding && d.destinationDisplay.frontText === BUSS_DESTINASJON) {
+          // Buss
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
             faktiskTid: Moment(d.expectedArrivalTime),
