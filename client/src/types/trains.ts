@@ -7,6 +7,7 @@ export interface TrainData {
   id: string;
   linje: string;
   skalTil: string;
+  type: 'Buss' | 'Bane';
 }
 
 // With some more data...
@@ -19,37 +20,4 @@ export interface ExtendedTrainData extends TrainData {
 // A set of train data
 export interface TrainDataSet {
   [s: number]: TrainData;
-}
-
-export interface EnturApiData {
-  ServiceDelivery: {
-    EstimatedTimetableDelivery: {
-      EstimatedJourneyVersionFrame: {
-        EstimatedVehicleJourney: EnturTripData[];
-      };
-    };
-  };
-}
-
-export interface EnturTripData {
-  DirectionRef: string;
-  LineRef: string;
-  EstimatedCalls: {
-    EstimatedCall: EnturCallData[];
-  };
-  FramedVehicleJourneyRef: {
-    DataFrameRef: string;
-    DatedVehicleJourneyRef: string;
-  };
-}
-
-export interface EnturCallData {
-  DepartureStatus: string;
-  StopPointRef: string;
-  StopPointName: string;
-  AimedDepartureTime: string;
-  AimedArrivalTime: string;
-  DestinationDisplay: string;
-  ExpectedDepartureTime: string;
-  ExpectedArrivalTime: string;
 }
