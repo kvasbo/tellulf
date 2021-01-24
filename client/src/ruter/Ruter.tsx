@@ -64,6 +64,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           }}
           key={t.id}
         >
+          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.linje}</div>
           <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.fromNowM}m</div>
           <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.faktiskTid.format('HH:mm')}</div>
           <div style={{ flex: 2.2, paddingLeft: '0.5em' }}>{t.skalTil}</div>

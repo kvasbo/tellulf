@@ -12,7 +12,7 @@ const THE_STOP = 'NSR:Quay:11460';
 const VINDEREN_T = 'NSR:StopPlace:6245';
 const VINDEREN_B = 'NSR:StopPlace:6248';
 const VINDEREN_T_SPOR = '2';
-const VINDEREN_B_SPOR = '2';
+const VINDEREN_B_DESTINATION = 'Majorstuen';
 
 // const SLEMDAL_BUS = 'NSR:StopPlace:58270';
 // const SLEMDAL_BANE = 'NSR:StopPlace:58270';
@@ -30,21 +30,29 @@ export default async function getTrains(): Promise<TrainDataSet> {
       t?.departures.forEach((d) => {
         // Bane
         if (
+          d.forBoarding &&
           d.quay?.stopPlace.id === VINDEREN_T &&
-          d.quay?.publicCode === VINDEREN_B_SPOR &&
-          d.forBoarding
+          d.quay?.publicCode === VINDEREN_T_SPOR
         ) {
-          console.log(d);
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
             faktiskTid: Moment(d.expectedArrivalTime),
             id: d.serviceJourney.id,
             linje: '1',
             skalTil: d.destinationDisplay.frontText,
+            type: 'Bane',
           };
           trains[out.id] = out;
-        } else if (true) {
-          // console.log(d);
+        } else if (d.forBoarding && d.destinationDisplay.frontText === VINDEREN_B_DESTINATION) {
+          const out: TrainData = {
+            ruteTid: Moment(d.aimedArrivalTime),
+            faktiskTid: Moment(d.expectedArrivalTime),
+            id: d.serviceJourney.id,
+            linje: '46',
+            skalTil: d.destinationDisplay.frontText,
+            type: 'Buss',
+          };
+          trains[out.id] = out;
         }
       });
     });
