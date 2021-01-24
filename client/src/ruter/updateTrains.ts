@@ -2,14 +2,13 @@ import createEnturService from '@entur/sdk';
 import Moment from 'moment';
 import { TrainData, TrainDataSet } from '../types/trains';
 
-// const VINDEREN = 'NSR:StopPlace:58270';
-const VINDEREN_T = 'NSR:StopPlace:6245';
-const VINDEREN_B = 'NSR:StopPlace:6248';
-const VINDEREN_T_SPOR = '2';
-const VINDEREN_B_DESTINATION = 'Majorstuen';
+const VINDEREN_BANE = 'NSR:StopPlace:6245';
+const VINDEREN_BUSS = 'NSR:StopPlace:6248'; // Slemdal
+const BANE_SPOR = '2';
+const BUSS_DESTINASJON = 'Majorstuen';
 
-// const SLEMDAL_BUS = 'NSR:StopPlace:58270';
-// const SLEMDAL_BANE = 'NSR:StopPlace:58270';
+// const SLEMDAL_BUSS = 'NSR:StopPlace:6273';
+// const SLEMDAL_BANE = 'NSR:StopPlace:6284';
 
 // Fetch Entur API data
 export default async function getTrains(): Promise<TrainDataSet> {
@@ -18,15 +17,15 @@ export default async function getTrains(): Promise<TrainDataSet> {
     // New
     const entur = createEnturService({ clientName: 'kvasbo-infoskjerm' });
 
-    const trips = await entur.getDeparturesFromStopPlaces([VINDEREN_T, VINDEREN_B]);
+    const trips = await entur.getDeparturesFromStopPlaces([VINDEREN_BANE, VINDEREN_BUSS]);
 
     trips?.forEach((t) => {
       t?.departures.forEach((d) => {
         // Bane
         if (
           d.forBoarding &&
-          d.quay?.stopPlace.id === VINDEREN_T &&
-          d.quay?.publicCode === VINDEREN_T_SPOR
+          d.quay?.stopPlace.id === VINDEREN_BANE &&
+          d.quay?.publicCode === BANE_SPOR
         ) {
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
@@ -37,7 +36,7 @@ export default async function getTrains(): Promise<TrainDataSet> {
             type: 'Bane',
           };
           trains[out.id] = out;
-        } else if (d.forBoarding && d.destinationDisplay.frontText === VINDEREN_B_DESTINATION) {
+        } else if (d.forBoarding && d.destinationDisplay.frontText === BUSS_DESTINASJON) {
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
             faktiskTid: Moment(d.expectedArrivalTime),

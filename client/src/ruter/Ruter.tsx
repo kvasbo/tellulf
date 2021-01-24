@@ -48,11 +48,18 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       .sort((a, b) => {
         return a.fromNow - b.fromNow;
       })
-      .slice(0, 5);
+      .slice(0, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const out: any[] = [];
     tog.forEach((t) => {
+      let pic = '';
+      if (t.type === 'Bane') {
+        pic = 'subway-outline.svg';
+      } else if (t.type === 'Buss') {
+        pic = 'bus-outline.svg';
+      }
+
       out.push(
         <div
           style={{
@@ -64,10 +71,13 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           }}
           key={t.id}
         >
-          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.linje}</div>
-          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.fromNowM}m</div>
-          <div style={{ flex: 1, paddingLeft: '0.5em' }}>{t.faktiskTid.format('HH:mm')}</div>
-          <div style={{ flex: 2.2, paddingLeft: '0.5em' }}>{t.skalTil}</div>
+          <div style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
+            <img src={pic} style={{ color: '#fff', height: '1em', width: '1em' }} />
+          </div>
+          <div style={{ flex: 0.5, textAlign: 'center' }}>{t.linje}</div>
+          <div style={{ flex: 0.6 }}>{t.fromNowM}m</div>
+          <div style={{ flex: 1 }}>{t.faktiskTid.format('HH:mm')}</div>
+          <div style={{ flex: 2 }}>{t.skalTil}</div>
         </div>,
       );
     });
