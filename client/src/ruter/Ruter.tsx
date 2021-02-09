@@ -38,7 +38,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
     this.props.dispatch(fetchTrains());
   }
 
-  private getTrainList() {
+  private getTrainList(): JSX.Element[] {
     let tog = [];
     const trains = Object.values(this.props.trains);
 
@@ -50,8 +50,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       })
       .slice(0, 10);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const out: any[] = [];
+    const out: JSX.Element[] = [];
     tog.forEach((t) => {
       let pic = '';
       if (t.type === 'Bane') {
@@ -62,14 +61,14 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
 
       out.push(
         <tr key={t.id}>
-          <td style={{}}>{t.fromNowM} m</td>
+          <td>{t.fromNowM} m</td>
           <td style={{ textAlign: 'left' }}>
             <img src={pic} style={{ color: '#fff', height: '1em', width: '1em' }} />
             &nbsp;{t.linje}
           </td>
 
-          <td style={{}}>{t.faktiskTid.format('HH:mm')}</td>
-          <td style={{}}>{t.skalTil}</td>
+          <td>{t.faktiskTid.format('HH:mm')}</td>
+          <td>{t.skalTil}</td>
         </tr>,
       );
     });
@@ -84,6 +83,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           padding: '0.5vh',
           flexDirection: 'column',
           height: '100%',
+          fontSize: '0.8em',
           flex: 1,
           justifyContent: 'flex-end',
         }}

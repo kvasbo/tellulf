@@ -2,27 +2,25 @@ import createEnturService from '@entur/sdk';
 import Moment from 'moment';
 import { TrainData, TrainDataSet } from '../types/trains';
 
-const VINDEREN_BANE = 'NSR:StopPlace:6245';
-const VINDEREN_BUSS = 'NSR:StopPlace:6248'; // Slemdal
 const BANE_SPOR = '1';
 const BUSS_DESTINASJON = 'Majorstuen';
 
-// const SLEMDAL_BUSS = 'NSR:StopPlace:6273';
-// const SLEMDAL_BANE = 'NSR:StopPlace:6284';
+const SLEMDAL_BUSS = 'NSR:StopPlace:6284';
+const SLEMDAL_BANE = 'NSR:StopPlace:6273';
 
 // Fetch Entur API data
 export default async function getTrains(): Promise<TrainDataSet> {
   const trains: TrainDataSet = {};
   try {
     const entur = createEnturService({ clientName: 'kvasbo-infoskjerm' });
-    const trips = await entur.getDeparturesFromStopPlaces([VINDEREN_BANE, VINDEREN_BUSS]);
+    const trips = await entur.getDeparturesFromStopPlaces([SLEMDAL_BUSS, SLEMDAL_BANE]);
 
     trips?.forEach((t) => {
       t?.departures.forEach((d) => {
         // Bane
         if (
           d.forBoarding &&
-          d.quay?.stopPlace.id === VINDEREN_BANE &&
+          d.quay?.stopPlace.id === SLEMDAL_BANE &&
           d.quay?.publicCode === BANE_SPOR
         ) {
           const out: TrainData = {
