@@ -88,7 +88,9 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           justifyContent: 'flex-end',
         }}
       >
-        <table style={{ height: '100%' }}>{this.getTrainList()}</table>
+        <table style={{ height: '100%' }}>
+          <tbody>{this.getTrainList()}</tbody>
+        </table>
       </div>
     );
   }

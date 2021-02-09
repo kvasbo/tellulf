@@ -22,12 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const firebase = __importStar(require("firebase/app"));
-const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
+const express_1 = __importDefault(require("express"));
+const firebase = __importStar(require("firebase/app"));
 const netatmo_1 = __importDefault(require("./netatmo"));
 const tibber_1 = __importDefault(require("./tibber"));
-const solAnal_1 = __importDefault(require("./solAnal"));
 require('firebase/auth');
 require('firebase/database');
 const firebaseConfig = {
@@ -63,7 +62,7 @@ app.get('/proxy', async (req, res) => {
     });
 });
 const fb = firebase.initializeApp(firebaseConfig);
-new solAnal_1.default(fb);
+4;
 function init() {
     if (!process.env.FIREBASE_USER)
         throw Error('FIREBASE_USER not set');

@@ -1,9 +1,8 @@
-import * as firebase from 'firebase/app';
-import express from 'express';
 import axios from 'axios';
+import express from 'express';
+import * as firebase from 'firebase/app';
 import Netatmo, { NetatmoConfig } from './netatmo';
 import Tibber from './tibber';
-import SolAnal from './solAnal';
 
 require('firebase/auth');
 require('firebase/database');
@@ -20,6 +19,7 @@ const firebaseConfig = {
 // Set up static web server and proxy
 const app = express();
 const port = process.env.HTTP_PORT;
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -30,10 +30,13 @@ app.use(express.static('../client/build'));
 app.listen(port, () => {
   console.log(`Serving static files at ${port}`);
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.get('/proxy', async (req: any, res) => {
   console.log('Get', req.query.url);
   axios
     .get(req.query.url)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .then((data: any) => {
       res.send(data.data);
       return;
@@ -45,8 +48,7 @@ app.get('/proxy', async (req: any, res) => {
 
 const fb = firebase.initializeApp(firebaseConfig);
 
-// Smarthouse
-new SolAnal(fb);
+4;
 
 function init() {
   if (!process.env.FIREBASE_USER) throw Error('FIREBASE_USER not set');

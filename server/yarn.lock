@@ -1856,7 +1856,7 @@ netatmo@^2.3.0:
     moment "^2.22.2"
     request "^2.85.0"
 
-node-fetch@2.6.1, node-fetch@^2.3.0, node-fetch@^2.6.0:
+node-fetch@2.6.1, node-fetch@^2.3.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
@@ -2197,14 +2197,6 @@ sshpk@^1.7.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
-
-stecagridscrape@^1.2.4:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/stecagridscrape/-/stecagridscrape-1.2.5.tgz#e03005b3043b6e3c6844bfb8fe2894c644bc8e01"
-  integrity sha512-O8B4h1Id616YOiyLsTH3qVwnbwEtrpNmWdr/iYFh2aIKuCcVcECQ7cvqaLspXb30HTvRrvuTChnSJs2LWTnPkg==
-  dependencies:
-    moment "^2.24.0"
-    node-fetch "^2.6.0"
 
 string-width@^3.0.0:
   version "3.1.0"
