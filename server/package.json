@@ -17,7 +17,7 @@
     "@firebase/app-types": "^0.6.0",
     "@firebase/util": "^0.3.1",
     "@types/express": "^4.17.8",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "firebase": "^7.6.0",
     "lodash": "^4.17.19",
