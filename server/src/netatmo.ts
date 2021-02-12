@@ -232,7 +232,7 @@ class Netatmo {
         );
       });
     } catch (err) {
-      console.log(err.message);
+      console.log(`Netatmo error: ${err.message}`);
     }
   }
 }
