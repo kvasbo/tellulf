@@ -1,9 +1,9 @@
-import React from 'react';
 import Moment from 'moment';
-import Dag from './Dag';
-
-import { getIcal } from './kalenderHelpers';
+import React from 'react';
 import { IcalParseResult } from '../types/calendar';
+import Dag from './Dag';
+import { getIcal } from './kalenderHelpers';
+
 
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
