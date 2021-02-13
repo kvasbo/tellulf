@@ -14,6 +14,8 @@ jobs:
           node-version: 10.x
       - name: Install Client Dependencies
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
+      - name: Install Functions Dependencies
+        run: yarn --cwd "functions" install --non-interactive --pure-lockfile
       - name: Lint Client
         run: yarn --cwd "client" run lint
       - name: Build Client
