@@ -22,7 +22,6 @@
     "firebase": "^7.6.0",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
-    "netatmo": "^2.3.0",
     "tibber-pulse-connector": "^3.0.1",
     "ws": "^7.2.1"
   },

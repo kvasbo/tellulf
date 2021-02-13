@@ -1,7 +1,6 @@
 import axios from 'axios';
 import express from 'express';
 import * as firebase from 'firebase/app';
-import Netatmo, { NetatmoConfig } from './netatmo';
 import Tibber from './tibber';
 
 require('firebase/auth');
@@ -64,27 +63,6 @@ function init() {
 }
 
 function start() {
-  // eslint-disable-next-line no-console
-  console.log('Starting.');
-  if (
-    !process.env.NETATMO_USERNAME ||
-    !process.env.NETATMO_PASSWORD ||
-    !process.env.NETATMO_CLIENT_ID ||
-    !process.env.NETATMO_CLIENT_SECRET
-  ) {
-    // eslint-disable-next-line no-console
-    console.log('Netatmo config incomplete, quitting');
-    return;
-  }
-  const netatmoConfig: NetatmoConfig = {
-    username: process.env.NETATMO_USERNAME,
-    password: process.env.NETATMO_PASSWORD,
-    client_id: process.env.NETATMO_CLIENT_ID,
-    client_secret: process.env.NETATMO_CLIENT_SECRET,
-  };
-  const myNetatmo = new Netatmo(netatmoConfig, fb);
-  myNetatmo.start(5);
-
   const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
   const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
   const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';

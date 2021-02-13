@@ -25,7 +25,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
 const firebase = __importStar(require("firebase/app"));
-const netatmo_1 = __importDefault(require("./netatmo"));
 const tibber_1 = __importDefault(require("./tibber"));
 require('firebase/auth');
 require('firebase/database');
@@ -76,22 +75,6 @@ function init() {
     });
 }
 function start() {
-    console.log('Starting.');
-    if (!process.env.NETATMO_USERNAME ||
-        !process.env.NETATMO_PASSWORD ||
-        !process.env.NETATMO_CLIENT_ID ||
-        !process.env.NETATMO_CLIENT_SECRET) {
-        console.log('Netatmo config incomplete, quitting');
-        return;
-    }
-    const netatmoConfig = {
-        username: process.env.NETATMO_USERNAME,
-        password: process.env.NETATMO_PASSWORD,
-        client_id: process.env.NETATMO_CLIENT_ID,
-        client_secret: process.env.NETATMO_CLIENT_SECRET,
-    };
-    const myNetatmo = new netatmo_1.default(netatmoConfig, fb);
-    myNetatmo.start(5);
     const tibberKey = process.env.TIBBER_KEY ? process.env.TIBBER_KEY : 'nokey';
     const tibberHome = process.env.TIBBER_HOME ? process.env.TIBBER_HOME : 'nokey';
     const tibberCabin = process.env.TIBBER_CABIN ? process.env.TIBBER_CABIN : 'nokey';
