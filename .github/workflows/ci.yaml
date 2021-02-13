@@ -3,7 +3,7 @@ on: push
 
 jobs:
   client-build:
-    name: Client, Lint and Build
+    name: Do the needful
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
