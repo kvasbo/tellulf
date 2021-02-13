@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { NowcastStore } from '../types/forecast';
 import { UPDATE_NOWCAST } from './actions';
 
 interface KnownAction {
@@ -6,12 +7,13 @@ interface KnownAction {
   temp?: number;
 }
 
-export default function Nowcast(state = -999, incomingAction: Action): number {
+export default function Nowcast(state = { temp: -999 }, incomingAction: Action): NowcastStore {
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_NOWCAST: {
-      console.log('Got nowcast!');
-      return action.temp ? action.temp : -999;
+      console.log('Got nowcast!' + action.temp);
+      const temp = action.temp ? action.temp : -999;
+      return { temp };
     }
     default:
       return state;

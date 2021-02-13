@@ -5,10 +5,14 @@ import store from 'store';
 import firebase from './firebase';
 import Kalender from './kalender/Kalender';
 import Klokke from './Klokke';
-import { fetchForecast, updateNetatmo, updateNetatmoAverages } from './redux/actions';
+import {
+    fetchForecast,
+    updateNetatmo,
+    updateNetatmoAverages,
+    updateNowcast
+} from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
 import { NetatmoAverageData } from './redux/NetatmoAverages';
-import { fetchForecast, updateNowcast } from './redux/actions';
 import { AppStore } from './redux/reducers';
 import Ruter from './ruter/Ruter';
 import Settings from './Settings';
