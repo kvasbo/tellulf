@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import axios from 'axios';
 import Moment from 'moment';
+import Tibber from 'tibber-pulse-connector';
 import firebase from './firebase';
 import {
     updateInitStatus,
@@ -142,38 +143,45 @@ export default class TibberUpdater {
     }
   }
 
-  // Create and start websocket connection
   public async subscribeToRealTime(id: string, name: houses): Promise<void> {
-    firebase
-      .database()
-      .ref(`tibber/realtime/${id}`)
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
-        try {
-          if (snapshot === null) return;
-          const tmp = snapshot.val();
-          const data: TibberRealtimeData = {
-            accumulatedConsumption: tmp.accumulatedConsumption,
-            accumulatedCost: tmp.accumulatedCost,
-            accumulatedProduction: tmp.accumulatedProduction,
-            accumulatedReward: tmp.accumulatedReward,
-            averagePower: tmp.averagePower,
-            currency: tmp.currency,
-            lastMeterConsumption: tmp.lastMeterConsumption,
-            lastMeterProduction: tmp.lastMeterProduction,
-            maxPower: tmp.maxPower,
-            maxPowerProduction: tmp.maxPowerProduction,
-            minPower: tmp.minPower,
-            minPowerProduction: tmp.minPowerProduction,
-            power: tmp.power,
-            powerProduction: tmp.powerProduction,
-            timestamp: tmp.timestamp,
-          };
-          this.store.dispatch(updateRealtimeConsumption(data, name));
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.log(err);
+    const tibberSettings = await this.getTibberSettings();
+    const token = tibberSettings.tibberApiKey;
+    const homeId = [tibberSettings.tibberHomeKey, tibberSettings.tibberCabinKey];
+    const connector = new Tibber({
+      token,
+      homeId,
+      onData: (data: { data: { liveMeasurement: TibberRealtimeData } }, homeId: any) => {
+        let where: houses;
+        if (homeId === tibberSettings.tibberHomeKey) {
+          where = 'hjemme';
+        } else if (homeId === tibberSettings.tibberCabinKey) {
+          where = 'hytta';
+        } else {
+          return;
         }
-      });
+        // Here we have data, so we can proceed!
+        const tmp = data.data.liveMeasurement;
+        const out: TibberRealtimeData = {
+          accumulatedConsumption: tmp.accumulatedConsumption,
+          accumulatedCost: tmp.accumulatedCost,
+          accumulatedProduction: tmp.accumulatedProduction,
+          accumulatedReward: tmp.accumulatedReward,
+          averagePower: tmp.averagePower,
+          currency: tmp.currency,
+          lastMeterConsumption: tmp.lastMeterConsumption,
+          lastMeterProduction: tmp.lastMeterProduction,
+          maxPower: tmp.maxPower,
+          maxPowerProduction: tmp.maxPowerProduction,
+          minPower: tmp.minPower,
+          minPowerProduction: tmp.minPowerProduction,
+          power: tmp.power,
+          powerProduction: tmp.powerProduction,
+          timestamp: tmp.timestamp,
+        };
+        this.store.dispatch(updateRealtimeConsumption(out, where));
+      },
+    });
+    connector.start();
   }
 
   public async updateConsumptionDaily(): Promise<void> {
@@ -252,72 +260,6 @@ export default class TibberUpdater {
         this.store.dispatch(updateTibberConsumptionMonth(outConsumption));
         this.store.dispatch(updateTibberProductionMonth(outProduction));
         // console.log(outConsumption, outProduction);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  public async updateConsumptionMonthlyAndCalculateBills(): Promise<void> {
-    const settings = await this.getTibberSettings();
-    const queryUsage = `
-    {
-      viewer {
-        homes {
-          id
-          appNickname
-          consumption(resolution: MONTHLY, last: 3) {
-            nodes {
-              from
-              to
-              totalCost
-              unitCost
-              unitPrice
-              unitPriceVAT
-              consumption
-              consumptionUnit
-            }
-          }
-        }
-      }
-    }
-`;
-
-    try {
-      const data = await axios({
-        url: 'https://api.tibber.com/v1-beta/gql',
-        method: 'post',
-        headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
-        },
-        data: {
-          query: queryUsage,
-        },
-      });
-      if (data.status === 200) {
-        const usage = data.data.data.viewer.homes;
-        usage.forEach((u: { appNickname: string; consumption: { nodes: [] } }) => {
-          console.group(u.appNickname);
-          console.info('OBS: Mangler produksjonsdata!');
-          u.consumption.nodes.forEach(
-            (n: { from: string; to: string; totalCost: number; consumption: number }) => {
-              const from = Moment(n.from).format('MMMM');
-              const tibberPrice = n.totalCost; //.toFixed(2).toLocaleString();
-              const netPrice =
-                n.consumption * netPriceSettings[u.appNickname].kwh +
-                netPriceSettings[u.appNickname].fast; //.toFixed(2).toLocaleString();
-              const totalPrice = tibberPrice + netPrice;
-              console.group(`${from}: `);
-              console.log(`Strøm: ${tibberPrice.toFixed(2).toLocaleString()}`);
-              console.log(`Nett: ${netPrice.toFixed(2).toLocaleString()}`);
-              console.log(`Totalt: ${totalPrice.toFixed(2).toLocaleString()}`);
-
-              console.groupEnd();
-            },
-          );
-          // console.log(u);
-          console.groupEnd();
-        });
       }
     } catch (err) {
       console.log(err);
