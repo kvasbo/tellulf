@@ -8,6 +8,7 @@ import Klokke from './Klokke';
 import { fetchForecast, updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
 import { NetatmoAverageData } from './redux/NetatmoAverages';
+import { fetchForecast, updateNowcast } from './redux/actions';
 import { AppStore } from './redux/reducers';
 import Ruter from './ruter/Ruter';
 import Settings from './Settings';
@@ -79,14 +80,21 @@ class Tellulf extends React.PureComponent<Props, State> {
     });
   }
 
-  private updateWeather() {
+  private async updateWeather() {
     try {
       // New
       this.props.dispatch(fetchForecast(steder.oslo.lat, steder.oslo.long, 'oslo'));
       this.props.dispatch(
         fetchForecast(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
       );
-      getNowCast();
+
+      // Hack: Get current temp
+      const nowCast = await getNowCast(steder.oslo.lat, steder.oslo.long);
+      if (nowCast.temp) {
+        this.props.dispatch(updateNowcast(nowCast.temp));
+      }
+
+      console.log(nowCast);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
@@ -141,8 +149,8 @@ class Tellulf extends React.PureComponent<Props, State> {
 function mapStateToProps(state: AppStore) {
   return {
     trains: state.Trains,
-    temperature: state.NetatmoAverages.temperature,
     netatmo: state.NetatmoAverages,
+    temperature: state.Nowcast.temp,
   };
 }
 

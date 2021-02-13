@@ -9,8 +9,8 @@ interface Props {
 class Rute extends React.PureComponent<Props, GenericProps> {
   public render() {
     // eslint-disable-next-line no-console
-    console.log(this.props.trains);
-    return <div>Test</div>;
+    // console.log(this.props.trains);
+    return null;
   }
 }
 

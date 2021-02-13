@@ -8,9 +8,6 @@ import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 export const localStorageKey = '12';
 const weatherSeriesKey = 'weatherSeries';
 
-const homeLat = '59.9508297';
-const homeLon = '10.6852376';
-
 // New: Create a time stamp
 function createTimeKey(d: Date): number {
   return Moment(d).add(30, 'minutes').startOf('hour').valueOf();
@@ -37,10 +34,15 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   return out;
 }
 
-export async function getNowCast() {
-  const url = `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${homeLat}&lon=${homeLon}`;
+export async function getNowCast(lat: number, lon: number): Promise<{ temp?: number }> {
+  const url = `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${lat}&lon=${lon}`;
   const nResponse = await axios.get(url);
-  console.log(nResponse);
+  if (nResponse.statusText === 'OK') {
+    const temp = nResponse.data.properties?.timeseries[0]?.data?.instant?.details?.air_temperature;
+    return { temp };
+  } else {
+    return {};
+  }
 }
 
 // New

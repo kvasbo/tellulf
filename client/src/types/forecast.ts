@@ -5,6 +5,10 @@ export interface ForecastStore {
   limits: WeatherLimits;
 }
 
+export interface NowcastStore {
+  temp: number;
+}
+
 export interface ForecastDataSet {
   [s: string]: Forecast;
 }

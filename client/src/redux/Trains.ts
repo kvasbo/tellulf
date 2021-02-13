@@ -1,8 +1,8 @@
-import Moment from 'moment';
 import omitBy from 'lodash/omitBy';
+import Moment from 'moment';
 import { Action } from 'redux';
-import { UPDATE_TRAINS } from './actions';
 import { TrainDataSet } from '../types/trains';
+import { UPDATE_TRAINS } from './actions';
 
 interface KnownAction {
   type: string;

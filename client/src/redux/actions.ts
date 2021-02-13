@@ -14,6 +14,7 @@ import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
 import { AppDispatch } from './store';
 
+export const UPDATE_NOWCAST = 'UPDATE_NOWCAST';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';
 export const NETATMO_UPDATE_AVERAGES = 'NETATMO_UPDATE_AVERAGES';
@@ -55,6 +56,13 @@ export function updateForecast(
     type: UPDATE_FORECAST,
     data,
     sted,
+  };
+}
+
+export function updateNowcast(temp: number): { type: 'UPDATE_NOWCAST'; temp: number } {
+  return {
+    type: UPDATE_NOWCAST,
+    temp,
   };
 }
 
