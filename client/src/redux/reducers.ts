@@ -5,8 +5,6 @@ import { SolarState } from '../types/solar';
 import { PowerPriceState, TibberRealTimeDataState, TibberUsageState } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
 import Forecast from './Forecast';
-import Netatmo, { NetatmoStore } from './Netatmo';
-import NetatmoAverages, { NetatmoAverageData } from './NetatmoAverages';
 import Init from './Init';
 import Nowcast from './Nowcast';
 import PowerPrices from './PowerPrices';
@@ -17,8 +15,6 @@ import Trains from './Trains';
 
 export interface AppStore {
   Init: InitState;
-  Netatmo: NetatmoStore;
-  NetatmoAverages: NetatmoAverageData;
   Nowcast: NowcastStore;
   Solar: SolarState;
   PowerPrices: PowerPriceState;
@@ -30,8 +26,6 @@ export interface AppStore {
 
 const tellulfReducer = combineReducers({
   Init,
-  Netatmo,
-  NetatmoAverages,
   Nowcast,
   Solar,
   PowerPrices,

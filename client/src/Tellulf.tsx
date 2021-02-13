@@ -2,17 +2,9 @@ import Moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
-import firebase from './firebase';
 import Kalender from './kalender/Kalender';
 import Klokke from './Klokke';
-import {
-    fetchForecast,
-    updateNetatmo,
-    updateNetatmoAverages,
-    updateNowcast
-} from './redux/actions';
-import { NetatmoStore } from './redux/Netatmo';
-import { NetatmoAverageData } from './redux/NetatmoAverages';
+import { fetchForecast, updateNowcast } from './redux/actions';
 import { AppStore } from './redux/reducers';
 import Ruter from './ruter/Ruter';
 import Settings from './Settings';
@@ -34,7 +26,6 @@ interface Props {
   loggedIn: boolean;
   trains: TrainDataSet;
   temperature: number;
-  netatmo: NetatmoAverageData;
   updaters: { tibber: TibberUpdater; solar: SolarUpdater };
 }
 
@@ -57,7 +48,6 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   public componentDidMount() {
     this.startReloadLoop();
-    this.attachNetatmoListener();
     this.updateWeather();
     this.width = window.innerWidth;
     this.interval = window.setInterval(() => this.updateWeather(), 60 * 1000 * 15);
@@ -65,23 +55,6 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   public componentWillUnmount() {
     window.clearInterval(this.interval);
-  }
-
-  private attachNetatmoListener() {
-    const dbRef = firebase.database().ref('netatmo/currentData');
-    dbRef.on('value', (snapshot) => {
-      if (snapshot) {
-        const data: NetatmoStore = snapshot.val() as NetatmoStore;
-        this.props.dispatch(updateNetatmo(data));
-      }
-    });
-    const dbRefAvg = firebase.database().ref('netatmo/areaData');
-    dbRefAvg.on('value', (snapshot) => {
-      if (snapshot) {
-        const data = snapshot.val();
-        this.props.dispatch(updateNetatmoAverages(data));
-      }
-    });
   }
 
   private async updateWeather() {
@@ -153,7 +126,6 @@ class Tellulf extends React.PureComponent<Props, State> {
 function mapStateToProps(state: AppStore) {
   return {
     trains: state.Trains,
-    netatmo: state.NetatmoAverages,
     temperature: state.Nowcast.temp,
   };
 }

@@ -10,14 +10,10 @@ import {
 } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
 import { getForecastFromYr } from '../weather/updateWeather';
-import { NetatmoStore } from './Netatmo';
-import { NetatmoAverageData } from './NetatmoAverages';
 import { AppDispatch } from './store';
 
 export const UPDATE_NOWCAST = 'UPDATE_NOWCAST';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
-export const NETATMO_UPDATE = 'NETATMO_UPDATE';
-export const NETATMO_UPDATE_AVERAGES = 'NETATMO_UPDATE_AVERAGES';
 export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
 export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
@@ -127,22 +123,6 @@ export function updateSolarCurrent(
 ): { type: 'UPDATE_SOLAR_CURRENT'; data: SolarCurrent } {
   return {
     type: UPDATE_SOLAR_CURRENT,
-    data,
-  };
-}
-
-export function updateNetatmo(data: NetatmoStore): { type: 'NETATMO_UPDATE'; data: NetatmoStore } {
-  return {
-    type: NETATMO_UPDATE,
-    data,
-  };
-}
-
-export function updateNetatmoAverages(
-  data: NetatmoAverageData,
-): { type: 'NETATMO_UPDATE_AVERAGES'; data: NetatmoAverageData } {
-  return {
-    type: NETATMO_UPDATE_AVERAGES,
     data,
   };
 }
