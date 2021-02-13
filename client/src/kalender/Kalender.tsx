@@ -4,7 +4,6 @@ import { IcalParseResult } from '../types/calendar';
 import Dag from './Dag';
 import { getIcal } from './kalenderHelpers';
 
-
 const proxy = 'https://us-central1-tellulf-151318.cloudfunctions.net/proxy';
 
 const calUrl =
@@ -43,7 +42,7 @@ class Kalender extends React.PureComponent<unknown, State> {
 
   public componentDidMount(): void {
     this.updateData();
-    this.interval = window.setInterval(() => this.updateData(), 1000 * 60);
+    this.interval = window.setInterval(() => this.updateData(), 1000 * 60 * 5);
   }
 
   public componentWillUnmount(): void {
