@@ -29,18 +29,3 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-
-  server-build:
-    name: Server, Lint and Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Out
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Install Server Dependencies
-        run: yarn --cwd "server" install --non-interactive --pure-lockfile
-      - name: Lint Server
-        run: CI=false yarn --cwd "server" run lint
