@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchTrains } from '../redux/actions';
 import { GenericProps } from '../types/generic';
 import { ExtendedTrainData, TrainData, TrainDataSet } from '../types/trains';
+import Rute from './Rute';
 
 interface Props {
   trains: TrainDataSet;
@@ -38,17 +39,20 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
     this.props.dispatch(fetchTrains());
   }
 
-  private getTrainList(): JSX.Element[] {
+  private getParsedTrains(limit = 9999999): ExtendedTrainData[] {
     let tog = [];
     const trains = Object.values(this.props.trains);
-
     tog = trains.map((t) => parseTrain(t));
-
     tog = tog
       .sort((a, b) => {
         return a.fromNow - b.fromNow;
       })
-      .slice(0, 10);
+      .slice(0, limit);
+    return tog;
+  }
+
+  private getTrainList(): JSX.Element[] {
+    const tog = this.getParsedTrains(10);
 
     const out: JSX.Element[] = [];
     tog.forEach((t) => {
@@ -88,6 +92,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           justifyContent: 'flex-end',
         }}
       >
+        <Rute trains={this.getParsedTrains(10000)} />
         <table style={{ height: '100%' }}>
           <tbody>{this.getTrainList()}</tbody>
         </table>

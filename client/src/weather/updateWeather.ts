@@ -1,12 +1,15 @@
 import axios from 'axios';
 import Moment from 'moment';
 import store from 'store';
-import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
+import { Forecast, HourForecast, WeatherDataSeries } from '../types/forecast';
 import { YrResponse, YrWeatherDataset } from '../types/yr';
-import { WeatherDataSeries, HourForecast, Forecast } from '../types/forecast';
+import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 
 export const localStorageKey = '12';
 const weatherSeriesKey = 'weatherSeries';
+
+const homeLat = '59.9508297';
+const homeLon = '10.6852376';
 
 // New: Create a time stamp
 function createTimeKey(d: Date): number {
@@ -32,6 +35,12 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
     out.symbol = d.data.next_6_hours.summary.symbol_code;
   }
   return out;
+}
+
+export async function getNowCast() {
+  const url = `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${homeLat}&lon=${homeLon}`;
+  const nResponse = await axios.get(url);
+  console.log(nResponse);
 }
 
 // New

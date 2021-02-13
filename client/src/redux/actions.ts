@@ -1,19 +1,18 @@
-import { getForecastFromYr } from '../weather/updateWeather';
 import getTrains from '../ruter/updateTrains';
-import { AppDispatch } from './store';
+import { Forecast } from '../types/forecast';
+import { SolarCurrent, SolarMaxData } from '../types/solar';
+import {
+    houses,
+    PowerPriceState,
+    TibberConsumptionNode,
+    TibberProductionNode,
+    TibberRealtimeData
+} from '../types/tibber';
+import { TrainDataSet } from '../types/trains';
+import { getForecastFromYr } from '../weather/updateWeather';
 import { NetatmoStore } from './Netatmo';
 import { NetatmoAverageData } from './NetatmoAverages';
-import { Forecast } from '../types/forecast';
-import { TrainDataSet } from '../types/trains';
-import { SolarCurrent, SolarMaxData } from '../types/solar';
-
-import {
-  PowerPriceState,
-  TibberRealtimeData,
-  TibberConsumptionNode,
-  TibberProductionNode,
-  houses,
-} from '../types/tibber';
+import { AppDispatch } from './store';
 
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
 export const NETATMO_UPDATE = 'NETATMO_UPDATE';

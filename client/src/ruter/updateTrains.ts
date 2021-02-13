@@ -2,11 +2,10 @@ import createEnturService from '@entur/sdk';
 import Moment from 'moment';
 import { TrainData, TrainDataSet } from '../types/trains';
 
-const BANE_SPOR = '1';
-const BUSS_DESTINASJON = 'Majorstuen';
-
 const SLEMDAL_BUSS = 'NSR:StopPlace:6284';
 const SLEMDAL_BANE = 'NSR:StopPlace:6273';
+const BUSS_QUAY = 'NSR:Quay:11541';
+const BANE_QUAY = 'NSR:Quay:11518';
 
 // Fetch Entur API data
 export default async function getTrains(): Promise<TrainDataSet> {
@@ -18,11 +17,7 @@ export default async function getTrains(): Promise<TrainDataSet> {
     trips?.forEach((t) => {
       t?.departures.forEach((d) => {
         // Bane
-        if (
-          d.forBoarding &&
-          d.quay?.stopPlace.id === SLEMDAL_BANE &&
-          d.quay?.publicCode === BANE_SPOR
-        ) {
+        if (d.forBoarding && d.quay?.stopPlace.id === SLEMDAL_BANE && d.quay?.id === BANE_QUAY) {
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
             faktiskTid: Moment(d.expectedArrivalTime),
@@ -32,8 +27,14 @@ export default async function getTrains(): Promise<TrainDataSet> {
             type: 'Bane',
           };
           trains[out.id] = out;
-        } else if (d.forBoarding && d.destinationDisplay.frontText === BUSS_DESTINASJON) {
+        } else if (
+          d.forBoarding &&
+          d.quay?.stopPlace.id === SLEMDAL_BUSS &&
+          d.quay?.id === BUSS_QUAY
+        ) {
+          //&& d.destinationDisplay.frontText === BUSS_DESTINASJON) {  && d.quay?.id === BUSS_QUAY
           // Buss
+
           const out: TrainData = {
             ruteTid: Moment(d.aimedArrivalTime),
             faktiskTid: Moment(d.expectedArrivalTime),
