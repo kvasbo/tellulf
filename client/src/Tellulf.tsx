@@ -1,25 +1,25 @@
+import Moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
-import Moment from 'moment';
 import store from 'store';
-import Solceller from './solceller/Solceller';
 import firebase from './firebase';
 import Kalender from './kalender/Kalender';
-import Ruter from './ruter/Ruter';
 import Klokke from './Klokke';
-import Settings from './Settings';
-import { updateNetatmo, updateNetatmoAverages } from './redux/actions';
+import { fetchForecast, updateNetatmo, updateNetatmoAverages } from './redux/actions';
 import { NetatmoStore } from './redux/Netatmo';
-import { fetchForecast } from './redux/actions';
-import { TrainDataSet } from './types/trains';
-import { AppStore } from './redux/reducers';
-import './tellulf.css';
 import { NetatmoAverageData } from './redux/NetatmoAverages';
-import TibberUpdater from './tibberUpdater';
+import { AppStore } from './redux/reducers';
+import Ruter from './ruter/Ruter';
+import Settings from './Settings';
 import SolarUpdater from './solarUpdater';
+import Solceller from './solceller/Solceller';
+import './tellulf.css';
+import TibberUpdater from './tibberUpdater';
+import { TrainDataSet } from './types/trains';
+import { getNowCast } from './weather/updateWeather';
 
 const steder = {
-  oslo: { lat: 59.9409, long: 10.6991 },
+  oslo: { lat: 59.9508, long: 10.6852 },
   sandefjord: { lat: 59.1347, long: 10.325 },
 };
 
@@ -86,6 +86,7 @@ class Tellulf extends React.PureComponent<Props, State> {
       this.props.dispatch(
         fetchForecast(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
       );
+      getNowCast();
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);
