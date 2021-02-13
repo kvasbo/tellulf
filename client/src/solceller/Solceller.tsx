@@ -36,7 +36,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
   public componentDidMount() {
     const { tibber, solar } = this.props.updaters;
     tibber.updatePowerPrices();
-    tibber.subscribeToRealTime('2b05f8c5-3241-465d-92b8-9e7ad567f78f', 'hjemme');
+    tibber.subscribeToRealTime('31c8ab35-7406-4cb2-932e-04d111829628', 'hjemme');
     tibber.subscribeToRealTime('61f93ce4-f15c-49c2-aac1-9d9f0e1d76bb', 'hytta');
     tibber.updateConsumption();
     tibber.updateConsumptionDaily();
