@@ -70,8 +70,6 @@ class Tellulf extends React.PureComponent<Props, State> {
       if (nowCast.temp) {
         this.props.dispatch(updateNowcast(nowCast.temp));
       }
-
-      console.log(nowCast);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);

@@ -20,11 +20,15 @@ const firebaseConfig = {
   messagingSenderId: '159155087298',
 };
 
-const fire = firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // if already initialized, use that one
+}
 
 // window.firebase = firebase;
-const tibber = new tibberUpdater(store, fire);
-const solar = new solarUpdater(store, fire);
+const tibber = new tibberUpdater(store, firebase);
+const solar = new solarUpdater(store, firebase);
 
 const updaters = { tibber, solar };
 
@@ -44,7 +48,7 @@ class App extends React.PureComponent {
   }
 
   public componentDidMount(): void {
-    fire.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true, user });
       }
@@ -54,7 +58,7 @@ class App extends React.PureComponent {
   private doLogin() {
     if (!this.state.username || !this.state.password)
       alert('Tast inn brukernavn og passord din slask');
-    fire
+    firebase
       .auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
       .catch((error) => {
