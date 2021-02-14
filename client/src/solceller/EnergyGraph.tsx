@@ -1,34 +1,31 @@
-import React from 'react';
 import Moment from 'moment';
+import React from 'react';
 import {
-  XAxis,
-  YAxis,
-  Area,
-  Line,
-  ReferenceLine,
-  ReferenceDot,
-  ComposedChart,
-  ResponsiveContainer,
-  CartesianGrid,
-  Label,
+    Area,
+    CartesianGrid,
+    ComposedChart,
+    Label,
+    Line,
+    ReferenceDot,
+    ReferenceLine,
+    ResponsiveContainer,
+    XAxis,
+    YAxis
 } from 'recharts';
-
-import './solceller.css';
-
-import {
-  getMaxSunHeight,
-  getEnergyScaleMax,
-  getSunForTime,
-  formatEnergyScaleTick,
-  getDataPointObject,
-  getXAxis,
-  getXTicks,
-  formatTick,
-} from './energyHelpers';
-
-import { SolarCurrent, SolarMax, SolarHour } from '../types/solar';
 import { InitState } from '../types/initstate';
+import { SolarCurrent, SolarHour, SolarMax } from '../types/solar';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
+import {
+    formatEnergyScaleTick,
+    formatTick,
+    getDataPointObject,
+    getEnergyScaleMax,
+    getMaxSunHeight,
+    getSunForTime,
+    getXAxis,
+    getXTicks
+} from './energyHelpers';
+import './solceller.css';
 
 const maxSunHeight = getMaxSunHeight();
 
@@ -251,17 +248,6 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               yAxisId="kwh"
               dot={false}
               type="monotone"
-              dataKey="production"
-              fill="#00FF00"
-              stroke="#00FF00"
-              fillOpacity="0.2"
-              strokeOpacity="0.2"
-              stackId="1"
-            />
-            <Area
-              yAxisId="kwh"
-              dot={false}
-              type="monotone"
               dataKey="consumption"
               fill="#FF0000"
               stroke="#FF0000"
@@ -285,46 +271,6 @@ class EnergyGraph extends React.PureComponent<Props, State> {
               r={4}
               label={''}
             />
-            {false && this.props.currentNetConsumption && this.props.currentNetConsumption > 0 && (
-              <ReferenceDot
-                yAxisId="kwh"
-                y={this.props.currentNetConsumption / 1000}
-                x={this.props.currentSolarProduction.currentTime.valueOf()}
-                r={3}
-                fill="#ffffff44"
-                stroke="#ffffff"
-                label={''}
-              >
-                <Label
-                  value={`${Number(this.props.currentNetConsumption).toLocaleString()}`}
-                  stroke="#FF0000"
-                  fill="#FF0000"
-                  fontSize={35}
-                  position="left"
-                />
-              </ReferenceDot>
-            )}
-            {false && this.props.currentSolarProduction.now > 0 && (
-              <ReferenceDot
-                yAxisId="kwh"
-                label={''}
-                y={this.props.currentSolarProduction.now / 1000}
-                x={this.props.currentSolarProduction.currentTime.valueOf()}
-                r={3}
-                fill="#ffffff44"
-                stroke="#ffffff"
-              >
-                <Label
-                  value={`${Number(
-                    this.props.currentSolarProduction.averageMinute,
-                  ).toLocaleString()}`}
-                  stroke="#00FF00"
-                  fill="#00FF00"
-                  fontSize={35}
-                  position="right"
-                />
-              </ReferenceDot>
-            )}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
