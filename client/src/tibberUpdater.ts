@@ -23,19 +23,6 @@ import {
 
 const nettleie = 0.477;
 
-const netPriceSettings = {
-  Hjemme: {
-    fast: 100,
-    kwh: 0.4795,
-    kwpProd: 0.07,
-  },
-  Hytta: {
-    fast: 287.5,
-    kwh: 0.41913,
-    kwhProd: 0.07,
-  },
-};
-
 interface TibberSettings {
   tibberApiKey: string;
   tibberHomeKey: string;
@@ -150,7 +137,7 @@ export default class TibberUpdater {
     const connector = new Tibber({
       token,
       homeId,
-      onData: (data: { data: { liveMeasurement: TibberRealtimeData } }, homeId: any) => {
+      onData: (data: { data: { liveMeasurement: TibberRealtimeData } }, homeId: string) => {
         let where: houses;
         if (homeId === tibberSettings.tibberHomeKey) {
           where = 'hjemme';
