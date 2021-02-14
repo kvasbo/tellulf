@@ -1,5 +1,5 @@
-import * as React from 'react';
 import Moment from 'moment';
+import * as React from 'react';
 
 Moment.locale('nb');
 
