@@ -1,12 +1,11 @@
 name: CI
-on: push
+on:
+  push:
+    branches: [master]
 
 jobs:
   client-build:
     name: Do the needful
-    only:
-      refs:
-        - master
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
