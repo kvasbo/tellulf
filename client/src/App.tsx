@@ -1,4 +1,6 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import Moment from 'moment';
 import 'moment/locale/nb';
 import React from 'react';
