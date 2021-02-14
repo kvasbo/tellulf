@@ -143,7 +143,7 @@ export default class TibberUpdater {
     }
   }
 
-  public async subscribeToRealTime(id: string, name: houses): Promise<void> {
+  public async subscribeToRealTime(): Promise<void> {
     const tibberSettings = await this.getTibberSettings();
     const token = tibberSettings.tibberApiKey;
     const homeId = [tibberSettings.tibberHomeKey, tibberSettings.tibberCabinKey];
