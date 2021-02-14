@@ -1,8 +1,10 @@
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import Moment from 'moment';
 import 'moment/locale/nb';
 import React from 'react';
 import { Provider } from 'react-redux';
-import firebase from './firebase';
 import { store } from './redux/store';
 import solarUpdater from './solarUpdater';
 import Tellulf from './Tellulf';
@@ -11,9 +13,20 @@ import { GenericProps } from './types/generic';
 
 Moment.locale('nb');
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyBIJfOzVFrazxX9FkLEOHcf2dKeewXBCpI',
+  authDomain: 'tellulf-151318.firebaseapp.com',
+  databaseURL: 'https://tellulf-151318.firebaseio.com',
+  projectId: 'tellulf-151318',
+  storageBucket: 'tellulf-151318.appspot.com',
+  messagingSenderId: '159155087298',
+};
+
+const fire = firebase.initializeApp(firebaseConfig);
+
 // window.firebase = firebase;
-const tibber = new tibberUpdater(store);
-const solar = new solarUpdater(store);
+const tibber = new tibberUpdater(store, fire);
+const solar = new solarUpdater(store, fire);
 
 const updaters = { tibber, solar };
 
@@ -33,7 +46,7 @@ class App extends React.PureComponent {
   }
 
   public componentDidMount(): void {
-    firebase.auth().onAuthStateChanged((user) => {
+    fire.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ loggedIn: true, user });
       }
@@ -43,7 +56,7 @@ class App extends React.PureComponent {
   private doLogin() {
     if (!this.state.username || !this.state.password)
       alert('Tast inn brukernavn og passord din slask');
-    firebase
+    fire
       .auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
       .catch((error) => {

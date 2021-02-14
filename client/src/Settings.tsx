@@ -1,5 +1,4 @@
 import * as React from 'react';
-import firebase from './firebase';
 import store from 'store';
 import { GenericProps } from './types/generic';
 
@@ -8,11 +7,6 @@ class Settings extends React.PureComponent<GenericProps, GenericProps> {
     store.set(key, value);
     window.location.reload();
   };
-
-  private async signOut() {
-    await firebase.auth().signOut();
-    window.location.reload();
-  }
 
   public render(): React.ReactNode {
     const showEnergy = store.get('showEnergy', true);
@@ -45,9 +39,6 @@ class Settings extends React.PureComponent<GenericProps, GenericProps> {
             onChange={() => this.setBool('showTrains', !showTrains)}
           ></input>
         </div>
-        <button type="button" onClick={() => this.signOut()}>
-          Logg ut
-        </button>
         <button type="button" onClick={() => window.location.reload()}>
           Last inn på nytt
         </button>

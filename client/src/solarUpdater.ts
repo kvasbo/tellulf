@@ -1,6 +1,5 @@
 import Moment from 'moment';
-import firebase from './firebase';
-import { updateSolarMax, updateSolarCurrent, updateInitStatus } from './redux/actions';
+import { updateInitStatus, updateSolarCurrent, updateSolarMax } from './redux/actions';
 import { AppDispatch } from './redux/store';
 import { SolarCurrent, SolarMaxData } from './types/solar';
 
@@ -16,16 +15,18 @@ function parseByHour(data: []) {
 
 export default class SolarUpdater {
   private store: { dispatch: AppDispatch };
+  private firebase: any;
 
-  public constructor(store: { dispatch: AppDispatch }) {
+  public constructor(store: { dispatch: AppDispatch }, firebase: any) {
     this.store = store;
+    this.firebase = firebase;
   }
 
   public async attachListeners(): Promise<void> {
-    firebase
+    this.firebase
       .database()
       .ref('steca/currentData')
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+      .on('value', (snapshot: any | null) => {
         try {
           if (snapshot === null) return;
           const val = snapshot.val();
@@ -75,10 +76,10 @@ export default class SolarUpdater {
     const refYear = `steca/maxValues/yearly/${y}`;
     const refEver = 'steca/maxValues/ever/';
 
-    firebase
+    this.firebase
       .database()
       .ref(refDay)
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+      .on('value', (snapshot: any | null) => {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
@@ -87,10 +88,10 @@ export default class SolarUpdater {
         }
       });
 
-    firebase
+    this.firebase
       .database()
       .ref(refMonth)
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+      .on('value', (snapshot: any | null) => {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
@@ -99,10 +100,10 @@ export default class SolarUpdater {
         }
       });
 
-    firebase
+    this.firebase
       .database()
       .ref(refYear)
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+      .on('value', (snapshot: any | null) => {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {
@@ -111,10 +112,10 @@ export default class SolarUpdater {
         }
       });
 
-    firebase
+    this.firebase
       .database()
       .ref(refEver)
-      .on('value', (snapshot: firebase.database.DataSnapshot | null) => {
+      .on('value', (snapshot: any | null) => {
         if (snapshot === null) return;
         const val = snapshot.val();
         if (val && val.value) {

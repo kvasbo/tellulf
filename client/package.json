@@ -7,7 +7,7 @@
   "dependencies": {
     "@entur/sdk": "^3.4.0",
     "axios": "^0.21.1",
-    "firebase": "^7.17.1",
+    "firebase": "^8.2.7",
     "ical-expander": "^3.1.0",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",

@@ -2,7 +2,6 @@
 import axios from 'axios';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
-import firebase from './firebase';
 import {
     updateInitStatus,
     updatePowerPrices,
@@ -31,8 +30,10 @@ interface TibberSettings {
 
 export default class TibberUpdater {
   private store: { dispatch: AppDispatch };
-  public constructor(store: { dispatch: AppDispatch }) {
+  private firebase;
+  public constructor(store: { dispatch: AppDispatch }, firebase: any) {
     this.store = store;
+    this.firebase = firebase;
   }
 
   public async updatePowerPrices(): Promise<void> {
@@ -255,7 +256,7 @@ export default class TibberUpdater {
 
   // Get tibber settings from firebase
   public async getTibberSettings(): Promise<TibberSettings> {
-    const settingsRef = firebase.database().ref('settings');
+    const settingsRef = this.firebase.database().ref('settings');
     const snapshot = await settingsRef.once('value');
     const data = snapshot.val() as TibberSettings;
     return data;
