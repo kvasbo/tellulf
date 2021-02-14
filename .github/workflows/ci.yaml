@@ -4,6 +4,9 @@ on: push
 jobs:
   client-build:
     name: Do the needful
+    only:
+      refs:
+        - master
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
