@@ -9,9 +9,9 @@ import { InitState } from '../types/initstate';
 import { SolarCurrent, SolarMax } from '../types/solar';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 import TallPanel from './TallPanel';
+const defaultLatitude = 59.9508;
+const defaultLongitude = 10.6852;
 
-const defaultLatitude = 59.9409;
-const defaultLongitude = 10.6991;
 interface Props {
   initState: InitState;
   realtimePowerHjemme: TibberRealtimeState;
@@ -65,6 +65,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
           flex: 1,
           flexDirection: 'column',
           height: '100%',
+          justifyContent: 'center',
         }}
       >
         <div
@@ -72,6 +73,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+
             marginBottom: 20,
           }}
         >
