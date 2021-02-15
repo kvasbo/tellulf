@@ -1,9 +1,11 @@
 import React from 'react';
 import { GenericProps } from '../types/generic';
-import { ExtendedTrainData } from '../types/trains';
+import { ExtendedTrainData, TransportType } from '../types/trains';
 
 interface Props {
   trains: ExtendedTrainData[];
+  rutenummer: string;
+  type: TransportType;
 }
 
 class Rute extends React.PureComponent<Props, GenericProps> {

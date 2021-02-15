@@ -92,7 +92,8 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           justifyContent: 'flex-end',
         }}
       >
-        <Rute trains={this.getParsedTrains(10000)} />
+        <Rute type="Bane" rutenummer="1" trains={this.getParsedTrains(10000)} />
+        <Rute type="Buss" rutenummer="46" trains={this.getParsedTrains(10000)} />
         <table style={{ height: '100%' }}>
           <tbody>{this.getTrainList()}</tbody>
         </table>

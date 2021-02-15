@@ -7,8 +7,10 @@ export interface TrainData {
   id: string;
   linje: string;
   skalTil: string;
-  type: 'Buss' | 'Bane';
+  type: TransportType;
 }
+
+export type TransportType = 'Buss' | 'Bane';
 
 // With some more data...
 export interface ExtendedTrainData extends TrainData {
