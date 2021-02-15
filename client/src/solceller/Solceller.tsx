@@ -8,7 +8,6 @@ import { GenericProps } from '../types/generic';
 import { InitState } from '../types/initstate';
 import { SolarCurrent, SolarMax } from '../types/solar';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
-import EnergyGraph from './EnergyGraph';
 import TallPanel from './TallPanel';
 
 const defaultLatitude = 59.9409;
@@ -71,7 +70,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
             marginBottom: 20,
           }}
@@ -99,19 +98,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             smartRoundKw
             key="currentConsumptionHytta"
             unit="W"
-          />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-          <EnergyGraph
-            latitude={this.props.latitude}
-            longitude={this.props.longitude}
-            usedPower={this.props.usedPower}
-            realtimePower={this.props.realtimePowerHjemme}
-            initState={this.props.initState}
-            powerPrices={this.props.powerPrices}
-            max={this.props.max}
-            currentSolarProduction={this.props.currentSolarProduction}
-            currentNetConsumption={currentNetConsumption}
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>

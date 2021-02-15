@@ -122,11 +122,12 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             header="Forbruk nå"
             decimals={1}
             key="prodPercent"
+            smartRoundKw
           />
           {this.getMinUsage(false)}
           <TellulfInfoCell
             info={this.props.consumptionMaximum}
-            header="max bruk"
+            header="max forbruk"
             key="maxBruk"
             smartRoundKw
             unit="W"
@@ -164,12 +165,13 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             header="forbruk nå"
             decimals={0}
             key="cabinCurrent"
+            smartRoundKw
           />
           {this.getMinUsage(true)}
           <TellulfInfoCell
             info={this.props.consumptionMaximumHytta}
             unit="W"
-            header="max bruk"
+            header="max forbruk"
             decimals={2}
             smartRoundKw
             key="cabinMaxUse"
