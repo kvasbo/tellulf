@@ -20,7 +20,7 @@ class Rute extends React.PureComponent<Props, GenericProps> {
       .sort((a, b) => {
         return a.fromNow - b.fromNow;
       })
-      .slice(0, 10);
+      .slice(0, 6);
 
     const html = sorted.map((t) => {
       const time = t.fromNowM < 15 ? `${t.fromNowM} m` : t.faktiskTid.format('HH:mm');
