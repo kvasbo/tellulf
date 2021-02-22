@@ -11,7 +11,6 @@ import WeatherGraph from '../weather/WeatherGraph';
 import { createForecastSummary, filterForecastData } from '../weather/weatherHelpers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
-import './kalender.css';
 
 interface Props {
   dinner: EventDataSet;

@@ -28,6 +28,14 @@ interface Props {
   weatherUpdated: Moment.Moment;
 }
 
+const colors = {
+  grid: '#FFFFFF33',
+  cold: '#0000FF44',
+  rain: '#8884d8',
+  temperature: '#FF000088',
+  updated: '#FFFF0022',
+};
+
 interface State {
   currentTime: number;
 }

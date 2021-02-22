@@ -1,7 +1,6 @@
-import React from 'react';
 import Moment from 'moment';
+import React from 'react';
 import { Event } from '../types/calendar';
-import './kalender.css';
 import { GenericProps } from '../types/generic';
 
 function fullDayFormats() {

@@ -1,9 +1,7 @@
 import React from 'react';
-import { getTimeString } from './HendelseMedTid';
 import { Event } from '../types/calendar';
 import { GenericProps } from '../types/generic';
-
-import './kalender.css';
+import { getTimeString } from './HendelseMedTid';
 
 interface Props {
   data: Event;
