@@ -1,31 +1,21 @@
-import React from 'react';
 import Moment from 'moment';
+import React from 'react';
 import {
-  ComposedChart,
-  Line,
-  XAxis,
-  YAxis,
-  Area,
-  Label,
-  CartesianGrid,
-  ReferenceLine,
-  ReferenceArea,
-  ResponsiveContainer,
-  RechartsFunction,
+    Area,
+    CartesianGrid,
+    ComposedChart,
+    Label,
+    Line,
+    RechartsFunction,
+    ReferenceArea,
+    ReferenceLine,
+    ResponsiveContainer,
+    XAxis,
+    YAxis
 } from 'recharts';
-import WeatherIcon from './WeatherIcon';
-import { WeatherLimits, WeatherDataSeries } from '../types/forecast';
+import { WeatherDataSeries, WeatherLimits } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
-import './yr.css';
-
-const colors = {
-  grid: '#FFFFFF33',
-  cold: '#0000FF44',
-  rain: '#8884d8',
-  temperature: '#FF000088',
-  updated: '#FFFF0022',
-};
-
+import WeatherIcon from './WeatherIcon';
 interface Props {
   weather: WeatherDataSeries;
   from: Moment.Moment;

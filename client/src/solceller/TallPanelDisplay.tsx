@@ -1,7 +1,6 @@
 import React from 'react';
 import TellulfInfoCell from '../TellulfInfoCell';
 import { GenericProps } from '../types/generic';
-import './solceller.css';
 
 interface Props {
   currentPower: number;

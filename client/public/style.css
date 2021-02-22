@@ -73,6 +73,36 @@ body {
   font-weight: 200;
 }
 
+.yr-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.weatherMeta {
+  display: flex;
+  height: 2vh;
+  padding: 1vh 1vw 1vh 1vw;
+  align-content: center;
+  justify-content: center;
+}
+
+.energyTableRow {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 8px;
+}
+
+.energyTableRowHeader {
+  margin-top: 1em;
+}
+
 @media only screen and (max-width: 600px) {
   .grid {
     grid-template-columns: 100vw;
