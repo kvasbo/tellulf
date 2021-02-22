@@ -51,34 +51,6 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
     return tog;
   }
 
-  private getTrainList(): JSX.Element[] {
-    const tog = this.getParsedTrains(10);
-
-    const out: JSX.Element[] = [];
-    tog.forEach((t) => {
-      let pic = '';
-      if (t.type === 'Bane') {
-        pic = 'subway-outline.svg';
-      } else if (t.type === 'Buss') {
-        pic = 'bus-outline.svg';
-      }
-
-      out.push(
-        <tr key={t.id}>
-          <td>{t.fromNowM} m</td>
-          <td style={{ textAlign: 'left' }}>
-            <img src={pic} style={{ color: '#fff', height: '1em', width: '1em' }} />
-            &nbsp;{t.linje}
-          </td>
-
-          <td>{t.faktiskTid.format('HH:mm')}</td>
-          <td>{t.skalTil}</td>
-        </tr>,
-      );
-    });
-    return out;
-  }
-
   public render() {
     return (
       <div
@@ -87,16 +59,12 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
           padding: '0.5vh',
           flexDirection: 'column',
           height: '100%',
-          fontSize: '0.8em',
           flex: 1,
           justifyContent: 'flex-end',
         }}
       >
         <Rute type="Bane" rutenummer="1" trains={this.getParsedTrains(10000)} />
         <Rute type="Buss" rutenummer="46" trains={this.getParsedTrains(10000)} />
-        <table style={{ height: '100%' }}>
-          <tbody>{this.getTrainList()}</tbody>
-        </table>
       </div>
     );
   }

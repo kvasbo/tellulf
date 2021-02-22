@@ -161,6 +161,35 @@ body {
   margin-bottom: 0.5em;
 }
 
+.ruterGroup {
+  margin-bottom: 1em;
+  .header {
+    font-size: 1.5em;
+    display: flex;
+    margin-bottom: 0.5em;
+    justify-content: flex-start;
+    align-items: center;
+    .ruteNummer {
+      margin-left: 1em;
+    }
+    img {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+  .avganger {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    .avgang {
+      padding: 0.25em;
+      margin: 0.25em;
+      border: 1px solid #ffffff77;
+      border-radius: 0.25em;
+    }
+  }
+}
+
 @media only screen and (max-width: 600px) {
   .grid {
     grid-template-columns: 100vw;
@@ -184,7 +213,4 @@ body {
   .clockTime {
     font-size: 4.5em;
   }
-}
-
-.ruterGroup {
 }
