@@ -4,24 +4,12 @@ import pickBy from 'lodash/pickBy';
 import sumBy from 'lodash/sumBy';
 import Moment from 'moment';
 import store from 'store';
-import { getNorwegianDaysOff } from '../external';
 import { ForecastDataSet, HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
-
-const sundayColor = '#FF0000CC';
-const redDays = getNorwegianDaysOff();
-const gridColor = '#FFFFFFAA';
 
 export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Moment } {
   const start = Moment().startOf('day');
   const end = Moment().add(days, 'day').startOf('day');
   return { start, end };
-}
-
-export function getDayColor(time: Moment.Moment): string {
-  if (time.day() === 0 || time.day() === 6) return sundayColor;
-  const dString = time.format('MMDD');
-  if (redDays.includes(dString)) return sundayColor;
-  return gridColor;
 }
 
 export function formatTick(data: number): string {

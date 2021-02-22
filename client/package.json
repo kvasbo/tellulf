@@ -29,7 +29,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "lint": "./node_modules/.bin/eslint src --ext .ts,.tsx",
-    "lint-fix": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix"
+    "lint-fix": "./node_modules/.bin/eslint src --ext .ts,.tsx --fix",
+    "sass": "npx sass sass/main.scss public/style.css"
   },
   "devDependencies": {
     "@firebase/app-types": "^0.6.0",

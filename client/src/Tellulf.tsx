@@ -10,7 +10,6 @@ import Ruter from './ruter/Ruter';
 import Settings from './Settings';
 import SolarUpdater from './solarUpdater';
 import Solceller from './solceller/Solceller';
-import './tellulf.css';
 import TibberUpdater from './tibberUpdater';
 import { TrainDataSet } from './types/trains';
 import { getNowCast } from './weather/updateWeather';
