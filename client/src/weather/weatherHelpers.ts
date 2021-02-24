@@ -59,8 +59,8 @@ export function createForecastSummary(data: WeatherDataSeries): string {
     return w.rain;
   });
 
-  const maxT = maxTemp && maxTemp.temp ? Math.round(maxTemp.temp) : undefined;
-  const minT = minTemp && minTemp.temp ? Math.round(minTemp.temp) : undefined;
+  const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : undefined;
+  const minT = minTemp && minTemp.temp !== undefined ? Math.round(minTemp.temp) : undefined;
   const r = Math.round(rain);
 
   if (!maxT || !minT) {
