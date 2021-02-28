@@ -96,17 +96,15 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
 
     return (
       <div
+        className="infoBox"
         style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'spaceAround',
-          alignItems: 'center',
           fontSize,
         }}
       >
         {this.props.header && (
-          <span style={{ fontSize: labelFontSize, color: this.props.labelColor }}>{header}</span>
+          <span style={{ fontSize: labelFontSize, color: this.props.labelColor, marginBottom: 3 }}>
+            {header}
+          </span>
         )}
         <span style={{ color }}>
           {text}
