@@ -56,7 +56,6 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
       <div
         style={{
           display: 'flex',
-          padding: '0.5vh',
           flexDirection: 'column',
           height: '100%',
           flex: 1,
