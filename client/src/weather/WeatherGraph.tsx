@@ -13,7 +13,7 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
-import { WeatherDataSeries, WeatherLimits } from '../types/forecast';
+import { HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import WeatherIcon from './WeatherIcon';
 interface Props {
@@ -73,6 +73,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
   public render(): React.ReactNode {
     const startTime = this.props.from.valueOf();
     const endTime = this.props.to.valueOf();
+    const weather: HourForecast[] = Object.values(this.props.weather);
     return (
       <ResponsiveContainer height={200} width="100%">
         <ComposedChart
@@ -82,7 +83,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             left: 0,
             bottom: 0,
           }}
-          data={Object.values(this.props.weather)}
+          data={weather}
           onClick={this.props.onClick as RechartsFunction}
         >
           <XAxis
@@ -159,7 +160,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             isAnimationActive={false}
           />
           <Line
-            dot={<WeatherIcon />}
+            dot={<WeatherIcon forecast={weather} />}
             yAxisId="temp"
             type="natural"
             dataKey="temp"
