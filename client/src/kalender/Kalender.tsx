@@ -42,7 +42,7 @@ class Kalender extends React.PureComponent<unknown, State> {
 
   public componentDidMount(): void {
     this.updateData();
-    this.interval = window.setInterval(() => this.updateData(), 1000 * 60 * 5);
+    this.interval = window.setInterval(() => this.updateData(), 1000 * 60 * 15);
   }
 
   public componentWillUnmount(): void {
