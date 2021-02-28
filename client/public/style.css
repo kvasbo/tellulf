@@ -34,7 +34,6 @@ body {
   padding-bottom: 0;
   padding-top: 1.2vw;
   justify-content: space-evenly;
-  align-items: center;
   flex-direction: column;
 }
 
@@ -58,12 +57,12 @@ body {
 }
 
 .clockTime {
-  font-size: 6em;
+  font-size: 5em;
   font-weight: 200;
 }
 
 .gridNetatmoTemp {
-  font-size: 6em;
+  font-size: 5em;
   font-weight: 200;
 }
 
@@ -88,17 +87,25 @@ body {
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
+  align-items: flex-start;
   margin-bottom: 8px;
 }
-
-.energyTableRowHeader {
+.energyTableRow.energyTableRowHeader {
+  font-weight: 400;
   margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.infoBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-bottom: 0.25em;
 }
 
 .kalenderDag {
-  padding: 0 0 0 0;
   margin: 0.5vh 0.5vw 1vh 0.5vw;
   background-color: #000000;
   display: grid;
@@ -140,15 +147,6 @@ body {
 }
 .kalenderDag .preggo {
   margin-bottom: 0.5em;
-}
-
-.infoBox {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  margin-bottom: 0.25em;
 }
 
 .ruterGroup {

@@ -72,8 +72,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-
             marginBottom: 20,
           }}
         >
