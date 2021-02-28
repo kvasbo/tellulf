@@ -44,21 +44,15 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
       if (d.getHours() % 2 !== 0) return null;
     }
 
-    // Check if same as previous.
+    // Check if same as previous (or first)
     let renderIcon = false;
-    // console.log(this.props.payload.index);
 
-    if (this.props.index === 0) {
-      renderIcon = true;
-    }
-
-    if (this.props.index >= 1) {
-      if (
-        this.props.forecast[this.props.index - 1].symbol !==
+    if (
+      this.props.index === 0 ||
+      this.props.forecast[this.props.index - 1].symbol !==
         this.props.forecast[this.props.index].symbol
-      ) {
-        renderIcon = true;
-      }
+    ) {
+      renderIcon = true;
     }
 
     const iconOpacity = renderIcon ? 1 : 0.25;
