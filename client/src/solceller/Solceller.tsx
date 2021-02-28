@@ -75,30 +75,36 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
             marginBottom: 20,
           }}
         >
-          <TellulfInfoCell
-            info={currentNetConsumptionTotal}
-            header="Totalt nå"
-            large
-            smartRoundKw
-            key="currentConsumption"
-            unit="W"
-          />
-          <TellulfInfoCell
-            info={currentNetConsumption}
-            header="Hus nå"
-            large
-            smartRoundKw
-            key="currentConsumptionHome"
-            unit="W"
-          />
-          <TellulfInfoCell
-            info={currentNetConsumptionHytta}
-            header="Hytta nå"
-            large
-            smartRoundKw
-            key="currentConsumptionHytta"
-            unit="W"
-          />
+          <div className="energyTableRow">
+            <TellulfInfoCell
+              info={currentNetConsumptionTotal}
+              header="Totalt nå"
+              large
+              smartRoundKw
+              key="currentConsumption"
+              unit="W"
+            />
+          </div>
+          <div className="energyTableRow">
+            <TellulfInfoCell
+              info={currentNetConsumption}
+              header="Hus nå"
+              large
+              smartRoundKw
+              key="currentConsumptionHome"
+              unit="W"
+            />
+          </div>
+          <div className="energyTableRow">
+            <TellulfInfoCell
+              info={currentNetConsumptionHytta}
+              header="Hytta nå"
+              large
+              smartRoundKw
+              key="currentConsumptionHytta"
+              unit="W"
+            />
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <TallPanel

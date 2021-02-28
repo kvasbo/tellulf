@@ -97,7 +97,7 @@ body {
   flex: 1;
   flex-direction: row;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 0.3em;
   &.energyTableRowHeader {
     font-weight: 400;
     margin-top: 1em;
@@ -111,7 +111,6 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
-  margin-bottom: 0.25em;
 }
 
 .kalenderDag {
