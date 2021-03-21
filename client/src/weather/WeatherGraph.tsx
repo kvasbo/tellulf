@@ -1,12 +1,9 @@
 import Moment from 'moment';
 import React from 'react';
 import {
-    Area,
-    CartesianGrid,
     ComposedChart,
     Label,
     Line,
-    RechartsFunction,
     ReferenceArea,
     ReferenceLine,
     ResponsiveContainer,
@@ -14,6 +11,7 @@ import {
     YAxis
 } from 'recharts';
 import { HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
+import { Area, CartesianGrid } from './rechartsFix';
 import { formatTick } from './weatherHelpers';
 import WeatherIcon from './WeatherIcon';
 interface Props {
@@ -84,7 +82,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             bottom: 0,
           }}
           data={weather}
-          onClick={this.props.onClick as RechartsFunction}
+          onClick={() => this.props.onClick()}
         >
           <XAxis
             scale="time"
