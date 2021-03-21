@@ -12,8 +12,6 @@ import { GenericProps } from './types/generic';
 
 Moment.locale('nb');
 
-let fb: firebase.app.App | undefined = undefined;
-
 const firebaseConfig = {
   apiKey: 'AIzaSyBIJfOzVFrazxX9FkLEOHcf2dKeewXBCpI',
   authDomain: 'tellulf-151318.firebaseapp.com',
@@ -24,13 +22,13 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps.length) {
-  fb = firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 } else {
-  fb = firebase.app(); // if already initialized, use that one
+  firebase.app(); // if already initialized, use that one
 }
 
 // window.firebase = firebase;
-const tibber = new tibberUpdater(store, fb);
+const tibber = new tibberUpdater(store, firebase);
 
 const updaters = { tibber };
 

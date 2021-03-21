@@ -5,7 +5,6 @@ import TellulfInfoCell from '../TellulfInfoCell';
 import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
 import { InitState } from '../types/initstate';
-import { SolarCurrent, SolarMax } from '../types/solar';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 import TallPanel from './TallPanel';
 const defaultLatitude = 59.9508;
@@ -15,12 +14,10 @@ interface Props {
   initState: InitState;
   realtimePowerHjemme: TibberRealtimeState;
   realtimePowerHytta: TibberRealtimeState;
-  currentSolarProduction: SolarCurrent;
   latitude: number;
   longitude: number;
   usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
-  max: SolarMax;
   updaters: { tibber: TibberUpdater };
 }
 
@@ -45,8 +42,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
   }
 
   public render() {
-    if (!this.props.initState.solar) return null;
-
     // Regne ut felles verdier.
     const currentNetConsumption = this.props.realtimePowerHjemme.calculatedConsumption; // Find actual current usage
 
@@ -105,8 +100,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <TallPanel
-            currentSolarProduction={this.props.currentSolarProduction}
-            max={this.props.max}
             realtimePower={this.props.realtimePowerHjemme}
             realtimePowerHytta={this.props.realtimePowerHytta}
             currentNetConsumption={currentNetConsumption}
@@ -120,8 +113,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
 
 const mapStateToProps = (state: AppStore) => {
   return {
-    currentSolarProduction: state.Solar.current,
-    max: state.Solar.max,
     powerPrices: state.PowerPrices,
     initState: state.Init,
     realtimePowerHjemme: state.TibberRealTime.hjemme,

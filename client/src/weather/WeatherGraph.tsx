@@ -117,7 +117,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             domain={[0, 1.5]}
             hide
           />
-          <CartesianGrid stroke={colors.grid} vertical={false} />
+          {false && <CartesianGrid stroke={colors.grid} vertical={false} />}
           {this.props.limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
@@ -127,16 +127,18 @@ class WeatherGraph extends React.PureComponent<Props, State> {
               fill={colors.cold}
             />
           )}
-          <Area
-            dot={false}
-            yAxisId="rain"
-            connectNulls={true}
-            type="natural"
-            dataKey="rain"
-            stroke={colors.rain}
-            fillOpacity="0.3"
-            isAnimationActive={false}
-          />
+          {false && (
+            <Area
+              dot={false}
+              yAxisId="rain"
+              connectNulls={true}
+              type="natural"
+              dataKey="rain"
+              stroke={colors.rain}
+              fillOpacity="0.3"
+              isAnimationActive={false}
+            />
+          )}
           <Line
             dot={false}
             yAxisId="rain"
