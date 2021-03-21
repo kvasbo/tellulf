@@ -10,7 +10,6 @@ interface Props {
   decimals: number;
   fontSize: number;
   large: boolean;
-  unitSpace: boolean;
   color: string;
   colorIfNegative: string;
   labelColor: string;
@@ -20,6 +19,11 @@ interface Props {
   invertValue: boolean;
   absoluteValue: boolean;
   smartRoundKw: boolean;
+}
+
+interface roundedNumber {
+  number: string;
+  unit: string;
 }
 
 export function roundToNumberOfDecimals(number: number, decimals: number): number {
@@ -45,12 +49,15 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
     smartRoundKw: false,
   };
 
-  smartRoundWatt(number: number): string {
-    const rounded = Math.round(number);
-    const space = this.props.unitSpace ? ' ' : '';
-    if (rounded === 0) return '-';
-    if (Math.abs(rounded) < 100) return `${rounded.toLocaleString()}`;
-    return `${(Math.round(rounded / 100) / 10).toLocaleString()}${space}k`;
+  smartRoundWatt(number: number): roundedNumber {
+    const out = { number: '-', unit: '' };
+    if (Math.abs(number) > 100) {
+      out.number = Math.round(number / 100).toLocaleString();
+    } else {
+      out.number = Math.round(number).toLocaleString();
+      out.unit = 'k';
+    }
+    return out;
   }
 
   public render(): React.ReactNode {
@@ -69,11 +76,18 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
         valToDisplay = Math.abs(valToDisplay);
       }
 
+      let unitMultiplier = '';
+
       // Text to show
       if (this.props.smartRoundKw) {
-        text = this.smartRoundWatt(valToDisplay);
+        const data = this.smartRoundWatt(valToDisplay);
+        unitMultiplier = data.unit;
+        text = data.number + ' ' + unitMultiplier + this.props.unit;
       } else {
-        text = roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString();
+        text =
+          roundToNumberOfDecimals(valToDisplay, this.props.decimals).toLocaleString() +
+          ' ' +
+          this.props.unit;
       }
     } else if (typeof this.props.info === 'string') {
       text = this.props.info;
@@ -86,7 +100,6 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
       fontSize = largeFontSize;
     }
 
-    const space = this.props.unitSpace ? ' ' : null;
     const color = this.props.info >= 0 ? this.props.color : this.props.colorIfNegative;
 
     let header = this.props.header;
@@ -106,11 +119,7 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
             {header}
           </span>
         )}
-        <span style={{ color }}>
-          {text}
-          {space}
-          {this.props.unit}
-        </span>
+        <span style={{ color }}>{text}</span>
       </div>
     );
   }

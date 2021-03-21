@@ -95,7 +95,6 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             unit="kr"
             header="netto dag"
             decimals={0}
-            unitSpace
             key="netDay"
           />
           <TellulfInfoCell
@@ -111,7 +110,6 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             header="Strømpris nå"
             key="priceNow"
             decimals={2}
-            unitSpace
           />
         </div>
         <div className="energyTableRow">
@@ -143,7 +141,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             key="cabinMoney"
           />
           <TellulfInfoCell
-            info={this.props.accumulatedConsumptionHytta}
+            info={this.props.accumulatedConsumptionHytta - this.props.accumulatedProductionHytta}
             unit="kWh"
             header="forbruk i dag"
             decimals={0}
