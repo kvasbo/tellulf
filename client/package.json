@@ -33,7 +33,6 @@
     "sass": "npx sass --watch sass/:public/"
   },
   "devDependencies": {
-    "@firebase/app-types": "^0.6.0",
     "@types/js-cookie": "^2.2.2",
     "@types/lodash": "^4.14.168",
     "@types/node": "^14.14.35",
