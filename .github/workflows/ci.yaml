@@ -22,11 +22,6 @@ jobs:
         run: yarn --cwd "client" run lint
       - name: Build Client
         run: CI=false yarn --cwd "client" run build
-      - name: Archive Production Client
-        uses: actions/upload-artifact@master
-        with:
-          name: client
-          path: client/build
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
