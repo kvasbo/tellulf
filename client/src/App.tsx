@@ -6,7 +6,6 @@ import 'moment/locale/nb';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import solarUpdater from './solarUpdater';
 import Tellulf from './Tellulf';
 import tibberUpdater from './tibberUpdater';
 import { GenericProps } from './types/generic';
@@ -30,9 +29,8 @@ if (!firebase.apps.length) {
 
 // window.firebase = firebase;
 const tibber = new tibberUpdater(store, firebase);
-const solar = new solarUpdater(store, firebase);
 
-const updaters = { tibber, solar };
+const updaters = { tibber };
 
 interface AppState {
   loggedIn: boolean;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { AppStore } from '../redux/reducers';
-import SolarUpdater from '../solarUpdater';
 import TellulfInfoCell from '../TellulfInfoCell';
 import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
@@ -22,7 +21,7 @@ interface Props {
   usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
   max: SolarMax;
-  updaters: { tibber: TibberUpdater; solar: SolarUpdater };
+  updaters: { tibber: TibberUpdater };
 }
 
 class Solceller extends React.PureComponent<Props, GenericProps> {
@@ -33,14 +32,12 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
   };
 
   public componentDidMount() {
-    const { tibber, solar } = this.props.updaters;
+    const { tibber } = this.props.updaters;
     tibber.updatePowerPrices();
     tibber.subscribeToRealTime();
     tibber.updateConsumption();
     tibber.updateConsumptionDaily();
     this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
-    solar.attachListeners();
-    solar.attachMaxListeners();
   }
 
   public componentWillUnmount() {

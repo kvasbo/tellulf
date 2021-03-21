@@ -8,7 +8,6 @@ import { fetchForecast, updateNowcast } from './redux/actions';
 import { AppStore } from './redux/reducers';
 import Ruter from './ruter/Ruter';
 import Settings from './Settings';
-import SolarUpdater from './solarUpdater';
 import Solceller from './solceller/Solceller';
 import TibberUpdater from './tibberUpdater';
 import { TrainDataSet } from './types/trains';
@@ -25,7 +24,7 @@ interface Props {
   loggedIn: boolean;
   trains: TrainDataSet;
   temperature: number;
-  updaters: { tibber: TibberUpdater; solar: SolarUpdater };
+  updaters: { tibber: TibberUpdater };
 }
 
 interface State {
