@@ -1,7 +1,7 @@
 import Moment from 'moment';
 import React from 'react';
 import {
-    ComposedChart,
+    Area, CartesianGrid, ComposedChart,
     Label,
     Line,
     ReferenceArea,
@@ -11,7 +11,6 @@ import {
     YAxis
 } from 'recharts';
 import { HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
-import { Area, CartesianGrid } from './rechartsFix';
 import { formatTick } from './weatherHelpers';
 import WeatherIcon from './WeatherIcon';
 interface Props {
@@ -117,7 +116,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             domain={[0, 1.5]}
             hide
           />
-          {false && <CartesianGrid stroke={colors.grid} vertical={false} />}
+          <CartesianGrid stroke={colors.grid} vertical={false} />
           {this.props.limits.lowerRange < 0 && (
             <ReferenceArea
               y1={0}
@@ -127,18 +126,18 @@ class WeatherGraph extends React.PureComponent<Props, State> {
               fill={colors.cold}
             />
           )}
-          {false && (
-            <Area
-              dot={false}
-              yAxisId="rain"
-              connectNulls={true}
-              type="natural"
-              dataKey="rain"
-              stroke={colors.rain}
-              fillOpacity="0.3"
-              isAnimationActive={false}
-            />
-          )}
+
+          <Area
+            dot={false}
+            yAxisId="rain"
+            connectNulls={true}
+            type="natural"
+            dataKey="rain"
+            stroke={colors.rain}
+            fillOpacity="0.3"
+            isAnimationActive={false}
+          />
+
           <Line
             dot={false}
             yAxisId="rain"

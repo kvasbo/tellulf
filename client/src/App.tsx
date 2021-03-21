@@ -21,14 +21,10 @@ const firebaseConfig = {
   messagingSenderId: '159155087298',
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app(); // if already initialized, use that one
-}
+const fb: firebase.app.App = firebase.initializeApp(firebaseConfig);
 
 // window.firebase = firebase;
-const tibber = new tibberUpdater(store, firebase);
+const tibber = new tibberUpdater(store, fb);
 
 const updaters = { tibber };
 

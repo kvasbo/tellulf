@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import axios from 'axios';
+import type firebase from 'firebase';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
 import {
@@ -31,7 +32,7 @@ interface TibberSettings {
 export default class TibberUpdater {
   private store: { dispatch: AppDispatch };
   private firebase;
-  public constructor(store: { dispatch: AppDispatch }, firebase: any) {
+  public constructor(store: { dispatch: AppDispatch }, firebase: firebase.app.App) {
     this.store = store;
     this.firebase = firebase;
   }
