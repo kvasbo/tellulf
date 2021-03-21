@@ -21,7 +21,6 @@ const steder = {
 interface Props {
   // eslint-disable-next-line @typescript-eslint/ban-types
   dispatch: Function;
-  loggedIn: boolean;
   trains: TrainDataSet;
   temperature: number;
   updaters: { tibber: TibberUpdater };

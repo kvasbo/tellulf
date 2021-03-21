@@ -112,7 +112,7 @@ class App extends React.PureComponent {
     if (!this.state.loggedIn) return this.getLogin();
     return (
       <Provider store={store}>
-        <Tellulf loggedIn={this.state.loggedIn} updaters={updaters} />
+        <Tellulf updaters={updaters} />
       </Provider>
     );
   }
