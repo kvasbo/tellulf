@@ -1,6 +1,5 @@
 import getTrains from '../ruter/updateTrains';
 import { Forecast } from '../types/forecast';
-import { SolarCurrent, SolarMaxData } from '../types/solar';
 import {
     houses,
     PowerPriceState,
@@ -14,8 +13,6 @@ import { AppDispatch } from './store';
 
 export const UPDATE_NOWCAST = 'UPDATE_NOWCAST';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
-export const UPDATE_SOLAR_MAX = 'UPDATE_SOLAR_MAX';
-export const UPDATE_SOLAR_CURRENT = 'UPDATE_SOLAR_CURRENT';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
 export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
 export const UPDATE_TRAINS = 'UPDATE_TRAINS';
@@ -105,24 +102,6 @@ export function updatePowerPrices(
 ): { type: 'UPDATE_POWER_PRICES'; data: PowerPriceState } {
   return {
     type: UPDATE_POWER_PRICES,
-    data,
-  };
-}
-
-export function updateSolarMax(
-  data: SolarMaxData,
-): { type: 'UPDATE_SOLAR_MAX'; data: SolarMaxData } {
-  return {
-    type: UPDATE_SOLAR_MAX,
-    data,
-  };
-}
-
-export function updateSolarCurrent(
-  data: SolarCurrent,
-): { type: 'UPDATE_SOLAR_CURRENT'; data: SolarCurrent } {
-  return {
-    type: UPDATE_SOLAR_CURRENT,
     data,
   };
 }

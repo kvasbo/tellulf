@@ -12,18 +12,6 @@ interface Props {
 
 class TallPanel extends React.PureComponent<Props, GenericProps> {
   public render(): React.ReactNode {
-    try {
-      if (this.props.realtimePower.accumulatedConsumption) {
-        // Brukt = laget hjemme + betalt for - solgt
-        const spent =
-          this.props.realtimePower.accumulatedConsumption * 1000 -
-          this.props.realtimePower.accumulatedProduction * 1000;
-      }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-    }
-
     // Get current power price
     const hour = new Date().getHours();
     const powerPrice = this.props.powerPrices[hour] ? this.props.powerPrices[hour].total : 0;
