@@ -53,7 +53,7 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
     const out = { number: '-', unit: '' };
 
     if (Math.abs(number) > 100) {
-      out.number = Math.round(number / 1000).toLocaleString();
+      out.number = (Math.round(number / 100) / 10).toLocaleString();
       out.unit = 'k';
     } else {
       out.number = Math.round(number).toLocaleString();
