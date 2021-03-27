@@ -44,8 +44,14 @@ export function storeToLocalStore(
   store.set(key, toStore);
 }
 
-export function createForecastSummary(data: WeatherDataSeries): string {
+export function createForecastSummary(data: WeatherDataSeries, date: Date = new Date()): string {
   const weather = Object.values(data);
+
+  weather.forEach((w: HourForecast) => {
+    console.log(new Date(w.time));
+    console.log(date);
+  });
+
   if (weather.length === 0) return '';
   const maxTemp = maxBy(weather, (w: HourForecast): number => {
     return w.temp !== undefined ? w.temp : -999;
@@ -59,8 +65,8 @@ export function createForecastSummary(data: WeatherDataSeries): string {
     return w.rain;
   });
 
-  const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : "?";
-  const minT = minTemp && minTemp.temp !== undefined ? Math.round(minTemp.temp) : "?";
+  const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : '?';
+  const minT = minTemp && minTemp.temp !== undefined ? Math.round(minTemp.temp) : '?';
   const r = Math.round(rain);
 
   if (!maxT || !minT) {

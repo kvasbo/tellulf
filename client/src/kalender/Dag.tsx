@@ -136,21 +136,22 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private filterForecast(): WeatherDataSeries {
-    if (!this.props.forecast.data || !this.props.forecast.data[this.state.sted]) {
+  private filterForecast(
+    date: Moment.Moment,
+    sted: string,
+    hoursBefore = 0,
+    hoursAfter = 0,
+  ): WeatherDataSeries {
+    if (!this.props.forecast.data || !this.props.forecast.data[sted]) {
       return {};
     }
 
     return filterForecastData(
-      this.props.date,
-      this.props.forecast.data[this.state.sted].forecast,
-      6,
-      6,
+      date,
+      this.props.forecast.data[sted].forecast,
+      hoursBefore,
+      hoursAfter,
     );
-  }
-
-  private getForecastSummary(): string {
-    return createForecastSummary(this.filterForecast());
   }
 
   private getWeatherUpdateTime(): Moment.Moment {
@@ -169,7 +170,7 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    const forecast = this.filterForecast();
+    const forecast = this.filterForecast(date, sted, 6, 6);
 
     if (!showWeatherGraphForDay(this.props.date, forecast)) return null;
 
@@ -196,7 +197,9 @@ class Dag extends React.PureComponent<Props, State> {
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="kalenderDato weatherSummary">{this.getForecastSummary()}</div>
+        <div className="kalenderDato weatherSummary">
+          {createForecastSummary(this.filterForecast(this.props.date, this.state.sted, 0, 0))}
+        </div>
         <div
           style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
         >
