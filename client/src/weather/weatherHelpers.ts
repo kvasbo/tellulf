@@ -44,13 +44,8 @@ export function storeToLocalStore(
   store.set(key, toStore);
 }
 
-export function createForecastSummary(data: WeatherDataSeries, date: Date = new Date()): string {
+export function createForecastSummary(data: WeatherDataSeries): string {
   const weather = Object.values(data);
-
-  weather.forEach((w: HourForecast) => {
-    console.log(new Date(w.time));
-    console.log(date);
-  });
 
   if (weather.length === 0) return '';
   const maxTemp = maxBy(weather, (w: HourForecast): number => {
