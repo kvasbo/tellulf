@@ -1,21 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { AppStore } from '../redux/reducers';
-import TellulfInfoCell from '../TellulfInfoCell';
 import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
 import { InitState } from '../types/initstate';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 import TallPanel from './TallPanel';
-const defaultLatitude = 59.9508;
-const defaultLongitude = 10.6852;
-
 interface Props {
   initState: InitState;
   realtimePowerHjemme: TibberRealtimeState;
   realtimePowerHytta: TibberRealtimeState;
-  latitude: number;
-  longitude: number;
   usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
   updaters: { tibber: TibberUpdater };
@@ -23,10 +17,6 @@ interface Props {
 
 class Solceller extends React.PureComponent<Props, GenericProps> {
   private interval = 0;
-  public static defaultProps = {
-    latitude: defaultLatitude,
-    longitude: defaultLongitude,
-  };
 
   public componentDidMount() {
     const { tibber } = this.props.updaters;
@@ -48,8 +38,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
     // Regne ut felles verdier.
     const currentNetConsumptionHytta = this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
 
-    const currentNetConsumptionTotal = currentNetConsumption + currentNetConsumptionHytta;
-
     return (
       <div
         style={{
@@ -60,44 +48,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
           justifyContent: 'center',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: 20,
-          }}
-        >
-          <div className="energyTableRow">
-            <TellulfInfoCell
-              info={currentNetConsumptionTotal}
-              header="Totalt nå"
-              large
-              smartRoundKw
-              key="currentConsumption"
-              unit="W"
-            />
-          </div>
-          <div className="energyTableRow">
-            <TellulfInfoCell
-              info={currentNetConsumption}
-              header="Hus nå"
-              large
-              smartRoundKw
-              key="currentConsumptionHome"
-              unit="W"
-            />
-          </div>
-          <div className="energyTableRow">
-            <TellulfInfoCell
-              info={currentNetConsumptionHytta}
-              header="Hytta nå"
-              large
-              smartRoundKw
-              key="currentConsumptionHytta"
-              unit="W"
-            />
-          </div>
-        </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <TallPanel
             realtimePower={this.props.realtimePowerHjemme}

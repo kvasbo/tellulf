@@ -35,7 +35,7 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
   public static defaultProps = {
     header: undefined,
     headerIfNegative: undefined,
-    info: '-',
+    info: '',
     large: false,
     fontSize: defaultFontSize,
     decimals: 0,

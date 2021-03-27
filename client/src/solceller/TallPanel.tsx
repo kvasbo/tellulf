@@ -16,9 +16,22 @@ class TallPanel extends React.PureComponent<Props, GenericProps> {
     const hour = new Date().getHours();
     const powerPrice = this.props.powerPrices[hour] ? this.props.powerPrices[hour].total : 0;
 
+    // Regne ut felles verdier.
+    const currentTotalConsumption =
+      this.props.realtimePower.calculatedConsumption +
+      this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
+
+    const currentTotalAccumulated =
+      this.props.realtimePower.accumulatedConsumption -
+      this.props.realtimePower.accumulatedProduction +
+      this.props.realtimePowerHytta.accumulatedConsumption -
+      this.props.realtimePowerHytta.accumulatedProduction;
+
     return (
       <TallPanelDisplay
         currentPower={this.props.currentNetConsumption}
+        currentNetConsumption={currentTotalConsumption}
+        currentTotalAccumulated={currentTotalAccumulated}
         currentConsumption={this.props.realtimePower.calculatedConsumption}
         currentConsumptionHytta={this.props.realtimePowerHytta.calculatedConsumption}
         accumulatedConsumption={this.props.realtimePower.accumulatedConsumption}
