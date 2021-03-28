@@ -159,9 +159,9 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getPreggo(): string {
-    const p = new Preggo(new Date('2020-07-17'));
+    const p = new Preggo(new Date('2020-07-22'));
     const d = p.getData(this.props.date.toDate());
-    if (d.percent >= 100) {
+    if (d.percent >= 105) {
       return '';
     }
     return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight.toFixed(
