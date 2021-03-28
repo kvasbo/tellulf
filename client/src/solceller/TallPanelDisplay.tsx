@@ -104,14 +104,14 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
           <TellulfInfoCell
             info={this.props.currentTotalAccumulated}
             unit="kWh"
-            header="forbruk i dag"
+            header="i dag"
             key="paidDayTotal"
-            decimals={1}
+            decimals={0}
           />
           <TellulfInfoCell
             info={this.props.costPerKwh}
             unit="kr"
-            header="Strømpris nå"
+            header="pris"
             key="priceNow"
             decimals={2}
           />
@@ -128,14 +128,14 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
           <TellulfInfoCell
             info={this.props.accumulatedConsumption}
             unit="kWh"
-            header="forbruk i dag"
+            header="forbruk"
             key="paidDay"
             decimals={1}
           />
           <TellulfInfoCell
             info={this.props.consumptionAverage}
             unit="W"
-            header="snitt i dag"
+            header="snitt"
             key="agbHome"
             decimals={1}
             smartRoundKw
@@ -145,7 +145,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
           <TellulfInfoCell
             info={this.props.currentConsumption}
             unit="W"
-            header="Forbruk nå"
+            header="effekt"
             decimals={1}
             key="prodPercent"
             smartRoundKw
@@ -157,7 +157,7 @@ class TallPanelDisplay extends React.PureComponent<Props, GenericProps> {
             key="maxBruk"
             smartRoundKw
             unit="W"
-            decimals={2}
+            decimals={1}
           />
         </div>
         <div className="energyTableRow energyTableRowHeader">Hytta</div>
