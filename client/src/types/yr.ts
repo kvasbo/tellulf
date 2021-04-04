@@ -99,7 +99,7 @@ export interface WeatherApiTimesetData {
 }
 
 export interface YrWeatherDataset {
-  time: Date;
+  time: string;
   data: WeatherApiTimesetData;
 }
 

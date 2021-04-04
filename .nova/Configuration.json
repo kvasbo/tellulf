@@ -1,7 +1,7 @@
 {
   "apexskier.eslint.config.fixOnSave" : "Enable",
   "apexskier.typescript.config.isEnabledForJavascript" : "Disable",
-  "apexskier.typescript.config.organizeImportsOnSave" : "true",
+  "apexskier.typescript.config.organizeImportsOnSave" : "false",
   "index.ignored_file_patterns" : [
     "node_modules"
   ],

@@ -1,18 +1,19 @@
 import Moment from 'moment';
 import React from 'react';
 import {
-    Area, CartesianGrid, ComposedChart,
-    Label,
-    Line,
-    ReferenceArea,
-    ReferenceLine,
-    ResponsiveContainer,
-    XAxis,
-    YAxis
+  Area,
+  ComposedChart,
+  Label,
+  Line,
+  ReferenceLine,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
 } from 'recharts';
 import { HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
 import { formatTick } from './weatherHelpers';
 import WeatherIcon from './WeatherIcon';
+
 interface Props {
   weather: WeatherDataSeries;
   from: Moment.Moment;
@@ -27,10 +28,9 @@ interface Props {
 
 const colors = {
   grid: '#FFFFFF33',
-  cold: '#0000FF44',
-  rain: '#8884d8',
-  temperature: '#FF000088',
-  updated: '#FFFF0022',
+  rain: '#ffffff',
+  temperature: '#FFFFFF88',
+  updated: '#FFFFFF22',
 };
 
 interface State {
@@ -95,7 +95,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             width={25}
             yAxisId="temp"
             type="number"
-            ticks={this.props.limits.ticks}
+            //ticks={null}
             domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
             hide
           />
@@ -116,16 +116,6 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             domain={[0, 1.5]}
             hide
           />
-          <CartesianGrid stroke={colors.grid} vertical={false} />
-          {this.props.limits.lowerRange < 0 && (
-            <ReferenceArea
-              y1={0}
-              y2={this.props.limits.lowerRange}
-              yAxisId="temp"
-              stroke="#00000000"
-              fill={colors.cold}
-            />
-          )}
 
           <Area
             dot={false}
@@ -134,7 +124,8 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             type="natural"
             dataKey="rain"
             stroke={colors.rain}
-            fillOpacity="0.3"
+            fillOpacity="0.15"
+            fill="#ffffff"
             isAnimationActive={false}
           />
 

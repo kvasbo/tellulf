@@ -174,8 +174,8 @@ class Dag extends React.PureComponent<Props, State> {
 
     if (!showWeatherGraphForDay(this.props.date, forecast)) return null;
 
-    const from = Moment(date).startOf('day');
-    const to = Moment(date).add(1, 'day');
+    const from = Moment(date).startOf('day'); //.add(6, 'hours');
+    const to = Moment(date).add(1, 'day'); //.subtract(2, 'hours');
 
     return (
       <WeatherGraph
@@ -200,11 +200,7 @@ class Dag extends React.PureComponent<Props, State> {
         <div className="kalenderDato weatherSummary">
           {createForecastSummary(this.filterForecast(this.props.date, this.state.sted, 0, 0))}
         </div>
-        <div
-          style={{ gridColumn: '1 / 3', gridRow: '2 / 4', display: 'flex', alignItems: 'flex-end' }}
-        >
-          {this.getWeather(this.props.date, this.state.sted)}
-        </div>
+        <div className="weatherGraph">{this.getWeather(this.props.date, this.state.sted)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
           <div className="preggo">{this.getPreggo()}</div>

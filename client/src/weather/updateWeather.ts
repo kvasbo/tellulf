@@ -5,11 +5,13 @@ import { Forecast, HourForecast, WeatherDataSeries } from '../types/forecast';
 import { YrResponse, YrWeatherDataset } from '../types/yr';
 import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 
-export const localStorageKey = '12';
+export const localStorageKey = '14';
 const weatherSeriesKey = 'weatherSeries';
 
+const hoursToUse = [2, 8, 14, 20];
+
 // New: Create a time stamp
-function createTimeKey(d: Date): number {
+function createTimeKey(d: string): number {
   return Moment(d).add(30, 'minutes').startOf('hour').valueOf();
 }
 
@@ -19,12 +21,16 @@ function parseWeatherHour(d: YrWeatherDataset): HourForecast {
   out.temp = d.data.instant.details.air_temperature;
 
   // Use hourly data
+  /*
   if (d.data.next_1_hours) {
     out.rain = d.data.next_1_hours.details.precipitation_amount;
     out.rainMin = d.data.next_1_hours.details.precipitation_amount_min;
     out.rainMax = d.data.next_1_hours.details.precipitation_amount_max;
     out.symbol = d.data.next_1_hours.summary.symbol_code;
-  } else if (d.data.next_6_hours) {
+  } else 
+  */
+
+  if (d.data.next_6_hours) {
     //... or six hours
     out.rain = d.data.next_6_hours.details.precipitation_amount / 6;
     out.rainMin = d.data.next_6_hours.details.precipitation_amount_min / 6;
@@ -92,7 +98,15 @@ export async function getForecastFromYr(lat: number, lon: number): Promise<Forec
   };
 
   nData.properties.timeseries.forEach((d) => {
+    const date = new Date(d.time);
+    const hour = date.getHours();
+
+    if (hoursToUse.indexOf(hour) === -1) {
+      return;
+    }
+
     const key = createTimeKey(d.time);
+
     forecast.forecast[key] = parseWeatherHour(d);
   });
 
