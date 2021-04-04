@@ -2,7 +2,7 @@ import React from 'react';
 import { HourForecast } from '../types/forecast';
 import { GenericProps } from '../types/generic';
 const baseUrl = '/weather_symbols';
-const iconBase = '/weather_icons';
+// const iconBase = '/weather_icons';
 
 interface Props {
   forecast: HourForecast[];
@@ -30,7 +30,6 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
 
   public constructor(props: Props) {
     super(props);
-    console.log(this.props.payload);
     this.width = window.innerWidth;
   }
 
@@ -39,12 +38,13 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
     return icon;
   }
 
+  /*
   private static getIconUrl(symbol: string): string {
-    const data = symbol.split('_');
-    //console.log(data);
+    // const data = symbol.split('_');
     const icon = 'alien';
     return `${iconBase}/wi-${icon}.svg`;
   }
+  */
 
   private getTemp() {
     const temp = Math.round(this.props.payload.temp);
@@ -70,7 +70,7 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
       if (d.getHours() % 2 !== 0) return null;
     }
 
-    const iconUrl = WeatherIcon.getIconUrl(this.props.payload.symbol);
+    // const iconUrl = WeatherIcon.getIconUrl(this.props.payload.symbol);
 
     return (
       <svg>
