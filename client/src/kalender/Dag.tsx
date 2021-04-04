@@ -179,6 +179,7 @@ class Dag extends React.PureComponent<Props, State> {
 
     return (
       <WeatherGraph
+        date={this.props.date}
         weather={forecast}
         from={from}
         to={to}

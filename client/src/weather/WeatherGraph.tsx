@@ -16,6 +16,7 @@ import WeatherIcon from './WeatherIcon';
 
 interface Props {
   weather: WeatherDataSeries;
+  date: Moment.Moment;
   from: Moment.Moment;
   to: Moment.Moment;
   sted: string;
@@ -68,8 +69,8 @@ class WeatherGraph extends React.PureComponent<Props, State> {
 
   // Stays on
   public render(): React.ReactNode {
-    const startTime = this.props.from.valueOf();
-    const endTime = this.props.to.valueOf();
+    const startTime = this.props.date.startOf('day').valueOf();
+    const endTime = this.props.date.endOf('day').valueOf();
     const weather: HourForecast[] = Object.values(this.props.weather);
     return (
       <ResponsiveContainer height={200} width="100%">
@@ -89,66 +90,66 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             type="number"
             tickFormatter={formatTick}
             domain={[startTime, endTime]}
-            allowDataOverflow
+            allowDataOverflow={true}
           />
           <YAxis
             width={25}
             yAxisId="temp"
             type="number"
-            //ticks={null}
             domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
             hide
           />
-          <YAxis
-            width={25}
-            label={{
-              angle: 90,
-              value: 'mm',
-              stroke: '#ffffff55',
-              fill: '#ffffff55',
-              fontSize: 15,
-              position: 'left',
-            }}
-            yAxisId="rain"
-            allowDataOverflow
-            type="number"
-            orientation="right"
-            domain={[0, 1.5]}
-            hide
-          />
+          {false && (
+            <YAxis
+              width={25}
+              yAxisId="rain"
+              allowDataOverflow
+              type="number"
+              orientation="right"
+              domain={[0, 1.5]}
+              hide
+            />
+          )}
+          {false && (
+            <Area
+              dot={false}
+              yAxisId="rain"
+              connectNulls={true}
+              type="natural"
+              dataKey="rain"
+              stroke={colors.rain}
+              fillOpacity="0.15"
+              fill="#ffffff"
+              isAnimationActive={false}
+            />
+          )}
 
-          <Area
-            dot={false}
-            yAxisId="rain"
-            connectNulls={true}
-            type="natural"
-            dataKey="rain"
-            stroke={colors.rain}
-            fillOpacity="0.15"
-            fill="#ffffff"
-            isAnimationActive={false}
-          />
+          {false && (
+            <Line
+              dot={false}
+              yAxisId="rain"
+              connectNulls={true}
+              type="natural"
+              dataKey="rainMin"
+              stroke={colors.rain}
+              strokeDasharray="2 2"
+              isAnimationActive={false}
+            />
+          )}
 
-          <Line
-            dot={false}
-            yAxisId="rain"
-            connectNulls={true}
-            type="natural"
-            dataKey="rainMin"
-            stroke={colors.rain}
-            strokeDasharray="2 2"
-            isAnimationActive={false}
-          />
-          <Line
-            dot={false}
-            yAxisId="rain"
-            connectNulls={true}
-            type="natural"
-            dataKey="rainMax"
-            stroke={colors.rain}
-            strokeDasharray="2 2"
-            isAnimationActive={false}
-          />
+          {false && (
+            <Line
+              dot={false}
+              yAxisId="rain"
+              connectNulls={true}
+              type="natural"
+              dataKey="rainMax"
+              stroke={colors.rain}
+              strokeDasharray="2 2"
+              isAnimationActive={false}
+            />
+          )}
+
           <Line
             dot={<WeatherIcon forecast={weather} />}
             yAxisId="temp"

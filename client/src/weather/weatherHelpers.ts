@@ -14,7 +14,7 @@ export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Mom
 
 export function formatTick(data: number): string {
   const time = Moment(data, 'x');
-  return time.format('HH');
+  return time.format('H');
 }
 
 export function createKeyBasedOnStamps(from: string, to: string): string {
