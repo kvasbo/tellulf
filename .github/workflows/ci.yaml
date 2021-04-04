@@ -1,7 +1,5 @@
 name: CI
-on:
-  push:
-    branches: [master]
+on: push
 
 jobs:
   client-build:
@@ -14,15 +12,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Install Client Dependencies
+      - name: 'Client: Install dependencies'
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
-      - name: Install Functions Dependencies
+      - name: 'Functions: Install dependencies'
         run: yarn --cwd "functions" install --non-interactive --pure-lockfile
-      - name: Lint Client
+      - name: 'Client: Lint'
         run: yarn --cwd "client" run lint
-      - name: Build Client
+      - name: 'Client: Sass'
+        run: CI=false yarn --cwd "client" run sass
+      - name: 'Client: Build'
         run: CI=false yarn --cwd "client" run build
-      - name: Deploy to Firebase
+      - name: 'Deploy to Firebase'
+        if: github.ref == 'refs/heads/master'
         uses: w9jds/firebase-action@master
         with:
           args: deploy
