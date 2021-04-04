@@ -1,5 +1,7 @@
 name: CI
-on: push
+on:
+  push:
+    branches: [master]
 
 jobs:
   client-build:
@@ -23,7 +25,6 @@ jobs:
       - name: 'Client: Build'
         run: CI=false yarn --cwd "client" run build
       - name: 'Deploy to Firebase'
-        if: github.ref == 'refs/heads/master'
         uses: w9jds/firebase-action@master
         with:
           args: deploy
