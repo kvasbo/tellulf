@@ -37,10 +37,6 @@ if (!firebase.apps.length) {
 
 let tibberSettings: TibberSettings;
 
-const tibber = new tibberUpdater(store, fb);
-
-const updaters = { tibber };
-
 interface AppState {
   loggedIn: boolean;
   user: number | null;
@@ -132,6 +128,9 @@ class App extends React.PureComponent {
 
   public render(): React.ReactNode {
     if (!this.state.loggedIn) return this.getLogin();
+    const tibber = new tibberUpdater(store, tibberSettings);
+
+    const updaters = { tibber };
     return (
       <Provider store={store}>
         <Tellulf tibberSettings={tibberSettings} updaters={updaters} />

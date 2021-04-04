@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import axios from 'axios';
-import type firebase from 'firebase';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
 import { TibberSettings } from './App';
@@ -26,14 +25,14 @@ const nettleie = 0.477;
 
 export default class TibberUpdater {
   private store: { dispatch: AppDispatch };
-  private firebase;
-  public constructor(store: { dispatch: AppDispatch }, firebase: firebase.app.App) {
+  private settings;
+  public constructor(store: { dispatch: AppDispatch }, settings: TibberSettings) {
     this.store = store;
-    this.firebase = firebase;
+    this.settings = settings;
   }
 
   public async updatePowerPrices(): Promise<void> {
-    const settings: TibberSettings = await this.getTibberSettings();
+    const settings: TibberSettings = this.settings;
 
     const queryPrices = `
     {
@@ -84,7 +83,7 @@ export default class TibberUpdater {
   }
 
   public async updateConsumption(): Promise<void> {
-    const settings: TibberSettings = await this.getTibberSettings();
+    const settings: TibberSettings = this.settings;
     const queryUsage = `
     {
       viewer {
@@ -128,7 +127,7 @@ export default class TibberUpdater {
   }
 
   public async subscribeToRealTime(): Promise<void> {
-    const tibberSettings = await this.getTibberSettings();
+    const tibberSettings = this.settings;
     const token = tibberSettings.tibberApiKey;
     const homeId = [tibberSettings.tibberHomeKey, tibberSettings.tibberCabinKey];
     const connector = new Tibber({
@@ -169,7 +168,7 @@ export default class TibberUpdater {
   }
 
   public async updateConsumptionDaily(): Promise<void> {
-    const settings = await this.getTibberSettings();
+    const settings = this.settings;
 
     const daysToAskFor = new Date().getDate();
     const queryUsage = `
@@ -248,13 +247,5 @@ export default class TibberUpdater {
     } catch (err) {
       console.log(err);
     }
-  }
-
-  // Get tibber settings from firebase
-  public async getTibberSettings(): Promise<TibberSettings> {
-    const settingsRef = this.firebase.database().ref('settings');
-    const snapshot = await settingsRef.once('value');
-    const data = snapshot.val() as TibberSettings;
-    return data;
   }
 }
