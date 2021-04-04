@@ -59,9 +59,7 @@ class App extends React.PureComponent {
   public componentDidMount(): void {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        // Get tibber API login info
         tibberSettings = await this.getTibberSettings();
-        // console.log(tibberSettings);
         this.setState({ loggedIn: true, user });
       }
     });
