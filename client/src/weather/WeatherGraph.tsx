@@ -99,7 +99,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             domain={[this.props.limits.lowerRange, this.props.limits.upperRange]}
             hide
           />
-          {false && (
+          {true && (
             <YAxis
               width={25}
               yAxisId="rain"
@@ -110,7 +110,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
               hide
             />
           )}
-          {false && (
+          {true && (
             <Area
               dot={false}
               yAxisId="rain"
@@ -124,7 +124,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             />
           )}
 
-          {false && (
+          {true && (
             <Line
               dot={false}
               yAxisId="rain"
@@ -137,7 +137,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             />
           )}
 
-          {false && (
+          {true && (
             <Line
               dot={false}
               yAxisId="rain"
