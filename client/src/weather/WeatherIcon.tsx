@@ -2,6 +2,7 @@ import React from 'react';
 import { HourForecast } from '../types/forecast';
 import { GenericProps } from '../types/generic';
 const baseUrl = '/weather_symbols';
+const iconBase = '/weather_icons';
 
 interface Props {
   forecast: HourForecast[];
@@ -30,10 +31,11 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
     return icon;
   }
 
-  private static getIconClass(symbol: string): string {
+  private static getIconUrl(symbol: string): string {
     const data = symbol.split('_');
-    console.log(data);
-    return 'nada';
+    //console.log(data);
+    const icon = 'alien';
+    return `${iconBase}/wi-${icon}.svg`;
   }
 
   private getTemp() {
@@ -50,20 +52,7 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
       if (d.getHours() % 2 !== 0) return null;
     }
 
-    // Check if same as previous (or first)
-    let renderIcon = false;
-
-    if (
-      this.props.index === 0 ||
-      this.props.forecast[this.props.index - 1].symbol !==
-        this.props.forecast[this.props.index].symbol
-    ) {
-      renderIcon = true;
-    }
-
-    const iconOpacity = renderIcon ? 1 : 0.25;
-
-    const iconClass = WeatherIcon.getIconClass(this.props.payload.symbol);
+    const iconUrl = WeatherIcon.getIconUrl(this.props.payload.symbol);
 
     return (
       <svg>
@@ -79,11 +68,12 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
         </text>
         <image
           href={this.getIconLocation()}
+          //href={iconUrl}
           x={this.props.cx - 13}
           y={this.props.cy - 15}
           height="26px"
           width="26px"
-          opacity={iconOpacity}
+          //filter={'invert(100%)'}
         />
         )
       </svg>
