@@ -58,7 +58,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryPrices,
@@ -110,7 +110,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryUsage,
@@ -127,17 +127,16 @@ export default class TibberUpdater {
   }
 
   public async subscribeToRealTime(): Promise<void> {
-    const tibberSettings = this.settings;
-    const token = tibberSettings.tibberApiKey;
-    const homeId = [tibberSettings.tibberHomeKey, tibberSettings.tibberCabinKey];
+    const token = this.settings.tibberApiKey;
+    const homeId = [this.settings.tibberHomeKey, this.settings.tibberCabinKey];
     const connector = new Tibber({
       token,
       homeId,
       onData: (data: { data: { liveMeasurement: TibberRealtimeData } }, homeId: string) => {
         let where: houses;
-        if (homeId === tibberSettings.tibberHomeKey) {
+        if (homeId === this.settings.tibberHomeKey) {
           where = 'hjemme';
-        } else if (homeId === tibberSettings.tibberCabinKey) {
+        } else if (homeId === this.settings.tibberCabinKey) {
           where = 'hytta';
         } else {
           return;
@@ -168,8 +167,6 @@ export default class TibberUpdater {
   }
 
   public async updateConsumptionDaily(): Promise<void> {
-    const settings = this.settings;
-
     const daysToAskFor = new Date().getDate();
     const queryUsage = `
     {
@@ -210,7 +207,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryUsage,
