@@ -30,6 +30,12 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
     return icon;
   }
 
+  private static getIconClass(symbol: string): string {
+    const data = symbol.split('_');
+    console.log(data);
+    return 'nada';
+  }
+
   private getTemp() {
     const temp = Math.round(this.props.payload.temp);
     return temp;
@@ -56,6 +62,8 @@ class WeatherIcon extends React.PureComponent<Props, GenericProps> {
     }
 
     const iconOpacity = renderIcon ? 1 : 0.25;
+
+    const iconClass = WeatherIcon.getIconClass(this.props.payload.symbol);
 
     return (
       <svg>
