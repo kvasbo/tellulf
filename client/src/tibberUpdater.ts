@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import axios from 'axios';
-import type firebase from 'firebase';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
+import { TibberSettings } from './App';
 import {
     updateInitStatus,
     updatePowerPrices,
@@ -23,22 +23,16 @@ import {
 
 const nettleie = 0.477;
 
-interface TibberSettings {
-  tibberApiKey: string;
-  tibberHomeKey: string;
-  tibberCabinKey: string;
-}
-
 export default class TibberUpdater {
   private store: { dispatch: AppDispatch };
-  private firebase;
-  public constructor(store: { dispatch: AppDispatch }, firebase: firebase.app.App) {
+  private settings;
+  public constructor(store: { dispatch: AppDispatch }, settings: TibberSettings) {
     this.store = store;
-    this.firebase = firebase;
+    this.settings = settings;
   }
 
   public async updatePowerPrices(): Promise<void> {
-    const settings: TibberSettings = await this.getTibberSettings();
+    const settings: TibberSettings = this.settings;
 
     const queryPrices = `
     {
@@ -64,7 +58,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryPrices,
@@ -89,7 +83,7 @@ export default class TibberUpdater {
   }
 
   public async updateConsumption(): Promise<void> {
-    const settings: TibberSettings = await this.getTibberSettings();
+    const settings: TibberSettings = this.settings;
     const queryUsage = `
     {
       viewer {
@@ -116,7 +110,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryUsage,
@@ -133,17 +127,16 @@ export default class TibberUpdater {
   }
 
   public async subscribeToRealTime(): Promise<void> {
-    const tibberSettings = await this.getTibberSettings();
-    const token = tibberSettings.tibberApiKey;
-    const homeId = [tibberSettings.tibberHomeKey, tibberSettings.tibberCabinKey];
+    const token = this.settings.tibberApiKey;
+    const homeId = [this.settings.tibberHomeKey, this.settings.tibberCabinKey];
     const connector = new Tibber({
       token,
       homeId,
       onData: (data: { data: { liveMeasurement: TibberRealtimeData } }, homeId: string) => {
         let where: houses;
-        if (homeId === tibberSettings.tibberHomeKey) {
+        if (homeId === this.settings.tibberHomeKey) {
           where = 'hjemme';
-        } else if (homeId === tibberSettings.tibberCabinKey) {
+        } else if (homeId === this.settings.tibberCabinKey) {
           where = 'hytta';
         } else {
           return;
@@ -174,8 +167,6 @@ export default class TibberUpdater {
   }
 
   public async updateConsumptionDaily(): Promise<void> {
-    const settings = await this.getTibberSettings();
-
     const daysToAskFor = new Date().getDate();
     const queryUsage = `
     {
@@ -216,7 +207,7 @@ export default class TibberUpdater {
         url: 'https://api.tibber.com/v1-beta/gql',
         method: 'post',
         headers: {
-          Authorization: `bearer ${settings.tibberApiKey}`,
+          Authorization: `bearer ${this.settings.tibberApiKey}`,
         },
         data: {
           query: queryUsage,
@@ -253,13 +244,5 @@ export default class TibberUpdater {
     } catch (err) {
       console.log(err);
     }
-  }
-
-  // Get tibber settings from firebase
-  public async getTibberSettings(): Promise<TibberSettings> {
-    const settingsRef = this.firebase.database().ref('settings');
-    const snapshot = await settingsRef.once('value');
-    const data = snapshot.val() as TibberSettings;
-    return data;
   }
 }

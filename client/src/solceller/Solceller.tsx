@@ -23,8 +23,8 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
     tibber.updatePowerPrices();
     tibber.subscribeToRealTime();
     tibber.updateConsumption();
-    tibber.updateConsumptionDaily();
-    this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
+    // tibber.updateConsumptionDaily();
+    // this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
   }
 
   public componentWillUnmount() {
@@ -33,11 +33,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
 
   public render() {
     // Regne ut felles verdier.
-    const currentNetConsumption = this.props.realtimePowerHjemme.calculatedConsumption; // Find actual current usage
-
-    // Regne ut felles verdier.
-    const currentNetConsumptionHytta = this.props.realtimePowerHytta.calculatedConsumption; // Find actual current usage
-
     return (
       <div
         style={{
@@ -52,7 +47,7 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
           <TallPanel
             realtimePower={this.props.realtimePowerHjemme}
             realtimePowerHytta={this.props.realtimePowerHytta}
-            currentNetConsumption={currentNetConsumption}
+            currentNetConsumption={this.props.realtimePowerHjemme.calculatedConsumption}
             powerPrices={this.props.powerPrices}
           />
         </div>

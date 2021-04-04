@@ -12,6 +12,12 @@ import { GenericProps } from './types/generic';
 
 Moment.locale('nb');
 
+export interface TibberSettings {
+  tibberApiKey: string;
+  tibberHomeKey: string;
+  tibberCabinKey: string;
+}
+
 const firebaseConfig = {
   apiKey: 'AIzaSyBIJfOzVFrazxX9FkLEOHcf2dKeewXBCpI',
   authDomain: 'tellulf-151318.firebaseapp.com',
@@ -29,9 +35,7 @@ if (!firebase.apps.length) {
   fb = firebase.app(); // if already initialized, use that one
 }
 
-const tibber = new tibberUpdater(store, fb);
-
-const updaters = { tibber };
+let tibberSettings: TibberSettings;
 
 interface AppState {
   loggedIn: boolean;
@@ -49,11 +53,20 @@ class App extends React.PureComponent {
   }
 
   public componentDidMount(): void {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
+        tibberSettings = await this.getTibberSettings();
         this.setState({ loggedIn: true, user });
       }
     });
+  }
+
+  // Get tibber settings from firebase
+  private async getTibberSettings(): Promise<TibberSettings> {
+    const settingsRef = fb.database().ref('settings');
+    const snapshot = await settingsRef.once('value');
+    const data = snapshot.val() as TibberSettings;
+    return data;
   }
 
   private doLogin() {
@@ -115,9 +128,12 @@ class App extends React.PureComponent {
 
   public render(): React.ReactNode {
     if (!this.state.loggedIn) return this.getLogin();
+    const tibber = new tibberUpdater(store, tibberSettings);
+
+    const updaters = { tibber };
     return (
       <Provider store={store}>
-        <Tellulf updaters={updaters} />
+        <Tellulf tibberSettings={tibberSettings} updaters={updaters} />
       </Provider>
     );
   }

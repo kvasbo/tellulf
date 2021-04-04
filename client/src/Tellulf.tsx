@@ -2,6 +2,7 @@ import Moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
+import { TibberSettings } from './App';
 import Kalender from './kalender/Kalender';
 import Klokke from './Klokke';
 import { fetchForecast, updateNowcast } from './redux/actions';
@@ -24,6 +25,7 @@ interface Props {
   trains: TrainDataSet;
   temperature: number;
   updaters: { tibber: TibberUpdater };
+  tibberSettings: TibberSettings;
 }
 
 interface State {
