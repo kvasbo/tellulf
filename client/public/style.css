@@ -2,8 +2,8 @@ body {
   font-family: -apple-system, sans-serif;
   font-weight: 200;
   font-size: 16px;
-  background-color: #282828;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -110,7 +110,7 @@ body {
 
 .kalenderDag {
   margin: 0.5vh 0.5vw 1vh 0.5vw;
-  background-color: #000000;
+  background-color: #ffffff;
   display: grid;
   grid-template-columns: auto 225px;
   grid-template-rows: 5vh auto 5vh;
@@ -130,7 +130,7 @@ body {
   padding: 10;
   justify-content: flex-end;
   align-items: flex-start;
-  color: #ffffffaa;
+  color: #000000;
 }
 .kalenderDag .kalendarDayInfo {
   padding-left: 20px;
