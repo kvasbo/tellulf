@@ -57,7 +57,7 @@ export function createForecastSummary(data: WeatherDataSeries): string {
 
   const rain = sumBy(weather, (w: HourForecast): number => {
     if (!w.rain) return 0;
-    return w.rain;
+    return w.rain * 10;
   });
 
   const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : '?';
