@@ -10,9 +10,6 @@ interface Props {
   decimals: number;
   fontSize: number;
   large: boolean;
-  color: string;
-  colorIfNegative: string;
-  labelColor: string;
   header: string | undefined;
   headerIfNegative: string | undefined;
   unit: string | undefined;
@@ -41,9 +38,6 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
     decimals: 0,
     unit: '',
     unitSpace: false,
-    color: '#FFFFFF',
-    labelColor: '#777777',
-    colorIfNegative: '#FFFFFF',
     invertValue: false,
     absoluteValue: false,
     smartRoundKw: false,
@@ -101,8 +95,6 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
       fontSize = largeFontSize;
     }
 
-    const color = this.props.info >= 0 ? this.props.color : this.props.colorIfNegative;
-
     let header = this.props.header;
     if (this.props.info < 0 && this.props.headerIfNegative !== undefined) {
       header = this.props.headerIfNegative;
@@ -116,11 +108,9 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
         }}
       >
         {this.props.header && (
-          <span style={{ fontSize: labelFontSize, color: this.props.labelColor, marginBottom: 3 }}>
-            {header}
-          </span>
+          <span style={{ fontSize: labelFontSize, marginBottom: 3 }}>{header}</span>
         )}
-        <span style={{ color }}>{text}</span>
+        {text}
       </div>
     );
   }

@@ -1,17 +1,17 @@
-$black: #000000;
-$white: #ffffff;
-$dark: #282828;
+$background: #000000;
+$text: #ffffff;
 $mid: #767676;
-
 $radius: 2px;
 $big-radius: 5px;
 
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
+
 body {
-  font-family: -apple-system, sans-serif;
-  font-weight: 200;
+  font-family: 'raleway', sans-serif;
+  font-weight: 400;
   font-size: 16px;
-  background-color: $dark;
-  color: $white;
+  background-color: $background;
+  color: $text;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -118,7 +118,7 @@ body {
 
 .kalenderDag {
   margin: 0.5vh 0.5vw 1vh 0.5vw;
-  background-color: $black;
+  background-color: $background;
   display: grid;
   grid-template-columns: auto 225px;
   grid-template-rows: 5vh auto 5vh;
