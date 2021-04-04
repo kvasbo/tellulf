@@ -3,6 +3,7 @@ import axios from 'axios';
 import type firebase from 'firebase';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
+import { TibberSettings } from './App';
 import {
     updateInitStatus,
     updatePowerPrices,
@@ -22,12 +23,6 @@ import {
 } from './types/tibber';
 
 const nettleie = 0.477;
-
-interface TibberSettings {
-  tibberApiKey: string;
-  tibberHomeKey: string;
-  tibberCabinKey: string;
-}
 
 export default class TibberUpdater {
   private store: { dispatch: AppDispatch };
