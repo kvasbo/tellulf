@@ -2,9 +2,11 @@ import getTrains from '../ruter/updateTrains';
 import { Forecast } from '../types/forecast';
 import { houses, PowerPriceState, TibberProductionNode, TibberRealtimeData } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
+import { YrWeatherDataset } from '../types/yr';
 import { getForecastFromYr } from '../weather/updateWeather';
 import { AppDispatch } from './store';
 
+export const UPDATE_YR = 'UPDATE_YR';
 export const UPDATE_NOWCAST = 'UPDATE_NOWCAST';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
@@ -30,6 +32,17 @@ export function updateTrains(
   return {
     type: UPDATE_TRAINS,
     trains,
+  };
+}
+
+export function updateYr(
+  data: YrWeatherDataset[],
+  sted: string,
+): { type: 'UPDATE_YR'; data: YrWeatherDataset[]; sted: string } {
+  return {
+    type: UPDATE_YR,
+    data,
+    sted,
   };
 }
 

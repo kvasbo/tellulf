@@ -113,3 +113,7 @@ export interface YrResponse {
   geometry: Geometry;
   properties: Properties;
 }
+
+export interface YrStore {
+  [s: string]: YrWeatherDataset;
+}
