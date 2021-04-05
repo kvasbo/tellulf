@@ -1,12 +1,6 @@
 import getTrains from '../ruter/updateTrains';
 import { Forecast } from '../types/forecast';
-import {
-    houses,
-    PowerPriceState,
-    TibberConsumptionNode,
-    TibberProductionNode,
-    TibberRealtimeData
-} from '../types/tibber';
+import { houses, PowerPriceState, TibberProductionNode, TibberRealtimeData } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
 import { getForecastFromYr } from '../weather/updateWeather';
 import { AppDispatch } from './store';
@@ -18,8 +12,6 @@ export const UPDATE_INIT_STATUS = 'UPDATE_INIT_STATUS';
 export const UPDATE_TRAINS = 'UPDATE_TRAINS';
 export const UPDATE_TIBBER_REALTIME_CONSUMPTION = 'UPDATE_TIBBER_REALTIME_CONSUMPTION';
 export const UPDATE_TIBBER_POWER_USAGE = 'UPDATE_TIBBER_POWER_USAGE';
-export const UPDATE_TIBBER_USAGE_MONTH = 'UPDATE_TIBBER_USAGE_MONTH';
-export const UPDATE_TIBBER_PRODUCTION_MONTH = 'UPDATE_TIBBER_PRODUCTION_MONTH';
 
 export function updateInitStatus(
   key: string,
@@ -56,24 +48,6 @@ export function updateNowcast(temp: number): { type: 'UPDATE_NOWCAST'; temp: num
   return {
     type: UPDATE_NOWCAST,
     temp,
-  };
-}
-
-export function updateTibberProductionMonth(
-  data: TibberProductionNode[],
-): { type: 'UPDATE_TIBBER_PRODUCTION_MONTH'; data: TibberProductionNode[] } {
-  return {
-    type: UPDATE_TIBBER_PRODUCTION_MONTH,
-    data,
-  };
-}
-
-export function updateTibberConsumptionMonth(
-  data: TibberConsumptionNode[],
-): { type: 'UPDATE_TIBBER_USAGE_MONTH'; data: TibberConsumptionNode[] } {
-  return {
-    type: UPDATE_TIBBER_USAGE_MONTH,
-    data,
   };
 }
 

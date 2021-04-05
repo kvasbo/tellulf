@@ -4,22 +4,13 @@ import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
 import { TibberSettings } from './App';
 import {
-    updateInitStatus,
-    updatePowerPrices,
-    updatePowerUsage,
-    updateRealtimeConsumption,
-    updateTibberConsumptionMonth,
-    updateTibberProductionMonth
+  updateInitStatus,
+  updatePowerPrices,
+  updatePowerUsage,
+  updateRealtimeConsumption,
 } from './redux/actions';
 import { AppDispatch } from './redux/store';
-import {
-    houses,
-    TibberConsumptionNode,
-    TibberConsumptionReturn,
-    TibberProductionNode,
-    TibberProductionReturn,
-    TibberRealtimeData
-} from './types/tibber';
+import { houses, TibberProductionNode, TibberRealtimeData } from './types/tibber';
 
 const nettleie = 0.477;
 
@@ -164,85 +155,5 @@ export default class TibberUpdater {
       },
     });
     connector.start();
-  }
-
-  public async updateConsumptionDaily(): Promise<void> {
-    const daysToAskFor = new Date().getDate();
-    const queryUsage = `
-    {
-      viewer {
-        homes {
-          id
-          appNickname
-          consumption(resolution: DAILY, last: ${daysToAskFor}) {
-            nodes {
-              from
-              to
-              totalCost
-              unitCost
-              unitPrice
-              unitPriceVAT
-              consumption
-              consumptionUnit
-            }
-          }
-          production(resolution: DAILY, last: ${daysToAskFor}) {
-            nodes {
-              from
-              to
-              unitPrice
-              unitPriceVAT
-              production
-              productionUnit
-              profit
-            }
-          }
-        }
-      }
-    }
-`;
-
-    try {
-      const data = await axios({
-        url: 'https://api.tibber.com/v1-beta/gql',
-        method: 'post',
-        headers: {
-          Authorization: `bearer ${this.settings.tibberApiKey}`,
-        },
-        data: {
-          query: queryUsage,
-        },
-      });
-      if (data.status === 200) {
-        const outConsumption: TibberConsumptionNode[] = [];
-        const outProduction: TibberProductionNode[] = [];
-        const now = Moment();
-        const usage = data.data.data.viewer.homes;
-        usage.forEach(
-          (u: {
-            appNickname: string;
-            id: string;
-            consumption: TibberConsumptionReturn;
-            production: TibberProductionReturn;
-          }) => {
-            u.consumption.nodes.forEach((n) => {
-              const from = Moment(n.from);
-              if (!from.isSame(now, 'month')) return;
-              outConsumption.push(n);
-            });
-            u.production.nodes.forEach((n) => {
-              const from = Moment(n.from);
-              if (!from.isSame(now, 'month')) return;
-              outProduction.push(n);
-            });
-          },
-        );
-        this.store.dispatch(updateTibberConsumptionMonth(outConsumption));
-        this.store.dispatch(updateTibberProductionMonth(outProduction));
-        // console.log(outConsumption, outProduction);
-      }
-    } catch (err) {
-      console.log(err);
-    }
   }
 }
