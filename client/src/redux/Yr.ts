@@ -18,7 +18,10 @@ export default function Yr(state: YrStore = initialState, incomingAction: Action
       const newState: YrStore = { ...state };
 
       action.data.forEach((d) => {
-        state[d.time] = d;
+        if (!newState[action.sted]) {
+          newState[action.sted] = {};
+        }
+        newState[action.sted][d.time] = d;
       });
 
       return newState;

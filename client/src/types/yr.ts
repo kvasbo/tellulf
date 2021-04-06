@@ -115,5 +115,7 @@ export interface YrResponse {
 }
 
 export interface YrStore {
-  [s: string]: YrWeatherDataset;
+  [s: string]: {
+    [s: string]: YrWeatherDataset;
+  };
 }
