@@ -11,7 +11,7 @@ export default function Nowcast(state = { temp: -999 }, incomingAction: Action):
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_NOWCAST: {
-      const temp = action.temp ? action.temp : -999;
+      const temp = action.temp ? Math.round(action.temp) : -999;
       return { temp };
     }
     default:
