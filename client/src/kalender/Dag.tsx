@@ -1,6 +1,5 @@
 import maxBy from 'lodash/maxBy';
 import Moment from 'moment';
-import Preggo from 'pregnancy';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
@@ -158,17 +157,6 @@ class Dag extends React.PureComponent<Props, State> {
     return this.props.forecast.data[this.state.sted].updated;
   }
 
-  private getPreggo(): string {
-    const p = new Preggo(new Date('2020-07-22'));
-    const d = p.getData(this.props.date.toDate());
-    if (d.percent >= 105) {
-      return '';
-    }
-    return `${d.percent.toFixed(1)}% - uke ${d.week} dag ${d.dayOfWeek} - ${d.weight.toFixed(
-      0,
-    )}g - ${d.height.toPrecision(3)} cm`;
-  }
-
   private getWeather(date: Moment.Moment, sted: string) {
     const forecast = this.filterForecast(date, sted, 6, 6);
 
@@ -204,7 +192,6 @@ class Dag extends React.PureComponent<Props, State> {
         <div className="weatherGraph">{this.getWeather(this.props.date, this.state.sted)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
-          <div className="preggo">{this.getPreggo()}</div>
           {this.getBirthdays()}
           {this.getDinner()}
           {this.getEvents()}

@@ -157,9 +157,6 @@ body {
   display: flex;
   align-items: flex-end;
 }
-.kalenderDag .preggo {
-  margin-bottom: 0.5em;
-}
 
 .ruterGroup {
   margin-bottom: 1em;
