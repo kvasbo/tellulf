@@ -2,9 +2,11 @@ import getTrains from '../ruter/updateTrains';
 import { Forecast } from '../types/forecast';
 import { houses, PowerPriceState, TibberProductionNode, TibberRealtimeData } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
-import { getForecastFromYr } from '../weather/updateWeather';
+import { YrWeatherDataset } from '../types/yr';
+import { getForecastFromYr, getYr } from '../weather/updateWeather';
 import { AppDispatch } from './store';
 
+export const UPDATE_YR = 'UPDATE_YR';
 export const UPDATE_NOWCAST = 'UPDATE_NOWCAST';
 export const UPDATE_FORECAST = 'UPDATE_FORECAST';
 export const UPDATE_POWER_PRICES = 'UPDATE_POWER_PRICES';
@@ -30,6 +32,17 @@ export function updateTrains(
   return {
     type: UPDATE_TRAINS,
     trains,
+  };
+}
+
+export function updateYr(
+  data: YrWeatherDataset[],
+  sted: string,
+): { type: 'UPDATE_YR'; data: YrWeatherDataset[]; sted: string } {
+  return {
+    type: UPDATE_YR,
+    data,
+    sted,
   };
 }
 
@@ -91,5 +104,14 @@ export function fetchForecast(lat: number, lon: number, sted: string) {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
   return (dispatch: AppDispatch) => {
     return getForecastFromYr(lat, lon).then((forecast) => dispatch(updateForecast(forecast, sted)));
+  };
+}
+
+export function fetchYr(lat: number, lon: number, sted: string) {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
+  return (dispatch: AppDispatch) => {
+    return getYr(lat, lon).then((forecast) =>
+      dispatch(updateYr(forecast.properties.timeseries, sted)),
+    );
   };
 }

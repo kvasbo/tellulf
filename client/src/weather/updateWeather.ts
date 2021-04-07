@@ -79,9 +79,8 @@ function initWeatherSeries(days = 14): WeatherDataSeries {
   return nOut;
 }
 
-export async function getForecastFromYr(lat: number, lon: number): Promise<Forecast> {
-  // Use the new shiny API!
-  const { start, end } = getTimeLimits(14);
+// Use the new shiny API!
+export async function getYr(lat: number, lon: number): Promise<YrResponse> {
   const url = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat.toString()}&lon=${lon.toString()}`;
   const nResponse = await axios.get(url);
   if (nResponse.statusText !== 'OK') {
@@ -89,6 +88,12 @@ export async function getForecastFromYr(lat: number, lon: number): Promise<Forec
   }
   // The new API data set
   const nData: YrResponse = nResponse.data;
+  return nData;
+}
+
+export async function getForecastFromYr(lat: number, lon: number): Promise<Forecast> {
+  const { start, end } = getTimeLimits(14);
+  const nData = await getYr(lat, lon);
 
   const forecast: Forecast = {
     forecast: initWeatherSeries(),
