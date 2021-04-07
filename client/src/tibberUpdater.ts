@@ -1,17 +1,11 @@
 /* eslint-disable no-console */
-import axios from 'axios';
 import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
 import { TibberQuery, TibberFeed, IConfig } from 'tibber-api';
 import { TibberSettings } from './App';
-import {
-  updateInitStatus,
-  updatePowerPrices,
-  updatePowerUsage,
-  updateRealtimeConsumption,
-} from './redux/actions';
+import { updateInitStatus, updatePowerPrices, updateRealtimeConsumption } from './redux/actions';
 import { AppDispatch } from './redux/store';
-import { houses, TibberProductionNode, TibberRealtimeData } from './types/tibber';
+import { houses, TibberRealtimeData } from './types/tibber';
 
 const nettleie = 0.477;
 
@@ -50,50 +44,6 @@ export default class TibberUpdater {
 
     this.store.dispatch(updatePowerPrices(parsedPrices));
     this.store.dispatch(updateInitStatus('powerPrices'));
-  }
-
-  public async updateConsumption(): Promise<void> {
-    const settings: TibberSettings = this.settings;
-    const queryUsage = `
-    {
-      viewer {
-        home(id: "${settings.tibberHomeKey}") {
-          consumption(resolution: HOURLY, last: 24) {
-            nodes {
-              from
-              to
-              totalCost
-              unitCost
-              unitPrice
-              unitPriceVAT
-              consumption
-              consumptionUnit
-            }
-          }
-        }
-      }
-    }
-`;
-
-    try {
-      const data = await axios({
-        url: 'https://api.tibber.com/v1-beta/gql',
-        method: 'post',
-        headers: {
-          Authorization: `bearer ${this.settings.tibberApiKey}`,
-        },
-        data: {
-          query: queryUsage,
-        },
-      });
-      if (data.status === 200) {
-        const usage: TibberProductionNode[] = data.data.data.viewer.home.consumption.nodes;
-        this.store.dispatch(updatePowerUsage(usage));
-      }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-    }
   }
 
   public async subscribeToRealTime(): Promise<void> {

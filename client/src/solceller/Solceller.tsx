@@ -22,9 +22,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
     const { tibber } = this.props.updaters;
     tibber.updatePowerPrices();
     tibber.subscribeToRealTime();
-    tibber.updateConsumption();
-    // tibber.updateConsumptionDaily();
-    // this.interval = window.setInterval(() => tibber.updateConsumption(), 60 * 1000); // Every minute
   }
 
   public componentWillUnmount() {
