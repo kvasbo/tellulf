@@ -21,7 +21,7 @@
     "redux-thunk": "^2.3.0",
     "store": "^2.0.12",
     "suncalc": "^1.8.0",
-    "tibber-api": "^2.3.0",
+    "tibber-api": "kvasbo/tibber-api#master",
     "tibber-pulse-connector": "^3.0.1"
   },
   "scripts": {
