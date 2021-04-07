@@ -31,7 +31,6 @@ export default class TibberUpdater {
     // Instance of TibberQuery
     this.query = new TibberQuery(config);
     this.feed = new TibberFeed(config);
-    // this.feed.connect();
   }
 
   // TODO: PRICE PER HOUSE
