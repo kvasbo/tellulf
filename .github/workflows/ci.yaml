@@ -16,6 +16,10 @@ jobs:
           node-version: 10.x
       - name: Install Client Dependencies
         run: yarn --cwd "client" install --non-interactive --pure-lockfile
+      - name: 'TMP! Setup tibber-api'
+        run: yarn -cwd "client/node_modules/tibber-api" run install --non-interactive --pure-lockfile
+      - name: 'TMP! Build tibber-api'
+        run: yarn -cwd "client/node_modules/tibber-api" run build
       - name: Install Functions Dependencies
         run: yarn --cwd "functions" install --non-interactive --pure-lockfile
       - name: Lint Client
