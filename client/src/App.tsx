@@ -4,10 +4,12 @@ import 'firebase/database';
 import Moment from 'moment';
 import 'moment/locale/nb';
 import React from 'react';
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import Tellulf from './Tellulf';
 import tibberUpdater from './tibberUpdater';
+import { persistor } from './redux/store';
 import { GenericProps } from './types/generic';
 
 Moment.locale('nb');
@@ -56,6 +58,7 @@ class App extends React.PureComponent {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         tibberSettings = await this.getTibberSettings();
+
         this.setState({ loggedIn: true, user });
       }
     });
@@ -129,14 +132,21 @@ class App extends React.PureComponent {
   public render(): React.ReactNode {
     if (!this.state.loggedIn) return this.getLogin();
     const tibber = new tibberUpdater(store, tibberSettings);
+    // tibber.updatePowerPrices();
+    // tibber.subscribeToRealTime();
 
     const updaters = { tibber };
     return (
       <Provider store={store}>
-        <Tellulf tibberSettings={tibberSettings} updaters={updaters} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Tellulf tibberSettings={tibberSettings} updaters={updaters} />
+        </PersistGate>
       </Provider>
     );
   }
 }
 
 export default App;
+
+//
+//

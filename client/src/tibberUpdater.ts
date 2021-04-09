@@ -47,6 +47,7 @@ export default class TibberUpdater {
   }
 
   public async subscribeToRealTime(): Promise<void> {
+    console.log('Starting Tibber subscribe');
     const token = this.settings.tibberApiKey;
     const homeId = [this.settings.tibberHomeKey, this.settings.tibberCabinKey];
     const connector = new Tibber({
