@@ -161,7 +161,9 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeatherUpdateTime(): Moment.Moment {
-    return this.props.forecast.data[this.state.sted].updated;
+    return typeof this.props.forecast.data[this.state.sted].updated !== 'undefined'
+      ? this.props.forecast.data[this.state.sted].updated
+      : Moment(0);
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
@@ -179,7 +181,6 @@ class Dag extends React.PureComponent<Props, State> {
         weather={forecastData}
         from={from}
         to={to}
-        weatherUpdated={this.getWeatherUpdateTime()}
         sted={sted}
         showPlace={sted !== 'oslo'}
         onClick={this.togglePlace}
