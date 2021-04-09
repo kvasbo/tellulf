@@ -1,12 +1,12 @@
 import Moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
 import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
-import { WeatherDataSeries, ForecastPlace } from '../types/forecast';
-import { getUsableYrDataset, parseYrDatasetToTellulf } from '../weather/weatherHelpers';
+import { ForecastPlace } from '../types/forecast';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherUnit from '../weather/WeatherUnit';
@@ -125,36 +125,27 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getWeather(forecastData: WeatherDataSeries, place: 'oslo' | 'sandefjord'): JSX.Element[] {
+  private getWeather(place: 'oslo' | 'sandefjord'): JSX.Element[] {
     const out: JSX.Element[] = [];
-    for (const time in forecastData) {
-      out.push(
-        <WeatherUnit
-          key={forecastData[time].time}
-          forecast={forecastData[time]}
-          time={forecastData[time].time}
-          durationInHours={6}
-          place={place}
-        />,
-      );
+
+    for (let i = 0; i < 24; i += 6) {
+      const time = DateTime.fromISO(this.props.date.toISOString(), { zone: 'utc' })
+        .startOf('day')
+        .plus({ hours: i })
+        .valueOf();
+
+      out.push(<WeatherUnit key={time} time={time} place={place} />);
     }
     return out;
   }
 
   public render(): React.ReactNode {
-    // New
-    const fromStamp = Moment(this.props.date).startOf('day').valueOf();
-    const toStamp = Moment(this.props.date).add(1, 'day').valueOf();
-
-    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted], fromStamp, toStamp);
-    const forecastData = parseYrDatasetToTellulf(forecastDataYr);
-
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
 
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="weatherCellContainer">{this.getWeather(forecastData, this.state.sted)}</div>
+        <div className="weatherCellContainer">{this.getWeather(this.state.sted)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
           {this.getBirthdays()}

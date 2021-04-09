@@ -3,15 +3,25 @@ import { AppStore } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
 import { GenericProps } from '../types/generic';
-import { HourForecast, ForecastPlace } from '../types/forecast';
+import { ForecastPlace } from '../types/forecast';
+import { YrStore } from '../types/yr';
 
 const baseUrl = '/weather_symbols';
 
+interface SixHourForecast {
+  tempMax: number;
+  tempMin: number;
+  symbol: string;
+  rain: number;
+  rainMin: number;
+  rainMax: number;
+  rainProbability: number;
+}
+
 interface Props {
-  forecast: HourForecast;
   time: number;
-  durationInHours: 1 | 6;
   place: ForecastPlace;
+  yr: YrStore;
 }
 
 class WeatherUnit extends React.PureComponent<Props, GenericProps> {
@@ -24,7 +34,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     return <img src={url} className="weatherSymbol" />;
   }
 
-  private static getRain(forecast: HourForecast): JSX.Element {
+  private static getRain(forecast: SixHourForecast): JSX.Element {
     if (!forecast.rain && !forecast.rainMin && !forecast.rainMax) {
       return <span></span>;
     }
@@ -32,22 +42,60 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     return <span>{forecast.rain} mm</span>;
   }
 
-  private static getTime(forecast: HourForecast): string {
-    const from = DateTime.fromMillis(forecast.time).toFormat('HH');
-    const to = DateTime.fromMillis(forecast.time)
-      .plus({ hours: forecast.durationInHours })
-      .toFormat('HH');
+  private static getTimeFormatted(time: number): string {
+    const from = DateTime.fromMillis(time).toFormat('HH');
+    const to = DateTime.fromMillis(time).plus({ hours: 6 }).toFormat('HH');
 
     return `${from}-${to}`;
   }
 
+  private getForecastData(): SixHourForecast | null {
+    const key = DateTime.fromMillis(this.props.time).toISO();
+    const raw = this.props.yr[this.props.place][key];
+
+    console.log(raw);
+
+    if (!raw || !raw.data.next_6_hours) {
+      return null;
+    }
+
+    const tempMax = Math.round(raw.data.next_6_hours.details.air_temperature_max);
+    const tempMin = Math.round(raw.data.next_6_hours.details.air_temperature_min);
+    const symbol = raw.data.next_6_hours.summary.symbol_code;
+    const rain = raw.data.next_6_hours.details.precipitation_amount;
+    const rainMin = raw.data.next_6_hours.details.precipitation_amount_min;
+    const rainMax = raw.data.next_6_hours.details.precipitation_amount_max;
+    const rainProbability = raw.data.next_6_hours.details.probability_of_precipitation;
+
+    return {
+      tempMax,
+      tempMin,
+      symbol,
+      rain,
+      rainMin,
+      rainMax,
+      rainProbability,
+    };
+  }
+
   public render(): React.ReactNode {
+    const forecastData = this.getForecastData();
+
+    if (forecastData === null) {
+      return null;
+    }
+
     return (
       <div className="weatherCell">
-        <span>{WeatherUnit.getIcon(this.props.forecast.symbol)}</span>
-        <span className="weatherCellLine subInfo">{WeatherUnit.getTime(this.props.forecast)}</span>
-        <span className="weatherCellLine bigInfo">{this.props.forecast.temp}&deg;</span>
-        <span className="weatherCellLine rain">{WeatherUnit.getRain(this.props.forecast)}</span>
+        <span className="subInfo">{DateTime.fromMillis(this.props.time).toISO()}</span>
+        <span>{WeatherUnit.getIcon(forecastData.symbol)}</span>
+        <span className="weatherCellLine subInfo">
+          {WeatherUnit.getTimeFormatted(this.props.time)}
+        </span>
+        <span className="weatherCellLine bigInfo">
+          {forecastData.tempMin}&deg;/{forecastData.tempMax}&deg;
+        </span>
+        <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
       </div>
     );
   }
