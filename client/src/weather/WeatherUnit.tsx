@@ -1,5 +1,5 @@
 import React from 'react';
-import Moment from 'moment';
+import { DateTime } from 'luxon';
 import { GenericProps } from '../types/generic';
 import { HourForecast } from '../types/forecast';
 
@@ -27,10 +27,20 @@ export default class WeatherUnit extends React.PureComponent<Props, GenericProps
     return <span>{forecast.rain} mm</span>;
   }
 
+  private static getTime(forecast: HourForecast): string {
+    const from = DateTime.fromMillis(forecast.time).toFormat('HH');
+    const to = DateTime.fromMillis(forecast.time)
+      .plus({ hours: forecast.durationInHours })
+      .toFormat('HH');
+
+    return `${from}-${to}`;
+  }
+
   public render(): React.ReactNode {
     return (
       <div className="weatherCell">
-        <span className="weatherCellLine">{WeatherUnit.getIcon(this.props.forecast.symbol)}</span>
+        <span>{WeatherUnit.getIcon(this.props.forecast.symbol)}</span>
+        <span className="weatherCellLine subInfo">{WeatherUnit.getTime(this.props.forecast)}</span>
         <span className="weatherCellLine temp">{this.props.forecast.temp}&deg;</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(this.props.forecast)}</span>
       </div>

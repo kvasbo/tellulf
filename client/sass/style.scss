@@ -145,11 +145,13 @@ body {
       justify-content: flex-start;
 
       .subInfo {
-        font-size: 8pt;
+        font-size: 9pt;
+        color: $mid;
       }
 
       .weatherCellLine {
-        margin-top: 4px;
+        margin-bottom: 3px;
+        margin-top: 3px;
       }
 
       .weatherSymbol {

@@ -134,10 +134,12 @@ body {
   justify-content: flex-start;
 }
 .kalenderDag .weatherCellContainer .weatherCell .subInfo {
-  font-size: 8pt;
+  font-size: 9pt;
+  color: #767676;
 }
 .kalenderDag .weatherCellContainer .weatherCell .weatherCellLine {
-  margin-top: 4px;
+  margin-bottom: 3px;
+  margin-top: 3px;
 }
 .kalenderDag .weatherCellContainer .weatherCell .weatherSymbol {
   width: 60px;
