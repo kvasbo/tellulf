@@ -41,6 +41,8 @@ class Tellulf extends React.PureComponent<Props, State> {
     this.startReloadLoop();
     this.updateWeather();
     this.interval = window.setInterval(() => this.updateWeather(), 60 * 1000 * 15);
+    this.props.updaters.tibber.subscribeToRealTime();
+    this.props.updaters.tibber.updatePowerPrices();
   }
 
   public componentWillUnmount() {
@@ -90,7 +92,7 @@ class Tellulf extends React.PureComponent<Props, State> {
           <div className="gridNetatmoTemp">{this.props.temperature}&deg;</div>
         </div>
         <div className="block gridEnergy">
-          <Solceller key="tellulf-energi" updaters={this.props.updaters} />
+          <Solceller key="tellulf-energi" />
         </div>
         <div className="block gridTrains">
           <Ruter trains={this.props.trains} key="tellulf-trains" />

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { AppStore } from '../redux/reducers';
-import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 import TallPanel from './TallPanel';
@@ -10,17 +9,10 @@ interface Props {
   realtimePowerHytta: TibberRealtimeState;
   usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
-  updaters: { tibber: TibberUpdater };
 }
 
 class Solceller extends React.PureComponent<Props, GenericProps> {
   private interval = 0;
-
-  public componentDidMount() {
-    const { tibber } = this.props.updaters;
-    tibber.updatePowerPrices();
-    tibber.subscribeToRealTime();
-  }
 
   public componentWillUnmount() {
     window.clearInterval(this.interval);
