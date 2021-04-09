@@ -6,11 +6,7 @@ import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
 import { WeatherDataSeries } from '../types/forecast';
-import {
-  getUsableYrDataset,
-  createForecastSummary,
-  parseYrDatasetToTellulf,
-} from '../weather/weatherHelpers';
+import { getUsableYrDataset, parseYrDatasetToTellulf } from '../weather/weatherHelpers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherUnit from '../weather/WeatherUnit';
@@ -150,7 +146,6 @@ class Dag extends React.PureComponent<Props, State> {
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="kalenderDato weatherSummary">{createForecastSummary(forecastData)}</div>
         <div className="weatherCellContainer">{this.getWeather(forecastData)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">

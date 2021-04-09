@@ -115,18 +115,12 @@ body {
   display: block;
   margin: 0 0 5px 0;
 }
-.kalenderDag .weatherSummary {
-  text-align: right;
-  padding: 15;
-  padding-left: 20px;
-  grid-column: 2/3;
-  grid-row: 1/2;
-}
 .kalenderDag .weatherCellContainer {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   grid-column: 2/3;
+  grid-row: 1/3;
 }
 .kalenderDag .weatherCellContainer .weatherCell {
   display: flex;
@@ -134,8 +128,20 @@ body {
   margin-left: 0.5em;
   padding: 0 0.5em 0.5em 0.5em;
   flex-direction: column;
-  width: 100px;
+  width: 90px;
   overflow: hidden;
+  align-items: center;
+  justify-content: flex-start;
+}
+.kalenderDag .weatherCellContainer .weatherCell .subInfo {
+  font-size: 8pt;
+}
+.kalenderDag .weatherCellContainer .weatherCell .weatherCellLine {
+  margin-top: 4px;
+}
+.kalenderDag .weatherCellContainer .weatherCell .weatherSymbol {
+  width: 60px;
+  height: auto;
 }
 
 .ruterGroup {

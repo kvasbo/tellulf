@@ -1,6 +1,3 @@
-import maxBy from 'lodash/maxBy';
-import minBy from 'lodash/minBy';
-import sumBy from 'lodash/sumBy';
 import { HourForecast, WeatherDataSeries } from '../types/forecast';
 import { YrWeatherSeries } from '../types/yr';
 
@@ -52,31 +49,4 @@ export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSerie
   }
 
   return out;
-}
-
-export function createForecastSummary(data: WeatherDataSeries): string {
-  const weather = Object.values(data);
-
-  if (weather.length === 0) return '';
-  const maxTemp = maxBy(weather, (w: HourForecast): number => {
-    return w.temp !== undefined ? w.temp : -999;
-  });
-  const minTemp = minBy(weather, (w: HourForecast): number => {
-    return w.temp !== undefined ? w.temp : 999;
-  });
-
-  const rain = sumBy(weather, (w: HourForecast): number => {
-    if (!w.rain) return 0;
-    return w.rain;
-  });
-
-  const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : '?';
-  const minT = minTemp && minTemp.temp !== undefined ? Math.round(minTemp.temp) : '?';
-  const r = Math.round(rain);
-
-  if (!maxT || !minT) {
-    // return '';
-  }
-
-  return `${minT}/${maxT} ${r}mm`;
 }

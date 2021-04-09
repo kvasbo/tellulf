@@ -127,27 +127,35 @@ body {
     margin: 0 0 5px 0;
   }
 
-  .weatherSummary {
-    text-align: right;
-    padding: 15;
-    padding-left: 20px;
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-  }
-
   .weatherCellContainer {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     grid-column: 2/3;
+    grid-row: 1/3;
     .weatherCell {
       display: flex;
       margin: 0;
       margin-left: 0.5em;
       padding: 0 0.5em 0.5em 0.5em;
       flex-direction: column;
-      width: 100px;
+      width: 90px;
       overflow: hidden;
+      align-items: center;
+      justify-content: flex-start;
+
+      .subInfo {
+        font-size: 8pt;
+      }
+
+      .weatherCellLine {
+        margin-top: 4px;
+      }
+
+      .weatherSymbol {
+        width: 60px;
+        height: auto;
+      }
     }
   }
 }
