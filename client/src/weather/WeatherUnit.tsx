@@ -41,7 +41,7 @@ export default class WeatherUnit extends React.PureComponent<Props, GenericProps
       <div className="weatherCell">
         <span>{WeatherUnit.getIcon(this.props.forecast.symbol)}</span>
         <span className="weatherCellLine subInfo">{WeatherUnit.getTime(this.props.forecast)}</span>
-        <span className="weatherCellLine temp">{this.props.forecast.temp}&deg;</span>
+        <span className="weatherCellLine bigInfo">{this.props.forecast.temp}&deg;</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(this.props.forecast)}</span>
       </div>
     );
