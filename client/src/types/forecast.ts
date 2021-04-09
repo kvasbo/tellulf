@@ -22,7 +22,7 @@ export interface Forecast {
 }
 
 export interface WeatherDataSeries {
-  [s: number]: HourForecast;
+  [timestamp: number]: HourForecast;
 }
 
 export interface HourForecast {

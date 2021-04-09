@@ -4,10 +4,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
 import { AppStore } from '../redux/reducers';
+import { YrStore, YrWeatherSeries, YrWeatherDataset } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
 import { ForecastStore, HourForecast, WeatherDataSeries } from '../types/forecast';
 import WeatherGraph from '../weather/WeatherGraph';
-import { createForecastSummary, filterForecastData } from '../weather/weatherHelpers';
+import {
+  getUsableYrDataset,
+  createForecastSummary,
+  filterForecastData,
+  parseYrDatasetToTellulf,
+} from '../weather/weatherHelpers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 
@@ -17,6 +23,7 @@ interface Props {
   events: EventDataSet;
   date: Moment.Moment;
   forecast: ForecastStore;
+  yr: YrStore;
 }
 
 interface State {
@@ -158,9 +165,10 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   private getWeather(date: Moment.Moment, sted: string) {
-    const forecast = this.filterForecast(date, sted, 6, 6);
+    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted]);
+    const forecastData = parseYrDatasetToTellulf(forecastDataYr);
 
-    if (!showWeatherGraphForDay(this.props.date, forecast)) return null;
+    if (!showWeatherGraphForDay(this.props.date, forecastData)) return null;
 
     const from = Moment(date).startOf('day'); //.add(6, 'hours');
     const to = Moment(date).add(1, 'day'); //.subtract(2, 'hours');
@@ -168,7 +176,7 @@ class Dag extends React.PureComponent<Props, State> {
     return (
       <WeatherGraph
         date={this.props.date}
-        weather={forecast}
+        weather={forecastData}
         from={from}
         to={to}
         weatherUpdated={this.getWeatherUpdateTime()}
@@ -181,6 +189,8 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   public render(): React.ReactNode {
+    // New
+
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
 
     return (
@@ -204,6 +214,7 @@ class Dag extends React.PureComponent<Props, State> {
 function mapStateToProps(state: AppStore) {
   return {
     forecast: state.Forecast,
+    yr: state.Yr,
   };
 }
 

@@ -5,6 +5,7 @@ import sumBy from 'lodash/sumBy';
 import Moment from 'moment';
 import store from 'store';
 import { ForecastDataSet, HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
+import { YrWeatherSeries } from '../types/yr';
 
 export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Moment } {
   const start = Moment().startOf('day');
@@ -22,6 +23,45 @@ export function createKeyBasedOnStamps(from: string, to: string): string {
   const t = Moment(to);
   const key = `${f.toISOString()}->${t.toISOString()}`;
   return key;
+}
+
+/*
+New function to filter an Yr data series.
+*/
+export function getUsableYrDataset(data: YrWeatherSeries): YrWeatherSeries {
+  //  The time points to use for weather (all these needs to have six hour forecasts)
+  const utcHoursToUse = [0, 6, 12, 18];
+
+  // Then filter
+  const out: YrWeatherSeries = {};
+  for (const time in data) {
+    const d = new Date(time);
+    if (utcHoursToUse.indexOf(d.getUTCHours()) !== -1 && data[time].data.next_6_hours) {
+      out[time] = data[time];
+    }
+  }
+  return out;
+}
+
+export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSeries {
+  const out: WeatherDataSeries = {};
+  for (const time in data) {
+    const d = new Date(time);
+    const stamp = d.valueOf();
+    const fc: HourForecast = {
+      time: stamp,
+      temp: Math.round(data[time].data.instant.details.air_temperature),
+      rain: data[time].data.next_6_hours.details.precipitation_amount / 10,
+      rainMin: data[time].data.next_6_hours.details.precipitation_amount_min / 10,
+      rainMax: data[time].data.next_6_hours.details.precipitation_amount_max / 10,
+      symbol: data[time].data.next_6_hours.summary.symbol_code,
+    };
+    out[stamp] = fc;
+  }
+
+  console.log(out);
+
+  return out;
 }
 
 // Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
