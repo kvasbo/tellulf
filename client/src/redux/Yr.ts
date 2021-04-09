@@ -23,7 +23,7 @@ export default function Yr(state: YrStore = initialState, incomingAction: Action
         if (!newState[action.sted]) {
           newState[action.sted] = {};
         }
-        const timeStamp = DateTime.fromISO(d.time).toISO();
+        const timeStamp = DateTime.fromISO(d.time).valueOf();
         newState[action.sted][timeStamp] = d;
       });
 

@@ -129,9 +129,8 @@ class Dag extends React.PureComponent<Props, State> {
     const out: JSX.Element[] = [];
 
     for (let i = 0; i < 24; i += 6) {
-      const time = DateTime.fromISO(this.props.date.toISOString(), { zone: 'utc' })
-        .startOf('day')
-        .plus({ hours: i })
+      const time = DateTime.fromMillis(this.props.date.valueOf())
+        .plus({ hours: i + 2 })
         .valueOf();
 
       out.push(<WeatherUnit key={time} time={time} place={place} />);

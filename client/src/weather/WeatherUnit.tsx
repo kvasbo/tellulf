@@ -50,10 +50,8 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
   }
 
   private getForecastData(): SixHourForecast | null {
-    const key = DateTime.fromMillis(this.props.time).toISO();
+    const key = DateTime.fromMillis(this.props.time).valueOf();
     const raw = this.props.yr[this.props.place][key];
-
-    console.log(raw);
 
     if (!raw || !raw.data.next_6_hours) {
       return null;
@@ -87,11 +85,10 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
 
     return (
       <div className="weatherCell">
-        <span className="subInfo">{DateTime.fromMillis(this.props.time).toISO()}</span>
-        <span>{WeatherUnit.getIcon(forecastData.symbol)}</span>
         <span className="weatherCellLine subInfo">
           {WeatherUnit.getTimeFormatted(this.props.time)}
         </span>
+        <span>{WeatherUnit.getIcon(forecastData.symbol)}</span>
         <span className="weatherCellLine bigInfo">
           {forecastData.tempMin}&deg;/{forecastData.tempMax}&deg;
         </span>
