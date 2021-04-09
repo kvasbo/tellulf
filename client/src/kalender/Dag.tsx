@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
 import { AppStore } from '../redux/reducers';
-import { YrStore, YrWeatherSeries, YrWeatherDataset } from '../types/yr';
+import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
 import { ForecastStore, HourForecast, WeatherDataSeries } from '../types/forecast';
 import WeatherGraph from '../weather/WeatherGraph';

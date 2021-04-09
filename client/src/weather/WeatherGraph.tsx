@@ -11,7 +11,6 @@ import {
   YAxis,
 } from 'recharts';
 import { HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
-import { formatTick } from './weatherHelpers';
 import WeatherIcon from './WeatherIcon';
 
 interface Props {
@@ -87,7 +86,7 @@ class WeatherGraph extends React.PureComponent<Props, State> {
             scale="time"
             dataKey="time"
             type="number"
-            tickFormatter={formatTick}
+            tickFormatter={(data: number) => formatTick(data, startTime, endTime)}
             domain={[startTime, endTime]}
             allowDataOverflow={true}
           />
@@ -175,3 +174,12 @@ class WeatherGraph extends React.PureComponent<Props, State> {
 }
 
 export default WeatherGraph;
+
+function formatTick(data: number, startStamp: number, endStamp: number): string {
+  const time = Moment(data, 'x');
+  if (time.isBetween(Moment(startStamp), Moment(endStamp))) {
+    return time.format('HH:00');
+  } else {
+    return '';
+  }
+}

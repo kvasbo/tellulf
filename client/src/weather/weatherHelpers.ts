@@ -13,22 +13,14 @@ export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Mom
   return { start, end };
 }
 
-export function formatTick(data: number): string {
-  const time = Moment(data, 'x');
-  return time.format('H');
-}
-
-export function createKeyBasedOnStamps(from: string, to: string): string {
-  const f = Moment(from);
-  const t = Moment(to);
-  const key = `${f.toISOString()}->${t.toISOString()}`;
-  return key;
-}
-
 /*
-New function to filter an Yr data series.
+New function to filter an Yr data series. Get only six hour forecasts, and filter by date
 */
-export function getUsableYrDataset(data: YrWeatherSeries): YrWeatherSeries {
+export function getUsableYrDataset(
+  data: YrWeatherSeries,
+  fromStamp = 0,
+  toStamp = 9999999999999,
+): YrWeatherSeries {
   //  The time points to use for weather (all these needs to have six hour forecasts)
   const utcHoursToUse = [0, 6, 12, 18];
 
@@ -36,13 +28,21 @@ export function getUsableYrDataset(data: YrWeatherSeries): YrWeatherSeries {
   const out: YrWeatherSeries = {};
   for (const time in data) {
     const d = new Date(time);
-    if (utcHoursToUse.indexOf(d.getUTCHours()) !== -1 && data[time].data.next_6_hours) {
+    if (
+      utcHoursToUse.indexOf(d.getUTCHours()) !== -1 &&
+      data[time].data.next_6_hours &&
+      d.valueOf() > fromStamp &&
+      d.valueOf() < toStamp
+    ) {
       out[time] = data[time];
     }
   }
   return out;
 }
 
+/**
+Transform a Yr series to a Tellulf series that can be parsed by the graph
+*/
 export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSeries {
   const out: WeatherDataSeries = {};
   for (const time in data) {
@@ -58,8 +58,6 @@ export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSerie
     };
     out[stamp] = fc;
   }
-
-  console.log(out);
 
   return out;
 }

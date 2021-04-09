@@ -9,4 +9,8 @@ interface Props {
   to: Moment.Moment;
 }
 
-export default class WeatherPoint extends React.PureComponent<Props, GenericProps> {}
+export default class WeatherPoint extends React.PureComponent<Props, GenericProps> {
+  public render(): React.ReactNode {
+    return <div className="weatherCell"></div>;
+  }
+}
