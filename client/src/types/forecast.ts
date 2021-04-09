@@ -5,17 +5,6 @@ export interface NowcastStore {
   time: string;
 }
 
-export interface ForecastDataSet {
-  [s: string]: Forecast;
-}
-
-export interface Forecast {
-  forecast: WeatherDataSeries;
-  lat: number;
-  lon: number;
-  updated: Moment.Moment;
-}
-
 export interface WeatherDataSeries {
   [timestamp: number]: HourForecast;
 }
@@ -28,12 +17,4 @@ export interface HourForecast {
   rainMin?: number;
   rainMax?: number;
   symbol?: string;
-}
-
-export interface WeatherLimits {
-  lowerRange: number;
-  upperRange: number;
-  maxRain: number;
-  maxTemp: number;
-  minTemp: number;
 }

@@ -1,7 +1,7 @@
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
 import sumBy from 'lodash/sumBy';
-import { ForecastDataSet, HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
+import { HourForecast, WeatherDataSeries } from '../types/forecast';
 import { YrWeatherSeries } from '../types/yr';
 
 /*
@@ -43,9 +43,9 @@ export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSerie
       time: stamp,
       durationInHours: 6,
       temp: Math.round(data[time].data.instant.details.air_temperature),
-      rain: data[time].data.next_6_hours.details.precipitation_amount / 10,
-      rainMin: data[time].data.next_6_hours.details.precipitation_amount_min / 10,
-      rainMax: data[time].data.next_6_hours.details.precipitation_amount_max / 10,
+      rain: data[time].data.next_6_hours.details.precipitation_amount,
+      rainMin: data[time].data.next_6_hours.details.precipitation_amount_min,
+      rainMax: data[time].data.next_6_hours.details.precipitation_amount_max,
       symbol: data[time].data.next_6_hours.summary.symbol_code,
     };
     out[stamp] = fc;
@@ -67,7 +67,7 @@ export function createForecastSummary(data: WeatherDataSeries): string {
 
   const rain = sumBy(weather, (w: HourForecast): number => {
     if (!w.rain) return 0;
-    return w.rain * 10;
+    return w.rain;
   });
 
   const maxT = maxTemp && maxTemp.temp !== undefined ? Math.round(maxTemp.temp) : '?';
