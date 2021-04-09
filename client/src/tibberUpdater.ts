@@ -3,7 +3,7 @@ import Moment from 'moment';
 import Tibber from 'tibber-pulse-connector';
 import { TibberQuery, TibberFeed, IConfig } from 'tibber-api';
 import { TibberSettings } from './App';
-import { updateInitStatus, updatePowerPrices, updateRealtimeConsumption } from './redux/actions';
+import { updatePowerPrices, updateRealtimeConsumption } from './redux/actions';
 import { AppDispatch } from './redux/store';
 import { houses, TibberRealtimeData } from './types/tibber';
 
@@ -43,7 +43,6 @@ export default class TibberUpdater {
     });
 
     this.store.dispatch(updatePowerPrices(parsedPrices));
-    this.store.dispatch(updateInitStatus('powerPrices'));
   }
 
   public async subscribeToRealTime(): Promise<void> {

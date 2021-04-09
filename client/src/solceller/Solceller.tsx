@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import { AppStore } from '../redux/reducers';
 import TibberUpdater from '../tibberUpdater';
 import { GenericProps } from '../types/generic';
-import { InitState } from '../types/initstate';
 import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
 import TallPanel from './TallPanel';
 interface Props {
-  initState: InitState;
   realtimePowerHjemme: TibberRealtimeState;
   realtimePowerHytta: TibberRealtimeState;
   usedPower: TibberUsageState;
@@ -56,7 +54,6 @@ class Solceller extends React.PureComponent<Props, GenericProps> {
 const mapStateToProps = (state: AppStore) => {
   return {
     powerPrices: state.PowerPrices,
-    initState: state.Init,
     realtimePowerHjemme: state.TibberRealTime.hjemme,
     realtimePowerHytta: state.TibberRealTime.hytta,
     usedPower: state.TibberLastDay,
