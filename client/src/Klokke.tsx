@@ -8,7 +8,7 @@ interface State {
 }
 
 interface Props {
-  onClick(): void;
+  onClick?(): void;
 }
 
 class Clock extends React.PureComponent<Props, State> {
@@ -28,11 +28,7 @@ class Clock extends React.PureComponent<Props, State> {
   }
 
   public render(): React.ReactNode {
-    return (
-      <div className="clockTime" onClick={() => this.props.onClick()}>
-        {this.state.time.format('HH:mm')}
-      </div>
-    );
+    return <div className="clockTime">{this.state.time.format('HH:mm')}</div>;
   }
 }
 
