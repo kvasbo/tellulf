@@ -31,8 +31,8 @@ export function getUsableYrDataset(
     if (
       utcHoursToUse.indexOf(d.getUTCHours()) !== -1 &&
       data[time].data.next_6_hours &&
-      d.valueOf() > fromStamp &&
-      d.valueOf() < toStamp
+      d.valueOf() >= fromStamp &&
+      d.valueOf() <= toStamp
     ) {
       out[time] = data[time];
     }

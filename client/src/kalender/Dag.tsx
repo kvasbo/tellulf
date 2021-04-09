@@ -160,14 +160,11 @@ class Dag extends React.PureComponent<Props, State> {
     );
   }
 
-  private getWeatherUpdateTime(): Moment.Moment {
-    return typeof this.props.forecast.data[this.state.sted].updated !== 'undefined'
-      ? this.props.forecast.data[this.state.sted].updated
-      : Moment(0);
-  }
-
   private getWeather(date: Moment.Moment, sted: string) {
-    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted]);
+    const fromStamp = Moment(date).startOf('day').valueOf(); //.add(6, 'hours');
+    const toStamp = Moment(date).add(1, 'day').valueOf(); //.subtract(2, 'hours');
+
+    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted], fromStamp, toStamp);
     const forecastData = parseYrDatasetToTellulf(forecastDataYr);
 
     if (!showWeatherGraphForDay(this.props.date, forecastData)) return null;
