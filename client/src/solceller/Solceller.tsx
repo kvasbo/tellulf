@@ -2,12 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { AppStore } from '../redux/reducers';
 import { GenericProps } from '../types/generic';
-import { PowerPriceState, TibberRealtimeState, TibberUsageState } from '../types/tibber';
+import { PowerPriceState, TibberRealtimeState } from '../types/tibber';
 import TallPanel from './TallPanel';
 interface Props {
   realtimePowerHjemme: TibberRealtimeState;
   realtimePowerHytta: TibberRealtimeState;
-  usedPower: TibberUsageState;
   powerPrices: PowerPriceState;
 }
 
@@ -48,7 +47,6 @@ const mapStateToProps = (state: AppStore) => {
     powerPrices: state.PowerPrices,
     realtimePowerHjemme: state.TibberRealTime.hjemme,
     realtimePowerHytta: state.TibberRealTime.hytta,
-    usedPower: state.TibberLastDay,
   };
 };
 

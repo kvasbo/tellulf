@@ -1,6 +1,5 @@
 import getTrains from '../ruter/updateTrains';
-import { Forecast } from '../types/forecast';
-import { houses, PowerPriceState, TibberProductionNode, TibberRealtimeData } from '../types/tibber';
+import { houses, PowerPriceState, TibberRealtimeData } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
 import { YrWeatherDataset } from '../types/yr';
 import { getYr } from '../weather/updateWeather';
@@ -49,15 +48,6 @@ export function updateRealtimeConsumption(
     type: UPDATE_TIBBER_REALTIME_CONSUMPTION,
     data,
     where,
-  };
-}
-
-export function updatePowerUsage(
-  data: TibberProductionNode[],
-): { type: 'UPDATE_TIBBER_POWER_USAGE'; data: TibberProductionNode[] } {
-  return {
-    type: UPDATE_TIBBER_POWER_USAGE,
-    data,
   };
 }
 
