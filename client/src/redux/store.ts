@@ -5,8 +5,9 @@ import thunk from 'redux-thunk';
 import tellulfReducer from './reducers';
 
 const persistConfig = {
-  key: 'root',
+  key: 'v3',
   storage,
+  whitelist: ['Yr'],
 };
 
 // eslint-disable-next-line no-underscore-dangle
