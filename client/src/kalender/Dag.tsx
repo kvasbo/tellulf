@@ -1,12 +1,12 @@
 import Moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
 import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
-import { WeatherDataSeries } from '../types/forecast';
-import { getUsableYrDataset, parseYrDatasetToTellulf } from '../weather/weatherHelpers';
+import { ForecastPlace } from '../types/forecast';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherUnit from '../weather/WeatherUnit';
@@ -20,7 +20,7 @@ interface Props {
 }
 
 interface State {
-  sted: string;
+  sted: ForecastPlace;
 }
 
 function getDayHeader(date: Moment.Moment) {
@@ -41,7 +41,7 @@ class Dag extends React.PureComponent<Props, State> {
     };
   }
 
-  private loadSted(): string {
+  private loadSted(): ForecastPlace {
     const sted = store.get(`sted_${this.props.date}`, 'oslo');
     return sted;
   }
@@ -125,28 +125,26 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getWeather(forecastData: WeatherDataSeries): JSX.Element[] {
+  private getWeather(place: 'oslo' | 'sandefjord'): JSX.Element[] {
     const out: JSX.Element[] = [];
-    for (const time in forecastData) {
-      out.push(<WeatherUnit key={forecastData[time].time} forecast={forecastData[time]} />);
+
+    for (let i = 0; i < 24; i += 6) {
+      const time = DateTime.fromMillis(this.props.date.valueOf())
+        .plus({ hours: i + 2 })
+        .valueOf();
+
+      out.push(<WeatherUnit key={time} time={time} place={place} />);
     }
     return out;
   }
 
   public render(): React.ReactNode {
-    // New
-    const fromStamp = Moment(this.props.date).startOf('day').valueOf();
-    const toStamp = Moment(this.props.date).add(1, 'day').valueOf();
-
-    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted], fromStamp, toStamp);
-    const forecastData = parseYrDatasetToTellulf(forecastDataYr);
-
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
 
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="weatherCellContainer">{this.getWeather(forecastData)}</div>
+        <div className="weatherCellContainer">{this.getWeather(this.state.sted)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
           {this.getBirthdays()}

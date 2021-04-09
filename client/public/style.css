@@ -108,8 +108,8 @@ body {
 .kalenderDag .kalendarDayInfo {
   padding-left: 20px;
   padding-top: 10px;
-  grid-column: 1/3;
-  grid-row: 2/4;
+  grid-column: 1/2;
+  grid-row: 2/3;
 }
 .kalenderDag .kalenderSubInfo {
   display: block;
@@ -119,7 +119,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  grid-column: 2/3;
+  grid-column: 1/3;
   grid-row: 1/3;
 }
 .kalenderDag .weatherCellContainer .weatherCell {
@@ -128,7 +128,7 @@ body {
   margin-left: 0.5em;
   padding: 0 0.5em 0.5em 0.5em;
   flex-direction: column;
-  width: 90px;
+  width: 80px;
   overflow: hidden;
   align-items: center;
   justify-content: flex-start;

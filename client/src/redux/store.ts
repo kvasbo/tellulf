@@ -5,7 +5,8 @@ import thunk from 'redux-thunk';
 import tellulfReducer from './reducers';
 
 const persistConfig = {
-  key: 'v3',
+  key: 'root',
+  version: 2,
   storage,
   whitelist: ['Yr', 'Nowcast'],
 };
