@@ -22,6 +22,7 @@ export interface WeatherDataSeries {
 
 export interface HourForecast {
   time: number;
+  durationInHours: number;
   temp?: number;
   rain?: number;
   rainMin?: number;

@@ -167,13 +167,14 @@ body {
   .weatherCellContainer {
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
+    grid-column: 2/3;
     .weatherCell {
       display: flex;
       margin: 0;
-      margin-right: 0.5em;
+      margin-left: 0.5em;
+      padding: 0 0.5em 0.5em 0.5em;
       flex-direction: column;
-      background-color: red;
-      height: 50px;
       width: 100px;
       overflow: hidden;
     }

@@ -41,6 +41,7 @@ export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSerie
     const stamp = d.valueOf();
     const fc: HourForecast = {
       time: stamp,
+      durationInHours: 6,
       temp: Math.round(data[time].data.instant.details.air_temperature),
       rain: data[time].data.next_6_hours.details.precipitation_amount / 10,
       rainMin: data[time].data.next_6_hours.details.precipitation_amount_min / 10,
