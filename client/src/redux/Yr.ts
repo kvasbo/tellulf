@@ -1,7 +1,7 @@
 import { Action } from 'redux';
-
+import Moment from 'moment';
 import { UPDATE_YR } from './actions';
-import { YrWeatherDataset, YrStore } from '../types/yr';
+import { YrWeatherDataset, YrStore, YrWeatherSeries } from '../types/yr';
 
 const initialState: YrStore = {};
 
@@ -24,7 +24,23 @@ export default function Yr(state: YrStore = initialState, incomingAction: Action
         newState[action.sted][d.time] = d;
       });
 
-      return newState;
+      // Remove old datas
+      const filtered: YrStore = {};
+      for (const sted in newState) {
+        const now = Moment();
+        const pre: YrWeatherSeries = newState[sted];
+
+        filtered[sted] = {};
+
+        for (const time in pre) {
+          const date = Moment(time);
+          if (!date.isBefore(now, 'day')) {
+            filtered[sted][time] = pre[time];
+          }
+        }
+      }
+
+      return filtered;
     }
     default:
       return state;

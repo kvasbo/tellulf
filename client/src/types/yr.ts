@@ -114,8 +114,10 @@ export interface YrResponse {
   properties: Properties;
 }
 
+export interface YrWeatherSeries {
+  [time: string]: YrWeatherDataset;
+}
+
 export interface YrStore {
-  [s: string]: {
-    [s: string]: YrWeatherDataset;
-  };
+  [sted: string]: YrWeatherSeries;
 }
