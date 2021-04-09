@@ -1,5 +1,3 @@
-import Moment from 'moment';
-
 export interface NowcastStore {
   temp: number;
   time: string;
