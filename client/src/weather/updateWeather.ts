@@ -3,7 +3,6 @@ import Moment from 'moment';
 import store from 'store';
 import { Forecast, HourForecast, WeatherDataSeries } from '../types/forecast';
 import { YrResponse, YrWeatherDataset } from '../types/yr';
-import { getTimeLimits, storeToLocalStore } from './weatherHelpers';
 
 export const localStorageKey = '14';
 const weatherSeriesKey = 'weatherSeries';
@@ -92,7 +91,6 @@ export async function getYr(lat: number, lon: number): Promise<YrResponse> {
 }
 
 export async function getForecastFromYr(lat: number, lon: number): Promise<Forecast> {
-  const { start, end } = getTimeLimits(14);
   const nData = await getYr(lat, lon);
 
   const forecast: Forecast = {
@@ -115,6 +113,5 @@ export async function getForecastFromYr(lat: number, lon: number): Promise<Forec
     forecast.forecast[key] = parseWeatherHour(d);
   });
 
-  storeToLocalStore(`${weatherSeriesKey}_${localStorageKey}`, forecast.forecast, start, end);
   return forecast;
 }

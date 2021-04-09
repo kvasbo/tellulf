@@ -1,17 +1,8 @@
 import maxBy from 'lodash/maxBy';
 import minBy from 'lodash/minBy';
-import pickBy from 'lodash/pickBy';
 import sumBy from 'lodash/sumBy';
-import Moment from 'moment';
-import store from 'store';
 import { ForecastDataSet, HourForecast, WeatherDataSeries, WeatherLimits } from '../types/forecast';
 import { YrWeatherSeries } from '../types/yr';
-
-export function getTimeLimits(days = 3): { start: Moment.Moment; end: Moment.Moment } {
-  const start = Moment().startOf('day');
-  const end = Moment().add(days, 'day').startOf('day');
-  return { start, end };
-}
 
 /*
 New function to filter an Yr data series. Get only six hour forecasts, and filter by date
@@ -62,26 +53,6 @@ export function parseYrDatasetToTellulf(data: YrWeatherSeries): WeatherDataSerie
   return out;
 }
 
-// Store a weather data set to localstore, filtered on time. Must have a time key in object, that is a momentish thing!
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function storeToLocalStore(
-  key: string,
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,  @typescript-eslint/no-explicit-any
-  data: any,
-  from: Moment.Moment | string,
-  to: Moment.Moment | string,
-): void {
-  const toStore = {};
-  Object.keys(data).forEach((k) => {
-    const d = data[k];
-    if (!d.time) return;
-    if (Moment(d.time).isBetween(from, to, undefined, '[]')) {
-      toStore[k] = d;
-    }
-  });
-  store.set(key, toStore);
-}
-
 export function createForecastSummary(data: WeatherDataSeries): string {
   const weather = Object.values(data);
 
@@ -107,23 +78,6 @@ export function createForecastSummary(data: WeatherDataSeries): string {
   }
 
   return `${minT}/${maxT} ${r}mm`;
-}
-
-export function filterForecastData(
-  date: Moment.Moment,
-  weather: WeatherDataSeries,
-  hoursBefore = 0,
-  hoursAfter = 0,
-): WeatherDataSeries {
-  const from = Moment(date).startOf('day').subtract(hoursBefore, 'h');
-  const to = Moment(date).endOf('day').add(hoursAfter, 'h');
-
-  const filtered: WeatherDataSeries = pickBy(weather, (a) => {
-    if (!a.symbol && !a.temp) return false;
-    return Moment(a.time).isBetween(from, to);
-  });
-
-  return filtered;
 }
 
 // Calculate global limits

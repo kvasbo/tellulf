@@ -1,4 +1,3 @@
-import maxBy from 'lodash/maxBy';
 import Moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -6,38 +5,26 @@ import store from 'store';
 import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
-import { ForecastStore, HourForecast, WeatherDataSeries } from '../types/forecast';
-import WeatherGraph from '../weather/WeatherGraph';
+import { WeatherDataSeries } from '../types/forecast';
 import {
   getUsableYrDataset,
   createForecastSummary,
-  filterForecastData,
   parseYrDatasetToTellulf,
 } from '../weather/weatherHelpers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
+import WeatherUnit from '../weather/WeatherUnit';
 
 interface Props {
   dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
   date: Moment.Moment;
-  forecast: ForecastStore;
   yr: YrStore;
 }
 
 interface State {
   sted: string;
-}
-
-// CHeck if we have a full dataset for the day
-function showWeatherGraphForDay(day: Moment.Moment, data: WeatherDataSeries): boolean {
-  const weather = Object.values(data);
-  if (weather.length === 0) return false;
-  const endOfDay = Moment(day).endOf('day');
-  const lastKnown: HourForecast = maxBy(weather, 'time');
-  const lastMoment = Moment(lastKnown.time);
-  return lastMoment.isAfter(endOfDay);
 }
 
 function getDayHeader(date: Moment.Moment) {
@@ -142,62 +129,29 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private filterForecast(
-    date: Moment.Moment,
-    sted: string,
-    hoursBefore = 0,
-    hoursAfter = 0,
-  ): WeatherDataSeries {
-    if (!this.props.forecast.data || !this.props.forecast.data[sted]) {
-      return {};
+  private getWeather(forecastData: WeatherDataSeries): JSX.Element[] {
+    const out: JSX.Element[] = [];
+    for (const time in forecastData) {
+      out.push(<WeatherUnit key={forecastData[time].time} forecast={forecastData[time]} />);
     }
-
-    return filterForecastData(
-      date,
-      this.props.forecast.data[sted].forecast,
-      hoursBefore,
-      hoursAfter,
-    );
-  }
-
-  private getWeather(date: Moment.Moment, sted: string) {
-    const fromStamp = Moment(date).startOf('day').valueOf(); //.add(6, 'hours');
-    const toStamp = Moment(date).add(1, 'day').valueOf(); //.subtract(2, 'hours');
-
-    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted], fromStamp, toStamp);
-    const forecastData = parseYrDatasetToTellulf(forecastDataYr);
-
-    if (!showWeatherGraphForDay(this.props.date, forecastData)) return null;
-
-    const from = Moment(date).startOf('day'); //.add(6, 'hours');
-    const to = Moment(date).add(1, 'day'); //.subtract(2, 'hours');
-
-    return (
-      <WeatherGraph
-        date={this.props.date}
-        weather={forecastData}
-        from={from}
-        to={to}
-        sted={sted}
-        showPlace={sted !== 'oslo'}
-        onClick={this.togglePlace}
-        limits={this.props.forecast.limits}
-      />
-    );
+    return out;
   }
 
   public render(): React.ReactNode {
     // New
+    const fromStamp = Moment(this.props.date).startOf('day').valueOf();
+    const toStamp = Moment(this.props.date).add(1, 'day').valueOf();
+
+    const forecastDataYr = getUsableYrDataset(this.props.yr[this.state.sted], fromStamp, toStamp);
+    const forecastData = parseYrDatasetToTellulf(forecastDataYr);
 
     const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
 
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="kalenderDato weatherSummary">
-          {createForecastSummary(this.filterForecast(this.props.date, this.state.sted, 0, 0))}
-        </div>
-        <div className="weatherGraph">{this.getWeather(this.props.date, this.state.sted)}</div>
+        <div className="kalenderDato weatherSummary">{createForecastSummary(forecastData)}</div>
+        <div className="weatherCellContainer">{this.getWeather(forecastData)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
           {this.getBirthdays()}
@@ -211,7 +165,6 @@ class Dag extends React.PureComponent<Props, State> {
 
 function mapStateToProps(state: AppStore) {
   return {
-    forecast: state.Forecast,
     yr: state.Yr,
   };
 }
