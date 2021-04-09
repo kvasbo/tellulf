@@ -24,14 +24,7 @@ export default class WeatherUnit extends React.PureComponent<Props, GenericProps
       return <span></span>;
     }
 
-    return (
-      <span>
-        {forecast.rain}mm{' '}
-        <span className="subInfo">
-          ({forecast.rainMin}-{forecast.rainMax})
-        </span>
-      </span>
-    );
+    return <span>{forecast.rain} mm</span>;
   }
 
   public render(): React.ReactNode {

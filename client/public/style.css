@@ -86,7 +86,7 @@ body {
   margin: 0.5vh 0.5vw 1vh 0.5vw;
   background-color: #000000;
   display: grid;
-  grid-template-columns: 225px auto;
+  grid-template-columns: 205px auto;
   grid-template-rows: 5vh auto 5vh;
 }
 .kalenderDag .kalenderDato {
