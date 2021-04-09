@@ -7,12 +7,16 @@ interface KnownAction {
   temp?: number;
 }
 
-export default function Nowcast(state = { temp: -999 }, incomingAction: Action): NowcastStore {
+export default function Nowcast(
+  state = { temp: -999, time: new Date().toISOString() },
+  incomingAction: Action,
+): NowcastStore {
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case UPDATE_NOWCAST: {
       const temp = action.temp ? Math.round(action.temp) : -999;
-      return { temp };
+      const time = new Date().toISOString();
+      return { temp, time };
     }
     default:
       return state;

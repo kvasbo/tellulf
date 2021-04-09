@@ -7,7 +7,7 @@ import tellulfReducer from './reducers';
 const persistConfig = {
   key: 'v3',
   storage,
-  whitelist: ['Yr'],
+  whitelist: ['Yr', 'Nowcast'],
 };
 
 // eslint-disable-next-line no-underscore-dangle

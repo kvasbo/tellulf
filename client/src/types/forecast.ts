@@ -7,6 +7,7 @@ export interface ForecastStore {
 
 export interface NowcastStore {
   temp: number;
+  time: string;
 }
 
 export interface ForecastDataSet {
