@@ -51,6 +51,11 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
 
   private getForecastData(): SixHourForecast | null {
     const key = DateTime.fromMillis(this.props.time).valueOf();
+
+    if (!this.props.yr[this.props.place] || !this.props.yr[this.props.place][key]) {
+      return null;
+    }
+
     const raw = this.props.yr[this.props.place][key];
 
     if (!raw || !raw.data.next_6_hours) {
