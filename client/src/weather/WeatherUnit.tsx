@@ -1,15 +1,20 @@
 import React from 'react';
+import { AppStore } from '../redux/reducers';
+import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
 import { GenericProps } from '../types/generic';
-import { HourForecast } from '../types/forecast';
+import { HourForecast, ForecastPlace } from '../types/forecast';
 
 const baseUrl = '/weather_symbols';
 
 interface Props {
   forecast: HourForecast;
+  time: number;
+  durationInHours: 1 | 6;
+  place: ForecastPlace;
 }
 
-export default class WeatherUnit extends React.PureComponent<Props, GenericProps> {
+class WeatherUnit extends React.PureComponent<Props, GenericProps> {
   public constructor(props: Props) {
     super(props);
   }
@@ -47,3 +52,12 @@ export default class WeatherUnit extends React.PureComponent<Props, GenericProps
     );
   }
 }
+
+function mapStateToProps(state: AppStore) {
+  return {
+    yr: state.Yr,
+  };
+}
+
+// export default Dag;
+export default connect(mapStateToProps)(WeatherUnit);

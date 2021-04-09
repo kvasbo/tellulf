@@ -3,6 +3,8 @@ export interface NowcastStore {
   time: string;
 }
 
+export type ForecastPlace = 'oslo' | 'sandefjord';
+
 export interface WeatherDataSeries {
   [timestamp: number]: HourForecast;
 }

@@ -5,7 +5,7 @@ import store from 'store';
 import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
-import { WeatherDataSeries } from '../types/forecast';
+import { WeatherDataSeries, ForecastPlace } from '../types/forecast';
 import { getUsableYrDataset, parseYrDatasetToTellulf } from '../weather/weatherHelpers';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
@@ -20,7 +20,7 @@ interface Props {
 }
 
 interface State {
-  sted: string;
+  sted: ForecastPlace;
 }
 
 function getDayHeader(date: Moment.Moment) {
@@ -41,7 +41,7 @@ class Dag extends React.PureComponent<Props, State> {
     };
   }
 
-  private loadSted(): string {
+  private loadSted(): ForecastPlace {
     const sted = store.get(`sted_${this.props.date}`, 'oslo');
     return sted;
   }
@@ -125,10 +125,18 @@ class Dag extends React.PureComponent<Props, State> {
     return out;
   }
 
-  private getWeather(forecastData: WeatherDataSeries): JSX.Element[] {
+  private getWeather(forecastData: WeatherDataSeries, place: 'oslo' | 'sandefjord'): JSX.Element[] {
     const out: JSX.Element[] = [];
     for (const time in forecastData) {
-      out.push(<WeatherUnit key={forecastData[time].time} forecast={forecastData[time]} />);
+      out.push(
+        <WeatherUnit
+          key={forecastData[time].time}
+          forecast={forecastData[time]}
+          time={forecastData[time].time}
+          durationInHours={6}
+          place={place}
+        />,
+      );
     }
     return out;
   }
@@ -146,7 +154,7 @@ class Dag extends React.PureComponent<Props, State> {
     return (
       <div className="kalenderDag">
         <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="weatherCellContainer">{this.getWeather(forecastData)}</div>
+        <div className="weatherCellContainer">{this.getWeather(forecastData, this.state.sted)}</div>
         <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
           {this.getBirthdays()}

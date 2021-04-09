@@ -2,13 +2,14 @@ import { Action } from 'redux';
 import Moment from 'moment';
 import { UPDATE_YR } from './actions';
 import { YrWeatherDataset, YrStore, YrWeatherSeries } from '../types/yr';
+import { ForecastPlace } from '../types/forecast';
 
 const initialState: YrStore = {};
 
 interface KnownAction {
   type: string;
   data: YrWeatherDataset[];
-  sted: string;
+  sted: ForecastPlace;
 }
 
 export default function Yr(state: YrStore = initialState, incomingAction: Action): YrStore {
