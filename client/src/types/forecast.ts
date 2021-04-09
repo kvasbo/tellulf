@@ -36,5 +36,4 @@ export interface WeatherLimits {
   maxRain: number;
   maxTemp: number;
   minTemp: number;
-  ticks: number[];
 }
