@@ -3,7 +3,7 @@ import { Forecast } from '../types/forecast';
 import { houses, PowerPriceState, TibberProductionNode, TibberRealtimeData } from '../types/tibber';
 import { TrainDataSet } from '../types/trains';
 import { YrWeatherDataset } from '../types/yr';
-import { getForecastFromYr, getYr } from '../weather/updateWeather';
+import { getYr } from '../weather/updateWeather';
 import { AppDispatch } from './store';
 
 export const UPDATE_YR = 'UPDATE_YR';
@@ -29,17 +29,6 @@ export function updateYr(
 ): { type: 'UPDATE_YR'; data: YrWeatherDataset[]; sted: string } {
   return {
     type: UPDATE_YR,
-    data,
-    sted,
-  };
-}
-
-export function updateForecast(
-  data: Forecast,
-  sted: string,
-): { type: 'UPDATE_FORECAST'; data: Forecast; sted: string } {
-  return {
-    type: UPDATE_FORECAST,
     data,
     sted,
   };
@@ -85,13 +74,6 @@ export function updatePowerPrices(
 export function fetchTrains(): { (dispatch: AppDispatch): unknown } {
   return (dispatch: AppDispatch): unknown => {
     return getTrains().then((trains) => dispatch(updateTrains(trains)));
-  };
-}
-
-export function fetchForecast(lat: number, lon: number, sted: string) {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
-  return (dispatch: AppDispatch) => {
-    return getForecastFromYr(lat, lon).then((forecast) => dispatch(updateForecast(forecast, sted)));
   };
 }
 

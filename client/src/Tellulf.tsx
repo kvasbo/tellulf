@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { TibberSettings } from './App';
 import Kalender from './kalender/Kalender';
 import Klokke from './Klokke';
-import { fetchForecast, updateNowcast, fetchYr } from './redux/actions';
+import { updateNowcast, fetchYr } from './redux/actions';
 import { AppStore } from './redux/reducers';
 import Ruter from './ruter/Ruter';
 import Solceller from './solceller/Solceller';
@@ -51,12 +51,6 @@ class Tellulf extends React.PureComponent<Props, State> {
 
   private async updateWeather() {
     try {
-      // Deprecated
-      this.props.dispatch(fetchForecast(steder.oslo.lat, steder.oslo.long, 'oslo'));
-      this.props.dispatch(
-        fetchForecast(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'),
-      );
-
       // With raw data
       this.props.dispatch(fetchYr(steder.oslo.lat, steder.oslo.long, 'oslo'));
       this.props.dispatch(fetchYr(steder.sandefjord.lat, steder.sandefjord.long, 'sandefjord'));

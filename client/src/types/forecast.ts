@@ -1,10 +1,5 @@
 import Moment from 'moment';
 
-export interface ForecastStore {
-  data: ForecastDataSet;
-  limits: WeatherLimits;
-}
-
 export interface NowcastStore {
   temp: number;
   time: string;
