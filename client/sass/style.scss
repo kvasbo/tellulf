@@ -1,7 +1,6 @@
 $background: #000000;
 $text: #ffffff;
 $mid: #767676;
-$radius: 2px;
 $big-radius: 5px;
 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
@@ -50,6 +49,12 @@ body {
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
+
+  .clockTime,
+  .gridNetatmoTemp {
+    font-size: 5em;
+    font-weight: 200;
+  }
 }
 
 .gridTrains {
@@ -59,43 +64,9 @@ body {
   align-items: center;
 }
 
-.gridSettings {
-  grid-column: 2 / 3;
-  grid-row: 2 / 4;
-  background-color: darkblue;
-  z-index: 999;
-}
-
 .gridEnergy {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-}
-
-.clockTime {
-  font-size: 5em;
-  font-weight: 200;
-}
-
-.gridNetatmoTemp {
-  font-size: 5em;
-  font-weight: 200;
-}
-
-.yr-container {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  border: none;
-  display: flex;
-  flex-direction: column;
-}
-
-.weatherMeta {
-  display: flex;
-  height: 2vh;
-  padding: 1vh 1vw 1vh 1vw;
-  align-content: center;
-  justify-content: center;
 }
 
 .energyTableRow {
