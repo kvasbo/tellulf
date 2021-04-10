@@ -19,7 +19,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": ["./externalLibraryTypeDefinitions", "./node_modules/@types"],
     "rootDir": "src",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "externalLibraryTypeDefinitions"]
