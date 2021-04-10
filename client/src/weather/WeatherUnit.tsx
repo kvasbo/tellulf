@@ -16,6 +16,8 @@ interface SixHourForecast {
   rainMin: number;
   rainMax: number;
   rainProbability: number;
+  prevTemp: number | undefined;
+  nextTemp: number | undefined;
 }
 
 interface Props {
@@ -63,6 +65,8 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
 
   private getForecastData(): SixHourForecast | null {
     const key = DateTime.fromMillis(this.props.time).valueOf();
+    const nextKey = DateTime.fromMillis(this.props.time).plus({ hours: 6 }).valueOf();
+    const prevKey = DateTime.fromMillis(this.props.time).minus({ hours: 6 }).valueOf();
 
     if (!this.props.yr[this.props.place] || !this.props.yr[this.props.place][key]) {
       return null;
@@ -82,7 +86,14 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     const rainMax = raw.data.next_6_hours.details.precipitation_amount_max;
     const rainProbability = raw.data.next_6_hours.details.probability_of_precipitation;
 
+    const prevTemp = this.props.yr[this.props.place][prevKey]?.data?.next_6_hours?.details
+      ?.air_temperature_max;
+    const nextTemp = this.props.yr[this.props.place][nextKey]?.data?.next_6_hours?.details
+      ?.air_temperature_max;
+
     return {
+      prevTemp,
+      nextTemp,
       tempMax,
       tempMin,
       symbol,
@@ -94,13 +105,21 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
   }
 
   private static getTempFormatted(forecastData: SixHourForecast): string {
+    const sinking =
+      forecastData.nextTemp &&
+      forecastData.prevTemp &&
+      forecastData.nextTemp < forecastData.prevTemp;
     const from = forecastData.tempMin;
     const to = forecastData.tempMax;
+
     if (Math.abs(to - from) <= 1) {
       const t = Math.round((to + from) / 2);
       return `${t}°`;
+    } else if (sinking) {
+      return `${forecastData.tempMax}°/${forecastData.tempMin}°`;
+    } else {
+      return `${forecastData.tempMin}°/${forecastData.tempMax}°`;
     }
-    return `${forecastData.tempMin}°/${forecastData.tempMax}°`;
   }
 
   public render(): React.ReactNode {
