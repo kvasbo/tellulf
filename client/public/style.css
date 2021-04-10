@@ -136,6 +136,7 @@ body {
 .kalenderDag .weatherCellContainer .weatherCell .subInfo {
   font-size: 9pt;
   color: #767676;
+  text-align: center;
 }
 .kalenderDag .weatherCellContainer .weatherCell .bigInfo {
   font-size: 19pt;

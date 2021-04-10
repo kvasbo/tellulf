@@ -39,7 +39,19 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
       return <span></span>;
     }
 
-    return <span>{forecast.rain} mm</span>;
+    return (
+      <span className="subInfo">
+        {forecast.rainMin}-{forecast.rainMax} mm
+      </span>
+    );
+  }
+
+  private static getRainProb(forecast: SixHourForecast): JSX.Element {
+    if (!forecast.rain && !forecast.rainMin && !forecast.rainMax) {
+      return <span></span>;
+    }
+
+    return <span className="subInfo">{Math.round(forecast.rainProbability)}%</span>;
   }
 
   private static getTimeFormatted(time: number): string {
@@ -108,6 +120,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
           {WeatherUnit.getTempFormatted(forecastData)}
         </span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
+        <span className="weatherCellLine rain">{WeatherUnit.getRainProb(forecastData)}</span>
       </div>
     );
   }
