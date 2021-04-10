@@ -91,35 +91,25 @@ body {
 }
 
 .kalenderDag {
-  margin: 0.5vh 0.5vw 1vh 0.5vw;
+  margin: 10px 10px 22px 10px;
   background-color: $background;
   display: grid;
   grid-template-columns: 205px auto;
-  grid-template-rows: 5vh auto 5vh;
+  grid-template-rows: auto;
 
   .kalenderDato {
     font-size: 22pt;
-    padding: 15px;
-    padding-left: 20px;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
   }
 
-  .kalenderSted {
-    grid-column: 1 / 3;
-    grid-row: 2 / 4;
+  .kalendarDagInfo {
     display: flex;
-    padding: 10px;
-    justify-content: flex-end;
-    align-items: flex-start;
-    color: #ffffffaa;
+    flex-direction: column;
   }
 
-  .kalendarDayInfo {
-    padding-left: 20px;
-    padding-top: 10px;
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
+  .kalenderHendelser {
+    margin-top: 0.75em;
   }
 
   .kalenderSubInfo {
@@ -131,8 +121,8 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    grid-column: 1/3;
-    grid-row: 1/3;
+    grid-column: 2/3;
+    grid-row: 1/2;
     .weatherCell {
       display: flex;
       margin: 0;

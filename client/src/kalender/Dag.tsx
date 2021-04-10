@@ -12,7 +12,6 @@ import HendelseMedTid from './HendelseMedTid';
 import WeatherUnit from '../weather/WeatherUnit';
 
 interface Props {
-  dinner: EventDataSet;
   birthdays: EventDataSet;
   events: EventDataSet;
   date: Moment.Moment;
@@ -44,28 +43,6 @@ class Dag extends React.PureComponent<Props, State> {
   private loadSted(): ForecastPlace {
     const sted = store.get(`sted_${this.props.date}`, 'oslo');
     return sted;
-  }
-
-  private getDinner() {
-    try {
-      if (!this.props.dinner || !this.props.dinner.events) return null;
-      return (
-        <div className="kalenderSubInfo">
-          <img
-            src="dinner.png"
-            width={15}
-            height={15}
-            alt="Dinner"
-            style={{ filter: 'invert(100%)', marginRight: 5 }}
-          />
-          {this.props.dinner.events[0].name}
-        </div>
-      );
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return null;
-    }
   }
 
   private getBirthdays(): JSX.Element[] {
@@ -143,14 +120,14 @@ class Dag extends React.PureComponent<Props, State> {
 
     return (
       <div className="kalenderDag">
-        <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
-        <div className="weatherCellContainer">{this.getWeather(this.state.sted)}</div>
-        <div className="kalenderSted">{stedToShow}</div>
         <div className="kalendarDayInfo">
-          {this.getBirthdays()}
-          {this.getDinner()}
-          {this.getEvents()}
+          <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
+          <div className="kalenderHendelser">
+            {this.getBirthdays()}
+            {this.getEvents()}
+          </div>
         </div>
+        <div className="weatherCellContainer">{this.getWeather(this.state.sted)}</div>
       </div>
     );
   }
