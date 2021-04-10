@@ -81,6 +81,16 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     };
   }
 
+  private static getTempFormatted(forecastData: SixHourForecast): string {
+    const from = forecastData.tempMin;
+    const to = forecastData.tempMax;
+    if (Math.abs(to - from) <= 1) {
+      const t = Math.round((to + from) / 2);
+      return `${t}°`;
+    }
+    return `${forecastData.tempMin}°/${forecastData.tempMax}°`;
+  }
+
   public render(): React.ReactNode {
     const forecastData = this.getForecastData();
 
@@ -95,7 +105,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
         </span>
         <span>{WeatherUnit.getIcon(forecastData.symbol)}</span>
         <span className="weatherCellLine bigInfo">
-          {forecastData.tempMin}&deg;/{forecastData.tempMax}&deg;
+          {WeatherUnit.getTempFormatted(forecastData)}
         </span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
       </div>
