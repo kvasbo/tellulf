@@ -33,10 +33,14 @@ export function updateYr(
   };
 }
 
-export function updateNowcast(temp: number): { type: 'UPDATE_NOWCAST'; temp: number } {
+export function updateNowcast(
+  temp: number,
+  rain: number,
+): { type: 'UPDATE_NOWCAST'; temp: number; rain: number } {
   return {
     type: UPDATE_NOWCAST,
     temp,
+    rain,
   };
 }
 

@@ -1,5 +1,6 @@
 export interface NowcastStore {
   temp: number;
+  rain: number;
   time: string;
 }
 

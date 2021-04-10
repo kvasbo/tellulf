@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-import Moment from 'moment';
 import { DateTime } from 'luxon';
 import { UPDATE_YR } from './actions';
 import { YrWeatherDataset, YrStore, YrWeatherSeries } from '../types/yr';
@@ -30,15 +29,13 @@ export default function Yr(state: YrStore = initialState, incomingAction: Action
       // Remove old datas
       const filtered: YrStore = {};
       for (const sted in newState) {
-        const now = Moment();
+        const startOfDay = DateTime.fromJSDate(new Date()).startOf('day').valueOf();
         const pre: YrWeatherSeries = newState[sted];
 
         filtered[sted] = {};
 
         for (const time in pre) {
-          // Todo: Stop using Moment
-          const date = Moment(time);
-          if (!date.isBefore(now, 'day')) {
+          if (Number(time) > startOfDay) {
             filtered[sted][time] = pre[time];
           }
         }

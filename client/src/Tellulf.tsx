@@ -58,7 +58,7 @@ class Tellulf extends React.PureComponent<Props, State> {
       // Hack: Get current temp
       const nowCast = await getNowCast(steder.oslo.lat, steder.oslo.long);
       if (nowCast.temp) {
-        this.props.dispatch(updateNowcast(nowCast.temp));
+        this.props.dispatch(updateNowcast(nowCast.temp, nowCast.rain));
       }
     } catch (err) {
       // eslint-disable-next-line no-console

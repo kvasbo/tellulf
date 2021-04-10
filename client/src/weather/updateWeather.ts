@@ -2,14 +2,19 @@ import axios from 'axios';
 
 import { YrResponse } from '../types/yr';
 
-export async function getNowCast(lat: number, lon: number): Promise<{ temp?: number }> {
+export async function getNowCast(
+  lat: number,
+  lon: number,
+): Promise<{ temp: number; rain: number }> {
   const url = `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${lat}&lon=${lon}`;
   const nResponse = await axios.get(url);
   if (nResponse.statusText === 'OK') {
     const temp = nResponse.data.properties?.timeseries[0]?.data?.instant?.details?.air_temperature;
-    return { temp };
+    const rain =
+      nResponse.data.properties?.timeseries[0]?.data?.next_1_hours?.details?.precipitation_amount;
+    return { temp, rain };
   } else {
-    return {};
+    return { temp: -999, rain: -1 };
   }
 }
 

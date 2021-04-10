@@ -116,7 +116,7 @@ class Dag extends React.PureComponent<Props, State> {
   }
 
   public render(): React.ReactNode {
-    const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
+    //const stedToShow = this.state.sted !== 'oslo' ? this.state.sted.toLocaleUpperCase() : null;
 
     return (
       <div className="kalenderDag">
