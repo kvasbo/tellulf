@@ -104,21 +104,18 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     };
   }
 
+  /**
+  Format the temperature
+  */
   private static getTempFormatted(forecastData: SixHourForecast): string {
-    const sinking =
-      forecastData.nextTemp &&
-      forecastData.prevTemp &&
-      forecastData.nextTemp < forecastData.prevTemp;
     const from = forecastData.tempMin;
     const to = forecastData.tempMax;
 
     if (Math.abs(to - from) <= 1) {
       const t = Math.round((to + from) / 2);
       return `${t}°`;
-    } else if (sinking) {
-      return `${forecastData.tempMax}°/${forecastData.tempMin}°`;
     } else {
-      return `${forecastData.tempMin}°/${forecastData.tempMax}°`;
+      return `${forecastData.tempMax}°/${forecastData.tempMin}°`;
     }
   }
 
