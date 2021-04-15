@@ -54,6 +54,17 @@ class App extends React.PureComponent {
   }
 
   public componentDidMount(): void {
+    // Auto-login
+    const params = new URLSearchParams(location.search);
+    if (params.has('u') && params.has('p')) {
+      const u = params.get('u');
+      const p = params.get('p');
+      this.setState({ u, p });
+      if (u && p) {
+        this.doLogin(u, p);
+      }
+    }
+
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         tibberSettings = await this.getTibberSettings();
@@ -71,12 +82,11 @@ class App extends React.PureComponent {
     return data;
   }
 
-  private doLogin() {
-    if (!this.state.username || !this.state.password)
-      alert('Tast inn brukernavn og passord din slask');
+  private doLogin(u: string, p: string) {
+    if (!u || !p) alert('Tast inn brukernavn og passord din slask');
     firebase
       .auth()
-      .signInWithEmailAndPassword(this.state.username, this.state.password)
+      .signInWithEmailAndPassword(u, p)
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -119,7 +129,7 @@ class App extends React.PureComponent {
         <div>
           <button
             disabled={!this.state.username && !this.state.password}
-            onClick={() => this.doLogin()}
+            onClick={() => this.doLogin(this.state.username, this.state.password)}
           >
             Logg inn
           </button>
