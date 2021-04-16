@@ -15,6 +15,10 @@ const symbolsMap: WeatherSymbolsMap = {
   fair_night: 'night-cloudy',
   partlycloudy_day: 'day-cloudy',
   partlycloudy_night: 'night-cloudy',
+  cloudy: 'cloud',
+  lightrainshowers_day: 'day-showers',
+  lightrainshowers_night: 'night-showers',
+  lightrain: 'rain',
 };
 
 export function mapSymbol(symbol: string): string {
