@@ -7,8 +7,6 @@ import { GenericProps } from '../types/generic';
 import { ForecastPlace } from '../types/forecast';
 import { YrStore } from '../types/yr';
 
-const baseUrl = '/weather_symbols';
-
 interface SixHourForecast {
   tempMax: number;
   tempMin: number;
