@@ -2,6 +2,7 @@ import React from 'react';
 import { AppStore } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
+import { mapSymbol } from './symbolsMap';
 import { GenericProps } from '../types/generic';
 import { ForecastPlace } from '../types/forecast';
 import { YrStore } from '../types/yr';
@@ -33,8 +34,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
   }
 
   private static getIcon(symbol: string): JSX.Element {
-    const url = `${baseUrl}/${symbol}.png`;
-    return <img src={url} className="weatherSymbol" />;
+    return <img src={mapSymbol(symbol)} className="weatherSymbol" />;
   }
 
   private static getRain(forecast: SixHourForecast): JSX.Element {

@@ -1,13 +1,25 @@
 // https://api.met.no/weatherapi/weathericon/2.0/documentation
 // https://erikflowers.github.io/weather-icons/api-list.html
 
+const yrBaseUrl = '/weather_symbols';
+const mappedBaseUrl = '/weather_icons';
+
 interface WeatherSymbolsMap {
   [s: string]: string;
 }
 
-export const symbolsMap: WeatherSymbolsMap = {
+const symbolsMap: WeatherSymbolsMap = {
   clearsky: 'tast',
 };
+
+export function mapSymbol(symbol: string): string {
+  console.log(symbol);
+
+  if (symbolsMap[symbol]) {
+  }
+
+  return `${yrBaseUrl}/${symbol}.png`;
+}
 
 /**
 
