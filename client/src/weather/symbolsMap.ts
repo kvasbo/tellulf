@@ -9,13 +9,22 @@ interface WeatherSymbolsMap {
 }
 
 const symbolsMap: WeatherSymbolsMap = {
-  clearsky: 'tast',
+  clearsky_day: 'day-sunny',
+  clearsky_night: 'night-clear',
+  fair_day: 'day-sunny-overcast',
+  fair_night: 'night-cloudy',
+  partlycloudy_day: 'day-cloudy',
+  partlycloudy_night: 'night-cloudy',
 };
 
 export function mapSymbol(symbol: string): string {
-  console.log(symbol);
-
   if (symbolsMap[symbol]) {
+    const file = `wi-${symbolsMap[symbol]}`;
+    const newUrl = `${mappedBaseUrl}/${file}.svg`;
+    //console.log(newUrl);
+    return newUrl;
+  } else {
+    console.log(symbol);
   }
 
   return `${yrBaseUrl}/${symbol}.png`;
