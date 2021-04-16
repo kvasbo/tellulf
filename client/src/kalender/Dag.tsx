@@ -105,12 +105,13 @@ class Dag extends React.PureComponent<Props, State> {
   private getWeather(place: 'oslo' | 'sandefjord'): JSX.Element[] {
     const out: JSX.Element[] = [];
 
-    for (let i = 0; i < 24; i += 6) {
+    for (let i = 0; i < 4; i += 1) {
+      const h = i * 6;
       const time = DateTime.fromMillis(this.props.date.valueOf())
-        .plus({ hours: i + 2 })
+        .plus({ hours: h + 2 })
         .valueOf();
 
-      out.push(<WeatherUnit key={time} time={time} place={place} />);
+      out.push(<WeatherUnit key={time} column={i} time={time} place={place} />);
     }
     return out;
   }

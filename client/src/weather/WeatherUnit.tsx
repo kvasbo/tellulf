@@ -22,6 +22,7 @@ interface SixHourForecast {
 
 interface Props {
   time: number;
+  column: number;
   place: ForecastPlace;
   yr: YrStore;
 }
@@ -126,8 +127,10 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
       return null;
     }
 
+    const columnClass = `weatherCell row-${this.props.column + 1}`;
+
     return (
-      <div className="weatherCell">
+      <div className={columnClass}>
         <span className="weatherCellLine subInfo">
           {WeatherUnit.getTimeFormatted(this.props.time)}
         </span>
