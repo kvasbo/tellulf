@@ -53,8 +53,6 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
 
   private getForecastData(): SixHourForecast | null {
     const key = DateTime.fromMillis(this.props.time).valueOf();
-    const nextKey = DateTime.fromMillis(this.props.time).plus({ hours: 6 }).valueOf();
-    const prevKey = DateTime.fromMillis(this.props.time).minus({ hours: 6 }).valueOf();
 
     if (!this.props.yr[this.props.place] || !this.props.yr[this.props.place][key]) {
       return null;
@@ -67,7 +65,6 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     }
 
     const wind = mapWindToSomethingUsable(raw);
-    console.log(wind);
 
     const tempMax = Math.round(raw.data.next_6_hours.details.air_temperature_max);
     const tempMin = Math.round(raw.data.next_6_hours.details.air_temperature_min);
@@ -77,14 +74,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     const rainMax = raw.data.next_6_hours.details.precipitation_amount_max;
     const rainProbability = raw.data.next_6_hours.details.probability_of_precipitation;
 
-    const prevTemp = this.props.yr[this.props.place][prevKey]?.data?.next_6_hours?.details
-      ?.air_temperature_max;
-    const nextTemp = this.props.yr[this.props.place][nextKey]?.data?.next_6_hours?.details
-      ?.air_temperature_max;
-
     return {
-      prevTemp,
-      nextTemp,
       tempMax,
       tempMin,
       symbol,

@@ -1,5 +1,5 @@
-import Moment from 'moment';
 import React from 'react';
+import { DateTime } from 'luxon';
 import { connect } from 'react-redux';
 import { TibberSettings } from './App';
 import Kalender from './kalender/Kalender';
@@ -67,12 +67,13 @@ class Tellulf extends React.PureComponent<Props, State> {
   }
 
   private startReloadLoop() {
-    const now = Moment();
-    const reload = Moment(now).startOf('hour').add(1, 'hour').add(5, 'seconds');
-    const diff = reload.diff(now, 'milliseconds');
+    const timeToReload =
+      DateTime.now().startOf('hour').plus({ hours: 1, seconds: 5 }).valueOf() -
+      DateTime.now().valueOf();
+
     setTimeout(() => {
       window.location.reload();
-    }, diff);
+    }, timeToReload);
   }
 
   public render(): React.ReactNode {
