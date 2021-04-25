@@ -1,6 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import Moment from 'moment';
+import 'moment/locale/nb';
 import React from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
@@ -8,6 +10,8 @@ import { store, persistor } from './redux/store';
 import Tellulf from './Tellulf';
 import tibberUpdater from './tibberUpdater';
 import { GenericProps } from './types/generic';
+
+Moment.locale('nb');
 
 export interface TibberSettings {
   tibberApiKey: string;
