@@ -4,20 +4,9 @@ import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
 import { mapSymbol } from './symbolsMap';
 import { GenericProps } from '../types/generic';
-import { ForecastPlace } from '../types/forecast';
+import { ForecastPlace, SixHourForecast } from '../types/forecast';
 import { YrStore } from '../types/yr';
-
-interface SixHourForecast {
-  tempMax: number;
-  tempMin: number;
-  symbol: string;
-  rain: number;
-  rainMin: number;
-  rainMax: number;
-  rainProbability: number;
-  prevTemp: number | undefined;
-  nextTemp: number | undefined;
-}
+import { mapWindToSomethingUsable } from './windMap';
 
 interface Props {
   time: number;
@@ -76,6 +65,8 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     if (!raw || !raw.data.next_6_hours) {
       return null;
     }
+
+    const wind = mapWindToSomethingUsable(raw);
 
     const tempMax = Math.round(raw.data.next_6_hours.details.air_temperature_max);
     const tempMin = Math.round(raw.data.next_6_hours.details.air_temperature_min);
@@ -136,6 +127,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
         <span className="weatherCellLine bigInfo">
           {WeatherUnit.getTempFormatted(forecastData)}
         </span>
+        <span className="weatherCellLine rain">{WeatherUnit.getTempFormatted(forecastData)}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRainProb(forecastData)}</span>
       </div>

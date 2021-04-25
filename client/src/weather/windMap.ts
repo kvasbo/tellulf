@@ -1,4 +1,4 @@
-import { WeatherApiTimesetData } from '../types/yr';
+import { YrWeatherDataset } from '../types/yr';
 import { parsedWind } from '../types/forecast';
 
 /**
@@ -18,13 +18,13 @@ import { parsedWind } from '../types/forecast';
 Forekommer meget sjelden. Uvanlig store ødeleggelser
 **/
 
-export default function mapWindToSomethingUsable(data: WeatherApiTimesetData): parsedWind {
+export function mapWindToSomethingUsable(data: YrWeatherDataset): parsedWind {
   return {
-    wind: data.instant.details.wind_speed,
-    gust: data.instant.details.wind_speed_of_gust,
-    windName: mapWind(data.instant.details.wind_speed),
-    gustName: mapWind(data.instant.details.wind_speed_of_gust),
-    direction: data.instant.details.wind_from_direction,
+    wind: data.data.instant.details.wind_speed,
+    gust: data.data.instant.details.wind_speed_of_gust,
+    windName: mapWind(data.data.instant.details.wind_speed),
+    gustName: mapWind(data.data.instant.details.wind_speed_of_gust),
+    direction: data.data.instant.details.wind_from_direction,
   };
 }
 
