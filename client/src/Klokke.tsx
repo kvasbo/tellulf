@@ -18,7 +18,7 @@ class Clock extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount(): void {
-    // Change on next
+    // Find the start of the next minute, change when it occurs.
     const timeToChange =
       DateTime.now().startOf('minute').plus({ minutes: 1 }).valueOf() - DateTime.now().valueOf();
     this.timeout = window.setTimeout(() => this.setState({ time: DateTime.now() }), timeToChange);
