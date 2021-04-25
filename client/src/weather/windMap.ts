@@ -29,7 +29,9 @@ export function mapWindToSomethingUsable(data: YrWeatherDataset): parsedWind {
 }
 
 function mapWind(windSpeed: number): string {
-  if (windSpeed >= 33) {
+  if (windSpeed === undefined) {
+    return '';
+  } else if (windSpeed >= 33) {
     return 'orkan';
   } else if (windSpeed >= 30) {
     return 'sterk storm';
@@ -49,9 +51,11 @@ function mapWind(windSpeed: number): string {
     return 'laber bris';
   } else if (windSpeed >= 5) {
     return 'lett bris';
-  } else if (windSpeed >= 5) {
+  } else if (windSpeed >= 2) {
     return 'svak vind';
+  } else if (windSpeed >= 0.5) {
+    return 'flau vind';
+  } else {
+    return 'vindstille';
   }
-
-  return '';
 }

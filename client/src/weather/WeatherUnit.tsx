@@ -67,6 +67,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
     }
 
     const wind = mapWindToSomethingUsable(raw);
+    console.log(wind);
 
     const tempMax = Math.round(raw.data.next_6_hours.details.air_temperature_max);
     const tempMin = Math.round(raw.data.next_6_hours.details.air_temperature_min);
@@ -91,6 +92,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
       rainMin,
       rainMax,
       rainProbability,
+      wind,
     };
   }
 
@@ -127,7 +129,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
         <span className="weatherCellLine bigInfo">
           {WeatherUnit.getTempFormatted(forecastData)}
         </span>
-        <span className="weatherCellLine rain">{WeatherUnit.getTempFormatted(forecastData)}</span>
+        <span className="weatherCellLine wind">{forecastData.wind.windName}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRainProb(forecastData)}</span>
       </div>

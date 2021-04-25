@@ -29,7 +29,7 @@ export function mapSymbol(symbol: string): string {
     const newUrl = `${mappedBaseUrl}/${file}.svg`;
     return newUrl;
   } else {
-    console.log(symbol);
+    //console.log(symbol);
   }
 
   return `${yrBaseUrl}/${symbol}.png`;

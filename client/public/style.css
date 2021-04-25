@@ -139,12 +139,18 @@ body {
   color: #767676;
   text-align: center;
 }
+.kalenderDag .weatherCellContainer .weatherCell .wind {
+  font-size: 9pt;
+  text-align: center;
+}
 .kalenderDag .weatherCellContainer .weatherCell .bigInfo {
   font-size: 19pt;
 }
 .kalenderDag .weatherCellContainer .weatherCell .weatherCellLine {
   margin-bottom: 3px;
   margin-top: 3px;
+  height: 1em;
+  overflow: hidden;
 }
 .kalenderDag .weatherCellContainer .weatherCell .weatherSymbol {
   width: 60px;
