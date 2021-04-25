@@ -61,7 +61,9 @@ class Kalender extends React.PureComponent<unknown, State> {
       const birthdays = this.state.birthdays[d];
 
       if (diff < 14 || cald || birthdays) {
-        out.push(<Dag key={`kalenderdag${d}`} date={day} events={cald} birthdays={birthdays} />);
+        out.push(
+          <Dag key={`kalenderdag${d}`} date={day.toDate()} events={cald} birthdays={birthdays} />,
+        );
       }
     });
     return out;

@@ -1,7 +1,10 @@
-import Moment from 'moment';
 import React from 'react';
+import Moment from 'moment';
+import { DateTime } from 'luxon';
 import { Event } from '../types/calendar';
 import { GenericProps } from '../types/generic';
+
+Moment.locale('nb');
 
 function fullDayFormats() {
   return {

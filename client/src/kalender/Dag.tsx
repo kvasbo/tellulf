@@ -1,4 +1,3 @@
-import Moment from 'moment';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -15,7 +14,7 @@ import WeatherUnit from '../weather/WeatherUnit';
 interface Props {
   birthdays: EventDataSet;
   events: EventDataSet;
-  date: Moment.Moment;
+  date: Date;
   yr: YrStore;
 }
 
@@ -23,8 +22,8 @@ interface State {
   sted: ForecastPlace;
 }
 
-function getDayHeader(date: Moment.Moment) {
-  return date.format('dddd D.');
+function getDayHeader(timestamp: number) {
+  return DateTime.fromMillis(timestamp).setLocale('no').toFormat('cccc d.');
 }
 
 class Dag extends React.PureComponent<Props, State> {
@@ -34,18 +33,18 @@ class Dag extends React.PureComponent<Props, State> {
   public constructor(props: Props) {
     super(props);
     this.state = { sted: this.loadSted() };
-    this.sunTimes = SunCalc.getTimes(this.props.date.toDate(), 59.9508, 10.6852);
+    this.sunTimes = SunCalc.getTimes(this.props.date, 59.9508, 10.6852);
     // console.log(this.sunTimes);
     this.togglePlace = (): void => {
       const sted = this.loadSted();
       const nyttSted = sted === 'oslo' ? 'sandefjord' : 'oslo';
-      store.set(`sted_${this.props.date}`, nyttSted);
+      store.set(`sted_${this.props.date.toISOString()}`, nyttSted);
       this.setState({ sted: nyttSted });
     };
   }
 
   private loadSted(): ForecastPlace {
-    const sted = store.get(`sted_${this.props.date}`, 'oslo');
+    const sted = store.get(`sted_${this.props.date.toISOString()}`, 'oslo');
     return sted;
   }
 
@@ -126,7 +125,7 @@ class Dag extends React.PureComponent<Props, State> {
     return (
       <div className="kalenderDag">
         <div className="kalendarDayInfo">
-          <div className="kalenderDato">{getDayHeader(this.props.date)}</div>
+          <div className="kalenderDato">{getDayHeader(this.props.date.valueOf())}</div>
           <div className="kalenderHendelser">
             {this.getBirthdays()}
             {this.getEvents()}
