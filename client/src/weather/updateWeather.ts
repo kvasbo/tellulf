@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { YrResponse } from '../types/yr';
 
 export async function getNowCast(

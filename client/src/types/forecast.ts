@@ -22,7 +22,5 @@ export interface SixHourForecast {
   rainMin: number;
   rainMax: number;
   rainProbability: number;
-  prevTemp: number | undefined;
-  nextTemp: number | undefined;
   wind: parsedWind;
 }

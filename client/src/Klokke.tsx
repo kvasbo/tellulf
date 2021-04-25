@@ -1,10 +1,8 @@
-import Moment from 'moment';
+import { DateTime } from 'luxon';
 import * as React from 'react';
 
-Moment.locale('nb');
-
 interface State {
-  time: Moment.Moment;
+  time: DateTime;
 }
 
 interface Props {
@@ -12,23 +10,26 @@ interface Props {
 }
 
 class Clock extends React.PureComponent<Props, State> {
-  private interval = 0;
+  private timeout = 0;
 
   public constructor(props: Props) {
     super(props);
-    this.state = { time: Moment() };
+    this.state = { time: DateTime.now() };
   }
 
   public componentDidMount(): void {
-    this.interval = window.setInterval(() => this.setState({ time: Moment() }), 1000);
+    // Find the start of the next minute, change when it occurs.
+    const timeToChange =
+      DateTime.now().startOf('minute').plus({ minutes: 1 }).valueOf() - DateTime.now().valueOf();
+    this.timeout = window.setTimeout(() => this.setState({ time: DateTime.now() }), timeToChange);
   }
 
   public componentWillUnmount(): void {
-    window.clearInterval(this.interval);
+    window.clearTimeout(this.timeout);
   }
 
   public render(): React.ReactNode {
-    return <div className="clockTime">{this.state.time.format('HH:mm')}</div>;
+    return <div className="clockTime">{this.state.time.toFormat('HH:mm')}</div>;
   }
 }
 
