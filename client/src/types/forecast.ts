@@ -19,3 +19,11 @@ export interface HourForecast {
   rainMax?: number;
   symbol: string;
 }
+
+export interface parsedWind {
+  wind: number;
+  gust: number;
+  windName: string;
+  gustName: string;
+  direction: number;
+}

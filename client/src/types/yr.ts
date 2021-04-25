@@ -22,8 +22,8 @@ export interface Units {
   relative_humidity: string;
   ultraviolet_index_clear_sky: string;
   wind_from_direction: string;
-  wind_speed: string;
-  wind_speed_of_gust: string;
+  wind_speed: string; // "m/s"
+  wind_speed_of_gust: string; // "m/s"
 }
 
 export interface Meta {
