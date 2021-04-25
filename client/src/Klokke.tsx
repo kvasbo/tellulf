@@ -18,10 +18,17 @@ class Clock extends React.PureComponent<Props, State> {
   }
 
   public componentDidMount(): void {
-    // Find the start of the next minute, change when it occurs.
+    this.updateTime();
+  }
+
+  // Find the start of the next minute, change when it occurs.
+  private updateTime(): void {
     const timeToChange =
       DateTime.now().startOf('minute').plus({ minutes: 1 }).valueOf() - DateTime.now().valueOf();
-    this.timeout = window.setTimeout(() => this.setState({ time: DateTime.now() }), timeToChange);
+    this.timeout = window.setTimeout(() => {
+      this.setState({ time: DateTime.now() });
+      this.updateTime();
+    }, timeToChange);
   }
 
   public componentWillUnmount(): void {
