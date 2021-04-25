@@ -155,6 +155,11 @@ body {
         text-align: center;
       }
 
+      .wind {
+        font-size: 9pt;
+        text-align: center;
+      }
+
       .bigInfo {
         font-size: 19pt;
       }
@@ -162,11 +167,14 @@ body {
       .weatherCellLine {
         margin-bottom: 3px;
         margin-top: 3px;
+        height: 1em;
+        overflow: hidden;
       }
 
       .weatherSymbol {
         width: 60px;
         height: auto;
+        // filter: invert(100%);
       }
     }
   }

@@ -2,23 +2,11 @@ import React from 'react';
 import { AppStore } from '../redux/reducers';
 import { connect } from 'react-redux';
 import { DateTime } from 'luxon';
+import { mapSymbol } from './symbolsMap';
 import { GenericProps } from '../types/generic';
-import { ForecastPlace } from '../types/forecast';
+import { ForecastPlace, SixHourForecast } from '../types/forecast';
 import { YrStore } from '../types/yr';
-
-const baseUrl = '/weather_symbols';
-
-interface SixHourForecast {
-  tempMax: number;
-  tempMin: number;
-  symbol: string;
-  rain: number;
-  rainMin: number;
-  rainMax: number;
-  rainProbability: number;
-  prevTemp: number | undefined;
-  nextTemp: number | undefined;
-}
+import { mapWindToSomethingUsable } from './windMap';
 
 interface Props {
   time: number;
@@ -33,8 +21,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
   }
 
   private static getIcon(symbol: string): JSX.Element {
-    const url = `${baseUrl}/${symbol}.png`;
-    return <img src={url} className="weatherSymbol" />;
+    return <img src={mapSymbol(symbol)} className="weatherSymbol" />;
   }
 
   private static getRain(forecast: SixHourForecast): JSX.Element {
@@ -79,6 +66,9 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
       return null;
     }
 
+    const wind = mapWindToSomethingUsable(raw);
+    console.log(wind);
+
     const tempMax = Math.round(raw.data.next_6_hours.details.air_temperature_max);
     const tempMin = Math.round(raw.data.next_6_hours.details.air_temperature_min);
     const symbol = raw.data.next_6_hours.summary.symbol_code;
@@ -102,6 +92,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
       rainMin,
       rainMax,
       rainProbability,
+      wind,
     };
   }
 
@@ -138,6 +129,7 @@ class WeatherUnit extends React.PureComponent<Props, GenericProps> {
         <span className="weatherCellLine bigInfo">
           {WeatherUnit.getTempFormatted(forecastData)}
         </span>
+        <span className="weatherCellLine wind">{forecastData.wind.windName}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRain(forecastData)}</span>
         <span className="weatherCellLine rain">{WeatherUnit.getRainProb(forecastData)}</span>
       </div>

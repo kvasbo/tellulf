@@ -6,16 +6,23 @@ export interface NowcastStore {
 
 export type ForecastPlace = 'oslo' | 'sandefjord';
 
-export interface WeatherDataSeries {
-  [timestamp: number]: HourForecast;
+export interface parsedWind {
+  wind: number;
+  gust: number;
+  windName: string;
+  gustName: string;
+  direction: number;
 }
 
-export interface HourForecast {
-  time: number;
-  durationInHours: number;
-  temp?: number;
-  rain?: number;
-  rainMin?: number;
-  rainMax?: number;
+export interface SixHourForecast {
+  tempMax: number;
+  tempMin: number;
   symbol: string;
+  rain: number;
+  rainMin: number;
+  rainMax: number;
+  rainProbability: number;
+  prevTemp: number | undefined;
+  nextTemp: number | undefined;
+  wind: parsedWind;
 }

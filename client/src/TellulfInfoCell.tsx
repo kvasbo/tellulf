@@ -46,7 +46,10 @@ class TellulfInfoCell extends React.PureComponent<Props, GenericProps> {
   smartRoundWatt(number: number): roundedNumber {
     const out = { number: '-', unit: '' };
 
-    if (Math.abs(number) > 100) {
+    if (Math.abs(number) > 1000) {
+      out.number = Math.round(number / 1000).toLocaleString();
+      out.unit = 'k';
+    } else if (Math.abs(number) > 100) {
       out.number = (Math.round(number / 100) / 10).toLocaleString();
       out.unit = 'k';
     } else {

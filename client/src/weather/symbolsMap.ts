@@ -1,13 +1,39 @@
 // https://api.met.no/weatherapi/weathericon/2.0/documentation
 // https://erikflowers.github.io/weather-icons/api-list.html
 
+const yrBaseUrl = '/weather_symbols';
+const mappedBaseUrl = '/weather_icons';
+
+const doMap = false;
+
 interface WeatherSymbolsMap {
   [s: string]: string;
 }
 
-export const symbolsMap: WeatherSymbolsMap = {
-  clearsky: 'tast',
+const symbolsMap: WeatherSymbolsMap = {
+  clearsky_day: 'day-sunny',
+  clearsky_night: 'night-clear',
+  fair_day: 'day-sunny-overcast',
+  fair_night: 'night-cloudy',
+  partlycloudy_day: 'day-cloudy',
+  partlycloudy_night: 'night-cloudy',
+  cloudy: 'cloud',
+  lightrainshowers_day: 'day-showers',
+  lightrainshowers_night: 'night-showers',
+  lightrain: 'rain',
 };
+
+export function mapSymbol(symbol: string): string {
+  if (doMap && symbolsMap[symbol]) {
+    const file = `wi-${symbolsMap[symbol]}`;
+    const newUrl = `${mappedBaseUrl}/${file}.svg`;
+    return newUrl;
+  } else {
+    //console.log(symbol);
+  }
+
+  return `${yrBaseUrl}/${symbol}.png`;
+}
 
 /**
 

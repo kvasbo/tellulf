@@ -7,6 +7,7 @@ import { AppStore } from '../redux/reducers';
 import { YrStore } from '../types/yr';
 import { Event, EventDataSet } from '../types/calendar';
 import { ForecastPlace } from '../types/forecast';
+import SunCalc from 'suncalc';
 import HendelseFullDag from './HendelseFullDag';
 import HendelseMedTid from './HendelseMedTid';
 import WeatherUnit from '../weather/WeatherUnit';
@@ -28,10 +29,13 @@ function getDayHeader(date: Moment.Moment) {
 
 class Dag extends React.PureComponent<Props, State> {
   private togglePlace: () => void;
+  private sunTimes: any;
 
   public constructor(props: Props) {
     super(props);
     this.state = { sted: this.loadSted() };
+    this.sunTimes = SunCalc.getTimes(this.props.date.toDate(), 59.9508, 10.6852);
+    // console.log(this.sunTimes);
     this.togglePlace = (): void => {
       const sted = this.loadSted();
       const nyttSted = sted === 'oslo' ? 'sandefjord' : 'oslo';
