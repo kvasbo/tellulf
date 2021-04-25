@@ -4,6 +4,8 @@
 const yrBaseUrl = '/weather_symbols';
 const mappedBaseUrl = '/weather_icons';
 
+const doMap = false;
+
 interface WeatherSymbolsMap {
   [s: string]: string;
 }
@@ -22,10 +24,9 @@ const symbolsMap: WeatherSymbolsMap = {
 };
 
 export function mapSymbol(symbol: string): string {
-  if (symbolsMap[symbol]) {
+  if (doMap && symbolsMap[symbol]) {
     const file = `wi-${symbolsMap[symbol]}`;
     const newUrl = `${mappedBaseUrl}/${file}.svg`;
-    //console.log(newUrl);
     return newUrl;
   } else {
     console.log(symbol);

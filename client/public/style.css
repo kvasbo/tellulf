@@ -149,7 +149,6 @@ body {
 .kalenderDag .weatherCellContainer .weatherCell .weatherSymbol {
   width: 60px;
   height: auto;
-  filter: invert(100%);
 }
 
 .ruterGroup {
