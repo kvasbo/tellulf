@@ -5,8 +5,8 @@ body {
   font-family: "raleway", sans-serif;
   font-weight: 400;
   font-size: 16px;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -84,7 +84,7 @@ body {
 
 .kalenderDag {
   margin: 10px 10px 22px 10px;
-  background-color: #000000;
+  background-color: #ffffff;
   display: grid;
   grid-template-columns: 205px auto;
   grid-template-rows: auto;
