@@ -53,15 +53,7 @@ class Ruter extends React.PureComponent<Props, GenericProps> {
 
   public render() {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          flex: 1,
-          justifyContent: 'flex-end',
-        }}
-      >
+      <div>
         <Rute type="Bane" rutenummer="1" trains={this.getParsedTrains(10000)} />
         <Rute type="Buss" rutenummer="46" trains={this.getParsedTrains(10000)} />
       </div>
